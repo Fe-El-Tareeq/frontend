@@ -1,24 +1,271 @@
-.badge {
-  display: inline-flex;
-  border-radius: 9999px;
-  border: 1px solid rgba(74, 222, 128, 0.3);
-  background: rgba(74, 222, 128, 0.1);
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: rgb(167, 243, 208);
+/* استيراد خط القاهرة المعتمد بالتصميم */
+@import url('https://googleapis.com');
+
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8fafc;
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+  padding: 20px;
 }
 
-.chip {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 0.5rem;
-  border: 1px solid rgb(51, 65, 85);
-  background: rgb(30, 41, 59);
-  padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: rgb(226, 232, 240);
+.login-card {
+  width: 100%;
+  max-width: 360px;
+  background: #ffffff;
+  padding: 24px 20px; 
+  border-radius: 24px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03);
+  text-align: center;
 }
+
+
+/* الشعار */
+/* حاوية الشعار الممركزة في المنتصف تماماً */
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  width: 100%;
+  margin: 0 auto 0px auto; 
+}
+
+
+/* تنسيق أبعاد صورة الشعار */
+.logo-img {
+  width: 200px; 
+  height: 90px;
+  object-fit: contain;
+}
+
+
+
+/* النصوص والعناوين */
+/* العنوان الرئيسي (أهلاً بعودتك!) تحت الشعار مباشرة */
+.welcome-title {
+  width: 143px;
+  height: 32px;
+  margin: 0px auto 4px auto; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 32px;
+  text-align: center;
+  color: #1C3F72;
+}
+
+
+
+/* النص الفرعي (سجل دخولك للمتابعة) */
+.welcome-subtitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  width: 100%;
+  height: 20px;
+  margin: 0 0 32px 0; /* مسافة 32px قبل بدء حقول الإدخال */
+  
+  font-family: 'Cairo', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  color: #7A869A; /* الرمادي المعتمد بالنصوص المساعدة */
+}
+
+
+/* الحقول والمدخلات */
+.form-group {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1C3F72;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  font-size: 14px;
+  background-color: #FAFAFA;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #1C3F72;
+  background-color: #ffffff;
+}
+
+/* محاذاة أرقام الهاتف */
+.phone-input {
+  text-align: left !important;
+  letter-spacing: 1px;
+}
+
+/* روابط نسيت كلمة المرور */
+.forgot-link-container {
+  text-align: left; 
+  margin-top: -12px;
+  margin-bottom: 28px;
+}
+
+.forgot-link {
+  font-size: 12px;
+  color: #7A869A;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-link:hover {
+  color: #1C3F72;
+}
+
+/* الأزرار الأساسية */
+.btn-submit {
+  width: 100%;
+  background-color: #1C3F72; /* اللون الكحلي الأساسي لبطريقتك */
+  color: #ffffff;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.btn-submit:hover {
+  background-color: #132D53;
+}
+
+/* أسفل الكرت */
+.footer-text {
+  font-size: 13px;
+  color: #7A869A;
+  margin: 0;
+}
+
+.signup-link {
+  color: #FF7A00; /* اللون البرتقالي المعتمد لإنشاء حساب بالفيجما */
+  text-decoration: none;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+
+/* ======================================================== */
+/*  أكواد إضافية خاصة بصفحة إنشاء الحساب (الخطوط البرتقالية)  */
+/* ======================================================== */
+
+/* نص الشروط والأحكام في الخطوة الثانية */
+.terms-text {
+  font-size: 12px;
+  text-align: right;
+  margin: 8px 0 16px 0;
+  line-height: 18px;
+  color: #7A869A;
+}
+
+/* الروابط البرتقالية المخصصة (شروط الاستخدام وسياسة الخصوصية) */
+.orange-link {
+  color: #FF7A00;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.orange-link:hover {
+  text-decoration: underline;
+}
+
+/* زر العودة للخطوة السابقة */
+.back-step-btn {
+  cursor: pointer;
+  margin-top: -12px !important;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #1C3F72;
+  font-weight: bold;
+  text-align: center;
+}
+
+.back-step-btn:hover {
+  color: #FF7A00;
+}
+
+
+/* ======================================================== */
+/*  تقليص المسافات لصفحة التسجيل البرتقالية لمنع تمدد الكارد  */
+/* ======================================================== */
+
+/* تقليل التباعد السفلي بين الحقول داخل فورم التسجيل فقط */
+.signup-form-wrapper .form-group {
+  margin-bottom: 12px !important; 
+}
+
+
+.signup-form-wrapper .form-group label {
+  margin-bottom: 4px !important; 
+}
+
+
+.signup-form-wrapper .form-group input {
+  padding: 10px 14px !important; 
+  font-size: 13px !important;
+}
+
+
+.signup-form-wrapper .form-group input::placeholder {
+  font-size: 13px !important;
+}
+
+
+/* ======================================================== */
+/*          تنسيق شريط الخطوط التوضيحية الديناميكية             */
+/* ======================================================== */
+
+.steps-indicator-container {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  margin: 0 auto 20px auto !important;
+}
+
+/* 1. التنسيق الافتراضي للخط (أقصر ورمادي) */
+.steps-indicator-container .step-line {
+  width: 25px !important; /* الخط غير المفعل يكون قصيراً جداً */
+  height: 5px !important; /* سُمك الخط */
+  background-color: #E2E8F0 !important; /* اللون الرمادي */
+  border-radius: 10px !important;
+  transition: all 0.3s ease !important; /* أنيميشن ناعم وسلس أثناء تغير الحجم */
+}
+
+/* 2. التنسيق عند تفعيل الخط (يصبح أطول ويتلون بالبرتقالي) */
+.steps-indicator-container .step-line.active {
+  width: 60px !important; /* الخط المفعل يتمدد ليصبح أطول بوضوح */
+  background-color: #FF7A00 !important; /* اللون البرتقالي الرسمي */
+}
+
+
