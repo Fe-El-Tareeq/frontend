@@ -1,15 +1,16 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import Register from "./pages/Register";
+
 function App() {
   return (
-    <main
-      dir="rtl"
-      className="relative min-h-screen bg-white flex items-center justify-center"
-    >
-      <img
-        src="/logo.png"
-        alt="بطريقك"
-        className="w-[111px] h-[107px] object-contain opacity-100"
-      />
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
