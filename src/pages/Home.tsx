@@ -17,7 +17,8 @@ function Home() {
         />
 
         <button
-          onClick={() => navigate("/register")}
+          type="button"
+          onClick={() => navigate("/welcome")}
           className="mt-6 rounded-pill bg-accent px-6 py-3 text-white"
         >
           ابدأ الآن
