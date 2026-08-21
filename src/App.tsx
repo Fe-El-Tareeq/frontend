@@ -1,36 +1,110 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
-import Home from "./pages/Home";
-import Welcome from "./pages/auth/Welcome";
-import RegisterStep1 from "./pages/auth/RegisterStep1";
-import RegisterStep2 from "./pages/auth/RegisterStep2";
-import Register from "./pages/auth/Register";
+// Lazy-loaded pages matching Figma structure
+const Home = lazy(() => import("./pages/Home"));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Login = lazy(() => import("./pages/auth/Login"));
+const RegisterStep1 = lazy(() => import("./pages/auth/RegisterStep1"));
+const RegisterStep2 = lazy(() => import("./pages/auth/RegisterStep2"));
+const VerifyOtp = lazy(() => import("./pages/auth/VerifyOtp"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
+
+const CreateErrand = lazy(() => import("./pages/errands/CreateErrand"));
+const ErrandDetail = lazy(() => import("./pages/errands/ErrandDetail"));
+const SubmitOfferPage = lazy(() => import("./pages/errands/SubmitOfferPage"));
+const OrderTracking = lazy(() => import("./pages/errands/OrderTracking"));
+const RatingPage = lazy(() => import("./pages/errands/RatingPage"));
+const MyErrands = lazy(() => import("./pages/errands/MyErrands"));
+
+const TripsPage = lazy(() => import("./pages/trips/TripsPage"));
+const CreateTrip = lazy(() => import("./pages/trips/CreateTrip"));
+const TripDetailPage = lazy(() => import("./pages/trips/TripDetailPage"));
+const RequestSpacePage = lazy(() => import("./pages/trips/RequestSpacePage"));
+const MatchFeed = lazy(() => import("./pages/trips/MatchFeed"));
+
+const MessagesPage = lazy(() => import("./pages/chat/MessagesPage"));
+const ChatPage = lazy(() => import("./pages/chat/ChatPage"));
+
+const WalletPage = lazy(() => import("./pages/wallet/WalletPage"));
+const TopUpQRPage = lazy(() => import("./pages/wallet/TopUpQRPage"));
+
+const ProfilePage = lazy(() => import("./pages/profile/ProfilePage"));
+const EditProfile = lazy(() => import("./pages/profile/EditProfile"));
+const SettingsPage = lazy(() => import("./pages/profile/SettingsPage"));
+const ChangePasswordPage = lazy(() => import("./pages/profile/ChangePasswordPage"));
+const NotificationsPage = lazy(() => import("./pages/notifications/NotificationsPage"));
+const TermsPage = lazy(() => import("./pages/legal/TermsPage"));
+
+// Clean Mobile Loading Fallback
+const PageLoadingFallback = () => (
+  <div className="min-h-screen flex flex-col items-center justify-center bg-background text-primary gap-3">
+    <div className="h-14 w-14 rounded-2xl bg-white border border-border shadow-xs flex items-center justify-center">
+      <Loader2 className="h-7 w-7 animate-spin text-accent" />
+    </div>
+    <span className="text-xs font-bold text-text-secondary">
+      جاري التحميل...
+    </span>
+  </div>
+);
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
+      <Suspense fallback={<PageLoadingFallback />}>
+        <Routes>
+          {/* Main Dashboard & Landing */}
+          <Route path="/" element={<Home />} />
+          <Route path="/welcome" element={<LandingPage />} />
+          <Route path="/landing" element={<LandingPage />} />
 
-        <Route path="/" element={<Home />} />
+          {/* Errands Domain */}
+          <Route path="/errands" element={<MyErrands />} />
+          <Route path="/errands/new" element={<CreateErrand />} />
+          <Route path="/errands/:id" element={<ErrandDetail />} />
+          <Route path="/errands/:id/offer" element={<SubmitOfferPage />} />
+          <Route path="/errands/:id/tracking" element={<OrderTracking />} />
+          <Route path="/errands/:id/rating" element={<RatingPage />} />
+          <Route path="/my-errands" element={<MyErrands />} />
 
-        <Route path="/welcome" element={<Welcome />} />
+          {/* Auth Domain */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register-step1" element={<RegisterStep1 />} />
+          <Route path="/register-step2" element={<RegisterStep2 />} />
+          <Route path="/register" element={<Navigate to="/register-step1" replace />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
-        <Route
-          path="/register-step1"
-          element={<RegisterStep1 />}
-        />
+          {/* Trips Domain */}
+          <Route path="/trips" element={<TripsPage />} />
+          <Route path="/trips/new" element={<CreateTrip />} />
+          <Route path="/trips/:id" element={<TripDetailPage />} />
+          <Route path="/trips/:id/request-space" element={<RequestSpacePage />} />
+          <Route path="/trips/match-feed" element={<MatchFeed />} />
 
-        <Route
-          path="/register-step2"
-          element={<RegisterStep2 />}
-        />
+          {/* Chat & Messages Domain */}
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/chat/:id" element={<ChatPage />} />
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+          {/* Wallet Domain */}
+          <Route path="/wallet" element={<WalletPage />} />
+          <Route path="/wallet/topup-qr" element={<TopUpQRPage />} />
 
-      </Routes>
+          {/* Profile & Settings Domain */}
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings/change-password" element={<ChangePasswordPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
