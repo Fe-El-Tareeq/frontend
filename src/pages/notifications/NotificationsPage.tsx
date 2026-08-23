@@ -95,7 +95,7 @@ export default function NotificationsPage() {
 
         {/* Notifications List */}
         {notifications.length === 0 ? (
-          <div className="rounded-[20px] bg-white p-8 text-center border border-border shadow-sm mt-8">
+          <div className="rounded-xl bg-white p-8 text-center border border-border shadow-sm mt-8">
             <Bell className="h-12 w-12 text-text-muted mx-auto mb-3" />
             <h3 className="text-[16px] font-bold text-primary">
               لا توجد إشعارات حالياً
@@ -117,7 +117,7 @@ export default function NotificationsPage() {
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-background">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-background">
                     {getIcon(n.type)}
                   </div>
                   <div className="text-right">

@@ -94,7 +94,7 @@ export default function MatchFeed() {
     >
       <div className="space-y-4 pb-8">
         {/* Match Algorithm Banner */}
-        <div className="rounded-[20px] bg-gradient-to-l from-primary via-primary to-primary-dark p-4 text-white shadow-md">
+        <div className="rounded-xl bg-linear-to-l from-primary via-primary to-primary-dark p-4 text-white shadow-md">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-accent animate-pulse" />
             <span className="text-[14px] font-bold text-accent">
@@ -108,7 +108,7 @@ export default function MatchFeed() {
 
         {/* Matches List */}
         {matches.length === 0 ? (
-          <div className="rounded-[20px] bg-white p-8 text-center border border-border shadow-sm mt-8">
+          <div className="rounded-xl bg-white p-8 text-center border border-border shadow-sm mt-8">
             <Route className="h-12 w-12 text-text-muted mx-auto mb-3" />
             <h3 className="text-[16px] font-bold text-primary">
               لا توجد طلبات أخرى مطابقة
@@ -158,7 +158,7 @@ export default function MatchFeed() {
                   {item.itemsDescription}
                 </p>
 
-                <div className="mt-3 space-y-1.5 rounded-[12px] bg-background p-3 border border-border/50 text-[12px]">
+                <div className="mt-3 space-y-1.5 rounded-md bg-background p-3 border border-border/50 text-[12px]">
                   <div className="flex items-center gap-1.5 text-primary">
                     <MapPin className="h-3.5 w-3.5 text-accent shrink-0" />
                     <span className="font-bold">{item.destination}</span>

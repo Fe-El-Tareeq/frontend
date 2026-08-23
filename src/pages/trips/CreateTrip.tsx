@@ -4,15 +4,17 @@ import { ChevronRight, Car, Info } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { useTrips } from "../../hooks/useTrips";
+import { useLocations } from "../../hooks/useLocations";
 
 export default function CreateTrip() {
   const navigate = useNavigate();
   const { createTrip, isCreating } = useTrips();
+  const { neighborhoods, isLoadingNeighborhoods } = useLocations();
 
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [city, setCity] = useState("غزة");
-  const [neighborhood, setNeighborhood] = useState("");
+  const [neighborhoodId, setNeighborhoodId] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [capacity, setCapacity] = useState("LIGHT");
@@ -30,7 +32,7 @@ export default function CreateTrip() {
     try {
       await createTrip({
         originCity: city,
-        originNeighborhoodId: neighborhood,
+        originNeighborhoodId: neighborhoodId || undefined,
         destinationCity: destination,
         departureDate: date,
         departureTime: time,
@@ -123,16 +125,24 @@ export default function CreateTrip() {
               </select>
             </div>
 
-            {/* Current neighborhood */}
+            {/* Current neighborhood from live Locations API */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">الحي</label>
-              <input
-                type="text"
-                value={neighborhood}
-                onChange={(e) => setNeighborhood(e.target.value)}
-                placeholder="حيّك الحالي"
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none text-right"
-              />
+              <select
+                disabled={isLoadingNeighborhoods}
+                value={neighborhoodId}
+                onChange={(e) => setNeighborhoodId(e.target.value)}
+                className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-accent focus:outline-none"
+              >
+                <option value="">
+                  {isLoadingNeighborhoods ? "جاري تحميل الأحياء..." : "اختر الحي الحالي"}
+                </option>
+                {neighborhoods.map((n) => (
+                  <option key={n.id} value={n.id}>
+                    {n.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Departure Date */}
@@ -146,7 +156,8 @@ export default function CreateTrip() {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-accent focus:outline-none"
-              />
+              >
+              </input>
             </div>
 
             {/* Departure Time */}
