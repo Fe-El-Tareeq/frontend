@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Plus, Package } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { ErrandFeedCard } from "../../components/errands/ErrandFeedCard";
 import type { ErrandCardData } from "../../components/errands/ErrandFeedCard";
 import { ErrandFilterBar } from "../../components/errands/ErrandFilterBar";
+import { EmptyState } from "../../components/ui/feedback/EmptyState";
+import { ErrorState } from "../../components/ui/feedback/ErrorState";
+import { useErrands } from "../../hooks/useErrands";
 
 export default function MyErrands() {
   const navigate = useNavigate();
@@ -13,73 +16,65 @@ export default function MyErrands() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [zoneFilter, setZoneFilter] = useState("ALL");
 
-  const errands: ErrandCardData[] = [
-    {
-      id: "errand-1",
-      title: "توصيل دواء من صيدلية في رفح إلى الرمال",
-      requesterName: "فاطمة علي",
-      avatarInitials: "فع",
-      avatarBg: "bg-[#8B5CF6]",
-      from: "رفح",
-      to: "غزة - الرمال",
-      date: "23 يوليو 2024",
-      status: "PENDING",
-      statusText: "قيد الانتظار",
-      statusClass: "bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]",
-      priceNis: 5,
-    },
-    {
-      id: "errand-2",
-      title: "توصيل وثائق رسمية من ديوان الموظفين إلى الشجاعية",
-      requesterName: "خالد عبد الله",
-      avatarInitials: "خع",
-      avatarBg: "bg-[#8B5CF6]",
-      from: "غزة - تل الهوا",
-      to: "غزة - الشجاعية",
-      date: "22 يوليو 2024",
-      status: "MATCHED",
-      statusText: "تم التطابق",
-      statusClass: "bg-[#DBEAFE] text-[#1E40AF] border-[#BFDBFE]",
-      priceNis: 7,
-    },
-    {
-      id: "errand-3",
-      title: "شراء مستلزمات مدرسية من مكتبة القدس",
-      requesterName: "رنا سمير",
-      avatarInitials: "رس",
-      avatarBg: "bg-[#F36F21]",
-      from: "خان يونس",
-      to: "دير البلح",
-      date: "21 يوليو 2024",
-      status: "COMPLETED",
-      statusText: "مكتمل",
-      statusClass: "bg-[#D1FAE5] text-[#065F46] border-[#A7F3D0]",
-      priceNis: 10,
-    },
-    {
-      id: "errand-4",
-      title: "توصيل طرد ملابس وأحذية عائلية",
-      requesterName: "يوسف النجار",
-      avatarInitials: "ين",
-      avatarBg: "bg-[#0D9488]",
-      from: "شمال غزة",
-      to: "غزة - النصر",
-      date: "20 يوليو 2024",
-      status: "CANCELLED",
-      statusText: "ملغي",
-      statusClass: "bg-[#FFE4E6] text-[#BE123C] border-[#FECDD3]",
-      priceNis: 8,
-    },
-  ];
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION: Live Errands Feed
+   * Endpoint: GET /api/v1/errands
+   * Handles: Loading, Error (ErrorState with retry), Empty (EmptyState).
+   * ============================================================================
+   */
+  const { errands: backendErrands, isLoading, isError, refetch } = useErrands();
 
-  const filteredErrands = errands.filter((e) => {
-    if (searchQuery && !e.title.includes(searchQuery) && !e.requesterName.includes(searchQuery)) {
+  // Map Backend DTO directly
+  const displayErrands: ErrandCardData[] = (backendErrands || []).map((e) => ({
+    id: e.id,
+    title: e.title || e.itemsDescription || "طلب توصيل",
+    requesterName: e.requester?.fullName || "مستخدم مسجل",
+    avatarInitials: e.requester?.fullName
+      ? e.requester.fullName.slice(0, 2)
+      : "مخ",
+    avatarBg: "bg-[#123A68]",
+    from: e.neighborhood?.name ? `غزة - ${e.neighborhood.name}` : "غزة",
+    to: e.destinationKeyword || "وجهة محددة",
+    date: new Date(e.createdAt).toLocaleDateString("ar-EG", {
+      month: "short",
+      day: "numeric",
+    }),
+    status: e.status,
+    statusText:
+      e.status === "OPEN"
+        ? "مفتوح"
+        : e.status === "MATCHED"
+          ? "تم التطابق"
+          : e.status === "COMPLETED"
+            ? "مكتمل"
+            : "ملغي",
+    statusClass:
+      e.status === "OPEN"
+        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+        : e.status === "MATCHED"
+          ? "bg-blue-50 text-blue-700 border-blue-200"
+          : e.status === "COMPLETED"
+            ? "bg-slate-100 text-text-secondary border-slate-200"
+            : "bg-red-50 text-red-700 border-red-200",
+    priceNis: e.calculatedFeeNis || 5,
+  }));
+
+  const filteredErrands = displayErrands.filter((e) => {
+    if (statusFilter !== "ALL" && e.status !== statusFilter) return false;
+    if (
+      zoneFilter !== "ALL" &&
+      !e.from.includes(zoneFilter) &&
+      !e.to.includes(zoneFilter)
+    ) {
       return false;
     }
-    if (statusFilter !== "ALL" && e.status !== statusFilter) {
-      return false;
-    }
-    if (zoneFilter !== "ALL" && !e.from.includes(zoneFilter) && !e.to.includes(zoneFilter)) {
+    if (
+      searchQuery &&
+      !e.title.includes(searchQuery) &&
+      !e.from.includes(searchQuery) &&
+      !e.to.includes(searchQuery)
+    ) {
       return false;
     }
     return true;
@@ -92,24 +87,19 @@ export default function MyErrands() {
       <div className="px-4 pt-4 space-y-4">
         {/* Title Header with Action Button */}
         <div className="flex items-center justify-between">
+          <h1 className="text-xl font-black text-[#123A68]">الطلبات</h1>
+          
           <button
             type="button"
-            onClick={() => navigate("/errands/new")}
-            className="flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-[#F36F21] px-4 text-xs font-black text-white shadow-md active:scale-98 transition-all"
+            onClick={() => navigate("/create-errand")}
+            className="flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-[#F36F21] px-4 text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer"
           >
             <Plus className="h-4 w-4" />
             <span>إنشاء طلب</span>
           </button>
-
-          <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68]">الطلبات</h1>
-            <p className="text-xs text-text-secondary">
-              {filteredErrands.length} طلب متاح
-            </p>
-          </div>
         </div>
 
-        {/* Filter Card */}
+        {/* Filter & Search Bar */}
         <ErrandFilterBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -119,16 +109,44 @@ export default function MyErrands() {
           onZoneChange={setZoneFilter}
         />
 
-        {/* Errand Cards List */}
-        <div className="space-y-3.5 pt-1">
-          {filteredErrands.map((errand) => (
-            <ErrandFeedCard
-              key={errand.id}
-              errand={errand}
-              onViewDetails={(id) => navigate(`/errands/${id}`)}
-            />
-          ))}
-        </div>
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-44 w-full animate-pulse rounded-3xl bg-white border border-border"
+              />
+            ))}
+          </div>
+        ) : isError ? (
+          /* Error State with Retry */
+          <ErrorState
+            title="تعذر تحميل الطلبات"
+            message="حدث خطأ أثناء جلب قائمة الطلبات من الخادم، يرجى المحاولة مرة أخرى."
+            onRetry={() => refetch()}
+          />
+        ) : filteredErrands.length === 0 ? (
+          /* Structured Empty State from Design System */
+          <EmptyState
+            icon={<Package className="h-7 w-7 text-[#123A68]" />}
+            title="لا توجد طلبات حالياً"
+            description="لم يتم العثور على أي طلبات نشطة في الوقت الحالي. يمكنك نشر طلبك الآن وسيقوم المسافرون بمساعدتك."
+            actionText="إنشاء طلب جديد"
+            onAction={() => navigate("/create-errand")}
+          />
+        ) : (
+          /* Errands List */
+          <div className="space-y-3.5 pt-1">
+            {filteredErrands.map((errand) => (
+              <ErrandFeedCard
+                key={errand.id}
+                errand={errand}
+                onViewDetails={(id) => navigate(`/errands/${id}`)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </MobileContainer>
   );

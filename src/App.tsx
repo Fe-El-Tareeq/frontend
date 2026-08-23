@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { useAuthStore } from "./store/useAuthStore";
 
 // Lazy-loaded pages matching Figma structure
 const Home = lazy(() => import("./pages/Home"));
@@ -50,19 +51,30 @@ const PageLoadingFallback = () => (
   </div>
 );
 
+// Root entry point: Landing page by default at "/", redirected to "/home" if logged in
+function RootRoute() {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  if (isAuthenticated) {
+    return <Navigate to="/home" replace />;
+  }
+  return <LandingPage />;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
-          {/* Main Dashboard & Landing */}
-          <Route path="/" element={<Home />} />
-          <Route path="/welcome" element={<LandingPage />} />
-          <Route path="/landing" element={<LandingPage />} />
+          {/* Main Entry Point: Landing Page at "/" (redirects to "/home" if authenticated) */}
+          <Route path="/" element={<RootRoute />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/welcome" element={<Navigate to="/" replace />} />
+          <Route path="/landing" element={<Navigate to="/" replace />} />
 
           {/* Errands Domain */}
           <Route path="/errands" element={<MyErrands />} />
           <Route path="/errands/new" element={<CreateErrand />} />
+          <Route path="/create-errand" element={<CreateErrand />} />
           <Route path="/errands/:id" element={<ErrandDetail />} />
           <Route path="/errands/:id/offer" element={<SubmitOfferPage />} />
           <Route path="/errands/:id/tracking" element={<OrderTracking />} />
@@ -81,6 +93,7 @@ function App() {
           {/* Trips Domain */}
           <Route path="/trips" element={<TripsPage />} />
           <Route path="/trips/new" element={<CreateTrip />} />
+          <Route path="/trips/create" element={<CreateTrip />} />
           <Route path="/trips/:id" element={<TripDetailPage />} />
           <Route path="/trips/:id/request-space" element={<RequestSpacePage />} />
           <Route path="/trips/match-feed" element={<MatchFeed />} />

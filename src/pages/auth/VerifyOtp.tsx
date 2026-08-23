@@ -35,7 +35,7 @@ export default function VerifyOtp() {
 
   useEffect(() => {
     if (!phone) {
-      navigate("/welcome", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [phone, navigate]);
 
@@ -72,7 +72,7 @@ export default function VerifyOtp() {
           phone,
           otp: data.otp,
         });
-        navigate("/", { replace: true });
+        navigate("/home", { replace: true });
       }
     } catch (err: unknown) {
       const msg = getApiErrorMessage(

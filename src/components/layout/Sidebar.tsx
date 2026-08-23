@@ -27,7 +27,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { tokenBalance } = useWallet();
 
   const navItems = [
-    { label: "الرئيسية", path: "/", icon: Home },
+    { label: "الرئيسية", path: "/home", icon: Home },
     { label: "الرحلات", path: "/trips", icon: Car },
     { label: "الطلبات", path: "/errands", icon: Package },
     {
@@ -48,7 +48,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
 
   const handleLogout = () => {
     logout();
-    navigate("/welcome");
+    navigate("/");
     onClose();
   };
 

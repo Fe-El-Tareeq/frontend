@@ -24,10 +24,10 @@ export const LandingMenuModal: FC<LandingMenuModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[390px] rounded-3xl bg-[#F1F5F9]/95 p-4 shadow-2xl space-y-3.5 border border-white/60 animate-in zoom-in-95 duration-150"
+        className="w-full max-w-[390px] rounded-3xl bg-[#F1F5F9]/95 p-4 shadow-2xl space-y-3.5 border border-white/60 animate-in zoom-in-95 duration-150 text-right"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Logo Card */}
+        {/* 1. Logo Card */}
         <div className="flex items-center justify-center gap-2 rounded-2xl bg-white py-4 px-6 border border-slate-200/80 shadow-xs">
           <span className="text-base font-black text-[#123A68]">بطريقك</span>
           <img
@@ -37,34 +37,38 @@ export const LandingMenuModal: FC<LandingMenuModalProps> = ({
           />
         </div>
 
-        {/* Login Button */}
+        {/* 2. Login Button */}
         <button
           type="button"
           onClick={onNavigateLogin}
-          className="flex w-full items-center justify-between rounded-2xl bg-white p-4 border border-slate-200/80 shadow-xs hover:bg-slate-50 active:scale-98 transition-all text-right"
+          className="flex w-full items-center justify-between rounded-2xl bg-white p-4 border border-slate-200/80 shadow-xs hover:bg-slate-50 active:scale-98 transition-all text-right cursor-pointer"
         >
+          <span className="text-sm font-black text-[#123A68]">
+            تسجيل الدخول
+          </span>
           <ChevronLeft className="h-5 w-5 text-[#123A68]" />
-          <span className="text-sm font-black text-[#123A68]">تسجيل الدخول</span>
         </button>
 
-        {/* Register Button */}
+        {/* 3. Register Button */}
         <button
           type="button"
           onClick={onNavigateRegister}
-          className="flex w-full items-center justify-between rounded-2xl bg-white p-4 border border-slate-200/80 shadow-xs hover:bg-slate-50 active:scale-98 transition-all text-right"
+          className="flex w-full items-center justify-between rounded-2xl bg-white p-4 border border-slate-200/80 shadow-xs hover:bg-slate-50 active:scale-98 transition-all text-right cursor-pointer"
         >
+          <span className="text-sm font-black text-[#123A68]">
+            إنشاء حساب جديد
+          </span>
           <ChevronLeft className="h-5 w-5 text-[#123A68]" />
-          <span className="text-sm font-black text-[#123A68]">إنشاء حساب جديد</span>
         </button>
 
-        {/* Home Active Button (Orange) */}
+        {/* 4. Home Active Button (Orange) */}
         <button
           type="button"
           onClick={onNavigateHome}
-          className="flex w-full items-center justify-between rounded-2xl bg-[#F36F21] p-4 text-white shadow-md active:scale-98 transition-all text-right"
+          className="flex w-full items-center justify-between rounded-2xl bg-[#F36F21] p-4 text-white shadow-md active:scale-98 transition-all text-right cursor-pointer"
         >
-          <ChevronLeft className="h-5 w-5 text-white" />
           <span className="text-sm font-black text-white">الرئيسية</span>
+          <ChevronLeft className="h-5 w-5 text-white" />
         </button>
       </div>
     </div>

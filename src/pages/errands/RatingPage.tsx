@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Star, CheckCircle, ShieldCheck, Heart } from "lucide-react";
+import { Star, CheckCircle, ShieldCheck, Heart, Package } from "lucide-react";
 import { AppLayout } from "../../components/layout/AppLayout";
 import { Card } from "../../components/ui/card/Card";
 import { Button } from "../../components/ui/button/Button";
+import { EmptyState } from "../../components/ui/feedback/EmptyState";
+import { useErrandDetail } from "../../hooks/useErrands";
 
 export default function RatingPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION: Errand Details for Rating
+   * Endpoint: GET /api/v1/errands/:id
+   * ============================================================================
+   */
+  const { errand, isLoading } = useErrandDetail(id);
 
   const [ratingStars, setRatingStars] = useState<number>(5);
   const [paymentModality, setPaymentModality] = useState<"CASH" | "BARTER">(
@@ -45,10 +55,46 @@ export default function RatingPage() {
       setIsSubmitting(false);
       setIsDone(true);
       setTimeout(() => {
-        navigate("/");
+        navigate("/home");
       }, 1500);
     }, 800);
   };
+
+  if (isLoading) {
+    return (
+      <AppLayout
+        headerProps={{
+          title: "تقييم تجربة التوصيل",
+          showBack: true,
+        }}
+        showBottomNav={false}
+      >
+        <div className="space-y-4 pb-8">
+          <div className="h-48 w-full animate-pulse rounded-[20px] bg-white border border-border" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (!errand && id) {
+    return (
+      <AppLayout
+        headerProps={{
+          title: "تقييم تجربة التوصيل",
+          showBack: true,
+        }}
+        showBottomNav={false}
+      >
+        <EmptyState
+          icon={<Package className="h-7 w-7 text-[#123A68]" />}
+          title="الطلب غير موجود"
+          description="لم نتمكن من العثور على هذا الطلب لتقييمه."
+          actionText="العودة للرئيسية"
+          onAction={() => navigate("/home")}
+        />
+      </AppLayout>
+    );
+  }
 
   if (isDone) {
     return (
@@ -60,14 +106,14 @@ export default function RatingPage() {
         showBottomNav={false}
       >
         <div className="rounded-[20px] bg-white p-8 text-center border border-border shadow-md mt-12">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success-light text-success mb-4 animate-bounce">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 mb-4 animate-bounce border border-emerald-200">
             <CheckCircle className="h-8 w-8" />
           </div>
           <h2 className="text-[20px] font-extrabold text-primary">
             تم تسجيل تقييمك بنجاح!
           </h2>
           <p className="text-[13px] text-text-secondary mt-2 leading-relaxed">
-            مساهمتك في التقييم تعزز من موثوقية وأمان مجتمع "في الطريق".
+            مساهمتك في التقييم تعزز من موثوقية وأمان مجتمع "بطريقك".
           </p>
         </div>
       </AppLayout>
@@ -78,20 +124,22 @@ export default function RatingPage() {
     <AppLayout
       headerProps={{
         title: "تقييم تجربة التوصيل",
-        subtitle: `طلب رقم #${id ? id.substring(0, 8) : "84920"}`,
+        subtitle: `طلب رقم #${id.substring(0, 8)}`,
         showBack: true,
       }}
       showBottomNav={false}
     >
-      <form onSubmit={handleSubmit} className="space-y-4 pb-8">
+      <form onSubmit={handleSubmit} className="space-y-4 pb-8 text-right">
         {/* Traveler Profile Header */}
         <Card variant="elevated">
           <div className="text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white text-[20px] font-extrabold shadow-md mb-2">
-              ع
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#123A68] text-white text-[20px] font-extrabold shadow-md mb-2">
+              {errand?.requester?.fullName
+                ? errand.requester.fullName.slice(0, 1)
+                : "م"}
             </div>
             <h3 className="text-[17px] font-bold text-primary">
-              عمر خليل السقا
+              {errand?.requester?.fullName || "المسافر المسجل"}
             </h3>
             <p className="text-[12px] text-text-secondary">
               قام بتوصيل أغراضك بنجاح
@@ -104,7 +152,7 @@ export default function RatingPage() {
                   key={star}
                   type="button"
                   onClick={() => setRatingStars(star)}
-                  className="p-1 text-amber-400 hover:scale-125 transition-transform focus:outline-none"
+                  className="p-1 text-amber-400 hover:scale-125 transition-transform focus:outline-none cursor-pointer"
                 >
                   <Star
                     className={`h-8 w-8 ${
@@ -116,7 +164,7 @@ export default function RatingPage() {
                 </button>
               ))}
             </div>
-            <span className="mt-1 text-[13px] font-bold text-accent block">
+            <span className="mt-1 text-[13px] font-bold text-[#F36F21] block">
               {ratingStars === 5 && "ممتاز جداً (5/5)"}
               {ratingStars === 4 && "جيد جداً (4/5)"}
               {ratingStars === 3 && "متوسط (3/5)"}
@@ -129,7 +177,7 @@ export default function RatingPage() {
         <Card>
           <Card.Header>
             <Card.Title>تأكيد استلام وتصفية الأجر</Card.Title>
-            <ShieldCheck className="h-5 w-5 text-success" />
+            <ShieldCheck className="h-5 w-5 text-emerald-600" />
           </Card.Header>
 
           <Card.Body>
@@ -141,10 +189,10 @@ export default function RatingPage() {
               <button
                 type="button"
                 onClick={() => setPaymentModality("CASH")}
-                className={`p-3 rounded-[14px] border-2 font-bold text-[13px] transition-all ${
+                className={`p-3 rounded-[14px] border-2 font-bold text-[13px] transition-all cursor-pointer ${
                   paymentModality === "CASH"
-                    ? "border-accent bg-accent-light text-accent shadow-sm"
-                    : "border-border bg-background text-primary"
+                    ? "border-[#F36F21] bg-amber-50 text-[#F36F21] shadow-sm"
+                    : "border-slate-200 bg-[#F8FAFC] text-primary"
                 }`}
               >
                 💵 نقداً (كاش)
@@ -153,10 +201,10 @@ export default function RatingPage() {
               <button
                 type="button"
                 onClick={() => setPaymentModality("BARTER")}
-                className={`p-3 rounded-[14px] border-2 font-bold text-[13px] transition-all ${
+                className={`p-3 rounded-[14px] border-2 font-bold text-[13px] transition-all cursor-pointer ${
                   paymentModality === "BARTER"
-                    ? "border-accent bg-accent-light text-accent shadow-sm"
-                    : "border-border bg-background text-primary"
+                    ? "border-[#F36F21] bg-amber-50 text-[#F36F21] shadow-sm"
+                    : "border-slate-200 bg-[#F8FAFC] text-primary"
                 }`}
               >
                 🤝 خدمة متبادلة (مقايضة)
@@ -169,7 +217,7 @@ export default function RatingPage() {
         <Card>
           <Card.Header>
             <Card.Title>ما أكثر ما أعجبك في المسافر؟</Card.Title>
-            <Heart className="h-4 w-4 text-error" />
+            <Heart className="h-4 w-4 text-red-500" />
           </Card.Header>
 
           <Card.Body>
@@ -181,10 +229,10 @@ export default function RatingPage() {
                     key={tag}
                     type="button"
                     onClick={() => toggleTag(tag)}
-                    className={`px-3 py-1.5 rounded-pill text-[12px] font-bold border transition-all ${
+                    className={`px-3 py-1.5 rounded-full text-[12px] font-bold border transition-all cursor-pointer ${
                       isSelected
-                        ? "border-accent bg-accent text-white shadow-sm"
-                        : "border-border bg-white text-text-secondary hover:border-accent/40"
+                        ? "border-[#F36F21] bg-[#F36F21] text-white shadow-sm"
+                        : "border-slate-200 bg-white text-text-secondary hover:border-slate-300"
                     }`}
                   >
                     {isSelected ? `✓ ${tag}` : `+ ${tag}`}
@@ -208,7 +256,7 @@ export default function RatingPage() {
               onChange={(e) => setComments(e.target.value)}
               placeholder="اكتب كلمة شكر أو أي تفاصيل ترغب بمشاركتها..."
               maxLength={150}
-              className="w-full rounded-[14px] border border-border bg-[#FAFBFC] p-3 text-right text-[13px] text-primary outline-none focus:border-accent focus:bg-white resize-none"
+              className="w-full rounded-[14px] border border-slate-200 bg-[#FAFBFC] p-3 text-right text-[13px] text-primary outline-none focus:border-accent focus:bg-white resize-none"
             />
             <span className="text-[11px] text-text-muted block text-left">
               {comments.length}/150 حرف
@@ -223,7 +271,7 @@ export default function RatingPage() {
           size="md"
           fullWidth
           isLoading={isSubmitting}
-          className="mt-2"
+          className="mt-2 cursor-pointer"
         >
           إرسال التقييم
         </Button>

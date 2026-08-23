@@ -2,19 +2,23 @@ import type { FC } from "react";
 
 interface LandingFooterProps {
   onScrollTo: (sectionId: string) => void;
-  onNavigateLogin: () => void;
-  onNavigateRegister: () => void;
+  onNavigateHome: () => void;
+  onNavigateTerms: () => void;
 }
 
 export const LandingFooter: FC<LandingFooterProps> = ({
   onScrollTo,
-  onNavigateLogin,
-  onNavigateRegister,
+  onNavigateHome,
+  onNavigateTerms,
 }) => {
   return (
-    <footer className="mt-8 rounded-3xl bg-[#123A68] p-6 text-white text-center space-y-4">
-      <div className="flex items-center justify-center gap-2">
-        <span className="text-base font-black text-white">بطريقك</span>
+    <footer className="pt-6 pb-4 text-center space-y-3">
+      {/* Brand Logo & Name */}
+      <div
+        onClick={onNavigateHome}
+        className="flex items-center justify-center gap-2 cursor-pointer select-none"
+      >
+        <span className="text-base font-black text-[#123A68]">بطريقك</span>
         <img
           src="/logo.png"
           alt="بطريقك"
@@ -22,49 +26,46 @@ export const LandingFooter: FC<LandingFooterProps> = ({
         />
       </div>
 
-      <p className="text-[11.5px] text-slate-300 max-w-[280px] mx-auto leading-relaxed">
-        الشبكة التضامنية الأولى في غزة لتوصيل الاحتياجات اليومية والطرود بين الجيران والمسافرين.
+      {/* Copyright */}
+      <p className="text-[11px] text-text-muted">
+        2026 بطريقك - جميع الحقوق محفوظة
       </p>
 
-      <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-slate-300 pt-1">
+      {/* Footer Navigation Links */}
+      <div className="flex items-center justify-center gap-4 text-xs font-bold text-text-secondary pt-1">
         <button
-          onClick={() => onScrollTo("how-it-works")}
-          className="hover:text-accent transition-colors"
+          type="button"
+          onClick={onNavigateTerms}
+          className="hover:text-primary transition-colors cursor-pointer"
         >
-          كيف يعمل
+          الشروط
         </button>
         <span>•</span>
         <button
-          onClick={() => onScrollTo("why-us")}
-          className="hover:text-accent transition-colors"
+          type="button"
+          onClick={onNavigateTerms}
+          className="hover:text-primary transition-colors cursor-pointer"
         >
-          الميزات
+          الخصوصية
         </button>
         <span>•</span>
         <button
-          onClick={() => onScrollTo("faqs")}
-          className="hover:text-accent transition-colors"
+          type="button"
+          onClick={() => onScrollTo("about-platform")}
+          className="hover:text-primary transition-colors cursor-pointer"
         >
-          الأسئلة الشائعة
+          عن المنصة
         </button>
         <span>•</span>
         <button
-          onClick={onNavigateLogin}
-          className="hover:text-accent transition-colors"
+          type="button"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="hover:text-primary transition-colors cursor-pointer"
         >
-          تسجيل الدخول
+          الرئيسية
         </button>
-        <span>•</span>
-        <button
-          onClick={onNavigateRegister}
-          className="hover:text-accent transition-colors font-bold text-accent"
-        >
-          حساب جديد
-        </button>
-      </div>
-
-      <div className="border-t border-white/10 pt-3 text-[10.5px] text-slate-400">
-        جميع الحقوق محفوظة © {new Date().getFullYear()} بطريقك (في الطريق)
       </div>
     </footer>
   );

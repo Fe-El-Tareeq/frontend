@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Form } from "../../components/ui/form/Form";
+import { Alert } from "../../components/ui/feedback/Alert";
 import { useAuth } from "../../hooks/useAuth";
 import { getApiErrorMessage } from "../../utils/apiError";
 
@@ -39,7 +40,7 @@ export default function Login() {
     setErrorMessage(null);
     try {
       await login(data);
-      navigate("/", { replace: true });
+      navigate("/home", { replace: true });
     } catch (err: unknown) {
       const serverMessage = getApiErrorMessage(
         err,
@@ -65,8 +66,10 @@ export default function Login() {
       onFooterAction={() => navigate("/register-step1")}
     >
       {errorMessage && (
-        <div className="mb-4 rounded-xl bg-red-50 p-3 text-right text-xs font-bold text-red-600 border border-red-100">
-          {errorMessage}
+        <div className="mb-4">
+          <Alert variant="error" onClose={() => setErrorMessage(null)}>
+            {errorMessage}
+          </Alert>
         </div>
       )}
 
@@ -100,7 +103,7 @@ export default function Login() {
           <button
             type="button"
             onClick={() => navigate("/forgot-password")}
-            className="text-xs font-bold text-[#123A68] hover:text-[#F36F21] transition-colors"
+            className="text-xs font-bold text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
           >
             نسيت كلمة المرور؟
           </button>
@@ -110,7 +113,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={isLoggingIn}
-          className="mt-3 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-60"
+          className="mt-3 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-60 cursor-pointer"
         >
           {isLoggingIn ? "جاري التحقق..." : "تسجيل الدخول"}
         </button>

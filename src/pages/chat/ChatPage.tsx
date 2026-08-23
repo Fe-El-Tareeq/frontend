@@ -9,6 +9,19 @@ import { ChatBottomInput } from "../../components/chat/ChatBottomInput";
 export default function ChatPage() {
   const navigate = useNavigate();
   const [inputText, setInputText] = useState("");
+
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION PLACEHOLDER: Real-time Messages & Chat Stream
+   * Pending Endpoints:
+   * - GET  /api/v1/messages/conversations/:id      (Fetch chat history)
+   * - POST /api/v1/messages/conversations/:id/send (Post new message)
+   * - WS   /ws/chat                                (Real-time live WebSocket)
+   *
+   * Once backend chat endpoints are live, connect using useChat(id):
+   * const { messages: liveMessages, sendMessage, isSending } = useChat(id);
+   * ============================================================================
+   */
   const [messages, setMessages] = useState<MessageData[]>([
     {
       id: 1,
@@ -79,29 +92,16 @@ export default function ChatPage() {
 
   return (
     <MobileContainer className="bg-[#F8FAFC] flex flex-col justify-between min-h-screen">
-      {/* Header */}
+      {/* Header: RTL Order (Right: Back Button + Avatar + Name | Left: Actions) */}
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between bg-white px-4 border-b border-border shadow-2xs">
-        <div className="flex items-center gap-2">
-          <button className="p-1.5 text-text-muted hover:text-primary">
-            <MoreHorizontal className="h-5 w-5" />
-          </button>
-          <a
-            href="tel:0591234567"
-            className="p-1.5 text-text-muted hover:text-primary"
-          >
-            <Phone className="h-5 w-5" />
-          </a>
-        </div>
-
+        {/* Right side in RTL: Back chevron + Avatar + User info */}
         <div className="flex items-center gap-3">
-          <div className="text-right">
-            <h2 className="text-xs font-black text-primary leading-tight">
-              أحمد خالد
-            </h2>
-            <span className="text-[10px] text-emerald-600 font-bold">
-              متصل الآن
-            </span>
-          </div>
+          <button
+            onClick={() => navigate(-1)}
+            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
 
           <div className="relative">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F36F21] text-xs font-black text-white">
@@ -110,11 +110,26 @@ export default function ChatPage() {
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-white" />
           </div>
 
-          <button
-            onClick={() => navigate(-1)}
-            className="p-1 text-primary hover:text-accent transition-colors"
+          <div className="text-right">
+            <h2 className="text-xs font-black text-primary leading-tight">
+              أحمد خالد
+            </h2>
+            <span className="text-[10px] text-emerald-600 font-bold">
+              متصل الآن
+            </span>
+          </div>
+        </div>
+
+        {/* Left side in RTL: Phone and More options */}
+        <div className="flex items-center gap-2">
+          <a
+            href="tel:0591234567"
+            className="p-1.5 text-text-muted hover:text-primary transition-colors"
           >
-            <ChevronRight className="h-6 w-6" />
+            <Phone className="h-5 w-5" />
+          </a>
+          <button className="p-1.5 text-text-muted hover:text-primary transition-colors cursor-pointer">
+            <MoreHorizontal className="h-5 w-5" />
           </button>
         </div>
       </header>

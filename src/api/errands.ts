@@ -47,4 +47,19 @@ export const errandsApi = {
     );
     return res.data;
   },
+
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION PLACEHOLDER: Submit Delivery Offer on Errand
+   * Endpoint: POST /api/v1/errands/:id/offers
+   * Payload: { priceNis: number; departureTime: string; notes?: string; audioMemoUrl?: string }
+   * ============================================================================
+   */
+  submitOffer: async (
+    errandId: string,
+    payload: { priceNis: number; departureTime: string; notes?: string }
+  ) => {
+    const res = await apiClient.post(ENDPOINTS.ERRANDS.OFFERS(errandId), payload);
+    return res.data;
+  },
 };

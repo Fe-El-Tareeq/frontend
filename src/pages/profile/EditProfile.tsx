@@ -6,9 +6,9 @@ import { z } from "zod";
 import { AppLayout } from "../../components/layout/AppLayout";
 import { Form } from "../../components/ui/form/Form";
 import { Button } from "../../components/ui/button/Button";
+import { Alert } from "../../components/ui/feedback/Alert";
 import { useAuth } from "../../hooks/useAuth";
 import { useLocations } from "../../hooks/useLocations";
-
 import { getApiErrorMessage } from "../../utils/apiError";
 
 const editProfileSchema = z.object({
@@ -66,15 +66,15 @@ export default function EditProfile() {
     >
       <div className="space-y-4 pb-8">
         {successMessage && (
-          <div className="rounded-[14px] bg-success-light p-3.5 text-right text-[13px] font-bold text-success border border-success/20">
+          <Alert variant="success">
             تم حفظ التعديلات بنجاح!
-          </div>
+          </Alert>
         )}
 
         {errorMessage && (
-          <div className="rounded-[12px] bg-error-light p-3 text-right text-[13px] font-medium text-error border border-error/20">
+          <Alert variant="error" onClose={() => setErrorMessage(null)}>
             {errorMessage}
-          </div>
+          </Alert>
         )}
 
         <div className="rounded-[20px] bg-white p-6 border border-border shadow-sm">

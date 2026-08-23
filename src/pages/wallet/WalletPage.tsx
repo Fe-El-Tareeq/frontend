@@ -1,75 +1,74 @@
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Plus, Wallet } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { useAuth } from "../../hooks/useAuth";
-import { useWallet } from "../../hooks/useWallet";
+import { useWallet, useWalletTransactions } from "../../hooks/useWallet";
 import { WalletBalanceHero } from "../../components/wallet/WalletBalanceHero";
 import { WalletStatsSummary } from "../../components/wallet/WalletStatsSummary";
 import { WalletTransactionsList } from "../../components/wallet/WalletTransactionsList";
 import type { TransactionRowData } from "../../components/wallet/WalletTransactionsList";
+import { EmptyState } from "../../components/ui/feedback/EmptyState";
+import { ErrorState } from "../../components/ui/feedback/ErrorState";
+import type { WalletTransaction } from "../../types";
 
 export default function WalletPage() {
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { tokenBalance } = useWallet();
+  const {
+    tokenBalance,
+    isLoadingWallet,
+    isErrorWallet,
+    refetchWallet,
+  } = useWallet();
 
-  const transactions: TransactionRowData[] = [
-    {
-      id: "tx-1",
-      date: "23 يوليو 2024",
-      type: "نشر طلب",
-      amount: "-1",
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION: Wallet Balance & Transactions History
+   * Endpoints:
+   * - GET /api/v1/wallet
+   * - GET /api/v1/wallet/transactions
+   * Handles: Loading, Error (ErrorState with retry), Empty (EmptyState).
+   * ============================================================================
+   */
+  const {
+    transactions: backendTransactions,
+    isLoadingTransactions,
+    isErrorTransactions,
+    refetchTransactions,
+  } = useWalletTransactions();
+
+  // Map Backend transactions directly from API
+  const displayTransactions: TransactionRowData[] = (backendTransactions || []).map(
+    (tx: WalletTransaction) => ({
+      id: tx.id,
+      date: new Date(tx.createdAt).toLocaleDateString("ar-EG", {
+        month: "short",
+        day: "numeric",
+      }),
+      type:
+        tx.transactionType === "TOKEN_TOP_UP" ||
+        tx.transactionType === "SIGNUP_BONUS"
+          ? "شراء باقة توكنز"
+          : "نشر طلب",
+      amount:
+        tx.tokenAmount > 0
+          ? `+${tx.tokenAmount}`
+          : `${tx.tokenAmount}`,
       status: "COMPLETED",
       statusText: "مكتمل",
       statusClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    },
-    {
-      id: "tx-2",
-      date: "22 يوليو 2024",
-      type: "شراء باقة 20 توكن",
-      amount: "+20",
-      status: "COMPLETED",
-      statusText: "مكتمل",
-      statusClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    },
-    {
-      id: "tx-3",
-      date: "20 يوليو 2024",
-      type: "نشر طلب",
-      amount: "-1",
-      status: "COMPLETED",
-      statusText: "مكتمل",
-      statusClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    },
-    {
-      id: "tx-4",
-      date: "18 يوليو 2024",
-      type: "نشر طلب",
-      amount: "-1",
-      status: "COMPLETED",
-      statusText: "مكتمل",
-      statusClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    },
-    {
-      id: "tx-5",
-      date: "15 يوليو 2024",
-      type: "شراء باقة 50 توكن",
-      amount: "+50",
-      status: "COMPLETED",
-      statusText: "مكتمل",
-      statusClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    },
-    {
-      id: "tx-6",
-      date: "10 يوليو 2024",
-      type: "نشر طلب",
-      amount: "-1",
-      status: "FAILED",
-      statusText: "فشلت",
-      statusClass: "bg-red-50 text-red-700 border-red-200",
-    },
-  ];
+    })
+  );
+
+  // Compute live totals from real transactions
+  const totalPurchased = (backendTransactions || [])
+    .filter((tx) => tx.tokenAmount > 0)
+    .reduce((acc, tx) => acc + tx.tokenAmount, 0);
+
+  const totalSpent = (backendTransactions || [])
+    .filter((tx) => tx.tokenAmount < 0)
+    .reduce((acc, tx) => acc + Math.abs(tx.tokenAmount), 0);
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-16 text-right">
@@ -81,7 +80,7 @@ export default function WalletPage() {
           <button
             type="button"
             onClick={() => navigate("/wallet/topup-qr")}
-            className="flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-[#F36F21] px-4 text-xs font-black text-white shadow-md active:scale-98 transition-all"
+            className="flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-[#F36F21] px-4 text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer"
           >
             <Plus className="h-4 w-4" />
             <span>شراء توكنز</span>
@@ -92,15 +91,41 @@ export default function WalletPage() {
 
         {/* Main Navy Balance Card */}
         <WalletBalanceHero
-          tokenBalance={tokenBalance || 47}
-          userName={profile?.fullName || "هديل محمد"}
+          tokenBalance={tokenBalance ?? 0}
+          userName={profile?.fullName || "المستخدم"}
         />
 
-        {/* Two Mini Summary Cards */}
-        <WalletStatsSummary totalPurchased={70} totalSpent={23} />
+        {/* Two Mini Summary Cards with Live Totals */}
+        <WalletStatsSummary
+          totalPurchased={totalPurchased}
+          totalSpent={totalSpent}
+        />
 
         {/* Transactions Table Section */}
-        <WalletTransactionsList transactions={transactions} />
+        {isLoadingWallet || isLoadingTransactions ? (
+          <div className="h-48 w-full animate-pulse rounded-3xl bg-white border border-border" />
+        ) : isErrorWallet || isErrorTransactions ? (
+          /* Error State with Retry */
+          <ErrorState
+            title="تعذر تحميل بيانات المحفظة"
+            message="حدث خطأ أثناء جلب سجل المعاملات، يرجى المحاولة مرة أخرى."
+            onRetry={() => {
+              refetchWallet();
+              refetchTransactions();
+            }}
+          />
+        ) : displayTransactions.length === 0 ? (
+          /* Structured Empty State from Design System */
+          <EmptyState
+            icon={<Wallet className="h-7 w-7 text-[#123A68]" />}
+            title="لا توجد معاملات سابقة"
+            description="لم تقم بإجراء أي عمليات شحن أو استهلاك للتوكنز حتى الآن. رصيدك الحالي متاح للاستخدام فوراً."
+            actionText="شراء توكنز الآن"
+            onAction={() => navigate("/wallet/topup-qr")}
+          />
+        ) : (
+          <WalletTransactionsList transactions={displayTransactions} />
+        )}
       </div>
     </MobileContainer>
   );

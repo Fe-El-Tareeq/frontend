@@ -22,7 +22,7 @@ export default function TripDetailPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
-            className="p-1 text-primary hover:text-accent transition-colors"
+            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -37,34 +37,50 @@ export default function TripDetailPage() {
         {/* Orange Hero Route Banner (Figma exact card) */}
         <div className="relative overflow-hidden rounded-3xl bg-[#F36F21] p-5 text-white shadow-md space-y-4">
           <div className="flex items-center justify-between text-xs">
+            <span className="text-[11px] text-white/90">منذ ساعتين</span>
             <span className="rounded-full bg-white px-3 py-1 text-[10.5px] font-black text-[#F36F21]">
               منشورة
             </span>
-            <span className="text-[11px] text-white/90">منذ ساعتين</span>
           </div>
 
+          {/* RTL Route: From on RIGHT (1st child), arrow, To on LEFT (3rd child) */}
           <div className="flex items-center justify-between pt-1">
-            <div className="text-right">
-              <span className="text-[11px] text-white/80 block">إلى</span>
-              <span className="text-2xl font-black text-white">رفح</span>
-            </div>
-
-            <ArrowLeft className="h-6 w-6 text-white/90" />
-
             <div className="text-right">
               <span className="text-[11px] text-white/80 block">من</span>
               <span className="text-2xl font-black text-white">غزة - الرمال</span>
             </div>
+
+            <ArrowLeft className="h-6 w-6 text-white/90" />
+
+            <div className="text-left">
+              <span className="text-[11px] text-white/80 block">إلى</span>
+              <span className="text-2xl font-black text-white">رفح</span>
+            </div>
           </div>
         </div>
 
-        {/* Traveler Profile Card */}
+        {/* Traveler Profile Card: RTL Order (Traveler info on RIGHT, Action buttons on LEFT) */}
         <div className="flex items-center justify-between rounded-3xl bg-white p-4 border border-border shadow-xs">
+          {/* Right side in RTL: Avatar + Name & Rating */}
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white">
+              مر
+            </div>
+
+            <div className="text-right">
+              <h3 className="text-sm font-black text-primary">محمد أبو ريدة</h3>
+              <p className="text-[11px] text-text-muted mt-0.5">
+                32 رحلة سابقة • ⭐ 4.8
+              </p>
+            </div>
+          </div>
+
+          {/* Left side in RTL: Phone and Message buttons */}
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => navigate(`/chat/${id || "trip-1"}`)}
-              className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-primary hover:text-accent hover:border-accent shadow-2xs transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-primary hover:text-accent hover:border-accent shadow-2xs transition-colors cursor-pointer"
             >
               <MessageSquare className="h-4.5 w-4.5" />
             </button>
@@ -76,24 +92,11 @@ export default function TripDetailPage() {
               <Phone className="h-4.5 w-4.5" />
             </a>
           </div>
-
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <h3 className="text-sm font-black text-primary">محمد أبو ريدة</h3>
-              <p className="text-[11px] text-text-muted mt-0.5">
-                32 رحلة سابقة • ⭐ 4.8
-              </p>
-            </div>
-
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white">
-              مر
-            </div>
-          </div>
         </div>
 
         {/* Detail Cards List */}
         <div className="space-y-2.5">
-          <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs">
+          <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs text-right">
             <span className="text-[10.5px] text-text-muted block">
               تاريخ المغادرة
             </span>
@@ -102,7 +105,7 @@ export default function TripDetailPage() {
             </span>
           </div>
 
-          <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs">
+          <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs text-right">
             <span className="text-[10.5px] text-text-muted block">
               وقت المغادرة
             </span>
@@ -111,14 +114,14 @@ export default function TripDetailPage() {
             </span>
           </div>
 
-          <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs">
+          <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs text-right">
             <span className="text-[10.5px] text-text-muted block">الحي</span>
             <span className="text-xs font-black text-primary mt-0.5 block">
               حي الشيخ رضوان
             </span>
           </div>
 
-          <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs">
+          <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs text-right">
             <span className="text-[10.5px] text-text-muted block">
               السعة المتاحة للأغراض
             </span>
@@ -129,7 +132,7 @@ export default function TripDetailPage() {
         </div>
 
         {/* Additional notes */}
-        <div className="space-y-1 pt-1">
+        <div className="space-y-1 pt-1 text-right">
           <span className="text-[11px] font-bold text-text-muted block">
             ملاحظات إضافية
           </span>
@@ -145,14 +148,14 @@ export default function TripDetailPage() {
           <button
             type="button"
             onClick={() => navigate(`/trips/${id || "trip-1"}/request-space`)}
-            className="flex h-12 flex-1 items-center justify-center rounded-2xl bg-[#F36F21] text-xs font-black text-white shadow-md active:scale-98 transition-all"
+            className="flex h-12 flex-1 items-center justify-center rounded-2xl bg-[#F36F21] text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer"
           >
             اطلب مكانك بالرحلة
           </button>
 
           <button
             type="button"
-            className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-primary hover:border-accent hover:text-accent shadow-xs active:scale-95 transition-all"
+            className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-primary hover:border-accent hover:text-accent shadow-xs active:scale-95 transition-all cursor-pointer"
           >
             <Share2 className="h-5 w-5" />
           </button>

@@ -5,17 +5,17 @@ interface ProfileStatsGridProps {
   tokenBalance: number;
   tripsCount?: number;
   errandsCount?: number;
-  rating?: number;
+  rating?: number | string;
 }
 
 export const ProfileStatsGrid: FC<ProfileStatsGridProps> = ({
   tokenBalance,
-  tripsCount = 12,
-  errandsCount = 23,
-  rating = 4.8,
+  tripsCount = 0,
+  errandsCount = 0,
+  rating = "5.0",
 }) => {
   return (
-    <div className="rounded-3xl bg-white p-5 border border-border shadow-xs space-y-3">
+    <div className="rounded-3xl bg-white p-5 border border-border shadow-xs space-y-3 text-right">
       <h3 className="text-sm font-black text-[#123A68]">الإحصائيات</h3>
 
       <div className="grid grid-cols-2 gap-3">

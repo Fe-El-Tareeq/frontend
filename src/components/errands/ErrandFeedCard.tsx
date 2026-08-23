@@ -26,25 +26,27 @@ export const ErrandFeedCard: FC<ErrandFeedCardProps> = ({
   onViewDetails,
 }) => {
   return (
-    <div className="rounded-3xl bg-white p-4.5 border border-border shadow-xs space-y-3.5">
-      {/* Top Row: Status badge on left, Requester on right */}
+    <div className="rounded-3xl bg-white p-4.5 border border-border shadow-xs space-y-3.5 text-right">
+      {/* Top Row: Requester on RIGHT (1st child in RTL), Status Badge on LEFT (2nd child in RTL) */}
       <div className="flex items-center justify-between">
-        <span
-          className={`rounded-full px-3 py-1 text-[10.5px] font-bold border ${errand.statusClass}`}
-        >
-          {errand.statusText}
-        </span>
-
+        {/* Right side in RTL: Avatar + Name */}
         <div className="flex items-center gap-2.5">
-          <span className="text-xs font-black text-primary">
-            {errand.requesterName}
-          </span>
           <div
             className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-black text-white ${errand.avatarBg}`}
           >
             {errand.avatarInitials}
           </div>
+          <span className="text-xs font-black text-primary">
+            {errand.requesterName}
+          </span>
         </div>
+
+        {/* Left side in RTL: Status Badge */}
+        <span
+          className={`rounded-full px-3 py-1 text-[10.5px] font-bold border ${errand.statusClass}`}
+        >
+          {errand.statusText}
+        </span>
       </div>
 
       {/* Description Title */}
@@ -55,12 +57,12 @@ export const ErrandFeedCard: FC<ErrandFeedCardProps> = ({
       {/* Route Details Box */}
       <div className="flex items-center justify-between rounded-2xl bg-[#F8FAFC] p-3 text-xs font-bold text-primary border border-slate-200">
         <div className="flex items-center gap-1.5">
-          <MapPin className="h-4 w-4 text-[#F36F21]" />
-          <span>إلى: {errand.to}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
           <MapPin className="h-4 w-4 text-[#123A68]" />
           <span>من: {errand.from}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <MapPin className="h-4 w-4 text-[#F36F21]" />
+          <span>إلى: {errand.to}</span>
         </div>
       </div>
 
@@ -73,7 +75,7 @@ export const ErrandFeedCard: FC<ErrandFeedCardProps> = ({
           </span>
         </div>
 
-        <div className="flex items-center gap-1 text-[11px] text-text-secondary">
+        <div className="flex items-center gap-1.5 text-[11px] text-text-secondary">
           <Calendar className="h-3.5 w-3.5 text-text-muted" />
           <span>{errand.date}</span>
         </div>
@@ -83,7 +85,7 @@ export const ErrandFeedCard: FC<ErrandFeedCardProps> = ({
       <button
         type="button"
         onClick={() => onViewDetails(errand.id)}
-        className="flex h-11 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all"
+        className="flex h-11 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer"
       >
         عرض تفاصيل الطلب
       </button>

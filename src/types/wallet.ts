@@ -39,7 +39,7 @@ export interface WalletTransactionsData {
 export interface GenerateQRRequestDTO {
   token_package_id: string;
   amount_nis: number;
-  payment_provider: "JAWWAL_PAY" | "PALPAY";
+  payment_provider: "JAWWAL_PAY";
 }
 
 export interface GenerateQRResponseDTO {

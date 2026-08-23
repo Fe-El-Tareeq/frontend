@@ -3,7 +3,8 @@ import { Header } from "../components/layout/Header";
 import { MobileContainer } from "../components/layout/MobileContainer";
 import { useAuth } from "../hooks/useAuth";
 import { useWallet } from "../hooks/useWallet";
-import LandingPage from "./LandingPage";
+import { useTrips } from "../hooks/useTrips";
+import { useErrands } from "../hooks/useErrands";
 import { HomeGreeting } from "../components/home/HomeGreeting";
 import { HomeStatsGrid } from "../components/home/HomeStatsGrid";
 import { HomeActiveTrips } from "../components/home/HomeActiveTrips";
@@ -12,93 +13,101 @@ import { HomeFloatingActions } from "../components/home/HomeFloatingActions";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { isAuthenticated, profile } = useAuth();
+  const { profile } = useAuth();
   const { tokenBalance } = useWallet();
+  const { trips: backendTrips } = useTrips();
+  const { errands: backendErrands } = useErrands();
 
-  // If visitor is unauthenticated, render the Landing Page
-  if (!isAuthenticated) {
-    return <LandingPage />;
-  }
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION:
+   * 1. Errands (Endpoint GET /api/v1/errands exists):
+   *    Live data is retrieved directly. If empty ([]), EmptyState is displayed.
+   * 2. Trips (Endpoint pending backend implementation):
+   *    Static preview data is used until backend endpoint is deployed.
+   * ============================================================================
+   */
 
-  // Active trips near user
-  const nearbyTrips = [
+  // Live Errands directly from Backend API (No fake fallback)
+  const displayErrands = (backendErrands || []).slice(0, 3).map((e) => ({
+    id: e.id,
+    title: e.title || e.itemsDescription || "طلب توصيل",
+    neighborhood: e.neighborhood?.name
+      ? `غزة - ${e.neighborhood.name}`
+      : "غزة",
+    date: new Date(e.createdAt).toLocaleDateString("ar-EG", {
+      month: "short",
+      day: "numeric",
+    }),
+    status: e.status,
+    statusText:
+      e.status === "OPEN"
+        ? "مفتوح"
+        : e.status === "MATCHED"
+        ? "تم التطابق"
+        : "مكتمل",
+    statusBg:
+      e.status === "OPEN"
+        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+        : "bg-blue-50 text-blue-700 border-blue-200",
+    avatarInitials: e.requester?.fullName
+      ? e.requester.fullName.slice(0, 2)
+      : "سخ",
+    avatarBg: "bg-[#123A68]",
+  }));
+
+  // Static preview trips while backend endpoint GET /api/v1/trips is pending
+  const staticFallbackTrips = [
     {
       id: "trip-1",
-      travelerName: "أحمد خالد",
-      avatarInitials: "أخ",
-      avatarBg: "bg-[#F36F21]",
-      from: "رفح",
-      to: "غزة - الرمال",
-      rating: 4.9,
-      time: "10:00 ص",
+      travelerName: "محمد أبو ريدة",
+      avatarInitials: "مر",
+      avatarBg: "bg-[#123A68]",
+      from: "غزة - الرمال",
+      to: "رفح",
+      rating: 4.8,
+      time: "9:30 صباحاً",
     },
     {
       id: "trip-2",
-      travelerName: "سارة عمر",
-      avatarInitials: "سع",
-      avatarBg: "bg-[#E11D48]",
-      from: "غزة - الشجاعية",
+      travelerName: "خالد السعدي",
+      avatarInitials: "خس",
+      avatarBg: "bg-[#F36F21]",
+      from: "دير البلح",
       to: "خان يونس",
-      rating: 4.7,
-      time: "2:00 م",
-    },
-    {
-      id: "trip-3",
-      travelerName: "محمد يوسف",
-      avatarInitials: "مي",
-      avatarBg: "bg-[#0D9488]",
-      from: "بيت لاهيا",
-      to: "دير البلح",
-      rating: 5.0,
-      time: "9:00 ص",
+      rating: 4.9,
+      time: "1:00 ظهراً",
     },
   ];
 
-  // Nearby errands
-  const nearbyErrands = [
-    {
-      id: "errand-1",
-      title: "توصيل دواء من صيدلية في رفح إلى...",
-      neighborhood: "الرمال",
-      date: "23 يوليو",
-      status: "PENDING",
-      statusText: "قيد الانتظار",
-      statusBg: "bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]",
-      avatarInitials: "فع",
-      avatarBg: "bg-[#8B5CF6]",
-    },
-    {
-      id: "errand-2",
-      title: "توصيل وثائق رسمية من ديوان الموظفين...",
-      neighborhood: "الشجاعية",
-      date: "22 يوليو",
-      status: "MATCHED",
-      statusText: "تم التطابق",
-      statusBg: "bg-[#DBEAFE] text-[#1E40AF] border-[#BFDBFE]",
-      avatarInitials: "خع",
-      avatarBg: "bg-[#8B5CF6]",
-    },
-    {
-      id: "errand-3",
-      title: "شراء مستلزمات مدرسية من محلات د...",
-      neighborhood: "بيت لاهيا",
-      date: "21 يوليو",
-      status: "COMPLETED",
-      statusText: "مكتمل",
-      statusBg: "bg-[#D1FAE5] text-[#065F46] border-[#A7F3D0]",
-      avatarInitials: "رس",
-      avatarBg: "bg-[#F36F21]",
-    },
-  ];
+  const displayTrips =
+    backendTrips && backendTrips.length > 0
+      ? backendTrips.slice(0, 3).map((t) => ({
+          id: t.id,
+          travelerName: t.traveler?.fullName || "محمد أبو ريدة",
+          avatarInitials: t.traveler?.fullName
+            ? t.traveler.fullName.slice(0, 2)
+            : "مر",
+          avatarBg: "bg-[#123A68]",
+          from: t.originNeighborhood
+            ? `${t.originCity} - ${t.originNeighborhood}`
+            : t.originCity,
+          to: t.destinationNeighborhood
+            ? `${t.destinationCity} - ${t.destinationNeighborhood}`
+            : t.destinationCity,
+          rating: t.traveler?.trustScore ? Number((t.traveler.trustScore / 20).toFixed(1)) : 4.8,
+          time: t.departureTime || "9:30 صباحاً",
+        }))
+      : staticFallbackTrips;
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
       <Header />
 
       <div className="px-4 pt-4 space-y-4">
-        {/* 1. Greeting */}
+        {/* User Greeting */}
         <HomeGreeting
-          userName={profile?.fullName || "هديل محمد"}
+          userName={profile?.fullName || "المستخدم"}
           neighborhoodName={
             profile?.neighborhood?.name
               ? `غزة - ${profile.neighborhood.name}`
@@ -106,11 +115,11 @@ export default function Home() {
           }
         />
 
-        {/* 2. Four Stats Overview Cards */}
+        {/* 4 Stats Cards */}
         <HomeStatsGrid
-          tokenBalance={tokenBalance || 47}
-          activeTripsCount={3}
-          myErrandsCount={2}
+          tokenBalance={tokenBalance ?? 0}
+          activeTripsCount={displayTrips.length}
+          myErrandsCount={displayErrands.length}
           newMessagesCount={0}
           onNavigateWallet={() => navigate("/wallet")}
           onNavigateTrips={() => navigate("/trips")}
@@ -118,25 +127,25 @@ export default function Home() {
           onNavigateMessages={() => navigate("/messages")}
         />
 
-        {/* 3. Available Trips */}
+        {/* Available Trips (Static placeholder until trips endpoint is live) */}
         <HomeActiveTrips
-          trips={nearbyTrips}
+          trips={displayTrips}
           onViewAll={() => navigate("/trips")}
           onSelectTrip={(id) => navigate(`/trips/${id}`)}
         />
 
-        {/* 4. Nearby Errands */}
+        {/* Nearby Errands (Live data from backend, EmptyState if empty) */}
         <HomeNearbyErrands
-          errands={nearbyErrands}
+          errands={displayErrands}
           onViewAll={() => navigate("/errands")}
           onSelectErrand={(id) => navigate(`/errands/${id}`)}
         />
       </div>
 
-      {/* 5. Sticky Bottom Action Buttons */}
+      {/* Floating Action Buttons */}
       <HomeFloatingActions
-        onCreateErrand={() => navigate("/errands/new")}
-        onCreateTrip={() => navigate("/trips/new")}
+        onCreateErrand={() => navigate("/create-errand")}
+        onCreateTrip={() => navigate("/trips/create")}
       />
     </MobileContainer>
   );

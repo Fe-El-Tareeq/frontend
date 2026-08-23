@@ -9,8 +9,8 @@ export const BottomNav = () => {
   const navItems = [
     {
       id: "home",
-      label: "الطلبات",
-      path: "/",
+      label: "الرئيسية",
+      path: "/home",
       icon: Home,
     },
     {
@@ -22,7 +22,7 @@ export const BottomNav = () => {
     {
       id: "create",
       label: "طلب جديد",
-      path: "/errands/new",
+      path: "/create-errand",
       isCenterAction: true,
       icon: Plus,
     },
@@ -45,8 +45,8 @@ export const BottomNav = () => {
       <div className="flex h-16.5 items-center justify-around px-2">
         {navItems.map((item) => {
           const isActive =
-            item.path === "/"
-              ? location.pathname === "/" || location.pathname === "/errands"
+            item.path === "/home"
+              ? location.pathname === "/home" || location.pathname === "/"
               : location.pathname.startsWith(item.path);
 
           const Icon = item.icon;

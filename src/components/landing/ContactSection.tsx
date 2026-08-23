@@ -1,99 +1,146 @@
 import { useState } from "react";
 import type { FC } from "react";
-import { Send, Phone, Mail, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Send } from "lucide-react";
 
 export const ContactSection: FC = () => {
+  const [name, setName] = useState("");
+  const [contactInfo, setContactInfo] = useState("");
+  const [message, setMessage] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
+    setName("");
+    setContactInfo("");
+    setMessage("");
     setTimeout(() => setIsSubmitted(false), 3000);
   };
 
   return (
-    <section id="contact" className="space-y-4 pt-2">
-      <div className="text-center space-y-1">
-        <h2 className="text-base font-black text-[#123A68]">تواصل معنا</h2>
-        <p className="text-xs text-text-secondary">
-          نحن هنا للإجابة عن أسئلتك ومساعدتك دائماً
+    <section id="contact" className="space-y-4 pt-4 text-right">
+      {/* Section Header */}
+      <div className="space-y-1">
+        <span className="text-xs font-black text-[#F36F21] block">
+          تواصل معنا
+        </span>
+        <h2 className="text-2xl font-black text-[#123A68]">
+          نحن هنا لمساعدتك
+        </h2>
+        <p className="text-xs text-text-secondary leading-relaxed">
+          فريق الدعم متاح للإجابة على استفساراتك ومساعدتك على مدار الساعة.
         </p>
       </div>
 
-      <div className="rounded-3xl bg-white p-5 border border-border shadow-xs space-y-4 text-right">
-        {/* Contact Info Badges */}
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-slate-50 p-2.5 border border-slate-200/80">
-            <Phone className="h-4 w-4 text-primary mx-auto mb-1" />
-            <span className="text-[10px] font-bold text-text-secondary block" dir="ltr">
-              059X-XXX-XXX
-            </span>
+      {/* 3 Contact Info Rows */}
+      <div className="space-y-3 pt-1">
+        {/* Email */}
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white">
+            <Mail className="h-4.5 w-4.5" />
           </div>
-          <div className="rounded-2xl bg-slate-50 p-2.5 border border-slate-200/80">
-            <Mail className="h-4 w-4 text-accent mx-auto mb-1" />
-            <span className="text-[10px] font-bold text-text-secondary block">
-              الدعم الفني
+          <div>
+            <span className="text-[11px] text-text-muted block">
+              البريد الإلكتروني
             </span>
-          </div>
-          <div className="rounded-2xl bg-slate-50 p-2.5 border border-slate-200/80">
-            <Globe className="h-4 w-4 text-emerald-600 mx-auto mb-1" />
-            <span className="text-[10px] font-bold text-text-secondary block">
-              غزة، فلسطين
+            <span className="text-xs font-bold text-[#123A68]">
+              support@bitareeqak.ps
             </span>
           </div>
         </div>
 
-        {/* Message Form */}
-        <form onSubmit={handleSubmit} className="space-y-2.5">
-          {isSubmitted && (
-            <div className="rounded-xl bg-emerald-50 p-2.5 text-center text-xs font-bold text-emerald-700 border border-emerald-200">
-              شكراً لتواصلك! تم استلام رسالتك وسنرد قريباً.
-            </div>
-          )}
-
+        {/* WhatsApp / Phone */}
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white">
+            <Phone className="h-4.5 w-4.5" />
+          </div>
           <div>
-            <label className="text-[11px] font-bold text-text-muted block mb-1">
-              الاسم
+            <span className="text-[11px] text-text-muted block">
+              واتساب والدعم الفني
+            </span>
+            <span className="text-xs font-bold text-[#123A68]" dir="ltr">
+              +970 59 123 4567
+            </span>
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white">
+            <MapPin className="h-4.5 w-4.5" />
+          </div>
+          <div>
+            <span className="text-[11px] text-text-muted block">المقر</span>
+            <span className="text-xs font-bold text-[#123A68]">
+              غزة، فلسطين
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Message Form Card */}
+      <div className="rounded-3xl bg-white p-5 border border-slate-200/80 shadow-xs space-y-3.5">
+        <h3 className="text-sm font-black text-[#123A68]">أرسل رسالة</h3>
+
+        {isSubmitted && (
+          <div className="rounded-2xl bg-emerald-50 p-3 text-center text-xs font-bold text-emerald-700 border border-emerald-200 animate-in fade-in">
+            تم إرسال رسالتك بنجاح! سنرد عليك في أقرب وقت.
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {/* Name */}
+          <div className="space-y-1">
+            <label className="text-[11px] font-bold text-text-muted block">
+              الاسم الكامل
             </label>
             <input
               type="text"
               required
-              placeholder="اسمك الكريم"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="أدخل اسمك"
               className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
             />
           </div>
 
-          <div>
-            <label className="text-[11px] font-bold text-text-muted block mb-1">
-              رقم الهاتف
+          {/* Contact info */}
+          <div className="space-y-1">
+            <label className="text-[11px] font-bold text-text-muted block">
+              البريد أو الهاتف
             </label>
             <input
-              type="tel"
+              type="text"
               required
-              placeholder="059X-XXX-XXX"
-              dir="ltr"
-              className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary text-right placeholder:text-text-muted focus:border-accent focus:outline-none"
+              value={contactInfo}
+              onChange={(e) => setContactInfo(e.target.value)}
+              placeholder="your@email.com / 059..."
+              className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
             />
           </div>
 
-          <div>
-            <label className="text-[11px] font-bold text-text-muted block mb-1">
+          {/* Message */}
+          <div className="space-y-1">
+            <label className="text-[11px] font-bold text-text-muted block">
               الرسالة
             </label>
             <textarea
               rows={3}
               required
-              placeholder="اكتب استفسارك أو اقتراحك هنا..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="اكتب رسالتك هنا..."
               className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] p-3 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
             />
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all shadow-md"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all shadow-md cursor-pointer"
           >
             <Send className="h-4 w-4 -rotate-45" />
-            <span>إرسال الرسالة</span>
+            <span>إرسال رسالتك</span>
           </button>
         </form>
       </div>

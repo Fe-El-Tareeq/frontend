@@ -13,6 +13,7 @@ import {
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { Form } from "../../components/ui/form/Form";
+import { Alert } from "../../components/ui/feedback/Alert";
 import { useErrands } from "../../hooks/useErrands";
 import { useWallet } from "../../hooks/useWallet";
 import { useAuth } from "../../hooks/useAuth";
@@ -57,7 +58,7 @@ export default function CreateErrand() {
 
   const onSubmit = async (data: CreateErrandFormData) => {
     if (!isAuthenticated) {
-      navigate("/welcome");
+      navigate("/login");
       return;
     }
 
@@ -80,7 +81,7 @@ export default function CreateErrand() {
         categoryId: defaultCategoryId,
         title: data.description.slice(0, 40) + "...",
         itemsDescription: data.description,
-        destinationKeyword: "غزة",
+        destinationKeyword: data.city || "غزة",
         weightClass: "LIGHT",
         isUrgent: false,
         isInterZone: false,
@@ -105,7 +106,7 @@ export default function CreateErrand() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
-            className="p-1 text-primary hover:text-accent transition-colors"
+            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -118,13 +119,13 @@ export default function CreateErrand() {
         </div>
 
         {errorMessage && (
-          <div className="rounded-xl bg-red-50 p-3.5 text-xs font-bold text-red-600 border border-red-100">
+          <Alert variant="error" onClose={() => setErrorMessage(null)}>
             {errorMessage}
-          </div>
+          </Alert>
         )}
 
         {/* Main Card */}
-        <div className="rounded-3xl bg-white p-5 border border-border shadow-xs">
+        <div className="rounded-3xl bg-white p-5 border border-border shadow-xs text-right">
           <Form onSubmit={handleSubmit(onSubmit)}>
             {/* Description textarea */}
             <div className="space-y-1">
@@ -135,7 +136,7 @@ export default function CreateErrand() {
                 rows={4}
                 maxLength={300}
                 placeholder="صف طلبك بالتفصيل: نوع الغرض، الحجم، الأهمية، أي تعليمات خاصة..."
-                className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] p-3.5 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
+                className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] p-3.5 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none text-right"
                 {...register("description")}
               />
               <div className="flex justify-between text-[10.5px] text-text-muted">
@@ -187,13 +188,13 @@ export default function CreateErrand() {
               )}
             </div>
 
-            {/* Voice Note Option (Figma exact card) */}
-            <div className="mt-4 rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 space-y-2.5">
+            {/* Voice Note Option */}
+            <div className="mt-4 rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 space-y-2.5 text-right">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-[#123A68]">
                   <MessageSquare className="h-4 w-4" />
                 </div>
-                <div>
+                <div className="text-right">
                   <h4 className="text-xs font-black text-primary">
                     تسجيل رسالة صوتية (اختياري)
                   </h4>
@@ -206,7 +207,7 @@ export default function CreateErrand() {
               <button
                 type="button"
                 onClick={() => setIsRecording(!isRecording)}
-                className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-xs font-bold transition-all ${
+                className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-xs font-bold transition-all cursor-pointer ${
                   isRecording
                     ? "border-red-400 bg-red-50 text-red-600 animate-pulse"
                     : "border-slate-300 bg-white text-primary hover:border-accent"
@@ -226,7 +227,7 @@ export default function CreateErrand() {
                     تكلفة نشر الطلب
                   </span>
                   <span className="text-[10.5px] text-text-secondary">
-                    سيخصم توكن واحد من رصيدك (رصيدك: {tokenBalance || 47} توكن)
+                    سيخصم توكن واحد من رصيدك (رصيدك: {tokenBalance ?? 0} توكن)
                   </span>
                 </div>
               </div>
@@ -238,7 +239,7 @@ export default function CreateErrand() {
               <button
                 type="submit"
                 disabled={isCreating}
-                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60"
+                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer"
               >
                 <Package className="h-4 w-4" />
                 <span>{isCreating ? "جاري النشر..." : "نشر الطلب"}</span>
@@ -247,7 +248,7 @@ export default function CreateErrand() {
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="px-4 py-3 text-xs font-bold text-text-secondary hover:text-primary transition-colors"
+                className="px-4 py-3 text-xs font-bold text-text-secondary hover:text-primary transition-colors cursor-pointer"
               >
                 إلغاء
               </button>

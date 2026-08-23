@@ -9,6 +9,7 @@ import { HowItWorksSection } from "../components/landing/HowItWorksSection";
 import { WhyUsSection } from "../components/landing/WhyUsSection";
 import { FaqSection } from "../components/landing/FaqSection";
 import { ContactSection } from "../components/landing/ContactSection";
+import { LandingCtaBanner } from "../components/landing/LandingCtaBanner";
 import { LandingFooter } from "../components/landing/LandingFooter";
 
 export default function LandingPage() {
@@ -23,14 +24,14 @@ export default function LandingPage() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-10 text-right">
-      {/* Top Header */}
+    <MobileContainer className="bg-[#F8FAFC] pb-6 text-right">
+      {/* 1. Header with Menu Button & Logo */}
       <LandingHeader
         onOpenMenu={() => setIsMenuOpen(true)}
-        onNavigateHome={() => navigate("/")}
+        onNavigateHome={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       />
 
-      {/* Slide-out Menu Overlay Modal */}
+      {/* 2. Menu Overlay Modal (Popup when clicking hamburger icon) */}
       <LandingMenuModal
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
@@ -48,34 +49,40 @@ export default function LandingPage() {
         }}
       />
 
-      {/* Sticky Secondary Navigation */}
+      {/* 3. Sticky Sub Navigation Bar */}
       <LandingSubNav onScrollTo={scrollToSection} />
 
-      {/* Page Sections */}
+      {/* 4. Page Content Sections */}
       <div className="px-4 pt-4 space-y-6">
-        {/* 1. Hero Section */}
+        {/* Hero Section */}
         <HeroSection
           onNeedItem={() => navigate("/register-step1")}
           onTraveler={() => navigate("/register-step1")}
         />
 
-        {/* 2. How it works */}
+        {/* How It Works (ثلاث خطوات بسيطة) */}
         <HowItWorksSection />
 
-        {/* 3. Why Choose Us */}
+        {/* About / Why Choose Us (منصة مجتمعية تبني الثقة بين الجيران) */}
         <WhyUsSection />
 
-        {/* 4. FAQs */}
+        {/* FAQs (أسئلة يسألها المستخدمون) */}
         <FaqSection />
 
-        {/* 5. Contact Us */}
+        {/* Contact Us (نحن هنا لمساعدتك) */}
         <ContactSection />
 
-        {/* 6. Footer */}
+        {/* Bottom CTA Banner (ابدأ استخدام بطريقك اليوم) */}
+        <LandingCtaBanner
+          onRegister={() => navigate("/register-step1")}
+          onLogin={() => navigate("/login")}
+        />
+
+        {/* Footer */}
         <LandingFooter
           onScrollTo={scrollToSection}
-          onNavigateLogin={() => navigate("/login")}
-          onNavigateRegister={() => navigate("/register-step1")}
+          onNavigateHome={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onNavigateTerms={() => navigate("/terms")}
         />
       </div>
     </MobileContainer>
