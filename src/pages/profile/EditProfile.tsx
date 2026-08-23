@@ -77,7 +77,7 @@ export default function EditProfile() {
           </Alert>
         )}
 
-        <div className="rounded-[20px] bg-white p-6 border border-border shadow-sm">
+        <div className="rounded-xl bg-white p-6 border border-border shadow-sm">
           <Form onSubmit={handleSubmit(onSubmit)}>
             {/* Phone Number (Read-only) */}
             <div className="mb-3">
@@ -89,7 +89,7 @@ export default function EditProfile() {
                 value={profile?.phone || ""}
                 disabled
                 dir="ltr"
-                className="h-[50px] w-full rounded-[16px] border border-border bg-[#F5F7FA] px-4 text-right text-[14px] text-text-muted font-mono"
+                className="h-12.5 w-full rounded-[16px] border border-border bg-background px-4 text-right text-[14px] text-text-muted font-mono"
               />
             </div>
 
