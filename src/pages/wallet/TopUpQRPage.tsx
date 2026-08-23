@@ -58,7 +58,7 @@ export default function TopUpQRPage() {
     >
       <div className="space-y-4 pb-8 text-right">
         {/* Jawwal Pay Dedicated Provider Banner */}
-        <div className="flex items-center justify-between bg-white p-4 rounded-[20px] border border-border shadow-xs text-right">
+        <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-border shadow-xs text-right">
           <div className="text-right">
             <span className="text-[11px] text-text-muted block">طريقة الدفع المعتمدة</span>
             <h3 className="text-sm font-black text-[#123A68] mt-0.5">
@@ -116,7 +116,7 @@ export default function TopUpQRPage() {
             </div>
 
             {/* Generated QR Code Simulation */}
-            <div className="mx-auto my-2 flex h-52 w-52 items-center justify-center rounded-[20px] bg-white p-4 border-2 border-dashed border-accent/40 shadow-inner">
+            <div className="mx-auto my-2 flex h-52 w-52 items-center justify-center rounded-xl bg-white p-4 border-2 border-dashed border-accent/40 shadow-inner">
               <div className="flex flex-col items-center justify-center text-primary">
                 <QrCode className="h-36 w-36 text-primary" />
                 <span className="text-[11px] font-mono text-text-muted mt-1">
