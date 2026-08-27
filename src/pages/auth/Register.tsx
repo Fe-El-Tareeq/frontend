@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 function Register() {
+  const navigate = useNavigate();
   return (
     <main
       dir="rtl"
@@ -92,11 +94,12 @@ function Register() {
           <span>لديك حساب بالفعل؟ </span>
 
           <button
-            type="button"
-            className="font-bold text-accent hover:text-accent-hover"
-          >
-            تسجيل الدخول
-          </button>
+  type="button"
+  onClick={() => navigate("/dashboard")}
+  className="..."
+>
+  تسجيل الدخول
+</button>
         </div>
 
       </div>

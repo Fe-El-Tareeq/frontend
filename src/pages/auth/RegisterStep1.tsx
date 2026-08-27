@@ -8,7 +8,6 @@ function RegisterStep1() {
       dir="rtl"
       className="min-h-screen bg-[#F5F7FA] flex items-center justify-center px-5 py-8"
     >
-      {/* Main Card */}
       <div className="w-full max-w-[353px] min-h-[654px] rounded-[18px] border border-[#E1E4E8] bg-white px-[33px] pt-[38px] pb-[25px] shadow-sm">
 
         {/* Logo */}
@@ -31,10 +30,9 @@ function RegisterStep1() {
           </p>
         </div>
 
-        {/* Step Indicator */}
+        {/* Steps */}
         <div className="mt-[16px] flex items-center justify-center gap-[8px]">
           <span className="h-[6px] w-[48px] rounded-pill bg-accent" />
-
           <span className="h-[6px] w-[32px] rounded-pill bg-[#E4E7EB]" />
         </div>
 
@@ -43,10 +41,9 @@ function RegisterStep1() {
           className="mt-[27px]"
           onSubmit={(e) => {
             e.preventDefault();
-            navigate("/register");
+            navigate("/register-step2");
           }}
         >
-
           {/* Full Name */}
           <div className="mb-[14px]">
             <label className="mb-[6px] block text-[14px] font-medium text-primary">
@@ -89,29 +86,27 @@ function RegisterStep1() {
             />
           </div>
 
-          {/* Next Button */}
-         <button
-          type="button"
-          onClick={() => navigate("/register-step2")}
+          {/* Next */}
+          <button
+            type="submit"
             className="h-[51px] w-full rounded-[16px] bg-accent text-[16px] font-bold text-white shadow-sm"
-       >
-           التالي
-        </button>
+          >
+            التالي
+          </button>
         </form>
 
         {/* Login */}
         <div className="mt-[25px] text-center text-[14px] text-text-secondary">
           <span>لديك حساب بالفعل؟ </span>
 
-         <button
-  type="button"
-  onClick={() => navigate("/welcome")}
-  className="font-bold text-accent hover:text-accent-hover"
->
-  تسجيل الدخول
-</button>
+          <button
+            type="button"
+            onClick={() => navigate("/welcome")}
+            className="font-bold text-accent hover:text-accent-hover"
+          >
+            تسجيل الدخول
+          </button>
         </div>
-
       </div>
     </main>
   );
