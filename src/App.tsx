@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useAuthStore } from "./store/useAuthStore";
+import { ProtectedRoute, PublicOnlyRoute } from "./components/auth/ProtectedRoute";
 
 // Lazy-loaded pages matching Figma structure
 const SplashScreen = lazy(() => import("./pages/SplashScreen"));
@@ -70,60 +71,311 @@ function App() {
     <BrowserRouter>
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
-          {/* Main Entry Point: Landing Page at "/" (redirects to "/home" if authenticated) */}
+          {/* Public Landing & Info Routes */}
           <Route path="/" element={<RootRoute />} />
           <Route path="/splash" element={<SplashScreen />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="/welcome" element={<Navigate to="/" replace />} />
           <Route path="/landing" element={<Navigate to="/" replace />} />
 
-          {/* Errands Domain */}
-          <Route path="/errands" element={<MyErrands />} />
-          <Route path="/errands/new" element={<CreateErrand />} />
-          <Route path="/create-errand" element={<CreateErrand />} />
-          <Route path="/errands/incoming-offers" element={<IncomingOffersPage />} />
-          <Route path="/errands/:id" element={<ErrandDetail />} />
-          <Route path="/errands/:id/offer" element={<SubmitOfferPage />} />
-          <Route path="/errands/:id/offers" element={<IncomingOffersPage />} />
-          <Route path="/errands/:id/tracking" element={<OrderTracking />} />
-          <Route path="/errands/:id/rating" element={<RatingPage />} />
-          <Route path="/my-errands" element={<MyErrands />} />
-
-          {/* Auth Domain */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register-step1" element={<RegisterStep1 />} />
-          <Route path="/register-step2" element={<RegisterStep2 />} />
+          {/* Public-Only Auth Routes (Redirects to /home if already logged in) */}
+          <Route
+            path="/login"
+            element={
+              <PublicOnlyRoute>
+                <Login />
+              </PublicOnlyRoute>
+            }
+          />
+          <Route
+            path="/register-step1"
+            element={
+              <PublicOnlyRoute>
+                <RegisterStep1 />
+              </PublicOnlyRoute>
+            }
+          />
+          <Route
+            path="/register-step2"
+            element={
+              <PublicOnlyRoute>
+                <RegisterStep2 />
+              </PublicOnlyRoute>
+            }
+          />
           <Route path="/register" element={<Navigate to="/register-step1" replace />} />
-          <Route path="/verify-otp" element={<VerifyOtp />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/verify-otp"
+            element={
+              <PublicOnlyRoute>
+                <VerifyOtp />
+              </PublicOnlyRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicOnlyRoute>
+                <ForgotPassword />
+              </PublicOnlyRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicOnlyRoute>
+                <ResetPassword />
+              </PublicOnlyRoute>
+            }
+          />
+
+          {/* ========================================================================= */}
+          {/* ALL PROTECTED PLATFORM ROUTES (Requires Authentication, else redirects /login) */}
+          {/* ========================================================================= */}
+
+          {/* Home Dashboard */}
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Errands Domain */}
+          <Route
+            path="/errands"
+            element={
+              <ProtectedRoute>
+                <MyErrands />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-errands"
+            element={
+              <ProtectedRoute>
+                <MyErrands />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/errands/new"
+            element={
+              <ProtectedRoute>
+                <CreateErrand />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-errand"
+            element={
+              <ProtectedRoute>
+                <CreateErrand />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/errands/incoming-offers"
+            element={
+              <ProtectedRoute>
+                <IncomingOffersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/errands/:id"
+            element={
+              <ProtectedRoute>
+                <ErrandDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/errands/:id/offer"
+            element={
+              <ProtectedRoute>
+                <SubmitOfferPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/errands/:id/offers"
+            element={
+              <ProtectedRoute>
+                <IncomingOffersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/errands/:id/tracking"
+            element={
+              <ProtectedRoute>
+                <OrderTracking />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/errands/:id/rating"
+            element={
+              <ProtectedRoute>
+                <RatingPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Trips Domain */}
-          <Route path="/trips" element={<TripsPage />} />
-          <Route path="/trips/new" element={<CreateTrip />} />
-          <Route path="/trips/create" element={<CreateTrip />} />
-          <Route path="/trips/:id" element={<TripDetailPage />} />
-          <Route path="/trips/:id/request-space" element={<RequestSpacePage />} />
-          <Route path="/trips/match-feed" element={<MatchFeed />} />
+          <Route
+            path="/trips"
+            element={
+              <ProtectedRoute>
+                <TripsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trips/new"
+            element={
+              <ProtectedRoute>
+                <CreateTrip />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trips/create"
+            element={
+              <ProtectedRoute>
+                <CreateTrip />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trips/:id"
+            element={
+              <ProtectedRoute>
+                <TripDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trips/:id/request-space"
+            element={
+              <ProtectedRoute>
+                <RequestSpacePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trips/match-feed"
+            element={
+              <ProtectedRoute>
+                <MatchFeed />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Chat & Messages Domain */}
-          <Route path="/messages" element={<MessagesPage />} />
-          <Route path="/chat/:id" element={<ChatPage />} />
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <MessagesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat/:id"
+            element={
+              <ProtectedRoute>
+                <ChatPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Wallet & Multi-Step Purchase Flow */}
-          <Route path="/wallet" element={<WalletPage />} />
-          <Route path="/wallet/buy-tokens" element={<BuyTokensPackages />} />
-          <Route path="/wallet/payment-method" element={<PaymentMethodPage />} />
-          <Route path="/wallet/topup-qr" element={<TopUpQRPage />} />
-          <Route path="/wallet/payment-success" element={<PaymentSuccessPage />} />
+          <Route
+            path="/wallet"
+            element={
+              <ProtectedRoute>
+                <WalletPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet/buy-tokens"
+            element={
+              <ProtectedRoute>
+                <BuyTokensPackages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet/payment-method"
+            element={
+              <ProtectedRoute>
+                <PaymentMethodPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet/topup-qr"
+            element={
+              <ProtectedRoute>
+                <TopUpQRPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet/payment-success"
+            element={
+              <ProtectedRoute>
+                <PaymentSuccessPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Profile & Settings Domain */}
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/profile/edit" element={<EditProfile />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/settings/change-password" element={<ChangePasswordPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/terms" element={<TermsPage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/edit"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/change-password"
+            element={
+              <ProtectedRoute>
+                <ChangePasswordPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <NotificationsPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
