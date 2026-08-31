@@ -1,0 +1,56 @@
+{
+  "name": "بطريقك | منصة التوصيل المجتمعي",
+  "short_name": "بطريقك",
+  "description": "الشبكة التضامنية الأولى في غزة لتوصيل الاحتياجات اليومية والطلبات بين الجيران والمسافرين.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#123A68",
+  "theme_color": "#123A68",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["lifestyle", "social", "utilities"],
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "إنشاء طلب جديد",
+      "short_name": "طلب جديد",
+      "description": "نشر طلب غرض أو حاجة يومية",
+      "url": "/errands/new",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "إضافة رحلة",
+      "short_name": "رحلة جديدة",
+      "description": "عرض رحلتك وتوصيل الأغراض بطريقك",
+      "url": "/trips/new",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "المحفظة",
+      "short_name": "المحفظة",
+      "description": "رصيد التوكنز وشحن الحساب",
+      "url": "/wallet",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -1,101 +1,76 @@
 import { useNavigate } from "react-router-dom";
+import { MobileContainer } from "../../components/layout/MobileContainer";
+import { Button } from "../../components/ui/button/Button";
+import { Sparkles, ShieldCheck, Truck } from "lucide-react";
 
-function Welcome() {
+export default function Welcome() {
   const navigate = useNavigate();
 
   return (
-    <main
-      dir="rtl"
-      className="min-h-screen bg-[#F5F7FA] flex items-center justify-center px-5 py-8"
-    >
-      <div className="w-full max-w-[359px] min-h-[650px] rounded-[18px] border border-[#E3E8EF] bg-white px-[35px] pt-[38px] pb-[25px] shadow-sm">
-
-        {/* Logo */}
-        <div className="flex justify-center">
+    <MobileContainer className="justify-center items-center px-4 py-8 bg-background">
+      <div className="w-full max-w-90 rounded-xl border border-[#E1E4E8] bg-white px-7 py-8 shadow-sm text-center">
+        {/* App Logo */}
+        <div className="flex justify-center mb-4">
           <img
             src="/logo.png"
             alt="بطريقك"
-            className="h-[65px] w-[68px] object-contain"
+            className="h-18.75 w-19.5 object-contain drop-shadow-sm"
           />
         </div>
 
-        {/* Title */}
-        <div className="mt-[22px] text-center">
-          <h1 className="text-[24px] font-bold leading-[1.4] text-primary">
-            أهلاً بعودتك
-          </h1>
+        {/* Brand Title & Tagline */}
+        <h1 className="text-[26px] font-extrabold text-primary leading-tight">
+          في الطريق
+        </h1>
+        <p className="mt-2 text-[14px] text-text-secondary leading-relaxed">
+          شبكة التوصيل التضامنية بين الجيران في قطاع غزة
+        </p>
 
-          <p className="mt-[4px] text-[16px] text-text-secondary">
-            سجل الدخول إلى حسابك للمتابعة
-          </p>
+        {/* Feature Highlights */}
+        <div className="my-6 space-y-2.5 rounded-[16px] bg-background p-4 text-right text-[12.5px] text-primary border border-border/60">
+          <div className="flex items-center gap-2">
+            <Truck className="h-4 w-4 text-accent shrink-0" />
+            <span>وصّل أغراض جيرانك أثناء خط سيرك واكسب أجر المشوار</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 text-success shrink-0" />
+            <span>مجتمع آمن وموثوق بتقييمات وتأكيد هويات معتمد</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-accent shrink-0" />
+            <span>احصل على 3 عملات ترحيبية مجانية فور التسجيل!</span>
+          </div>
         </div>
 
-        {/* Login Form */}
-        <form className="mt-[30px]">
-
-          {/* Phone */}
-          <div className="mb-[16px]">
-            <label className="mb-[6px] block text-[14px] font-medium text-primary">
-              رقم الهاتف
-              <span className="mr-[3px] text-error">*</span>
-            </label>
-
-            <input
-              type="tel"
-              placeholder="05XX-XXX-XXX"
-              className="h-[50px] w-full rounded-[16px] border-2 border-[#E3E7EC] bg-[#FAFBFC] px-[16px] text-right text-[15px] text-primary outline-none placeholder:text-[#A7B0BE] focus:border-accent"
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="mb-[6px] block text-[14px] font-medium text-primary">
-              كلمة المرور
-              <span className="mr-[3px] text-error">*</span>
-            </label>
-
-            <input
-              type="password"
-              placeholder="أدخل كلمة المرور"
-              className="h-[50px] w-full rounded-[16px] border-2 border-[#E3E7EC] bg-[#FAFBFC] px-[16px] text-right text-[15px] text-primary outline-none placeholder:text-[#A7B0BE] focus:border-accent"
-            />
-          </div>
-
-          {/* Forgot Password */}
-          <div className="mt-[10px] text-right">
-            <button
-              type="button"
-              className="text-[13px] font-medium text-accent hover:text-accent-hover"
-            >
-              نسيت كلمة المرور؟
-            </button>
-          </div>
-
-          {/* Login Button */}
-          <button
-            type="submit"
-            className="mt-[24px] h-[51px] w-full rounded-[16px] bg-accent text-[16px] font-bold text-white shadow-sm transition hover:bg-accent-hover active:scale-[0.99]"
+        {/* CTA Buttons */}
+        <div className="space-y-3">
+          <Button
+            variant="accent"
+            size="md"
+            fullWidth
+            onClick={() => navigate("/login")}
           >
             تسجيل الدخول
-          </button>
-        </form>
+          </Button>
 
-        {/* Create Account */}
-        <div className="mt-[28px] text-center text-[14px] text-text-secondary">
-          <span>ليس لديك حساب؟ </span>
+          <Button
+            variant="outline"
+            size="md"
+            fullWidth
+            onClick={() => navigate("/register-step1")}
+          >
+            إنشاء حساب جديد
+          </Button>
 
           <button
             type="button"
-            onClick={() => navigate("/register-step1")}
-            className="font-bold text-accent hover:text-accent-hover"
+            onClick={() => navigate("/")}
+            className="mt-2 text-[13px] font-medium text-text-secondary hover:text-primary transition-colors"
           >
-            إنشاء حساب جديد
+            تصفح الطلبات كزائر
           </button>
         </div>
-
       </div>
-    </main>
+    </MobileContainer>
   );
 }
-
-export default Welcome;
