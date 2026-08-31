@@ -72,7 +72,7 @@ export default function ForgotPassword() {
       )}
 
       {errorMessage && (
-        <div className="mb-4 rounded-[12px] bg-error-light p-3 text-right text-[13px] font-medium text-error border border-error/20">
+        <div className="mb-4 rounded-md bg-error-light p-3 text-right text-[13px] font-medium text-error border border-error/20">
           {errorMessage}
         </div>
       )}
