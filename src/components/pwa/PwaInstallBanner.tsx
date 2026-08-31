@@ -24,7 +24,7 @@ export function PwaInstallBanner() {
     <>
       {/* Floating Bottom PWA Install Banner */}
       <div
-        className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-[400px] animate-fade-in"
+        className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-100 animate-fade-in"
         dir="rtl"
       >
         <div className="flex items-center justify-between gap-3 rounded-3xl bg-[#123A68] p-3.5 text-white shadow-2xl ring-1 ring-white/10">
