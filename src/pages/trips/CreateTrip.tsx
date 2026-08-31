@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Car, Info } from "lucide-react";
+import { ChevronRight, Car, Info, Calendar } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { useTrips } from "../../hooks/useTrips";
@@ -18,17 +18,12 @@ export default function CreateTrip() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [capacity, setCapacity] = useState("LIGHT");
+  const calculatedPrice = "5";
   const [notes, setNotes] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    /*
-     * ============================================================================
-     * BACKEND INTEGRATION IMPLEMENTATION: Create New Trip
-     * Endpoint: POST /api/v1/trips
-     * ============================================================================
-     */
     try {
       await createTrip({
         originCity: city,
@@ -46,7 +41,6 @@ export default function CreateTrip() {
       });
       navigate("/trips");
     } catch {
-      // Fallback demo redirect
       navigate("/trips");
     }
   };
@@ -74,10 +68,10 @@ export default function CreateTrip() {
           </div>
         </div>
 
-        {/* Main Card */}
+        {/* Main Form Card */}
         <div className="rounded-3xl bg-white p-5 border border-border shadow-xs text-right">
           <form onSubmit={handleSubmit} className="space-y-3.5">
-            {/* Origin */}
+            {/* 1. Origin */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
                 منطقة الانطلاق <span className="text-[#F36F21]">*</span>
@@ -92,7 +86,7 @@ export default function CreateTrip() {
               />
             </div>
 
-            {/* Destination */}
+            {/* 2. Destination */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
                 الوجهة <span className="text-[#F36F21]">*</span>
@@ -107,7 +101,7 @@ export default function CreateTrip() {
               />
             </div>
 
-            {/* City */}
+            {/* 3. City */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
                 المدينة
@@ -117,6 +111,7 @@ export default function CreateTrip() {
                 onChange={(e) => setCity(e.target.value)}
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-accent focus:outline-none"
               >
+                <option value="غزة">اختر المدينة ⌵</option>
                 <option value="غزة">غزة</option>
                 <option value="شمال غزة">شمال غزة</option>
                 <option value="دير البلح">دير البلح</option>
@@ -125,7 +120,7 @@ export default function CreateTrip() {
               </select>
             </div>
 
-            {/* Current neighborhood from live Locations API */}
+            {/* 4. Neighborhood */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">الحي</label>
               <select
@@ -135,7 +130,7 @@ export default function CreateTrip() {
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-accent focus:outline-none"
               >
                 <option value="">
-                  {isLoadingNeighborhoods ? "جاري تحميل الأحياء..." : "اختر الحي الحالي"}
+                  {isLoadingNeighborhoods ? "جاري تحميل الأحياء..." : "حيّك الحالي"}
                 </option>
                 {neighborhoods.map((n) => (
                   <option key={n.id} value={n.id}>
@@ -145,22 +140,24 @@ export default function CreateTrip() {
               </select>
             </div>
 
-            {/* Departure Date */}
+            {/* 5. Departure Date */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
                 تاريخ المغادرة <span className="text-[#F36F21]">*</span>
               </label>
-              <input
-                type="date"
-                required
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-accent focus:outline-none"
-              >
-              </input>
+              <div className="relative">
+                <input
+                  type="date"
+                  required
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] pr-10 pl-4 text-xs text-primary focus:border-accent focus:outline-none"
+                />
+                <Calendar className="absolute right-3.5 top-3.5 h-4 w-4 text-text-muted pointer-events-none" />
+              </div>
             </div>
 
-            {/* Departure Time */}
+            {/* 6. Departure Time */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
                 وقت المغادرة <span className="text-[#F36F21]">*</span>
@@ -174,7 +171,7 @@ export default function CreateTrip() {
               />
             </div>
 
-            {/* Available capacity */}
+            {/* 7. Capacity */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
                 السعة المتاحة للأغراض
@@ -184,13 +181,27 @@ export default function CreateTrip() {
                 onChange={(e) => setCapacity(e.target.value)}
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-accent focus:outline-none"
               >
+                <option value="LIGHT">اختر الطاقة ⌵</option>
                 <option value="LIGHT">أغراض خفيفة فقط (حتى 2 كجم)</option>
                 <option value="MEDIUM">أغراض متوسطة (حتى 5 كجم)</option>
                 <option value="HEAVY">متاح للأغراض المتنوعة والثقيلة</option>
               </select>
             </div>
 
-            {/* Notes */}
+            {/* 8. Price with Dynamic Hint */}
+            <div className="space-y-1">
+              <span className="block text-[11px] font-bold text-[#F36F21]">
+                عند اختيار منطقة الانتقال_الوجهة سيتم عرض السعر تلقائياً
+              </span>
+              <input
+                type="text"
+                readOnly
+                value={`${calculatedPrice} شيكل`}
+                className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:outline-none text-right font-bold"
+              />
+            </div>
+
+            {/* 9. Notes */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
                 ملاحظات إضافية
@@ -217,7 +228,7 @@ export default function CreateTrip() {
               <button
                 type="submit"
                 disabled={isCreating}
-                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer"
+                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
               >
                 <Car className="h-4 w-4" />
                 <span>{isCreating ? "جاري النشر..." : "نشر الرحلة"}</span>

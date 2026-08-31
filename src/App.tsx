@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useAuthStore } from "./store/useAuthStore";
 
 // Lazy-loaded pages matching Figma structure
+const SplashScreen = lazy(() => import("./pages/SplashScreen"));
 const Home = lazy(() => import("./pages/Home"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/auth/Login"));
@@ -16,6 +17,7 @@ const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const CreateErrand = lazy(() => import("./pages/errands/CreateErrand"));
 const ErrandDetail = lazy(() => import("./pages/errands/ErrandDetail"));
 const SubmitOfferPage = lazy(() => import("./pages/errands/SubmitOfferPage"));
+const IncomingOffersPage = lazy(() => import("./pages/errands/IncomingOffersPage"));
 const OrderTracking = lazy(() => import("./pages/errands/OrderTracking"));
 const RatingPage = lazy(() => import("./pages/errands/RatingPage"));
 const MyErrands = lazy(() => import("./pages/errands/MyErrands"));
@@ -30,7 +32,10 @@ const MessagesPage = lazy(() => import("./pages/chat/MessagesPage"));
 const ChatPage = lazy(() => import("./pages/chat/ChatPage"));
 
 const WalletPage = lazy(() => import("./pages/wallet/WalletPage"));
+const BuyTokensPackages = lazy(() => import("./pages/wallet/BuyTokensPackages"));
+const PaymentMethodPage = lazy(() => import("./pages/wallet/PaymentMethodPage"));
 const TopUpQRPage = lazy(() => import("./pages/wallet/TopUpQRPage"));
+const PaymentSuccessPage = lazy(() => import("./pages/wallet/PaymentSuccessPage"));
 
 const ProfilePage = lazy(() => import("./pages/profile/ProfilePage"));
 const EditProfile = lazy(() => import("./pages/profile/EditProfile"));
@@ -67,6 +72,7 @@ function App() {
         <Routes>
           {/* Main Entry Point: Landing Page at "/" (redirects to "/home" if authenticated) */}
           <Route path="/" element={<RootRoute />} />
+          <Route path="/splash" element={<SplashScreen />} />
           <Route path="/home" element={<Home />} />
           <Route path="/welcome" element={<Navigate to="/" replace />} />
           <Route path="/landing" element={<Navigate to="/" replace />} />
@@ -75,8 +81,10 @@ function App() {
           <Route path="/errands" element={<MyErrands />} />
           <Route path="/errands/new" element={<CreateErrand />} />
           <Route path="/create-errand" element={<CreateErrand />} />
+          <Route path="/errands/incoming-offers" element={<IncomingOffersPage />} />
           <Route path="/errands/:id" element={<ErrandDetail />} />
           <Route path="/errands/:id/offer" element={<SubmitOfferPage />} />
+          <Route path="/errands/:id/offers" element={<IncomingOffersPage />} />
           <Route path="/errands/:id/tracking" element={<OrderTracking />} />
           <Route path="/errands/:id/rating" element={<RatingPage />} />
           <Route path="/my-errands" element={<MyErrands />} />
@@ -102,9 +110,12 @@ function App() {
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/chat/:id" element={<ChatPage />} />
 
-          {/* Wallet Domain */}
+          {/* Wallet & Multi-Step Purchase Flow */}
           <Route path="/wallet" element={<WalletPage />} />
+          <Route path="/wallet/buy-tokens" element={<BuyTokensPackages />} />
+          <Route path="/wallet/payment-method" element={<PaymentMethodPage />} />
           <Route path="/wallet/topup-qr" element={<TopUpQRPage />} />
+          <Route path="/wallet/payment-success" element={<PaymentSuccessPage />} />
 
           {/* Profile & Settings Domain */}
           <Route path="/profile" element={<ProfilePage />} />

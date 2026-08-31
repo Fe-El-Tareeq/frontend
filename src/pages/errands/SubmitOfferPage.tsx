@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { SubmitOfferSuccessModal } from "../../components/modals/SubmitOfferSuccessModal";
 import { useLocations } from "../../hooks/useLocations";
 import { useWallet } from "../../hooks/useWallet";
 import { errandsApi } from "../../api/errands";
@@ -28,17 +29,12 @@ export default function SubmitOfferPage() {
   const [message, setMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    /*
-     * ============================================================================
-     * BACKEND INTEGRATION IMPLEMENTATION: Submit Delivery Offer
-     * Endpoint: POST /api/v1/errands/:id/offers
-     * ============================================================================
-     */
     try {
       if (id) {
         await errandsApi.submitOffer(id, {
@@ -47,13 +43,9 @@ export default function SubmitOfferPage() {
           notes: message,
         });
       }
-      navigate(`/errands/${id}`);
+      setShowSuccessModal(true);
     } catch {
-      // Fallback transition for demo / mock mode
-      setTimeout(() => {
-        setIsSubmitting(false);
-        navigate(`/errands/${id}`);
-      }, 500);
+      setShowSuccessModal(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -231,7 +223,7 @@ export default function SubmitOfferPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer"
+                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
               >
                 <Send className="h-4 w-4 -rotate-45" />
                 <span>{isSubmitting ? "جاري الإرسال..." : "إرسال العرض"}</span>
@@ -248,6 +240,13 @@ export default function SubmitOfferPage() {
           </form>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <SubmitOfferSuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        errandId={id}
+      />
     </MobileContainer>
   );
 }

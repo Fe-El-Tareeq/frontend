@@ -1,101 +1,76 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Phone, MoreHorizontal } from "lucide-react";
+import {
+  ChevronRight,
+  Phone,
+  Paperclip,
+  Mic,
+  Send,
+  Package,
+} from "lucide-react";
 import { MobileContainer } from "../../components/layout/MobileContainer";
-import { ChatMessageBubble } from "../../components/chat/ChatMessageBubble";
-import type { MessageData } from "../../components/chat/ChatMessageBubble";
-import { ChatBottomInput } from "../../components/chat/ChatBottomInput";
 
 export default function ChatPage() {
   const navigate = useNavigate();
-  const [inputText, setInputText] = useState("");
 
-  /*
-   * ============================================================================
-   * BACKEND INTEGRATION PLACEHOLDER: Real-time Messages & Chat Stream
-   * Pending Endpoints:
-   * - GET  /api/v1/messages/conversations/:id      (Fetch chat history)
-   * - POST /api/v1/messages/conversations/:id/send (Post new message)
-   * - WS   /ws/chat                                (Real-time live WebSocket)
-   *
-   * Once backend chat endpoints are live, connect using useChat(id):
-   * const { messages: liveMessages, sendMessage, isSending } = useChat(id);
-   * ============================================================================
-   */
-  const [messages, setMessages] = useState<MessageData[]>([
+  const [messageText, setMessageText] = useState("");
+  const [messages, setMessages] = useState([
     {
-      id: 1,
-      sender: "user",
-      text: "السلام عليكم، هل لا تزال الرحلة متاحة؟",
-      time: "9:30",
+      id: "m-1",
+      sender: "OTHER",
+      text: "مرحباً! شفت طلبك لتوصيل الدواء من رفح إلى الرمال.",
+      time: "10:30 ص",
     },
     {
-      id: 2,
-      sender: "other",
-      text: "وعليكم السلام، نعم ما زالت متاحة يا أخي",
-      time: "9:32",
+      id: "m-2",
+      sender: "OTHER",
+      text: "رحلتي بكرة الصبح الساعة 9:00، بقدر أوصلك إياه.",
+      time: "10:31 ص",
     },
     {
-      id: 3,
-      sender: "user",
-      text: "ممتاز، أحتاج إرسال دواء لوالدتي في رفح",
-      time: "9:33",
+      id: "m-3",
+      sender: "ME",
+      text: "أهلاً أحمد! ممتاز، الدواء جاهز في الصيدلية، كم بدك للتوصيل؟",
+      time: "10:33 ص",
     },
     {
-      id: 4,
-      sender: "other",
-      text: "بكل سرور، ما هو حجم الدواء تقريباً؟",
-      time: "9:35",
+      id: "m-4",
+      sender: "OTHER",
+      text: "بما إنه بطريقي، 5 شيكل بس ثمن المواصلات.",
+      time: "10:35 ص",
     },
     {
-      id: 5,
-      sender: "user",
-      text: "علبة صغيرة فقط، لا تتجاوز كيلو واحد",
-      time: "9:36",
-    },
-    {
-      id: 6,
-      sender: "other",
-      text: "لا مشكلة إطلاقاً، يمكنني أخذها معي بكل سعادة",
-      time: "9:38",
-    },
-    {
-      id: 7,
-      sender: "user",
-      text: "شكراً جزيلاً، سأكون في موقعك قبل الرحلة بنصف ساعة",
-      time: "9:40",
-    },
-    {
-      id: 8,
-      sender: "other",
-      text: "موافق، سأكون هناك الساعة العاشرة",
-      time: "9:41",
+      id: "m-5",
+      sender: "ME",
+      text: "تمام، متفقين! رح أبعتلك تفاصيل الصيدلية ورقم الوصفة.",
+      time: "10:36 ص",
     },
   ]);
 
-  const handleSend = () => {
-    if (!inputText.trim()) return;
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!messageText.trim()) return;
+
     setMessages((prev) => [
       ...prev,
       {
-        id: Date.now(),
-        sender: "user",
-        text: inputText,
+        id: `m-${Date.now()}`,
+        sender: "ME",
+        text: messageText.trim(),
         time: new Date().toLocaleTimeString("ar-EG", {
           hour: "2-digit",
           minute: "2-digit",
         }),
       },
     ]);
-    setInputText("");
+    setMessageText("");
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] flex flex-col justify-between min-h-screen">
-      {/* Header: RTL Order (Right: Back Button + Avatar + Name | Left: Actions) */}
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between bg-white px-4 border-b border-border shadow-2xs">
-        {/* Right side in RTL: Back chevron + Avatar + User info */}
-        <div className="flex items-center gap-3">
+    <MobileContainer className="bg-[#F8FAFC] flex flex-col h-screen max-h-screen text-right">
+      {/* Top Chat Header */}
+      <div className="flex items-center justify-between bg-white px-4 py-3.5 border-b border-border shadow-2xs">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={() => navigate(-1)}
             className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
@@ -107,46 +82,111 @@ export default function ChatPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F36F21] text-xs font-black text-white">
               أخ
             </div>
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-white" />
+            <span className="absolute bottom-0 left-0 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white" />
           </div>
 
           <div className="text-right">
-            <h2 className="text-xs font-black text-primary leading-tight">
-              أحمد خالد
-            </h2>
-            <span className="text-[10px] text-emerald-600 font-bold">
+            <h3 className="text-xs font-black text-[#123A68]">أحمد خالد</h3>
+            <span className="text-[10px] text-emerald-600 font-bold block">
               متصل الآن
             </span>
           </div>
         </div>
 
-        {/* Left side in RTL: Phone and More options */}
-        <div className="flex items-center gap-2">
+        {/* Action icons */}
+        <div className="flex items-center gap-1.5">
           <a
             href="tel:0591234567"
-            className="p-1.5 text-text-muted hover:text-primary transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-primary hover:bg-slate-200 transition-colors"
           >
-            <Phone className="h-5 w-5" />
+            <Phone className="h-4 w-4" />
           </a>
-          <button className="p-1.5 text-text-muted hover:text-primary transition-colors cursor-pointer">
-            <MoreHorizontal className="h-5 w-5" />
-          </button>
         </div>
-      </header>
-
-      {/* Message Stream */}
-      <div className="flex-1 p-4 space-y-3 overflow-y-auto">
-        {messages.map((msg) => (
-          <ChatMessageBubble key={msg.id} message={msg} />
-        ))}
       </div>
 
-      {/* Bottom Input */}
-      <ChatBottomInput
-        value={inputText}
-        onChange={setInputText}
-        onSend={handleSend}
-      />
+      {/* Context Errand Summary Banner */}
+      <div className="bg-[#FFF5EE] px-4 py-2 border-b border-orange-100 flex items-center justify-between text-xs text-right">
+        <div className="flex items-center gap-2">
+          <Package className="h-4 w-4 text-[#F36F21]" />
+          <span className="font-bold text-[#123A68] text-[11px] truncate">
+            طلب توصيل: توصيل دواء من صيدلية في رفح
+          </span>
+        </div>
+        <span className="text-[10.5px] text-text-muted font-bold">
+          غزة ➔ رفح
+        </span>
+      </div>
+
+      {/* Messages Scroll Area */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {messages.map((msg) => {
+          const isMe = msg.sender === "ME";
+
+          return (
+            <div
+              key={msg.id}
+              className={`flex flex-col ${
+                isMe ? "items-start" : "items-end"
+              }`}
+            >
+              <div
+                className={`max-w-[78%] rounded-3xl p-3.5 text-xs leading-relaxed text-right shadow-2xs ${
+                  isMe
+                    ? "bg-[#123A68] text-white rounded-tr-xs"
+                    : "bg-white text-[#123A68] border border-slate-200 rounded-tl-xs"
+                }`}
+              >
+                <p>{msg.text}</p>
+                <span
+                  className={`text-[9.5px] mt-1 block font-bold ${
+                    isMe ? "text-white/60 text-left" : "text-text-muted text-left"
+                  }`}
+                >
+                  {msg.time}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Input Bar */}
+      <div className="bg-white p-3 border-t border-border shadow-md">
+        <form
+          onSubmit={handleSendMessage}
+          className="flex items-center gap-2 text-right"
+        >
+          <button
+            type="submit"
+            disabled={!messageText.trim()}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F36F21] text-white shadow-md hover:bg-[#E05E12] active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
+          >
+            <Send className="h-4.5 w-4.5 -rotate-45" />
+          </button>
+
+          <input
+            type="text"
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            placeholder="اكتب رسالتك..."
+            className="h-11 flex-1 rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none text-right"
+          />
+
+          <button
+            type="button"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text-muted hover:text-primary transition-colors cursor-pointer"
+          >
+            <Mic className="h-5 w-5" />
+          </button>
+
+          <button
+            type="button"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text-muted hover:text-primary transition-colors cursor-pointer"
+          >
+            <Paperclip className="h-5 w-5" />
+          </button>
+        </form>
+      </div>
     </MobileContainer>
   );
 }

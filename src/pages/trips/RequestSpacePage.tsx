@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { RequestSpaceSuccessModal } from "../../components/modals/RequestSpaceSuccessModal";
 import { tripsApi } from "../../api/trips";
 
 export default function RequestSpacePage() {
@@ -22,31 +23,21 @@ export default function RequestSpacePage() {
   const [notes, setNotes] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    /*
-     * ============================================================================
-     * BACKEND INTEGRATION IMPLEMENTATION: Book Luggage Space on Trip
-     * Endpoint: POST /api/v1/trips/:id/book
-     * Payload: { errandDescription: description, size, pickupPoint, phone, notes }
-     * ============================================================================
-     */
     try {
       if (id) {
         await tripsApi.bookSpace(id, {
           notes: `${description} (${size}) - نقطة الاستلام: ${pickupPoint} - هاتف: ${phone}. ${notes}`,
         });
       }
-      navigate(`/trips/${id}`);
+      setShowSuccessModal(true);
     } catch {
-      // Fallback demo timeout
-      setTimeout(() => {
-        setIsSubmitting(false);
-        navigate(`/trips/${id}`);
-      }, 500);
+      setShowSuccessModal(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -204,7 +195,7 @@ export default function RequestSpacePage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer"
+                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
               >
                 <Send className="h-4 w-4 -rotate-45" />
                 <span>{isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}</span>
@@ -221,6 +212,13 @@ export default function RequestSpacePage() {
           </form>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <RequestSpaceSuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        tripId={id}
+      />
     </MobileContainer>
   );
 }

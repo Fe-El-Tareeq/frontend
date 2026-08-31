@@ -1,191 +1,187 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
-  QrCode,
-  Clock,
-  Copy,
-  ShieldCheck,
+  ChevronRight,
   Zap,
+  CheckCircle,
+  Download,
 } from "lucide-react";
-import { AppLayout } from "../../components/layout/AppLayout";
-import { Card } from "../../components/ui/card/Card";
-import { Button } from "../../components/ui/button/Button";
+import { Header } from "../../components/layout/Header";
+import { MobileContainer } from "../../components/layout/MobileContainer";
+import type { TokenPackage } from "./BuyTokensPackages";
 
 export default function TopUpQRPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [selectedAmount, setSelectedAmount] = useState<number>(10);
-  const [copied, setCopied] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(900); // 15 minutes in seconds
-
-  const packages = [
-    { nis: 5, tokens: 5, bonus: 0 },
-    { nis: 10, tokens: 10, bonus: 1, isPopular: true },
-    { nis: 20, tokens: 20, bonus: 3 },
-  ];
-
-  // Expiry countdown
-  useEffect(() => {
-    if (timeLeft <= 0) return;
-    const interval = setInterval(() => {
-      setTimeLeft((t) => t - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timeLeft]);
-
-  const formatTimer = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, "0")}`;
+  const pkg: TokenPackage = location.state?.package || {
+    id: "pkg-pro",
+    name: "الباقة الاحترافية",
+    subtitle: "للمستخدمين الدائمين والنشطين",
+    tokens: 50,
+    priceUsd: 30,
+    ratePerToken: "0.60$ لكل توكن",
+    features: [],
   };
 
-  const invoiceId = `INV-JP-${selectedAmount * 100}-839210`;
-
-  const copyInvoice = () => {
-    navigator.clipboard.writeText(invoiceId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCompleted = () => {
+    navigate("/wallet/payment-success", { state: { package: pkg } });
   };
 
   return (
-    <AppLayout
-      headerProps={{
-        title: "شحن رصيد التوكنز",
-        subtitle: "الدفع المباشر عبر محفظة جوال باي (Jawwal Pay)",
-        showBack: true,
-      }}
-      showBottomNav={false}
-    >
-      <div className="space-y-4 pb-8 text-right">
-        {/* Jawwal Pay Dedicated Provider Banner */}
-        <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-border shadow-xs text-right">
-          <div className="text-right">
-            <span className="text-[11px] text-text-muted block">طريقة الدفع المعتمدة</span>
-            <h3 className="text-sm font-black text-[#123A68] mt-0.5">
-              جوال باي (Jawwal Pay)
-            </h3>
-          </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
-            <ShieldCheck className="h-5 w-5" />
+    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+      <Header />
+
+      <div className="px-4 pt-4 space-y-4">
+        {/* Title */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+          <div>
+            <h1 className="text-xl font-black text-[#123A68]">إتمام الدفع</h1>
+            <p className="text-xs text-text-secondary">
+              امسح رمز QR بتطبيقك البنكي / جوال باي
+            </p>
           </div>
         </div>
 
-        {/* Package Selector */}
-        <div>
-          <label className="block text-[13px] font-bold text-primary mb-2 text-right">
-            اختر باقة التوكنز:
-          </label>
-          <div className="grid grid-cols-3 gap-2.5">
-            {packages.map((pkg) => {
-              const isSelected = selectedAmount === pkg.nis;
-              return (
-                <button
-                  key={pkg.nis}
-                  type="button"
-                  onClick={() => setSelectedAmount(pkg.nis)}
-                  className={`relative p-3 rounded-[16px] border-2 text-center transition-all cursor-pointer ${
-                    isSelected
-                      ? "border-accent bg-accent-light shadow-sm"
-                      : "border-border bg-white hover:border-text-muted"
-                  }`}
-                >
-                  {pkg.bonus > 0 && (
-                    <span className="absolute -top-2.5 right-2 rounded-pill bg-[#F36F21] px-1.5 py-0.5 text-[9px] font-black text-white shadow-sm">
-                      +{pkg.bonus} مجاناً
-                    </span>
-                  )}
-                  <span className="text-[17px] font-black text-primary block">
-                    {pkg.tokens + pkg.bonus} توكن
-                  </span>
-                  <span className="text-[12px] font-bold text-accent">
-                    {pkg.nis} شيكل ₪
-                  </span>
-                </button>
-              );
-            })}
+        {/* 4-Step Progress Bar (Step 3 Active) */}
+        <div className="flex items-center justify-between rounded-2xl bg-white p-3.5 border border-border shadow-2xs text-[11px] font-bold text-center">
+          <div className="flex items-center gap-1 text-emerald-600">
+            <CheckCircle className="h-4.5 w-4.5" />
+            <span>اختر الباقة</span>
+          </div>
+          <span className="text-emerald-500">──</span>
+          <div className="flex items-center gap-1 text-emerald-600">
+            <CheckCircle className="h-4.5 w-4.5" />
+            <span>طريقة الدفع</span>
+          </div>
+          <span className="text-emerald-500">──</span>
+          <div className="flex items-center gap-1 text-primary font-black">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123A68] text-white text-[10px] shadow-xs">
+              3
+            </span>
+            <span>إتمام الدفع</span>
+          </div>
+          <span className="text-slate-300">──</span>
+          <div className="flex items-center gap-1 text-text-muted">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[10px]">
+              4
+            </span>
+            <span>تم الشراء</span>
           </div>
         </div>
 
-        {/* Dynamic QR Display Card */}
-        <Card variant="elevated">
-          <div className="text-center">
-            {/* Invoice Countdown */}
-            <div className="inline-flex items-center gap-1.5 rounded-pill bg-amber-50 px-3 py-1 text-[12px] font-bold text-amber-700 border border-amber-200 mb-3">
-              <Clock className="h-3.5 w-3.5" />
-              <span>صلاحية الفاتورة: {formatTimer(timeLeft)}</span>
-            </div>
+        {/* Selected Package Banner */}
+        <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 border border-border shadow-2xs">
+          <div className="flex items-center gap-2">
+            <Zap className="h-4.5 w-4.5 text-[#F36F21] fill-[#F36F21]" />
+            <span className="text-xs font-black text-[#123A68]">
+              {pkg.name} — {pkg.tokens} توكن
+            </span>
+          </div>
+          <span className="text-sm font-black text-[#123A68]">
+            {pkg.priceUsd}$
+          </span>
+        </div>
 
-            {/* Generated QR Code Simulation */}
-            <div className="mx-auto my-2 flex h-52 w-52 items-center justify-center rounded-xl bg-white p-4 border-2 border-dashed border-accent/40 shadow-inner">
-              <div className="flex flex-col items-center justify-center text-primary">
-                <QrCode className="h-36 w-36 text-primary" />
-                <span className="text-[11px] font-mono text-text-muted mt-1">
-                  Jawwal Pay • {selectedAmount} NIS
-                </span>
+        {/* Main QR Card */}
+        <div className="rounded-3xl bg-white p-5 border border-border shadow-xs text-center space-y-4">
+          {/* Stylized QR Code matching Figma */}
+          <div className="relative mx-auto flex h-56 w-56 items-center justify-center rounded-3xl bg-[#F8FAFC] p-3 border border-slate-200 shadow-inner">
+            <div className="relative flex h-full w-full items-center justify-center rounded-2xl bg-white p-2">
+              <svg viewBox="0 0 100 100" className="h-full w-full text-[#123A68] fill-current">
+                {/* Outer positioning squares */}
+                <rect x="5" y="5" width="28" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="6" />
+                <rect x="12" y="12" width="14" height="14" rx="2" />
+                <rect x="67" y="5" width="28" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="6" />
+                <rect x="74" y="12" width="14" height="14" rx="2" />
+                <rect x="5" y="67" width="28" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="6" />
+                <rect x="12" y="74" width="14" height="14" rx="2" />
+                {/* Dense Pattern */}
+                <rect x="38" y="8" width="6" height="6" rx="1" />
+                <rect x="48" y="14" width="6" height="6" rx="1" />
+                <rect x="56" y="8" width="6" height="6" rx="1" />
+                <rect x="8" y="38" width="6" height="6" rx="1" />
+                <rect x="18" y="46" width="6" height="6" rx="1" />
+                <rect x="26" y="38" width="6" height="6" rx="1" />
+                <rect x="38" y="38" width="6" height="6" rx="1" />
+                <rect x="48" y="46" width="6" height="6" rx="1" />
+                <rect x="56" y="38" width="6" height="6" rx="1" />
+                <rect x="68" y="38" width="6" height="6" rx="1" />
+                <rect x="78" y="46" width="6" height="6" rx="1" />
+                <rect x="86" y="38" width="6" height="6" rx="1" />
+                <rect x="38" y="68" width="6" height="6" rx="1" />
+                <rect x="48" y="78" width="6" height="6" rx="1" />
+                <rect x="56" y="68" width="6" height="6" rx="1" />
+                <rect x="68" y="68" width="6" height="6" rx="1" />
+                <rect x="78" y="78" width="6" height="6" rx="1" />
+                <rect x="86" y="68" width="6" height="6" rx="1" />
+              </svg>
+
+              {/* Center Lightning Badge */}
+              <div className="absolute inset-0 m-auto flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-md border border-orange-100">
+                <Zap className="h-5 w-5 text-[#F36F21] fill-[#F36F21]" />
               </div>
             </div>
+          </div>
 
-            {/* Invoice Details */}
-            <div className="mt-3 flex items-center justify-between rounded-[14px] bg-[#F8FAFC] p-3 border border-border/70 text-[12px]">
-              <span className="text-text-secondary">رقم الفاتورة:</span>
-              <div className="flex items-center gap-1.5 font-mono font-bold text-primary">
-                <span>{invoiceId}</span>
-                <button
-                  type="button"
-                  onClick={copyInvoice}
-                  className="text-text-muted hover:text-accent cursor-pointer"
-                  title="نسخ"
-                >
-                  <Copy className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </div>
-            {copied && (
-              <span className="text-[11px] font-bold text-emerald-600 mt-1 block">
-                تم نسخ رقم الفاتورة!
+          {/* Numbered Steps in dark navy circles */}
+          <div className="space-y-2.5 text-xs text-text-secondary text-right pt-1">
+            <div className="flex items-center gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+                1
               </span>
-            )}
+              <span>افتح تطبيق البنك أو جوال باي على هاتفك</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+                2
+              </span>
+              <span>اختر "دفع برمز QR" أو "مسح رمز"</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+                3
+              </span>
+              <span>وجّه الكاميرا نحو رمز QR أعلاه</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+                4
+              </span>
+              <span>راجع المبلغ وأكّد العملية</span>
+            </div>
           </div>
-        </Card>
 
-        {/* Steps to Pay */}
-        <div className="rounded-[18px] bg-white p-4 border border-border space-y-2 text-right">
-          <h4 className="text-[13px] font-bold text-primary flex items-center gap-1.5">
-            <ShieldCheck className="h-4 w-4 text-emerald-600" />
-            <span>خطوات الشحن عبر جوال باي (Jawwal Pay):</span>
-          </h4>
-          <ol className="text-[12px] text-text-secondary space-y-1.5 pr-4 list-decimal leading-relaxed">
-            <li>افتح تطبيق <strong>جوال باي (Jawwal Pay)</strong> على هاتفك.</li>
-            <li>اختر خيار <strong>مسح رمز QR (Scan & Pay)</strong>.</li>
-            <li>امسح الرمز أعلاه وقم بتأكيد دفع <strong>{selectedAmount} شيكل</strong>.</li>
-            <li>ستتم إضافة التوكنز إلى محفظتك في التطبيق تلقائياً!</li>
-          </ol>
-        </div>
+          {/* Bottom Dual Action Buttons */}
+          <div className="pt-2 flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleCompleted}
+              className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
+            >
+              <CheckCircle className="h-4 w-4" />
+              <span>لقد أتممت الدفع</span>
+            </button>
 
-        {/* Check Payment & Return */}
-        <div className="pt-2 space-y-2">
-          <Button
-            variant="accent"
-            size="md"
-            fullWidth
-            onClick={() => {
-              navigate("/wallet");
-            }}
-            leftIcon={<Zap className="h-4 w-4" />}
-          >
-            تأكيد الدفع والعودة للمحفظة
-          </Button>
-
-          <Button
-            variant="outline"
-            size="md"
-            fullWidth
-            onClick={() => navigate("/wallet")}
-          >
-            إلغاء والعودة للمحفظة
-          </Button>
+            <button
+              type="button"
+              onClick={() => alert("تم حفظ رمز الـ QR في ألبوم الصور.")}
+              className="flex h-12 px-4 items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white text-xs font-black text-primary hover:border-accent active:scale-98 transition-all cursor-pointer"
+            >
+              <Download className="h-4 w-4" />
+              <span>حفظ QR</span>
+            </button>
+          </div>
         </div>
       </div>
-    </AppLayout>
+    </MobileContainer>
   );
 }

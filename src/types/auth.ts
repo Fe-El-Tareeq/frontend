@@ -14,6 +14,7 @@ export interface UserProfile {
   id: string;
   phone: string;
   fullName: string | null;
+  profileImageUrl?: string | null;
   role: UserRole;
   trustScore: number;
   neighborhoodId: string | null;

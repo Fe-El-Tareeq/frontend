@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Form } from "../../components/ui/form/Form";
+import { ResetPasswordSuccessModal } from "../../components/modals/ResetPasswordSuccessModal";
 
 const resetPasswordSchema = z
   .object({
-    password: z.string().min(6, "كلمة المرور يجب أن تتكون من 6 أحرف على الأقل"),
+    password: z
+      .string()
+      .min(8, "كلمة المرور يجب أن تتكون من 8 أحرف على الأقل"),
     confirmPassword: z.string().min(1, "يرجى تأكيد كلمة المرور"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -19,8 +21,7 @@ const resetPasswordSchema = z
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPassword() {
-  const navigate = useNavigate();
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const {
     register,
@@ -35,20 +36,15 @@ export default function ResetPassword() {
   });
 
   const onSubmit = () => {
-    setIsSuccess(true);
-    setTimeout(() => {
-      navigate("/login");
-    }, 1500);
+    setShowSuccessModal(true);
   };
 
   return (
-    <AuthLayout title="" showBack={true}>
-      {isSuccess && (
-        <div className="mb-4 rounded-xl bg-emerald-50 p-3.5 text-center text-xs font-bold text-emerald-700 border border-emerald-200">
-          تم تغيير كلمة المرور بنجاح! جاري التوجيه لتسجيل الدخول...
-        </div>
-      )}
-
+    <AuthLayout
+      title="تعيين كلمة مرور جديدة"
+      subtitle="أدخل كلمة المرور الجديدة لحسابك"
+      showBack={true}
+    >
       <Form onSubmit={handleSubmit(onSubmit)}>
         {/* New Password */}
         <Form.Field
@@ -56,8 +52,9 @@ export default function ResetPassword() {
           error={errors.password?.message}
           required
         >
+          <Form.Label>كلمة المرور الجديدة</Form.Label>
           <Form.PasswordInput
-            placeholder="كلمة المرور الجديدة"
+            placeholder="••••••••"
             className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
             {...register("password")}
           />
@@ -70,22 +67,39 @@ export default function ResetPassword() {
           error={errors.confirmPassword?.message}
           required
         >
+          <Form.Label>تأكيد كلمة المرور</Form.Label>
           <Form.PasswordInput
-            placeholder="تأكيد كلمة المرور الجديدة"
+            placeholder="••••••••"
             className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
             {...register("confirmPassword")}
           />
           <Form.ErrorMessage />
         </Form.Field>
 
-        {/* Save Button (Deep Navy) */}
+        {/* Password Hint */}
+        <div className="rounded-2xl bg-orange-50/70 p-3.5 border border-orange-200/70 text-right space-y-1">
+          <span className="text-[11px] font-bold text-[#F36F21] block">
+            شروط كلمة المرور:
+          </span>
+          <p className="text-[11px] text-text-secondary leading-relaxed">
+            يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وحرف كبير، ورقم، ورمز خاص.
+          </p>
+        </div>
+
+        {/* Save Button */}
         <button
           type="submit"
-          className="mt-6 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all"
+          className="mt-4 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
         >
-          حفظ
+          حفظ كلمة المرور
         </button>
       </Form>
+
+      {/* Success Modal */}
+      <ResetPasswordSuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
     </AuthLayout>
   );
 }
