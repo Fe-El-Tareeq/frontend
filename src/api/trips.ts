@@ -35,13 +35,8 @@ export interface CreateTripDto {
 export const tripsApi = {
   // GET /api/v1/trips
   getTrips: async (params?: { city?: string; sort?: string }): Promise<TripDto[]> => {
-    try {
-      const response = await apiClient.get<TripDto[]>(ENDPOINTS.TRIPS.LIST, { params });
-      return response.data;
-    } catch (error) {
-      // If endpoint is not yet deployed or returns 404, throw to let hook handle fallback
-      throw error;
-    }
+    const response = await apiClient.get<TripDto[]>(ENDPOINTS.TRIPS.LIST, { params });
+    return response.data;
   },
 
   // GET /api/v1/trips/:id
