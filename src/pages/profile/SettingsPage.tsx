@@ -7,12 +7,18 @@ import {
   Moon,
   Info,
   Trash2,
+  Download,
+  Smartphone,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { usePWA } from "../../hooks/usePWA";
+import { PwaInstallModal } from "../../components/pwa/PwaInstallModal";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
+  const { isInstalled, isIOS, triggerInstall } = usePWA();
+  const [showInstallModal, setShowInstallModal] = useState(false);
 
   const [appNotifications, setAppNotifications] = useState(true);
   const [offerNotifications, setOfferNotifications] = useState(true);
@@ -22,6 +28,13 @@ export default function SettingsPage() {
   const handleDeleteAccount = () => {
     if (confirm("هل أنت متأكد من رغبتك في حذف حسابك نهائياً؟ هذا الإجراء لا يمكن التراجع عنه.")) {
       alert("تم إرسال طلب حذف الحساب للإدارة.");
+    }
+  };
+
+  const handleInstallClick = async () => {
+    const result = await triggerInstall();
+    if (result === "ios" || result === "fallback") {
+      setShowInstallModal(true);
     }
   };
 
@@ -40,6 +53,36 @@ export default function SettingsPage() {
           </button>
           <h1 className="text-xl font-black text-[#123A68]">الإعدادات</h1>
         </div>
+
+        {/* Section 0: تثبيت التطبيق على الهاتف */}
+        {!isInstalled && (
+          <div className="rounded-3xl bg-gradient-to-r from-[#123A68] to-[#0A1F38] p-5 text-white shadow-md space-y-3">
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                onClick={handleInstallClick}
+                className="flex items-center gap-1.5 rounded-xl bg-[#F36F21] px-3.5 py-2 text-xs font-black text-white shadow-md hover:bg-[#E05E12] active:scale-95 transition-all cursor-pointer"
+              >
+                <Download className="h-4 w-4" />
+                <span>تثبيت الآن</span>
+              </button>
+
+              <div className="flex items-center gap-2 text-right">
+                <div>
+                  <h3 className="text-xs font-black text-white">
+                    تطبيق بطريقك على هاتفك
+                  </h3>
+                  <p className="text-[10px] text-white/70">
+                    تصفح أسرع وإشعارات فورية
+                  </p>
+                </div>
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-[#F36F21]">
+                  <Smartphone className="h-5 w-5" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Section 1: الإشعارات والتنبيهات */}
         <div className="rounded-3xl bg-white p-5 border border-border shadow-xs space-y-4 text-right">
@@ -84,10 +127,10 @@ export default function SettingsPage() {
             </label>
             <div className="text-right">
               <span className="text-xs font-bold text-primary block">
-                إشعارات العروض الجديدة
+                عروض الطلبات
               </span>
               <span className="text-[10.5px] text-text-muted">
-                عند تقديم عرض على طلبك أو قبول عرضك
+                تنبيه عند تقديم عرض جديد على طلبك
               </span>
             </div>
           </div>
@@ -105,10 +148,10 @@ export default function SettingsPage() {
             </label>
             <div className="text-right">
               <span className="text-xs font-bold text-primary block">
-                إشعارات الرسائل
+                الرسائل والمحادثات
               </span>
               <span className="text-[10.5px] text-text-muted">
-                تنبيهات فورية عند وصول رسالة جديدة
+                تنبيه فوري عند استلام رسالة جديدة
               </span>
             </div>
           </div>
@@ -222,12 +265,19 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={handleDeleteAccount}
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-red-50 text-xs font-black text-red-600 border border-red-200 hover:bg-red-100 active:scale-98 transition-all cursor-pointer"
+            className="mt-2 flex h-11 w-full items-center justify-center rounded-2xl border border-red-200 bg-red-50 text-xs font-bold text-red-600 hover:bg-red-100 active:scale-98 transition-all cursor-pointer"
           >
-            <span>حذف الحساب نهائياً</span>
+            طلب حذف الحساب
           </button>
         </div>
       </div>
+
+      {/* Installation Instructions Modal */}
+      <PwaInstallModal
+        isOpen={showInstallModal}
+        onClose={() => setShowInstallModal(false)}
+        isIOS={isIOS}
+      />
     </MobileContainer>
   );
 }

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useAuthStore } from "./store/useAuthStore";
 import { ProtectedRoute, PublicOnlyRoute } from "./components/auth/ProtectedRoute";
+import { PwaInstallBanner } from "./components/pwa/PwaInstallBanner";
 
 // Lazy-loaded pages matching Figma structure
 const SplashScreen = lazy(() => import("./pages/SplashScreen"));
@@ -381,6 +382,9 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
+
+      {/* Progressive Web App (PWA) Install Prompt Banner */}
+      <PwaInstallBanner />
     </BrowserRouter>
   );
 }

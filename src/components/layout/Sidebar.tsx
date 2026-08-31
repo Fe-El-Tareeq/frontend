@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { FC } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -11,9 +12,12 @@ import {
   LogOut,
   Zap,
   X,
+  Download,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useWallet } from "../../hooks/useWallet";
+import { usePWA } from "../../hooks/usePWA";
+import { PwaInstallModal } from "../pwa/PwaInstallModal";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -25,6 +29,8 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
   const location = useLocation();
   const { profile, logout } = useAuth();
   const { tokenBalance } = useWallet();
+  const { isInstalled, isIOS, triggerInstall } = usePWA();
+  const [showInstallModal, setShowInstallModal] = useState(false);
 
   const navItems = [
     { label: "الرئيسية", path: "/home", icon: Home },
@@ -52,6 +58,15 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
+  const handleInstallApp = async () => {
+    const result = await triggerInstall();
+    if (result === "ios" || result === "fallback") {
+      setShowInstallModal(true);
+    } else if (result === "accepted" || result === "prompted") {
+      onClose();
+    }
+  };
+
   const userInitials = profile?.fullName
     ? profile.fullName
         .split(" ")
@@ -77,7 +92,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
         }`}
       >
         {/* Top Section */}
-        <div className="space-y-6">
+        <div className="space-y-6 overflow-y-auto">
           {/* Header with Logo and Close */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div className="flex items-center gap-2">
@@ -148,6 +163,18 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </button>
               );
             })}
+
+            {/* Install App Button */}
+            {!isInstalled && (
+              <button
+                type="button"
+                onClick={handleInstallApp}
+                className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-bold bg-[#F36F21]/20 text-[#F36F21] border border-[#F36F21]/40 hover:bg-[#F36F21]/30 transition-all mt-2 cursor-pointer"
+              >
+                <Download className="h-5 w-5 text-[#F36F21]" />
+                <span>تثبيت التطبيق على هاتفك</span>
+              </button>
+            )}
           </nav>
         </div>
 
@@ -175,6 +202,16 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
       </aside>
+
+      {/* Installation Instructions Modal */}
+      <PwaInstallModal
+        isOpen={showInstallModal}
+        onClose={() => {
+          setShowInstallModal(false);
+          onClose();
+        }}
+        isIOS={isIOS}
+      />
     </>
   );
 };
