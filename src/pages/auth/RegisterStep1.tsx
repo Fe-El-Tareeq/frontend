@@ -62,7 +62,7 @@ export default function RegisterStep1() {
       currentStep={1}
       totalSteps={2}
       showBack={true}
-      onBack={() => navigate("/welcome")}
+      onBack={() => navigate("/")}
       footerText="لديك حساب بالفعل؟"
       footerActionText="تسجيل الدخول"
       onFooterAction={() => navigate("/login")}

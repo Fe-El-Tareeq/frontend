@@ -60,10 +60,10 @@ export default function ForgotPassword() {
       title="نسيت كلمة المرور؟"
       subtitle="أدخل رقم هاتفك المسجل وسنرسل لك رمزاً لتسجيل الدخول وتعيين كلمة مرور جديدة"
       showBack
-      onBack={() => navigate("/welcome")}
+      onBack={() => navigate("/login")}
       footerText="تذكرت كلمة المرور؟"
       footerActionText="العودة لتسجيل الدخول"
-      onFooterAction={() => navigate("/welcome")}
+      onFooterAction={() => navigate("/login")}
     >
       {isSuccess && (
         <div className="mb-4 rounded-[14px] bg-success-light p-3.5 text-right text-[13px] font-bold text-success border border-success/20">
