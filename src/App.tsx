@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
+import LandingPage from "./pages/LandingPage";
+
 import Welcome from "./pages/auth/Welcome";
 import RegisterStep1 from "./pages/auth/RegisterStep1";
 import RegisterStep2 from "./pages/auth/RegisterStep2";
@@ -16,13 +18,18 @@ function App() {
 
       <Routes>
 
-        {/* الصفحة الأولى */}
         <Route path="/" element={<Home />} />
 
-        {/* تسجيل الدخول */}
-        <Route path="/welcome" element={<Welcome />} />
+        <Route
+          path="/landing"
+          element={<LandingPage />}
+        />
 
-        {/* إنشاء الحساب */}
+        <Route
+          path="/welcome"
+          element={<Welcome />}
+        />
+
         <Route
           path="/register-step1"
           element={<RegisterStep1 />}
@@ -38,8 +45,6 @@ function App() {
           element={<Register />}
         />
 
-
-        {/* صفحات التطبيق */}
         <Route element={<DashboardLayout />}>
 
           <Route
