@@ -91,50 +91,38 @@ export default function ProfilePage() {
 
           <div className="space-y-0.5">
             <h2 className="text-base font-black text-[#123A68]">
-              {profile?.fullName || "هديل محمد"}
+              {profile?.fullName || "المستخدم"}
             </h2>
             <p className="text-xs text-text-secondary">
               {profile?.neighborhood?.name
-                ? `غزة - ${profile.neighborhood.name}`
-                : "غزة - الرمال"}
+                ? `${profile.neighborhood.governorate || "غزة"} - ${profile.neighborhood.name}`
+                : "غزة"}
             </p>
             <span className="text-[10.5px] text-text-muted block">
-              عضو منذ 2024
+              عضو في بطريقك
             </span>
           </div>
         </div>
 
-        {/* 2x2 Stats Summary Grid matching Batch 3 image 1 */}
+        {/* 2x2 Stats Summary Grid */}
         <div className="grid grid-cols-2 gap-3">
-          {/* Stat 1: Trips (Navy) */}
+          {/* Stat 1: Rating (Amber) */}
           <div className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-0.5">
-            <span className="text-[11px] text-text-muted block">الرحلات</span>
-            <div className="text-2xl font-black text-[#123A68]">12</div>
-            <span className="text-[10px] text-text-muted">منجزة</span>
+            <span className="text-[11px] text-text-muted block">درجة الثقة</span>
+            <div className="text-2xl font-black text-amber-500">
+              {profile?.trustScore ? (profile.trustScore / 20).toFixed(1) : "5.0"}
+            </div>
+            <span className="text-[10px] text-text-muted">⭐ ممتاز</span>
           </div>
 
-          {/* Stat 2: Errands (Orange) */}
-          <div className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-0.5">
-            <span className="text-[11px] text-text-muted block">الطلبات</span>
-            <div className="text-2xl font-black text-[#F36F21]">8</div>
-            <span className="text-[10px] text-text-muted">منجزة</span>
-          </div>
-
-          {/* Stat 3: Rating (Amber) */}
-          <div className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-0.5">
-            <span className="text-[11px] text-text-muted block">التقييم</span>
-            <div className="text-2xl font-black text-amber-500">4.8</div>
-            <span className="text-[10px] text-text-muted">ممتاز ⭐</span>
-          </div>
-
-          {/* Stat 4: Tokens (Teal) */}
+          {/* Stat 2: Tokens (Teal) */}
           <div
             onClick={() => navigate("/wallet")}
             className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-0.5 cursor-pointer hover:border-accent transition-all"
           >
-            <span className="text-[11px] text-text-muted block">التوكنز</span>
+            <span className="text-[11px] text-text-muted block">رصيد التوكنز</span>
             <div className="text-2xl font-black text-teal-700">
-              {tokenBalance ?? 47}
+              {tokenBalance ?? 0}
             </div>
             <span className="text-[10px] text-text-muted">توكن متاح ⚡</span>
           </div>

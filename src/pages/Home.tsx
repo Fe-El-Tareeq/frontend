@@ -126,7 +126,7 @@ export default function Home() {
         {!isInstalled && (
           <div
             onClick={handleInstallClick}
-            className="flex items-center justify-between gap-3 rounded-3xl bg-gradient-to-r from-[#123A68] to-[#1D4A7F] p-4 text-white shadow-md hover:shadow-lg active:scale-[0.99] transition-all cursor-pointer text-right"
+            className="flex items-center justify-between gap-3 rounded-3xl bg-linear-to-r from-[#123A68] to-[#1D4A7F] p-4 text-white shadow-md hover:shadow-lg active:scale-[0.99] transition-all cursor-pointer text-right"
           >
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F36F21] text-white shadow-xs">
@@ -356,7 +356,7 @@ export default function Home() {
                       {e.avatarInitials}
                     </div>
                     <div className="text-right">
-                      <h3 className="text-xs font-black text-primary line-clamp-1 max-w-[200px]">
+                      <h3 className="text-xs font-black text-primary line-clamp-1 max-w-50">
                         {e.title}
                       </h3>
                       <p className="text-[11px] text-text-muted">
@@ -380,7 +380,7 @@ export default function Home() {
       </div>
 
       {/* Sticky Dual Action Buttons at Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 mx-auto max-w-[430px] bg-white/95 backdrop-blur-md border-t border-border p-3.5 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-30 mx-auto max-w-107.5 bg-white/95 backdrop-blur-md border-t border-border p-3.5 shadow-lg">
         <div className="flex items-center gap-2.5">
           <button
             type="button"
