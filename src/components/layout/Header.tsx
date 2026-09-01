@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu, MapPin, Bell, Zap, ChevronRight } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useWallet } from "../../hooks/useWallet";
+import { useNotifications } from "../../hooks/useNotifications";
 import { Sidebar } from "./Sidebar";
 import { cn } from "../../utils/cn";
 
@@ -26,6 +27,7 @@ export const Header: FC<HeaderProps> = ({
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { tokenBalance } = useWallet();
+  const { unreadCount } = useNotifications();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleBack = () => {
@@ -111,10 +113,15 @@ export const Header: FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => navigate("/notifications")}
-                className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 border border-border text-primary hover:bg-slate-100 transition-colors"
+                className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 border border-border text-primary hover:bg-slate-100 transition-colors cursor-pointer"
                 aria-label="الإشعارات"
               >
                 <Bell className="h-5 w-5 text-text-secondary" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-[#F36F21] px-1 text-[10px] font-black text-white shadow-xs animate-scale-in">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
               </button>
 
               {/* Token Balance Pill */}

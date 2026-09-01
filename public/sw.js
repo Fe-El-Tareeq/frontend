@@ -78,3 +78,57 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
+
+// Notification Click Handler: Focus existing window or open target URL
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const urlToOpen = event.notification.data?.url || "/notifications";
+
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
+      // Check if there is already a window open with this app
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
+        if (client.url.includes(self.location.origin) && "focus" in client) {
+          client.navigate(urlToOpen);
+          return client.focus();
+        }
+      }
+      // Otherwise open a new window
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(urlToOpen);
+      }
+    })
+  );
+});
+
+// Push Event Handler (for Web Push Service integration)
+self.addEventListener("push", (event) => {
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      const title = data.title || "بطريقك";
+      const options = {
+        body: data.body || "لديك إشعار جديد في تطبيق بطريقك",
+        icon: "/logo.png",
+        badge: "/logo.png",
+        dir: "rtl",
+        lang: "ar",
+        data: {
+          url: data.url || "/notifications",
+        },
+      };
+      event.waitUntil(self.registration.showNotification(title, options));
+    } catch {
+      const title = "بطريقك";
+      const options = {
+        body: event.data.text(),
+        icon: "/logo.png",
+        badge: "/logo.png",
+        dir: "rtl",
+        lang: "ar",
+      };
+      event.waitUntil(self.registration.showNotification(title, options));
+    }
+  }
+});
