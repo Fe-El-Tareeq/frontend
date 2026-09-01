@@ -15,108 +15,63 @@ export default function MyErrands() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
-  const [regionFilter, setRegionFilter] = useState("ALL");
 
   const { errands: backendErrands, isLoading, isError, refetch } = useErrands();
 
-  // Fallback demo data matching Figma Batch 3 image 3
-  const staticFallbackErrands = [
-    {
-      id: "errand-1",
-      requesterName: "فاطمة علي",
-      avatarInitials: "فع",
-      avatarBg: "bg-purple-600",
-      status: "PENDING",
-      statusLabel: "قيد الانتظار",
-      statusBadge: "bg-amber-50 text-amber-700 border-amber-200",
-      date: "23 يوليو",
-      description: "توصيل دواء من صيدلية في رفح إلى منزلي في غزة - الرمال",
-      location: "الرمال",
-    },
-    {
-      id: "errand-2",
-      requesterName: "خالد عبدالله",
-      avatarInitials: "خع",
-      avatarBg: "bg-purple-600",
-      status: "MATCHED",
-      statusLabel: "تم التطابق",
-      statusBadge: "bg-blue-50 text-blue-700 border-blue-200",
-      date: "22 يوليو",
-      description: "توصيل وثائق رسمية من ديوان الموظفين في خان يونس",
-      location: "الشجاعية",
-    },
-    {
-      id: "errand-3",
-      requesterName: "رنا سعيد",
-      avatarInitials: "رس",
-      avatarBg: "bg-[#F36F21]",
-      status: "COMPLETED",
-      statusLabel: "مكتمل",
-      statusBadge: "bg-emerald-50 text-emerald-700 border-emerald-200",
-      date: "21 يوليو",
-      description: "شراء مستلزمات مدرسية من محلات خان يونس",
-      location: "بيت لاهيا",
-    },
-    {
-      id: "errand-4",
-      requesterName: "ياسر حمدان",
-      avatarInitials: "يح",
-      avatarBg: "bg-red-600",
-      status: "PENDING",
-      statusLabel: "قيد الانتظار",
-      statusBadge: "bg-amber-50 text-amber-700 border-amber-200",
-      date: "20 يوليو",
-      description: "توصيل طرود صغيرة من مكتب البريد المركزي",
-      location: "رفح",
-    },
-    {
-      id: "errand-5",
-      requesterName: "منى فارس",
-      avatarInitials: "مف",
-      avatarBg: "bg-[#123A68]",
-      status: "CANCELLED",
-      statusLabel: "ملغي",
-      statusBadge: "bg-red-50 text-red-700 border-red-200",
-      date: "19 يوليو",
-      description: "شراء ملابس أطفال من سوق الشجاعية",
-      location: "الرمال",
-    },
-  ];
+  const displayErrands = backendErrands.map((e, idx) => {
+    const requesterName = e.requester?.fullName || "مستخدم مسجل";
+    const initials = requesterName
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2);
 
-  const displayErrands =
-    backendErrands && backendErrands.length > 0
-      ? backendErrands.map((e) => ({
-          id: e.id,
-          requesterName: e.requester?.fullName || "مستخدم مسجل",
-          avatarInitials: e.requester?.fullName
-            ? e.requester.fullName.slice(0, 2)
-            : "مس",
-          avatarBg: "bg-[#123A68]",
-          status: e.status,
-          statusLabel:
-            e.status === "OPEN"
-              ? "قيد الانتظار"
-              : e.status === "MATCHED"
-              ? "تم التطابق"
-              : e.status === "COMPLETED"
-              ? "مكتمل"
-              : "ملغي",
-          statusBadge:
-            e.status === "OPEN"
-              ? "bg-amber-50 text-amber-700 border-amber-200"
-              : e.status === "MATCHED"
-              ? "bg-blue-50 text-blue-700 border-blue-200"
-              : e.status === "COMPLETED"
-              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-              : "bg-red-50 text-red-700 border-red-200",
-          date: new Date(e.createdAt).toLocaleDateString("ar-EG", {
-            day: "numeric",
-            month: "short",
-          }),
-          description: e.itemsDescription || e.title,
-          location: e.neighborhood?.name || e.destinationKeyword || "غزة",
-        }))
-      : staticFallbackErrands;
+    const isWaiting = e.status === "OPEN";
+    const isMatched = e.status === "MATCHED";
+    const isCompleted = e.status === "COMPLETED";
+
+    const statusLabel = isWaiting
+      ? "قيد الانتظار"
+      : isMatched
+      ? "تم التطابق"
+      : isCompleted
+      ? "مكتمل"
+      : e.status === "IN_TRANSIT"
+      ? "جاري التوصيل"
+      : "ملغي";
+
+    const statusBadge = isWaiting
+      ? "bg-amber-50 text-amber-700 border-amber-200"
+      : isMatched
+      ? "bg-blue-50 text-blue-700 border-blue-200"
+      : isCompleted
+      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+      : "bg-red-50 text-red-700 border-red-200";
+
+    const dateStr = e.createdAt
+      ? new Date(e.createdAt).toLocaleDateString("ar-EG", {
+          day: "numeric",
+          month: "short",
+        })
+      : "اليوم";
+
+    const locationStr = e.neighborhood?.name
+      ? `${e.neighborhood.name} ➔ ${e.destinationKeyword}`
+      : e.destinationKeyword || "غزة";
+
+    return {
+      id: e.id,
+      requesterName,
+      avatarInitials: initials,
+      avatarBg: idx % 3 === 0 ? "bg-[#123A68]" : idx % 3 === 1 ? "bg-purple-600" : "bg-[#F36F21]",
+      status: e.status,
+      statusLabel,
+      statusBadge,
+      date: dateStr,
+      description: e.title || e.itemsDescription,
+      location: locationStr,
+    };
+  });
 
   const filteredErrands = displayErrands.filter((e) => {
     if (searchQuery && !e.description.includes(searchQuery) && !e.requesterName.includes(searchQuery)) {
@@ -162,122 +117,118 @@ export default function MyErrands() {
           </div>
         </div>
 
-        {/* Filter Card */}
-        <div className="rounded-3xl bg-white p-4 border border-border shadow-xs space-y-2.5 text-right">
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ابحث في الطلبات..."
-              className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] pr-10 pl-4 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none text-right"
-            />
-            <Search className="absolute right-3.5 top-3.5 h-4 w-4 text-text-muted pointer-events-none" />
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-10 w-full rounded-xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs text-primary focus:border-accent focus:outline-none"
-            >
-              <option value="ALL">كل الحالات ⌵</option>
-              <option value="PENDING">قيد الانتظار</option>
-              <option value="MATCHED">تم التطابق</option>
-              <option value="COMPLETED">مكتمل</option>
-              <option value="CANCELLED">ملغي</option>
-            </select>
-
-            <select
-              value={regionFilter}
-              onChange={(e) => setRegionFilter(e.target.value)}
-              className="h-10 w-full rounded-xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs text-primary focus:border-accent focus:outline-none"
-            >
-              <option value="ALL">كل المناطق ⌵</option>
-              <option value="غزة">غزة</option>
-              <option value="الرمال">الرمال</option>
-              <option value="الشجاعية">الشجاعية</option>
-              <option value="رفح">رفح</option>
-              <option value="خان يونس">خان يونس</option>
-            </select>
-          </div>
+        {/* Search Bar */}
+        <div className="relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="ابحث في الطلبات..."
+            className="h-12 w-full rounded-2xl border border-slate-200 bg-white pr-11 pl-4 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-[#123A68] focus:outline-hidden shadow-2xs text-right"
+          />
+          <Search className="absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-text-muted" />
         </div>
 
-        {/* Errands List */}
-        {isLoading ? (
-          <div className="space-y-3">
+        {/* Status Filter Badges */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-bold no-scrollbar">
+          {[
+            { key: "ALL", label: "الكل" },
+            { key: "OPEN", label: "قيد الانتظار" },
+            { key: "MATCHED", label: "تم التطابق" },
+            { key: "COMPLETED", label: "مكتمل" },
+            { key: "CANCELLED", label: "ملغي" },
+          ].map((s) => (
+            <button
+              key={s.key}
+              type="button"
+              onClick={() => setStatusFilter(s.key)}
+              className={`shrink-0 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
+                statusFilter === s.key
+                  ? "bg-[#123A68] text-white shadow-xs"
+                  : "bg-white border border-slate-200 text-text-secondary hover:bg-slate-50"
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="space-y-3 pt-2">
             {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-36 w-full animate-pulse rounded-3xl bg-white border border-border"
-              />
+              <div key={i} className="h-28 rounded-3xl bg-slate-100 animate-pulse" />
             ))}
           </div>
-        ) : isError ? (
+        )}
+
+        {/* Error State */}
+        {isError && !isLoading && (
           <ErrorState
             title="تعذر تحميل الطلبات"
-            message="حدث خطأ أثناء جلب قائمة الطلبات."
-            onRetry={() => refetch()}
+            message="حدث خطأ أثناء جلب قائمة طلباتك من الخادم."
+            onRetry={refetch}
           />
-        ) : filteredErrands.length === 0 ? (
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !isError && filteredErrands.length === 0 && (
           <EmptyState
-            icon={<Package className="h-7 w-7 text-[#123A68]" />}
-            title="لا توجد طلبات مطابقة"
-            description="لم نتمكن من العثور على أي طلبات تطابق الفلتر الحالي."
-            actionText="إنشاء طلب جديد"
+            icon={<Package className="h-8 w-8 text-[#123A68]" />}
+            title="لا توجد طلبات مسجلة"
+            description="لم تقم بإنشاء أي طلبات توصيل حتى الآن. أنشئ طلبك الأول واطلب مساعدة مسافر بطريقك!"
+            actionText="إنشاء طلب جديد الآن"
             onAction={() => navigate("/errands/new")}
           />
-        ) : (
-          <div className="space-y-3 pt-1">
-            {filteredErrands.map((item) => (
+        )}
+
+        {/* Errands List */}
+        {!isLoading && !isError && filteredErrands.length > 0 && (
+          <div className="space-y-3.5">
+            {filteredErrands.map((errand) => (
               <div
-                key={item.id}
-                className="rounded-3xl bg-white p-4.5 border border-border shadow-xs space-y-3 hover:border-[#123A68]/30 transition-all text-right"
+                key={errand.id}
+                onClick={() => navigate(`/errands/${errand.id}`)}
+                className="rounded-3xl bg-white p-4.5 border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-[#123A68]/30 transition-all cursor-pointer space-y-3"
               >
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
+                {/* Header: User Avatar + Name + Status Badge */}
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full ${item.avatarBg} text-xs font-black text-white`}
+                      className={`flex h-11 w-11 items-center justify-center rounded-full ${errand.avatarBg} text-xs font-black text-white shadow-xs`}
                     >
-                      {item.avatarInitials}
+                      {errand.avatarInitials}
                     </div>
-                    <div className="text-right">
-                      <h3 className="text-xs font-black text-primary">
-                        {item.requesterName}
+                    <div>
+                      <h3 className="text-sm font-black text-primary">
+                        {errand.requesterName}
                       </h3>
-                      <span className="text-[10px] text-text-muted">
-                        {item.date}
+                      <span className="text-[11px] text-text-muted">
+                        {errand.date}
                       </span>
                     </div>
                   </div>
 
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-[10.5px] font-bold border ${item.statusBadge}`}
+                    className={`rounded-full px-2.5 py-1 text-xs font-bold border ${errand.statusBadge}`}
                   >
-                    {item.statusLabel}
+                    {errand.statusLabel}
                   </span>
                 </div>
 
                 {/* Description */}
-                <p className="text-xs text-primary leading-relaxed line-clamp-2">
-                  {item.description}
+                <p className="text-xs text-text-secondary leading-relaxed line-clamp-2">
+                  {errand.description}
                 </p>
 
-                {/* Footer Location & View Details */}
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-[11px] text-text-muted flex items-center gap-1">
-                    <span>📍</span>
-                    <span>{item.location}</span>
+                {/* Footer: Location Tag & Action */}
+                <div className="flex items-center justify-between text-[11px] text-text-muted pt-2 border-t border-slate-100">
+                  <span className="truncate max-w-[200px] font-medium text-text-primary">
+                    📍 {errand.location}
                   </span>
-
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/errands/${item.id}`)}
-                    className="flex h-9 px-4 items-center justify-center rounded-xl bg-blue-50/60 text-xs font-black text-[#123A68] hover:bg-blue-100 active:scale-98 transition-all cursor-pointer"
-                  >
-                    عرض التفاصيل
-                  </button>
+                  <span className="text-[#F36F21] font-bold">
+                    عرض التفاصيل ➔
+                  </span>
                 </div>
               </div>
             ))}

@@ -3,20 +3,18 @@ import { useNavigate } from "react-router-dom";
 import {
   Sparkles,
   MapPin,
-  Clock,
   CheckCircle,
   XCircle,
-  Flame,
-  Route,
   Zap,
 } from "lucide-react";
 import { AppLayout } from "../../components/layout/AppLayout";
 import { Card } from "../../components/ui/card/Card";
 import { Button } from "../../components/ui/button/Button";
+import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { WeightBadge } from "../../components/ui/badge/WeightBadge";
 import type { WeightClass } from "../../types";
 
-interface MockMatchItem {
+interface MatchItem {
   id: string;
   title: string;
   itemsDescription: string;
@@ -33,54 +31,22 @@ interface MockMatchItem {
 export default function MatchFeed() {
   const navigate = useNavigate();
 
-  const [matches, setMatches] = useState<MockMatchItem[]>([
-    {
-      id: "match-1",
-      title: "أدوية من صيدلية الشفاء",
-      itemsDescription: "شريط خافض حرارة وعلبة فيتامينات للأطفال",
-      destination: "صيدلية الشفاء - شارع الوحدة",
-      neighborhood: "الرمال الشمالي",
-      matchScore: 96,
-      distanceCategory: "SAME_NEIGHBORHOOD",
-      feeNis: 5,
-      weightClass: "LIGHT",
-      isUrgent: true,
-      timeEstimate: "في طريقك تماماً (+2 دقيقة)",
-    },
-    {
-      id: "match-2",
-      title: "طرد من البريد المركزي",
-      itemsDescription: "مغلف وثائق رسمية خفيف الوزن",
-      destination: "مفترق السرايا - عمارة الأمل",
-      neighborhood: "الرمال الجنوبي",
-      matchScore: 88,
-      distanceCategory: "SAME_NEIGHBORHOOD",
-      feeNis: 7,
-      weightClass: "LIGHT",
-      isUrgent: false,
-      timeEstimate: "انحراف طفيف (+5 دقائق)",
-    },
-    {
-      id: "match-3",
-      title: "مستلزمات مدرسية ومكتبية",
-      itemsDescription: "دفاتر وأقلام من مكتبة اليازجي",
-      destination: "مكتبة اليازجي - تل الهوا",
-      neighborhood: "تل الهوا",
-      matchScore: 74,
-      distanceCategory: "ADJACENT_ZONE",
-      feeNis: 5,
-      weightClass: "MEDIUM",
-      isUrgent: false,
-      timeEstimate: "حي مجاور (+8 دقائق)",
-    },
-  ]);
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION: Trip Matching Errands Feed
+   * Endpoint: GET /api/v1/matching/trips/:id?limit=10
+   * Response schema: { matches: [{ errand: Errand, score: number }], limit, recalculatedAt }
+   * When empty or pending, renders EmptyState from design system without mock data.
+   * ============================================================================
+   */
+  const [matches, setMatches] = useState<MatchItem[]>([]);
 
   const handleAccept = (matchId: string) => {
     navigate(`/errands/${matchId}/tracking`);
   };
 
   const handleDismiss = (matchId: string) => {
-    setMatches(matches.filter((m) => m.id !== matchId));
+    setMatches((prev) => prev.filter((m) => m.id !== matchId));
   };
 
   return (
@@ -94,117 +60,73 @@ export default function MatchFeed() {
     >
       <div className="space-y-4 pb-8">
         {/* Match Algorithm Banner */}
-        <div className="rounded-xl bg-linear-to-l from-primary via-primary to-primary-dark p-4 text-white shadow-md">
+        <div className="rounded-2xl bg-gradient-to-l from-[#123A68] to-[#1D4A7F] p-4 text-white shadow-md">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent animate-pulse" />
-            <span className="text-[14px] font-bold text-accent">
-              محرك المطابقة الذكي
+            <Sparkles className="h-5 w-5 text-amber-300 animate-pulse" />
+            <span className="text-xs font-bold text-amber-300">
+              خوارزمية التطابق الذكي
             </span>
           </div>
-          <p className="mt-1 text-[12px] text-white/80 leading-relaxed">
-            تم ترتيب هذه الطلبات حسب تطابقها العالي مع مسارك لتتمكن من كسب أجر التوصيل دون أن تنحرف عن طريقك!
+          <p className="mt-1 text-xs text-white/80 leading-relaxed">
+            يتم ترتيب الطلبات وفقاً لأقرب مسار زمني ومكاني لخط سير رحلتك.
           </p>
         </div>
 
-        {/* Matches List */}
+        {/* Empty State or Matches List */}
         {matches.length === 0 ? (
-          <div className="rounded-xl bg-white p-8 text-center border border-border shadow-sm mt-8">
-            <Route className="h-12 w-12 text-text-muted mx-auto mb-3" />
-            <h3 className="text-[16px] font-bold text-primary">
-              لا توجد طلبات أخرى مطابقة
-            </h3>
-            <p className="text-[13px] text-text-secondary mt-1 max-w-xs mx-auto">
-              سنرسل لك إشعاراً فور ظهور أي طلب جديد على نفس خط مسارك.
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-4"
-              onClick={() => navigate("/")}
-            >
-              العودة للرئيسية
-            </Button>
-          </div>
+          <EmptyState
+            icon={<Sparkles className="h-8 w-8 text-[#123A68]" />}
+            title="لا توجد طلبات مطابقة حالياً"
+            description="ستظهر هنا الطلبات المتوافقة مع مسار ووقت رحلتك تلقائياً فور توفرها."
+            actionText="العودة للرحلات"
+            onAction={() => navigate("/trips")}
+          />
         ) : (
-          matches.map((item) => (
-            <Card key={item.id} variant="elevated">
-              <Card.Header>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="inline-flex items-center gap-1 rounded-pill bg-accent-light px-2.5 py-0.5 text-[11px] font-extrabold text-accent border border-accent/20">
-                      <Zap className="h-3.5 w-3.5" />
-                      تطابق {item.matchScore}%
-                    </span>
-                    {item.isUrgent && (
-                      <span className="inline-flex items-center gap-1 rounded-pill bg-red-100 px-2 py-0.5 text-[11px] font-bold text-red-600">
-                        <Flame className="h-3 w-3" />
-                        عاجل
-                      </span>
-                    )}
+          <div className="space-y-4">
+            {matches.map((item) => (
+              <Card key={item.id} className="p-4 space-y-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="font-bold text-sm text-primary">{item.title}</h3>
+                    <p className="text-xs text-text-muted mt-0.5">{item.itemsDescription}</p>
                   </div>
-                  <Card.Title>{item.title}</Card.Title>
-                </div>
-
-                <div className="text-left">
-                  <span className="text-[18px] font-extrabold text-accent block">
-                    {item.feeNis} ₪
-                  </span>
-                  <span className="text-[10px] text-text-muted">أجر المشوار</span>
-                </div>
-              </Card.Header>
-
-              <Card.Body>
-                <p className="text-[13px] text-text-secondary leading-relaxed">
-                  {item.itemsDescription}
-                </p>
-
-                <div className="mt-3 space-y-1.5 rounded-md bg-background p-3 border border-border/50 text-[12px]">
-                  <div className="flex items-center gap-1.5 text-primary">
-                    <MapPin className="h-3.5 w-3.5 text-accent shrink-0" />
-                    <span className="font-bold">{item.destination}</span>
-                    <span className="text-text-muted">({item.neighborhood})</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-text-secondary">
-                    <Clock className="h-3.5 w-3.5 text-text-muted shrink-0" />
-                    <span>{item.timeEstimate}</span>
-                  </div>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between">
                   <WeightBadge weightClass={item.weightClass} />
-                  <span className="text-[11px] font-medium text-text-muted">
-                    {item.distanceCategory === "SAME_NEIGHBORHOOD"
-                      ? "نفس الحي"
-                      : "حي مجاور"}
-                  </span>
                 </div>
-              </Card.Body>
 
-              <Card.Footer>
-                <div className="flex gap-2 w-full">
+                <div className="flex items-center justify-between text-xs text-text-secondary pt-2 border-t border-slate-100">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-3.5 w-3.5 text-text-muted" />
+                    <span>{item.destination}</span>
+                  </div>
+                  <div className="flex items-center gap-1 font-bold text-[#F36F21]">
+                    <Zap className="h-3.5 w-3.5" />
+                    <span>{item.feeNis} شيكل</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
                   <Button
-                    variant="accent"
+                    variant="primary"
                     size="sm"
-                    fullWidth
+                    className="flex-1"
                     onClick={() => handleAccept(item.id)}
-                    leftIcon={<CheckCircle className="h-4 w-4" />}
                   >
-                    قبول وتوصيل ({item.feeNis} ₪)
+                    <CheckCircle className="h-4 w-4 ml-1" />
+                    قبول التوصيل
                   </Button>
-
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
+                    className="flex-1"
                     onClick={() => handleDismiss(item.id)}
-                    className="text-text-muted hover:text-error px-3"
-                    aria-label="تجاهل"
                   >
-                    <XCircle className="h-5 w-5" />
+                    <XCircle className="h-4 w-4 ml-1" />
+                    تخطي
                   </Button>
                 </div>
-              </Card.Footer>
-            </Card>
-          ))
+              </Card>
+            ))}
+          </div>
         )}
       </div>
     </AppLayout>

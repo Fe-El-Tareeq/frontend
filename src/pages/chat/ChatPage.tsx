@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   ChevronRight,
   Phone,
@@ -7,62 +7,50 @@ import {
   Mic,
   Send,
   Package,
+  MessageSquare,
 } from "lucide-react";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { EmptyState } from "../../components/ui/feedback/EmptyState";
+
+interface ChatMessage {
+  id: string;
+  sender: "ME" | "OTHER";
+  text: string;
+  time: string;
+}
 
 export default function ChatPage() {
+  const { id = "room-1" } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION: Room Messages & Real-Time Sync
+   * Endpoints:
+   *   - GET /api/v1/chat-rooms/:roomId/messages?limit=50
+   *   - POST /api/v1/chat-rooms/:roomId/messages (Body: { clientMessageKey, type: "TEXT", text })
+   *   - GET /api/v1/chat-rooms/:roomId/sync?since=...
+   * Renders dynamic messages or EmptyState from design system without mock data.
+   * ============================================================================
+   */
   const [messageText, setMessageText] = useState("");
-  const [messages, setMessages] = useState([
-    {
-      id: "m-1",
-      sender: "OTHER",
-      text: "مرحباً! شفت طلبك لتوصيل الدواء من رفح إلى الرمال.",
-      time: "10:30 ص",
-    },
-    {
-      id: "m-2",
-      sender: "OTHER",
-      text: "رحلتي بكرة الصبح الساعة 9:00، بقدر أوصلك إياه.",
-      time: "10:31 ص",
-    },
-    {
-      id: "m-3",
-      sender: "ME",
-      text: "أهلاً أحمد! ممتاز، الدواء جاهز في الصيدلية، كم بدك للتوصيل؟",
-      time: "10:33 ص",
-    },
-    {
-      id: "m-4",
-      sender: "OTHER",
-      text: "بما إنه بطريقي، 5 شيكل بس ثمن المواصلات.",
-      time: "10:35 ص",
-    },
-    {
-      id: "m-5",
-      sender: "ME",
-      text: "تمام، متفقين! رح أبعتلك تفاصيل الصيدلية ورقم الوصفة.",
-      time: "10:36 ص",
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!messageText.trim()) return;
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `m-${Date.now()}`,
-        sender: "ME",
-        text: messageText.trim(),
-        time: new Date().toLocaleTimeString("ar-EG", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      },
-    ]);
+    const newMsg: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      sender: "ME",
+      text: messageText.trim(),
+      time: new Date().toLocaleTimeString("ar-EG", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    setMessages((prev) => [...prev, newMsg]);
     setMessageText("");
   };
 
@@ -79,14 +67,14 @@ export default function ChatPage() {
           </button>
 
           <div className="relative">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F36F21] text-xs font-black text-white">
-              أخ
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white">
+              مس
             </div>
             <span className="absolute bottom-0 left-0 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white" />
           </div>
 
           <div className="text-right">
-            <h3 className="text-xs font-black text-[#123A68]">أحمد خالد</h3>
+            <h3 className="text-xs font-black text-[#123A68]">محادثة التوصيل</h3>
             <span className="text-[10px] text-emerald-600 font-bold block">
               متصل الآن
             </span>
@@ -109,45 +97,55 @@ export default function ChatPage() {
         <div className="flex items-center gap-2">
           <Package className="h-4 w-4 text-[#F36F21]" />
           <span className="font-bold text-[#123A68] text-[11px] truncate">
-            طلب توصيل: توصيل دواء من صيدلية في رفح
+            غرفة محادثة التوصيل ({id})
           </span>
         </div>
         <span className="text-[10.5px] text-text-muted font-bold">
-          غزة ➔ رفح
+          محادثة آمنة
         </span>
       </div>
 
       {/* Messages Scroll Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((msg) => {
-          const isMe = msg.sender === "ME";
+        {messages.length === 0 ? (
+          <div className="pt-8">
+            <EmptyState
+              icon={<MessageSquare className="h-7 w-7 text-[#123A68]" />}
+              title="لا توجد رسائل سابقة"
+              description="ابدأ المحادثة الآن للتنسيق حول موعد ومكان استلام وتسليم الأغراض."
+            />
+          </div>
+        ) : (
+          messages.map((msg) => {
+            const isMe = msg.sender === "ME";
 
-          return (
-            <div
-              key={msg.id}
-              className={`flex flex-col ${
-                isMe ? "items-start" : "items-end"
-              }`}
-            >
+            return (
               <div
-                className={`max-w-[78%] rounded-3xl p-3.5 text-xs leading-relaxed text-right shadow-2xs ${
-                  isMe
-                    ? "bg-[#123A68] text-white rounded-tr-xs"
-                    : "bg-white text-[#123A68] border border-slate-200 rounded-tl-xs"
+                key={msg.id}
+                className={`flex flex-col ${
+                  isMe ? "items-start" : "items-end"
                 }`}
               >
-                <p>{msg.text}</p>
-                <span
-                  className={`text-[9.5px] mt-1 block font-bold ${
-                    isMe ? "text-white/60 text-left" : "text-text-muted text-left"
+                <div
+                  className={`max-w-[78%] rounded-3xl p-3.5 text-xs leading-relaxed text-right shadow-2xs ${
+                    isMe
+                      ? "bg-[#123A68] text-white rounded-tr-xs"
+                      : "bg-white text-[#123A68] border border-slate-200 rounded-tl-xs"
                   }`}
                 >
-                  {msg.time}
-                </span>
+                  <p>{msg.text}</p>
+                  <span
+                    className={`text-[9.5px] mt-1 block font-bold ${
+                      isMe ? "text-white/60 text-left" : "text-text-muted text-left"
+                    }`}
+                  >
+                    {msg.time}
+                  </span>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
 
       {/* Input Bar */}

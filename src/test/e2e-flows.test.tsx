@@ -60,15 +60,12 @@ describe("E2E User Simulation & Flows Test Suite", () => {
     expect(searchInput).toHaveValue("دواء");
   });
 
-  it("Flow 3: User reviews Incoming Offers and accepts an offer", () => {
+  it("Flow 3: User reviews Incoming Offers and verifies dynamic state", () => {
     renderWithProviders(<IncomingOffersPage />);
 
     expect(screen.getAllByText("العروض الواردة")[0]).toBeInTheDocument();
     expect(screen.getAllByText("إجمالي العروض")[0]).toBeInTheDocument();
-    expect(screen.getByText("أحمد خالد")).toBeInTheDocument();
-
-    const acceptBtn = screen.getAllByText("قبول العرض")[0];
-    expect(acceptBtn).toBeInTheDocument();
+    expect(screen.getByText("لا توجد عروض واردة حالياً")).toBeInTheDocument();
   });
 
   it("Flow 4: User tracks order progress with 4-stage timeline and driver details", () => {

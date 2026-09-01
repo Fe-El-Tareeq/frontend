@@ -14,78 +14,46 @@ export default function WalletPage() {
   const {
     tokenBalance,
     isLoadingWallet,
-    isErrorWallet,
-    refetchWallet,
   } = useWallet();
 
-  const { transactions } = useWalletTransactions();
+  const {
+    transactions,
+    isLoadingTransactions,
+    isErrorTransactions,
+    refetchTransactions,
+  } = useWalletTransactions();
 
-  // Fallback demo data if backend transaction list is not yet populated
-  const staticTransactions = [
-    {
-      id: "tx-1",
-      date: "23 يوليو 2024",
-      type: "نشر طلب",
-      tokens: -1,
-      status: "COMPLETED",
-    },
-    {
-      id: "tx-2",
-      date: "22 يوليو 2024",
-      type: "شراء باقة 20 توكن",
-      tokens: 20,
-      status: "COMPLETED",
-    },
-    {
-      id: "tx-3",
-      date: "20 يوليو 2024",
-      type: "نشر طلب",
-      tokens: -1,
-      status: "COMPLETED",
-    },
-    {
-      id: "tx-4",
-      date: "18 يوليو 2024",
-      type: "نشر طلب",
-      tokens: -1,
-      status: "COMPLETED",
-    },
-    {
-      id: "tx-5",
-      date: "15 يوليو 2024",
-      type: "شراء باقة 50 توكن",
-      tokens: 50,
-      status: "COMPLETED",
-    },
-    {
-      id: "tx-6",
-      date: "10 يوليو 2024",
-      type: "نشر طلب",
-      tokens: -1,
-      status: "FAILED",
-    },
-  ];
+  const currentBalance = tokenBalance ?? 0;
 
-  const currentBalance = tokenBalance ?? 47;
+  // Calculate dynamic totals from transaction history
+  const totalBought = transactions
+    .filter((t: WalletTransaction) => t.tokenAmount > 0)
+    .reduce((acc: number, t: WalletTransaction) => acc + t.tokenAmount, 0);
 
-  // Format real or fallback transactions
-  const displayTransactions =
-    transactions && transactions.length > 0
-      ? transactions.map((t: WalletTransaction) => ({
-          id: t.id,
-          date: new Date(t.createdAt).toLocaleDateString("ar-EG", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          }),
-          type:
-            t.transactionType === "TOKEN_TOP_UP" || t.transactionType === "SIGNUP_BONUS"
-              ? "شراء باقة توكنز"
-              : "نشر طلب",
-          tokens: t.tokenAmount > 0 ? `+${t.tokenAmount}` : `${t.tokenAmount}`,
-          status: "COMPLETED",
-        }))
-      : staticTransactions;
+  const totalSpent = transactions
+    .filter((t: WalletTransaction) => t.tokenAmount < 0)
+    .reduce((acc: number, t: WalletTransaction) => acc + Math.abs(t.tokenAmount), 0);
+
+  // Format real dynamic transactions
+  const displayTransactions = transactions.map((t: WalletTransaction) => {
+    let typeLabel = "حركة توكنز";
+    if (t.transactionType === "SIGNUP_BONUS") typeLabel = "هدية التسجيل الترحيبية";
+    else if (t.transactionType === "TOKEN_TOP_UP") typeLabel = "شراء باقة توكنز";
+    else if (t.description) typeLabel = t.description;
+
+    return {
+      id: t.id,
+      date: new Date(t.createdAt).toLocaleDateString("ar-EG", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
+      type: typeLabel,
+      tokens: t.tokenAmount > 0 ? `+${t.tokenAmount}` : `${t.tokenAmount}`,
+      isPositive: t.tokenAmount > 0,
+      status: "COMPLETED",
+    };
+  });
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
@@ -112,12 +80,12 @@ export default function WalletPage() {
             <span className="text-xs text-white/70 block">رصيدك الحالي</span>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-4xl font-black text-white">
-                {currentBalance}
+                {isLoadingWallet ? "..." : currentBalance}
               </span>
               <span className="text-lg font-black text-white/90">توكن</span>
             </div>
             <p className="text-[11px] text-white/60 mt-1">
-              يكفي لنشر {currentBalance} طلب
+              يكفي لنشر أو قبول {currentBalance} طلب
             </p>
           </div>
 
@@ -125,7 +93,7 @@ export default function WalletPage() {
             <div className="flex items-center gap-1.5 text-white/90">
               <Zap className="h-4 w-4 text-[#F36F21] fill-[#F36F21]" />
               <span className="font-bold">
-                {profile?.fullName || "هديل محمد"}
+                {profile?.fullName || "المستخدم"}
               </span>
             </div>
           </div>
@@ -139,7 +107,8 @@ export default function WalletPage() {
               إجمالي الشراء
             </span>
             <div className="text-2xl font-black text-emerald-700">
-              70 <span className="text-xs font-bold">توكن</span>
+              {isLoadingTransactions ? "..." : totalBought}{" "}
+              <span className="text-xs font-bold">توكن</span>
             </div>
           </div>
 
@@ -149,7 +118,8 @@ export default function WalletPage() {
               إجمالي الإنفاق
             </span>
             <div className="text-2xl font-black text-[#F36F21]">
-              23 <span className="text-xs font-bold">توكن</span>
+              {isLoadingTransactions ? "..." : totalSpent}{" "}
+              <span className="text-xs font-bold">توكن</span>
             </div>
           </div>
         </div>
@@ -158,70 +128,61 @@ export default function WalletPage() {
         <div className="space-y-2 pt-1">
           <h2 className="text-base font-black text-[#123A68]">سجل المعاملات</h2>
 
-          {isLoadingWallet ? (
-            <div className="h-48 w-full animate-pulse rounded-3xl bg-white border border-border" />
-          ) : isErrorWallet ? (
+          {/* Loading */}
+          {isLoadingTransactions && (
+            <div className="space-y-2">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-14 rounded-2xl bg-slate-100 animate-pulse" />
+              ))}
+            </div>
+          )}
+
+          {/* Error */}
+          {isErrorTransactions && !isLoadingTransactions && (
             <ErrorState
-              title="تعذر تحميل سجل المعاملات"
-              message="حدث خطأ أثناء جلب العمليات."
-              onRetry={() => refetchWallet()}
+              title="تعذر تحميل المعاملات"
+              message="حدث خطأ أثناء جلب سجل حركات المحفظة."
+              onRetry={refetchTransactions}
             />
-          ) : displayTransactions.length === 0 ? (
+          )}
+
+          {/* Empty */}
+          {!isLoadingTransactions && !isErrorTransactions && displayTransactions.length === 0 && (
             <EmptyState
-              icon={<Zap className="h-7 w-7 text-[#123A68]" />}
-              title="لا توجد معاملات سابقة"
-              description="لم تقم بإجراء أي عمليات شحن أو استخدام توكنز بعد."
-              actionText="شراء توكنز الآن"
+              icon={<Zap className="h-8 w-8 text-[#F36F21]" />}
+              title="لا توجد معاملات مسجلة"
+              description="ستظهر هنا كافة عمليات شحن واستهلاك التوكنز والجوائز الترويجية."
+              actionText="شحن توكنز الآن"
               onAction={() => navigate("/wallet/buy-tokens")}
             />
-          ) : (
-            <div className="overflow-hidden rounded-3xl bg-white border border-border shadow-xs">
-              <table className="w-full text-right text-xs">
-                <thead>
-                  <tr className="border-b border-slate-100 bg-[#F8FAFC] text-[11px] font-black text-text-muted">
-                    <th className="py-3 px-3.5">التاريخ</th>
-                    <th className="py-3 px-3.5">نوع العملية</th>
-                    <th className="py-3 px-3.5 text-center">التوكنز</th>
-                    <th className="py-3 px-3.5 text-left">الحالة</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {displayTransactions.map((t) => (
-                    <tr key={t.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="py-3.5 px-3.5 font-bold text-text-secondary text-[11px]">
-                        {t.date}
-                      </td>
-                      <td className="py-3.5 px-3.5 font-bold text-[#123A68]">
-                        {t.type}
-                      </td>
-                      <td className="py-3.5 px-3.5 text-center font-black">
-                        <span
-                          className={
-                            typeof t.tokens === "number" && t.tokens > 0
-                              ? "text-emerald-600"
-                              : String(t.tokens).startsWith("+")
-                              ? "text-emerald-600"
-                              : "text-[#F36F21]"
-                          }
-                        >
-                          {t.tokens}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-3.5 text-left">
-                        <span
-                          className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${
-                            t.status === "COMPLETED"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                              : "bg-red-50 text-red-700 border-red-200"
-                          }`}
-                        >
-                          {t.status === "COMPLETED" ? "مكتمل" : "فشلت"}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          )}
+
+          {/* Transactions List */}
+          {!isLoadingTransactions && !isErrorTransactions && displayTransactions.length > 0 && (
+            <div className="rounded-3xl bg-white p-2 border border-slate-200/90 shadow-2xs divide-y divide-slate-100">
+              {displayTransactions.map((tx) => (
+                <div
+                  key={tx.id}
+                  className="flex items-center justify-between p-3.5 hover:bg-slate-50 transition-colors"
+                >
+                  <div className="text-right space-y-0.5">
+                    <span className="text-xs font-black text-[#123A68] block">
+                      {tx.type}
+                    </span>
+                    <span className="text-[10.5px] text-text-muted">
+                      {tx.date}
+                    </span>
+                  </div>
+
+                  <div
+                    className={`text-sm font-black ${
+                      tx.isPositive ? "text-emerald-600" : "text-[#F36F21]"
+                    }`}
+                  >
+                    {tx.tokens} توكن
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

@@ -17,6 +17,19 @@ import { useErrandDetail } from "../../hooks/useErrands";
 export default function OrderTracking() {
   const { id = "errand-1" } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION: Order Lifecycle & Assignment Tracking
+   * Endpoints:
+   *   - GET /api/v1/assignments/:id (or GET /api/v1/errands/:id)
+   *   - POST /api/v1/assignments/:id/pickup
+   *   - POST /api/v1/assignments/:id/start-delivery
+   *   - POST /api/v1/assignments/:id/complete (triggers rating prompt)
+   *   - POST /api/v1/assignments/:id/cancel
+   * Displays live lifecycle progress and traveler assignment data dynamically.
+   * ============================================================================
+   */
   const { errand } = useErrandDetail(id);
 
   const [rating, setRating] = useState<number>(0);

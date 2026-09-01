@@ -15,76 +15,32 @@ export default function MessagesPage() {
 
   /*
    * ============================================================================
-   * BACKEND INTEGRATION PLACEHOLDER: Active Conversations List
-   * Endpoint: GET /api/v1/messages/conversations
-   * Handles: Loading, Error (ErrorState with retry), Empty (EmptyState).
+   * BACKEND INTEGRATION: Chat Rooms & Active Conversations List
+   * Endpoint: GET /api/v1/chat-rooms (or GET /api/v1/messages/conversations)
+   * Response schema: { rooms: [ChatRoomSummary] }
+   * When empty or pending, renders EmptyState from design system without mock data.
    * ============================================================================
    */
   const { conversations: backendConversations, isLoading, isError, refetch } =
     useConversations();
 
-  const staticFallbackConversations: ConversationItemData[] = [
-    {
-      id: "1",
-      name: "أحمد خالد",
-      avatarInitials: "أخ",
-      avatarBg: "bg-[#F36F21]",
-      lastMessage: "شكراً، سأكون في موقعك قبل الرحلة بنصف ساعة",
-      time: "9:41 ص",
-      unreadCount: 2,
-      isOnline: true,
-    },
-    {
-      id: "2",
-      name: "سارة خليل",
-      avatarInitials: "سخ",
-      avatarBg: "bg-[#123A68]",
-      lastMessage: "تم تسليم الطلب بنجاح، شكراً جزيلاً",
-      time: "أمس",
-      unreadCount: 0,
-      isOnline: false,
-    },
-    {
-      id: "3",
-      name: "محمد أبو ريدة",
-      avatarInitials: "مر",
-      avatarBg: "bg-emerald-600",
-      lastMessage: "سأنطلق الساعة 9:30 صباحاً إن شاء الله",
-      time: "20 يوليو",
-      unreadCount: 0,
-      isOnline: false,
-    },
-    {
-      id: "4",
-      name: "محمود عادل",
-      avatarInitials: "مع",
-      avatarBg: "bg-purple-600",
-      lastMessage: "هل يمكن توصيل طرد إضافي؟",
-      time: "18 يوليو",
-      unreadCount: 0,
-      isOnline: true,
-    },
-  ];
-
-  // Map Backend DTO if endpoint is available, otherwise use static fallback
-  const displayConversations: ConversationItemData[] =
-    backendConversations && backendConversations.length > 0
-      ? backendConversations.map((c) => ({
-          id: c.id,
-          name: c.recipientName || "مستخدم",
-          avatarInitials: c.recipientName
-            ? c.recipientName.slice(0, 2)
-            : "مس",
-          avatarBg: "bg-[#123A68]",
-          lastMessage: c.lastMessage || "بدء محادثة جديدة",
-          time: new Date(c.lastMessageAt).toLocaleTimeString("ar-EG", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          unreadCount: c.unreadCount || 0,
-          isOnline: c.isOnline || false,
-        }))
-      : staticFallbackConversations;
+  const displayConversations: ConversationItemData[] = (backendConversations || []).map((c) => ({
+    id: c.id,
+    name: c.recipientName || "مستخدم",
+    avatarInitials: c.recipientName
+      ? c.recipientName.slice(0, 2)
+      : "مس",
+    avatarBg: "bg-[#123A68]",
+    lastMessage: c.lastMessage || "بدء محادثة جديدة",
+    time: c.lastMessageAt
+      ? new Date(c.lastMessageAt).toLocaleTimeString("ar-EG", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "الآن",
+    unreadCount: c.unreadCount || 0,
+    isOnline: c.isOnline || false,
+  }));
 
   const filteredConversations = displayConversations.filter(
     (c) =>
@@ -134,9 +90,9 @@ export default function MessagesPage() {
           <EmptyState
             icon={<MessageSquare className="h-7 w-7 text-[#123A68]" />}
             title="لا توجد محادثات نشطة"
-            description="ستظهر محادثاتك مع المسافرين وأصحاب الطلبات هنا عند التواصل معهم بشأن التوصيل."
-            actionText="تصفح الطلبات"
-            onAction={() => navigate("/errands")}
+            description="ستظهر محادثاتك مع المسافرين وأصحاب الطلبات هنا فور قبول الطلبات وبدء التنسيق."
+            actionText="تصفح الرحلات"
+            onAction={() => navigate("/trips")}
           />
         ) : (
           /* Conversations List */

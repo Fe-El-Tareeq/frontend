@@ -13,8 +13,16 @@ export default function RatingPage() {
 
   /*
    * ============================================================================
-   * BACKEND INTEGRATION: Errand Details for Rating
-   * Endpoint: GET /api/v1/errands/:id
+   * BACKEND INTEGRATION: Submit Rating for Assignment
+   * Endpoint: POST /api/v1/ratings
+   * Body schema:
+   *   {
+   *     assignmentId: string,
+   *     ratingStars: number (1-5),
+   *     comments?: string,
+   *     feedbackTags?: string[],
+   *     paymentModalityConfirmed: "CASH" | "BARTER"
+   *   }
    * ============================================================================
    */
   const { errand, isLoading } = useErrandDetail(id);

@@ -13,6 +13,7 @@ import {
   Zap,
   X,
   Download,
+  ChevronLeft,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useWallet } from "../../hooks/useWallet";
@@ -164,15 +165,23 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
               );
             })}
 
-            {/* Install App Button */}
+            {/* Install Web App Card (Prominent CTA) */}
             {!isInstalled && (
               <button
                 type="button"
                 onClick={handleInstallApp}
-                className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-bold bg-[#F36F21]/20 text-[#F36F21] border border-[#F36F21]/40 hover:bg-[#F36F21]/30 transition-all mt-2 cursor-pointer"
+                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-[#F36F21] to-[#E05E12] text-white shadow-md hover:opacity-95 active:scale-98 transition-all mt-3 cursor-pointer text-right"
               >
-                <Download className="h-5 w-5 text-[#F36F21]" />
-                <span>تثبيت التطبيق على هاتفك</span>
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 text-white">
+                    <Download className="h-4.5 w-4.5" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-black block leading-tight">تثبيت التطبيق على الهاتف</span>
+                    <span className="text-[10px] text-white/80 block">تنزيل الـ Web App فوراً</span>
+                  </div>
+                </div>
+                <ChevronLeft className="h-4 w-4 text-white/80" />
               </button>
             )}
           </nav>
