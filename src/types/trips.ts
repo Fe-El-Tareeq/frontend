@@ -1,64 +1,78 @@
-import type { Errand, WeightClass } from "./errands";
+import type { WeightClass } from "./errands";
+import type { Neighborhood } from "./locations";
+import type { PaginationMeta } from "./api";
 
-export type TripStatus = "ACTIVE" | "COMPLETED" | "CANCELLED";
-export type AssignmentStatus = "ACCEPTED" | "PICKED_UP" | "IN_TRANSIT" | "COMPLETED" | "CANCELLED";
+export type TripStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "COMPLETED";
+export type TripOriginType = "DEFAULT_NEIGHBORHOOD" | "CUSTOM_KEYWORD";
+
+export interface TripTraveler {
+  id: string;
+  fullName: string;
+  trustScore?: number;
+  profileImageUrl?: string | null;
+}
 
 export interface Trip {
-  trip_id: string;
-  traveler_id: string;
-  traveler_name: string;
-  traveler_trust_score: number;
-  destination_keyword: string;
-  neighborhood_id: string;
-  departure_time: string;
-  max_capacity: WeightClass;
-  remaining_capacity: WeightClass;
+  id: string;
+  travelerId: string;
+  neighborhoodId: string;
+  destinationNeighborhoodId: string;
+  clientRequestKey: string;
+  originType: TripOriginType;
+  customOriginKeyword?: string | null;
+  destinationKeyword: string;
+  deliveryFeeNis: number;
+  pricingRule?: string;
+  pricingVersion?: string;
+  departureTime: string;
+  expectedReturnTime?: string;
+  maxCapacityClass: WeightClass;
+  maxCapacityUnits: number;
+  remainingCapacityUnits: number;
+  notes?: string | null;
   status: TripStatus;
-  created_at: string;
+  expiresAt: string;
+  createdAt: string;
+  updatedAt: string;
+  neighborhood?: Neighborhood;
+  destinationNeighborhood?: Neighborhood;
+  traveler?: TripTraveler;
 }
 
-export interface CreateTripRequestDTO {
-  destination_keyword: string;
-  neighborhood_id: string;
-  departure_time: string;
-  max_capacity: WeightClass;
+export interface TripFilterParams {
+  neighborhoodId?: string;
+  destinationKeyword?: string;
+  status?: TripStatus;
+  departureFrom?: string;
+  departureTo?: string;
+  mine?: boolean;
+  skip?: number;
+  take?: number;
 }
 
-export interface TravelerFeedItemDTO {
-  match_id: string;
-  trip_id: string;
-  errand: Errand;
-  match_score: number;
-  distance_category: "SAME_NEIGHBORHOOD" | "ADJACENT_ZONE";
-  estimated_fee_nis: 3 | 5 | 7;
-  badges_required?: string[];
-  match_status: "SUGGESTED" | "ACCEPTED" | "REJECTED" | "EXPIRED";
-  expires_at?: string;
+export interface TripListData {
+  trips: Trip[];
+  pagination: PaginationMeta;
 }
 
-export interface TravelerFeedResponseDTO {
-  feed_timestamp: string;
-  total_matches: number;
-  urgent_count: number;
-  items: TravelerFeedItemDTO[];
+export interface CreateTripRequest {
+  clientRequestKey: string;
+  originType: TripOriginType;
+  originNeighborhoodId?: string;
+  customOriginKeyword?: string | null;
+  destinationKeyword: string;
+  destinationNeighborhoodId: string;
+  departureTime: string;
+  expectedReturnTime: string;
+  maxCapacityClass: WeightClass;
+  maxCapacityUnits: number;
+  notes?: string | null;
 }
 
-export interface AcceptErrandRequestDTO {
-  errand_id: string;
-  acceptance_source: "DIRECT" | "TRIP_MATCH";
-  trip_id?: string;
-}
-
-export interface AssignmentResponseDTO {
-  assignment_id: string;
-  errand_id: string;
-  traveler_id: string;
-  trip_id?: string;
-  acceptance_source: "DIRECT" | "TRIP_MATCH";
-  status: AssignmentStatus;
-  accepted_at: string;
-  picked_up_at?: string;
-  in_transit_at?: string;
-  completed_at?: string;
-  cancelled_at?: string;
+export interface UpdateTripRequest {
+  departureTime?: string;
+  expectedReturnTime?: string;
+  maxCapacityClass?: WeightClass;
+  maxCapacityUnits?: number;
+  notes?: string | null;
 }
