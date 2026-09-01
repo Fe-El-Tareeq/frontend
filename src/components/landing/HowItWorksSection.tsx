@@ -38,9 +38,7 @@ export const HowItWorksSection: FC = () => {
         <span className="text-xs font-black text-[#F36F21] block">
           كيف يعمل؟
         </span>
-        <h2 className="text-2xl font-black text-[#123A68]">
-          ثلاث خطوات بسيطة
-        </h2>
+        <h2 className="text-2xl font-black text-[#123A68]">ثلاث خطوات بسيطة</h2>
       </div>
 
       {/* Steps Cards List */}

@@ -1,5 +1,6 @@
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://fe-el-tareeq-api-staging.onrender.com";
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://fe-el-tareeq-api-staging.onrender.com";
 
 export const ENDPOINTS = {
   AUTH: {

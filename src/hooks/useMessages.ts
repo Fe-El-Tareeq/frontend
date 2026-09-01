@@ -20,7 +20,12 @@ export const useConversations = () => {
 export const useChat = (conversationId: string) => {
   const queryClient = useQueryClient();
 
-  const { data: messages, isLoading, isError, refetch } = useQuery({
+  const {
+    data: messages,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: [...MESSAGES_QUERY_KEY, "chat", conversationId],
     queryFn: () => messagesApi.getChatMessages(conversationId),
     enabled: Boolean(conversationId),

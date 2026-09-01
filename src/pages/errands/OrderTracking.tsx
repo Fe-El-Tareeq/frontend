@@ -61,7 +61,8 @@ export default function OrderTracking() {
 
           <div>
             <h2 className="text-base font-black text-white leading-relaxed">
-              {errand?.title || "توصيل وثائق رسمية من ديوان الموظفين في خان يونس"}
+              {errand?.title ||
+                "توصيل وثائق رسمية من ديوان الموظفين في خان يونس"}
             </h2>
             <div className="flex items-center gap-3 text-[11px] text-white/80 pt-1.5">
               <span>23 يوليو</span>
@@ -102,8 +103,12 @@ export default function OrderTracking() {
               </div>
               <div className="text-right flex-1 pt-0.5">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-black text-primary">تم نشر الطلب</h4>
-                  <span className="text-[10px] text-text-muted">23 يوليو • 10:30 ص</span>
+                  <h4 className="text-xs font-black text-primary">
+                    تم نشر الطلب
+                  </h4>
+                  <span className="text-[10px] text-text-muted">
+                    23 يوليو • 10:30 ص
+                  </span>
                 </div>
                 <p className="text-[11px] text-text-secondary mt-0.5">
                   نشر طلبك وبدأ المسافرون في مشاهدته
@@ -118,8 +123,12 @@ export default function OrderTracking() {
               </div>
               <div className="text-right flex-1 pt-0.5">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-black text-primary">تم قبول العرض</h4>
-                  <span className="text-[10px] text-text-muted">23 يوليو • 11:00 ص</span>
+                  <h4 className="text-xs font-black text-primary">
+                    تم قبول العرض
+                  </h4>
+                  <span className="text-[10px] text-text-muted">
+                    23 يوليو • 11:00 ص
+                  </span>
                 </div>
                 <p className="text-[11px] text-text-secondary mt-0.5">
                   وافق أحمد خالد على تنفيذ طلبك وأكّد الرحلة
@@ -135,12 +144,16 @@ export default function OrderTracking() {
               <div className="text-right flex-1 pt-0.5 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <h4 className="text-xs font-black text-[#123A68]">في الطريق</h4>
+                    <h4 className="text-xs font-black text-[#123A68]">
+                      في الطريق
+                    </h4>
                     <span className="rounded-full bg-blue-100 px-2 py-0.2 text-[9.5px] font-black text-[#123A68]">
                       الآن
                     </span>
                   </div>
-                  <span className="text-[10px] text-[#F36F21] font-bold">23 يوليو • 2:00 م (متوقع)</span>
+                  <span className="text-[10px] text-[#F36F21] font-bold">
+                    23 يوليو • 2:00 م (متوقع)
+                  </span>
                 </div>
                 <p className="text-[11px] text-text-secondary">
                   المسافر في طريقه — الرحلة من غزة إلى رفح
@@ -172,8 +185,12 @@ export default function OrderTracking() {
               </div>
               <div className="text-right flex-1 pt-0.5">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-slate-400">تم التسليم</h4>
-                  <span className="text-[10px] text-text-muted">في انتظار التأكيد</span>
+                  <h4 className="text-xs font-bold text-slate-400">
+                    تم التسليم
+                  </h4>
+                  <span className="text-[10px] text-text-muted">
+                    في انتظار التأكيد
+                  </span>
                 </div>
                 <p className="text-[11px] text-slate-400 mt-0.5">
                   وصل غرضك بأمان إلى وجهته
@@ -187,7 +204,9 @@ export default function OrderTracking() {
         <div className="rounded-3xl bg-white p-5 border border-border shadow-xs space-y-3.5 text-right">
           <div className="flex items-center gap-1.5 pb-2 border-b border-slate-100">
             <span className="text-base">👤</span>
-            <h3 className="text-sm font-black text-[#123A68]">المسافر المكلّف بطلبك</h3>
+            <h3 className="text-sm font-black text-[#123A68]">
+              المسافر المكلّف بطلبك
+            </h3>
           </div>
 
           <div className="flex items-center gap-3">
@@ -221,7 +240,8 @@ export default function OrderTracking() {
               رسالته عند القبول:
             </span>
             <p className="text-xs text-text-secondary leading-relaxed italic">
-              "يمكنني نقل غرضك بكل أمان، لدي خبرة طويلة في هذا المسار وأوصل في الوقت المحدد دائماً"
+              "يمكنني نقل غرضك بكل أمان، لدي خبرة طويلة في هذا المسار وأوصل في
+              الوقت المحدد دائماً"
             </p>
           </div>
         </div>
@@ -246,7 +266,9 @@ export default function OrderTracking() {
               >
                 <Star
                   className={`h-7 w-7 ${
-                    star <= rating ? "fill-amber-400 text-amber-400" : "text-slate-300"
+                    star <= rating
+                      ? "fill-amber-400 text-amber-400"
+                      : "text-slate-300"
                   }`}
                 />
               </button>

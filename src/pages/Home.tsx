@@ -53,7 +53,7 @@ export default function Home() {
       .slice(0, 2);
     const originLabel = t.neighborhood?.name
       ? `${t.neighborhood.governorate || "غزة"} - ${t.neighborhood.name}`
-      : (t.customOriginKeyword || "غزة");
+      : t.customOriginKeyword || "غزة";
     const destLabel = t.destinationNeighborhood?.name
       ? `${t.destinationNeighborhood.governorate || "الوجهة"} - ${t.destinationNeighborhood.name}`
       : t.destinationKeyword;
@@ -62,9 +62,19 @@ export default function Home() {
       id: t.id,
       travelerName,
       avatarInitials: initials,
-      avatarBg: idx % 3 === 0 ? "bg-[#F36F21]" : idx % 3 === 1 ? "bg-red-600" : "bg-teal-600",
-      rating: t.traveler?.trustScore ? Number((t.traveler.trustScore / 20).toFixed(1)) : 5.0,
-      time: new Date(t.departureTime).toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" }),
+      avatarBg:
+        idx % 3 === 0
+          ? "bg-[#F36F21]"
+          : idx % 3 === 1
+            ? "bg-red-600"
+            : "bg-teal-600",
+      rating: t.traveler?.trustScore
+        ? Number((t.traveler.trustScore / 20).toFixed(1))
+        : 5.0,
+      time: new Date(t.departureTime).toLocaleTimeString("ar-EG", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       from: originLabel,
       to: destLabel,
     };
@@ -89,19 +99,24 @@ export default function Home() {
       id: e.id,
       title: e.title || e.itemsDescription,
       avatarInitials: initials,
-      avatarBg: idx % 3 === 0 ? "bg-purple-600" : idx % 3 === 1 ? "bg-blue-600" : "bg-[#F36F21]",
+      avatarBg:
+        idx % 3 === 0
+          ? "bg-purple-600"
+          : idx % 3 === 1
+            ? "bg-blue-600"
+            : "bg-[#F36F21]",
       status: isWaiting
         ? "قيد الانتظار"
         : isMatched
-        ? "تم التطابق"
-        : isCompleted
-        ? "مكتمل"
-        : "جاري التوصيل",
+          ? "تم التطابق"
+          : isCompleted
+            ? "مكتمل"
+            : "جاري التوصيل",
       statusBadge: isWaiting
         ? "bg-amber-50 text-amber-700 border-amber-200"
         : isMatched
-        ? "bg-blue-50 text-blue-700 border-blue-200"
-        : "bg-emerald-50 text-emerald-700 border-emerald-200",
+          ? "bg-blue-50 text-blue-700 border-blue-200"
+          : "bg-emerald-50 text-emerald-700 border-emerald-200",
       dateLocation: locationText,
     };
   });
@@ -222,9 +237,7 @@ export default function Home() {
               <span className="text-[11px] text-text-muted block">
                 الرسائل والمحادثات
               </span>
-              <div className="text-2xl font-black text-purple-700">
-                0
-              </div>
+              <div className="text-2xl font-black text-purple-700">0</div>
               <span className="text-[10px] text-text-muted">محادثة نشطة</span>
             </div>
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-50 text-purple-700">
@@ -252,13 +265,18 @@ export default function Home() {
           {isLoadingTrips ? (
             <div className="space-y-2.5">
               {[1, 2].map((i) => (
-                <div key={i} className="h-16 rounded-3xl bg-slate-100 animate-pulse" />
+                <div
+                  key={i}
+                  className="h-16 rounded-3xl bg-slate-100 animate-pulse"
+                />
               ))}
             </div>
           ) : nearbyTrips.length === 0 ? (
             <div className="rounded-3xl bg-white p-5 text-center border border-slate-100 shadow-2xs space-y-2">
               <Car className="h-7 w-7 text-slate-400 mx-auto" />
-              <p className="text-xs font-bold text-text-secondary">لا توجد رحلات متاحة في منطقتك حالياً</p>
+              <p className="text-xs font-bold text-text-secondary">
+                لا توجد رحلات متاحة في منطقتك حالياً
+              </p>
               <button
                 type="button"
                 onClick={() => navigate("/trips/new")}
@@ -325,13 +343,18 @@ export default function Home() {
           {isLoadingErrands ? (
             <div className="space-y-2.5">
               {[1, 2].map((i) => (
-                <div key={i} className="h-16 rounded-3xl bg-slate-100 animate-pulse" />
+                <div
+                  key={i}
+                  className="h-16 rounded-3xl bg-slate-100 animate-pulse"
+                />
               ))}
             </div>
           ) : nearbyErrands.length === 0 ? (
             <div className="rounded-3xl bg-white p-5 text-center border border-slate-100 shadow-2xs space-y-2">
               <Package className="h-7 w-7 text-slate-400 mx-auto" />
-              <p className="text-xs font-bold text-text-secondary">لا توجد طلبات توصيل مسجلة حالياً</p>
+              <p className="text-xs font-bold text-text-secondary">
+                لا توجد طلبات توصيل مسجلة حالياً
+              </p>
               <button
                 type="button"
                 onClick={() => navigate("/errands/new")}

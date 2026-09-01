@@ -108,9 +108,13 @@ export default function ProfilePage() {
         <div className="grid grid-cols-2 gap-3">
           {/* Stat 1: Rating (Amber) */}
           <div className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-0.5">
-            <span className="text-[11px] text-text-muted block">درجة الثقة</span>
+            <span className="text-[11px] text-text-muted block">
+              درجة الثقة
+            </span>
             <div className="text-2xl font-black text-amber-500">
-              {profile?.trustScore ? (profile.trustScore / 20).toFixed(1) : "5.0"}
+              {profile?.trustScore
+                ? (profile.trustScore / 20).toFixed(1)
+                : "5.0"}
             </div>
             <span className="text-[10px] text-text-muted">⭐ ممتاز</span>
           </div>
@@ -120,7 +124,9 @@ export default function ProfilePage() {
             onClick={() => navigate("/wallet")}
             className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-0.5 cursor-pointer hover:border-accent transition-all"
           >
-            <span className="text-[11px] text-text-muted block">رصيد التوكنز</span>
+            <span className="text-[11px] text-text-muted block">
+              رصيد التوكنز
+            </span>
             <div className="text-2xl font-black text-teal-700">
               {tokenBalance ?? 0}
             </div>

@@ -74,7 +74,9 @@ export default function ChatPage() {
           </div>
 
           <div className="text-right">
-            <h3 className="text-xs font-black text-[#123A68]">محادثة التوصيل</h3>
+            <h3 className="text-xs font-black text-[#123A68]">
+              محادثة التوصيل
+            </h3>
             <span className="text-[10px] text-emerald-600 font-bold block">
               متصل الآن
             </span>
@@ -136,7 +138,9 @@ export default function ChatPage() {
                   <p>{msg.text}</p>
                   <span
                     className={`text-[9.5px] mt-1 block font-bold ${
-                      isMe ? "text-white/60 text-left" : "text-text-muted text-left"
+                      isMe
+                        ? "text-white/60 text-left"
+                        : "text-text-muted text-left"
                     }`}
                   >
                     {msg.time}

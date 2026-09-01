@@ -1,10 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  ChevronRight,
-  Zap,
-  CheckCircle,
-  Download,
-} from "lucide-react";
+import { ChevronRight, Zap, CheckCircle, Download } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import type { TokenPackage } from "./BuyTokensPackages";
@@ -93,13 +88,43 @@ export default function TopUpQRPage() {
           {/* Stylized QR Code matching Figma */}
           <div className="relative mx-auto flex h-56 w-56 items-center justify-center rounded-3xl bg-[#F8FAFC] p-3 border border-slate-200 shadow-inner">
             <div className="relative flex h-full w-full items-center justify-center rounded-2xl bg-white p-2">
-              <svg viewBox="0 0 100 100" className="h-full w-full text-[#123A68] fill-current">
+              <svg
+                viewBox="0 0 100 100"
+                className="h-full w-full text-[#123A68] fill-current"
+              >
                 {/* Outer positioning squares */}
-                <rect x="5" y="5" width="28" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="6" />
+                <rect
+                  x="5"
+                  y="5"
+                  width="28"
+                  height="28"
+                  rx="4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="6"
+                />
                 <rect x="12" y="12" width="14" height="14" rx="2" />
-                <rect x="67" y="5" width="28" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="6" />
+                <rect
+                  x="67"
+                  y="5"
+                  width="28"
+                  height="28"
+                  rx="4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="6"
+                />
                 <rect x="74" y="12" width="14" height="14" rx="2" />
-                <rect x="5" y="67" width="28" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="6" />
+                <rect
+                  x="5"
+                  y="67"
+                  width="28"
+                  height="28"
+                  rx="4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="6"
+                />
                 <rect x="12" y="74" width="14" height="14" rx="2" />
                 {/* Dense Pattern */}
                 <rect x="38" y="8" width="6" height="6" rx="1" />

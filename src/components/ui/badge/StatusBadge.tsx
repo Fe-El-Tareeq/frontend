@@ -6,7 +6,11 @@ export interface StatusBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   status: ErrandStatus | "URGENT";
 }
 
-export const StatusBadge = ({ status, className, ...props }: StatusBadgeProps) => {
+export const StatusBadge = ({
+  status,
+  className,
+  ...props
+}: StatusBadgeProps) => {
   const config: Record<
     ErrandStatus | "URGENT",
     { label: string; bg: string; text: string; dotBg: string }
@@ -68,7 +72,7 @@ export const StatusBadge = ({ status, className, ...props }: StatusBadgeProps) =
         "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold shrink-0",
         item.bg,
         item.text,
-        className
+        className,
       )}
       {...props}
     >

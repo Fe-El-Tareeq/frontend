@@ -16,7 +16,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           className={cn(
             "h-12.5 w-full appearance-none rounded-2xl border-2 border-border bg-[#FAFBFC] px-4 pr-4 pl-10 text-right text-sm text-primary transition-colors duration-200 outline-none focus:border-accent focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed",
             error && "border-error focus:border-error bg-error-light/10",
-            className
+            className,
           )}
           {...props}
         >
@@ -27,7 +27,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 Select.displayName = "Select";

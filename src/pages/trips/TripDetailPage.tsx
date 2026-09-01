@@ -76,7 +76,7 @@ export default function TripDetailPage() {
 
   const originText = trip.neighborhood?.name
     ? `${trip.neighborhood.governorate || "غزة"} - ${trip.neighborhood.name}`
-    : (trip.customOriginKeyword || "غزة");
+    : trip.customOriginKeyword || "غزة";
 
   const destText = trip.destinationNeighborhood?.name
     ? `${trip.destinationNeighborhood.governorate || "الوجهة"} - ${trip.destinationNeighborhood.name}`
@@ -102,8 +102,8 @@ export default function TripDetailPage() {
     trip.maxCapacityClass === "LIGHT"
       ? `حتى ${trip.maxCapacityUnits || 2} أغراض (خفيف)`
       : trip.maxCapacityClass === "MEDIUM"
-      ? `حتى ${trip.maxCapacityUnits || 5} أغراض (متوسط)`
-      : `حتى ${trip.maxCapacityUnits || 8} أغراض (ثقيل)`;
+        ? `حتى ${trip.maxCapacityUnits || 5} أغراض (متوسط)`
+        : `حتى ${trip.maxCapacityUnits || 8} أغراض (ثقيل)`;
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
@@ -213,7 +213,9 @@ export default function TripDetailPage() {
           </div>
 
           <div className="rounded-2xl bg-white p-3.5 border border-border shadow-2xs text-right">
-            <span className="text-[10.5px] text-text-muted block">حي الانطلاق</span>
+            <span className="text-[10.5px] text-text-muted block">
+              حي الانطلاق
+            </span>
             <span className="text-xs font-black text-primary mt-0.5 block">
               {originText}
             </span>

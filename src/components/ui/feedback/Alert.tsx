@@ -64,7 +64,7 @@ export const Alert: FC<AlertProps> = ({
       className={cn(
         "relative flex items-start gap-3 rounded-2xl p-3.5 text-right border transition-all text-xs",
         solid ? config.solid : config.subtle,
-        className
+        className,
       )}
     >
       {/* Icon on Right in RTL */}

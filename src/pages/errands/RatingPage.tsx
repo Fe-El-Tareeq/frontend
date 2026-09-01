@@ -29,7 +29,7 @@ export default function RatingPage() {
 
   const [ratingStars, setRatingStars] = useState<number>(5);
   const [paymentModality, setPaymentModality] = useState<"CASH" | "BARTER">(
-    "CASH"
+    "CASH",
   );
   const [selectedTags, setSelectedTags] = useState<string[]>([
     "سريع",

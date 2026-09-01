@@ -9,17 +9,24 @@ describe("Auth Module & Swagger API Schemas", () => {
     .min(8, "Password must be at least 8 characters")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[0-9]/, "Password must contain at least one number")
-    .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character");
+    .regex(
+      /[^A-Za-z0-9]/,
+      "Password must contain at least one special character",
+    );
 
   it("should validate strong passwords conforming to Swagger rules", () => {
     expect(passwordComplexitySchema.safeParse("Pass1234!").success).toBe(true);
-    expect(passwordComplexitySchema.safeParse("Secure@2026").success).toBe(true);
+    expect(passwordComplexitySchema.safeParse("Secure@2026").success).toBe(
+      true,
+    );
   });
 
   it("should reject weak passwords lacking required character classes", () => {
     expect(passwordComplexitySchema.safeParse("weakpass").success).toBe(false);
     expect(passwordComplexitySchema.safeParse("NoNumber!").success).toBe(false);
-    expect(passwordComplexitySchema.safeParse("NoSpecial1").success).toBe(false);
+    expect(passwordComplexitySchema.safeParse("NoSpecial1").success).toBe(
+      false,
+    );
     expect(passwordComplexitySchema.safeParse("Short1!").success).toBe(false);
   });
 

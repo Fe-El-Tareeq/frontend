@@ -9,7 +9,10 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, error, leftElement, rightElement, type = "text", ...props }, ref) => {
+  (
+    { className, error, leftElement, rightElement, type = "text", ...props },
+    ref,
+  ) => {
     return (
       <div className="relative w-full">
         {rightElement && (
@@ -26,7 +29,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             error && "border-error focus:border-error bg-error-light/10",
             rightElement && "pr-11",
             leftElement && "pl-11",
-            className
+            className,
           )}
           {...props}
         />
@@ -38,7 +41,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

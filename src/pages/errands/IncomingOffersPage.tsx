@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  ChevronRight,
-  ThumbsUp,
-  ThumbsDown,
-  Package,
-} from "lucide-react";
+import { ChevronRight, ThumbsUp, ThumbsDown, Package } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
@@ -30,7 +25,9 @@ export default function IncomingOffersPage() {
   const navigate = useNavigate();
   const { errand } = useErrandDetail(id);
 
-  const [activeTab, setActiveTab] = useState<"ALL" | "NEW" | "ACCEPTED" | "REJECTED">("ALL");
+  const [activeTab, setActiveTab] = useState<
+    "ALL" | "NEW" | "ACCEPTED" | "REJECTED"
+  >("ALL");
 
   /*
    * ============================================================================
@@ -49,14 +46,14 @@ export default function IncomingOffersPage() {
 
   const handleAcceptOffer = (offerId: string) => {
     setOffers((prev) =>
-      prev.map((o) => (o.id === offerId ? { ...o, status: "ACCEPTED" } : o))
+      prev.map((o) => (o.id === offerId ? { ...o, status: "ACCEPTED" } : o)),
     );
     navigate(`/errands/${id}/tracking`);
   };
 
   const handleRejectOffer = (offerId: string) => {
     setOffers((prev) =>
-      prev.map((o) => (o.id === offerId ? { ...o, status: "REJECTED" } : o))
+      prev.map((o) => (o.id === offerId ? { ...o, status: "REJECTED" } : o)),
     );
   };
 
@@ -94,7 +91,8 @@ export default function IncomingOffersPage() {
             </span>
           </div>
           <div className="text-2xl font-black text-white">
-            {offers.length} <span className="text-xs font-normal">عرض متاح</span>
+            {offers.length}{" "}
+            <span className="text-xs font-normal">عرض متاح</span>
           </div>
         </div>
 
@@ -165,7 +163,9 @@ export default function IncomingOffersPage() {
 
                 <div className="flex items-center justify-between text-[11px] text-text-muted pt-1 border-t border-slate-100">
                   <span>{offer.route}</span>
-                  <span className="font-bold text-[#123A68]">{offer.dateTime}</span>
+                  <span className="font-bold text-[#123A68]">
+                    {offer.dateTime}
+                  </span>
                 </div>
 
                 {offer.status === "NEW" && (

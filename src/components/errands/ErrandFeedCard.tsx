@@ -69,7 +69,9 @@ export const ErrandFeedCard: FC<ErrandFeedCardProps> = ({
       {/* Date & Cost Details */}
       <div className="flex items-center justify-between text-xs pt-1">
         <div className="text-right">
-          <span className="text-[10.5px] text-text-muted block">أجر التوصيل</span>
+          <span className="text-[10.5px] text-text-muted block">
+            أجر التوصيل
+          </span>
           <span className="font-black text-[#F36F21]">
             {errand.priceNis} شيكل
           </span>

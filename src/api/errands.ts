@@ -13,14 +13,14 @@ export const errandsApi = {
   getErrands: async (params?: ErrandFilterParams) => {
     const res = await apiClient.get<ApiSuccessResponse<ErrandListData>>(
       ENDPOINTS.ERRANDS.LIST,
-      { params }
+      { params },
     );
     return res.data;
   },
 
   getErrandById: async (id: string) => {
     const res = await apiClient.get<ApiSuccessResponse<{ errand: Errand }>>(
-      ENDPOINTS.ERRANDS.DETAIL(id)
+      ENDPOINTS.ERRANDS.DETAIL(id),
     );
     return res.data;
   },
@@ -28,7 +28,7 @@ export const errandsApi = {
   createErrand: async (payload: ErrandCreateRequest) => {
     const res = await apiClient.post<ApiSuccessResponse<{ errand: Errand }>>(
       ENDPOINTS.ERRANDS.CREATE,
-      payload
+      payload,
     );
     return res.data;
   },
@@ -36,14 +36,14 @@ export const errandsApi = {
   updateErrand: async (id: string, payload: ErrandUpdateRequest) => {
     const res = await apiClient.patch<ApiSuccessResponse<{ errand: Errand }>>(
       ENDPOINTS.ERRANDS.UPDATE(id),
-      payload
+      payload,
     );
     return res.data;
   },
 
   cancelErrand: async (id: string) => {
     const res = await apiClient.post<ApiSuccessResponse<{ errand: Errand }>>(
-      ENDPOINTS.ERRANDS.CANCEL(id)
+      ENDPOINTS.ERRANDS.CANCEL(id),
     );
     return res.data;
   },
@@ -57,9 +57,12 @@ export const errandsApi = {
    */
   submitOffer: async (
     errandId: string,
-    payload: { priceNis: number; departureTime: string; notes?: string }
+    payload: { priceNis: number; departureTime: string; notes?: string },
   ) => {
-    const res = await apiClient.post(ENDPOINTS.ERRANDS.OFFERS(errandId), payload);
+    const res = await apiClient.post(
+      ENDPOINTS.ERRANDS.OFFERS(errandId),
+      payload,
+    );
     return res.data;
   },
 };

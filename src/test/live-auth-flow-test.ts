@@ -20,7 +20,10 @@ async function testOtpAndProtectedEndpoints() {
       tokens = res.data?.data;
       break;
     } catch (err: any) {
-      console.log(`❌ OTP ${otp} failed:`, err.response?.data?.message || err.message);
+      console.log(
+        `❌ OTP ${otp} failed:`,
+        err.response?.data?.message || err.message,
+      );
     }
   }
 

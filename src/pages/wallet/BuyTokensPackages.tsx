@@ -1,5 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Zap, ArrowLeft, ShieldCheck, RefreshCw, Sparkles } from "lucide-react";
+import {
+  ChevronRight,
+  Zap,
+  ArrowLeft,
+  ShieldCheck,
+  RefreshCw,
+  Sparkles,
+} from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 
@@ -41,7 +48,12 @@ export const TOKEN_PACKAGES: TokenPackage[] = [
     tokens: 50,
     priceUsd: 30,
     ratePerToken: "0.60$ لكل توكن",
-    features: ["نشر الطلبات فوراً", "صلاحية 3 أشهر", "خصم 40%", "أولوية في البحث"],
+    features: [
+      "نشر الطلبات فوراً",
+      "صلاحية 3 أشهر",
+      "خصم 40%",
+      "أولوية في البحث",
+    ],
   },
   {
     id: "pkg-enterprise",
@@ -50,7 +62,12 @@ export const TOKEN_PACKAGES: TokenPackage[] = [
     tokens: 100,
     priceUsd: 50,
     ratePerToken: "0.50$ لكل توكن",
-    features: ["نشر الطلبات فوراً", "صلاحية 3 أشهر", "خصم 50%", "أولوية في البحث"],
+    features: [
+      "نشر الطلبات فوراً",
+      "صلاحية 3 أشهر",
+      "خصم 50%",
+      "أولوية في البحث",
+    ],
   },
 ];
 
@@ -136,7 +153,9 @@ export default function BuyTokensPackages() {
                     <h3 className="text-base font-black text-[#123A68]">
                       {pkg.name}
                     </h3>
-                    <p className="text-[11px] text-text-muted">{pkg.subtitle}</p>
+                    <p className="text-[11px] text-text-muted">
+                      {pkg.subtitle}
+                    </p>
                   </div>
 
                   <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-50 text-[#F36F21]">

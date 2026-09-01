@@ -28,7 +28,7 @@ export const AppLayout: FC<AppLayoutProps> = ({
         className={cn(
           "flex-1 px-4 py-4 overflow-y-auto",
           showBottomNav && "pb-24",
-          className
+          className,
         )}
       >
         {children}

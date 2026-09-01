@@ -213,8 +213,12 @@ async function runLiveApiAudit() {
       endpoint: "/api/v1/delivery-pricing/quote",
       method: "GET",
       status: status || "ERR_NETWORK",
-      isWorking: status === 200 || status === 401 || status === 400 || status === 422,
-      notes: status === 401 ? "يتطلب توكن المستخدم" : err.response?.data?.message || err.message,
+      isWorking:
+        status === 200 || status === 401 || status === 400 || status === 422,
+      notes:
+        status === 401
+          ? "يتطلب توكن المستخدم"
+          : err.response?.data?.message || err.message,
     });
   }
 
@@ -235,7 +239,8 @@ async function runLiveApiAudit() {
       method: "GET",
       status: status || "ERR_NETWORK",
       isWorking: status === 401,
-      notes: "محمي بحاجز المصادقة (401 Unauthorized كما هو متوقع للطلبات غير المسجلة)",
+      notes:
+        "محمي بحاجز المصادقة (401 Unauthorized كما هو متوقع للطلبات غير المسجلة)",
     });
   }
 

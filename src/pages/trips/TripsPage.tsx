@@ -12,17 +12,12 @@ export default function TripsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [cityFilter, setCityFilter] = useState("ALL");
 
-  const {
-    trips: backendTrips,
-    isLoading,
-    isError,
-    refetch,
-  } = useTrips();
+  const { trips: backendTrips, isLoading, isError, refetch } = useTrips();
 
   const displayTrips = backendTrips.map((t, idx) => {
     const originText = t.neighborhood?.name
       ? `${t.neighborhood.governorate || "غزة"} - ${t.neighborhood.name}`
-      : (t.customOriginKeyword || "غزة");
+      : t.customOriginKeyword || "غزة";
     const destText = t.destinationNeighborhood?.name
       ? `${t.destinationNeighborhood.governorate || "الوجهة"} - ${t.destinationNeighborhood.name}`
       : t.destinationKeyword;
@@ -31,8 +26,8 @@ export default function TripsPage() {
       t.maxCapacityClass === "LIGHT"
         ? `حتى ${t.maxCapacityUnits || 2} أغراض (خفيف)`
         : t.maxCapacityClass === "MEDIUM"
-        ? `حتى ${t.maxCapacityUnits || 5} أغراض (متوسط)`
-        : `حتى ${t.maxCapacityUnits || 8} أغراض (ثقيل)`;
+          ? `حتى ${t.maxCapacityUnits || 5} أغراض (متوسط)`
+          : `حتى ${t.maxCapacityUnits || 8} أغراض (ثقيل)`;
 
     const dateStr = t.departureTime
       ? new Date(t.departureTime).toLocaleDateString("ar-EG", {
@@ -54,7 +49,12 @@ export default function TripsPage() {
         .map((n) => n[0])
         .join("")
         .slice(0, 2),
-      avatarBg: idx % 3 === 0 ? "bg-[#123A68]" : idx % 3 === 1 ? "bg-[#F36F21]" : "bg-teal-600",
+      avatarBg:
+        idx % 3 === 0
+          ? "bg-[#123A68]"
+          : idx % 3 === 1
+            ? "bg-[#F36F21]"
+            : "bg-teal-600",
       capacityText: capacityLabel,
       rating: t.traveler?.trustScore
         ? Number((t.traveler.trustScore / 20).toFixed(1))
@@ -75,7 +75,11 @@ export default function TripsPage() {
     ) {
       return false;
     }
-    if (cityFilter !== "ALL" && !t.origin.includes(cityFilter) && !t.destination.includes(cityFilter)) {
+    if (
+      cityFilter !== "ALL" &&
+      !t.origin.includes(cityFilter) &&
+      !t.destination.includes(cityFilter)
+    ) {
       return false;
     }
     return true;
@@ -146,7 +150,10 @@ export default function TripsPage() {
         {isLoading && (
           <div className="space-y-3 pt-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 rounded-3xl bg-slate-100 animate-pulse" />
+              <div
+                key={i}
+                className="h-32 rounded-3xl bg-slate-100 animate-pulse"
+              />
             ))}
           </div>
         )}
@@ -208,12 +215,16 @@ export default function TripsPage() {
                 <div className="rounded-2xl bg-slate-50 p-3 text-xs space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-[#123A68]" />
-                    <span className="font-bold text-text-primary">من: {trip.origin}</span>
+                    <span className="font-bold text-text-primary">
+                      من: {trip.origin}
+                    </span>
                   </div>
                   <div className="mr-1 h-3 border-r-2 border-dashed border-slate-300" />
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-[#F36F21]" />
-                    <span className="font-bold text-text-primary">إلى: {trip.destination}</span>
+                    <span className="font-bold text-text-primary">
+                      إلى: {trip.destination}
+                    </span>
                   </div>
                 </div>
 

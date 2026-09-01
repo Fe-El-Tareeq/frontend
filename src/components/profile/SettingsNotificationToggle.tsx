@@ -8,13 +8,9 @@ interface SettingsNotificationToggleProps {
   borderBottom?: boolean;
 }
 
-export const SettingsNotificationToggle: FC<SettingsNotificationToggleProps> = ({
-  title,
-  description,
-  checked,
-  onChange,
-  borderBottom = true,
-}) => {
+export const SettingsNotificationToggle: FC<
+  SettingsNotificationToggleProps
+> = ({ title, description, checked, onChange, borderBottom = true }) => {
   return (
     <div
       className={`flex items-center justify-between ${

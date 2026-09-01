@@ -26,7 +26,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const baseStyles =
       "inline-flex items-center justify-center font-bold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-[0.98]";
@@ -62,7 +62,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           variants[variant],
           sizes[size],
           fullWidth && "w-full",
-          className
+          className,
         )}
         {...props}
       >
@@ -70,14 +70,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <Loader2 className="h-5 w-5 animate-spin" />
         ) : (
           <>
-            {leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>}
+            {leftIcon && (
+              <span className="inline-flex shrink-0">{leftIcon}</span>
+            )}
             <span>{children}</span>
-            {rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
+            {rightIcon && (
+              <span className="inline-flex shrink-0">{rightIcon}</span>
+            )}
           </>
         )}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

@@ -77,7 +77,7 @@ export default function VerifyOtp() {
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
-        "رمز التحقق غير صحيح أو قد انتهت صلاحيته."
+        "رمز التحقق غير صحيح أو قد انتهت صلاحيته.",
       );
       setErrorMessage(msg);
     }
@@ -92,7 +92,7 @@ export default function VerifyOtp() {
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
-        "تعذر إعادة إرسال الرمز، يرجى المحاولة لاحقاً."
+        "تعذر إعادة إرسال الرمز، يرجى المحاولة لاحقاً.",
       );
       setErrorMessage(msg);
     }
@@ -168,8 +168,8 @@ export default function VerifyOtp() {
           {isVerifyingOtp
             ? "جاري التحقق..."
             : isResetPassword
-            ? "تعيين كلمة مرور جديدة"
-            : "تأكيد الحساب والدخول"}
+              ? "تعيين كلمة مرور جديدة"
+              : "تأكيد الحساب والدخول"}
         </button>
       </Form>
     </AuthLayout>

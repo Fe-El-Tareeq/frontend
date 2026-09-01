@@ -14,9 +14,7 @@ const step1Schema = z.object({
     .string()
     .min(8, "رقم الهاتف يجب أن يتكون من 8 أرقام على الأقل")
     .max(20, "رقم الهاتف غير صالح"),
-  password: z
-    .string()
-    .min(6, "كلمة المرور يجب ألا تقل عن 6 أحرف"),
+  password: z.string().min(6, "كلمة المرور يجب ألا تقل عن 6 أحرف"),
 });
 
 type Step1FormData = z.infer<typeof step1Schema>;

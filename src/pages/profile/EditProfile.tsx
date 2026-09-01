@@ -49,7 +49,7 @@ export default function EditProfile() {
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
-        "تعذر حفظ التعديلات، يرجى المحاولة لاحقاً."
+        "تعذر حفظ التعديلات، يرجى المحاولة لاحقاً.",
       );
       setErrorMessage(msg);
     }
@@ -66,9 +66,7 @@ export default function EditProfile() {
     >
       <div className="space-y-4 pb-8">
         {successMessage && (
-          <Alert variant="success">
-            تم حفظ التعديلات بنجاح!
-          </Alert>
+          <Alert variant="success">تم حفظ التعديلات بنجاح!</Alert>
         )}
 
         {errorMessage && (
@@ -94,7 +92,11 @@ export default function EditProfile() {
             </div>
 
             {/* Full Name */}
-            <Form.Field name="fullName" error={errors.fullName?.message} required>
+            <Form.Field
+              name="fullName"
+              error={errors.fullName?.message}
+              required
+            >
               <Form.Label>الاسم الكامل</Form.Label>
               <Form.Input
                 placeholder="أدخل اسمك الكامل"

@@ -51,8 +51,14 @@ describe("Errands Domain & Schemas", () => {
     const errandId = "errand-123";
     expect(ENDPOINTS.ERRANDS.LIST).toBe("/api/v1/errands");
     expect(ENDPOINTS.ERRANDS.CREATE).toBe("/api/v1/errands");
-    expect(ENDPOINTS.ERRANDS.DETAIL(errandId)).toBe(`/api/v1/errands/${errandId}`);
-    expect(ENDPOINTS.ERRANDS.CANCEL(errandId)).toBe(`/api/v1/errands/${errandId}/cancel`);
-    expect(ENDPOINTS.ERRANDS.OFFERS(errandId)).toBe(`/api/v1/errands/${errandId}/offers`);
+    expect(ENDPOINTS.ERRANDS.DETAIL(errandId)).toBe(
+      `/api/v1/errands/${errandId}`,
+    );
+    expect(ENDPOINTS.ERRANDS.CANCEL(errandId)).toBe(
+      `/api/v1/errands/${errandId}/cancel`,
+    );
+    expect(ENDPOINTS.ERRANDS.OFFERS(errandId)).toBe(
+      `/api/v1/errands/${errandId}/offers`,
+    );
   });
 });

@@ -20,8 +20,14 @@ interface PwaInstallModalProps {
   isIOS?: boolean;
 }
 
-export function PwaInstallModal({ isOpen, onClose, isIOS: initialIsIOS = false }: PwaInstallModalProps) {
-  const [activeTab, setActiveTab] = useState<"android" | "ios">(initialIsIOS ? "ios" : "android");
+export function PwaInstallModal({
+  isOpen,
+  onClose,
+  isIOS: initialIsIOS = false,
+}: PwaInstallModalProps) {
+  const [activeTab, setActiveTab] = useState<"android" | "ios">(
+    initialIsIOS ? "ios" : "android",
+  );
   const [copied, setCopied] = useState(false);
   const { hasDeferredPrompt, triggerInstall } = usePWA();
 
@@ -122,7 +128,12 @@ export function PwaInstallModal({ isOpen, onClose, isIOS: initialIsIOS = false }
                 1
               </div>
               <p>
-                افتح الموقع عبر متصفح <span className="font-bold text-[#123A68]">Chrome</span> أو <span className="font-bold text-[#123A68]">Samsung Internet</span>.
+                افتح الموقع عبر متصفح{" "}
+                <span className="font-bold text-[#123A68]">Chrome</span> أو{" "}
+                <span className="font-bold text-[#123A68]">
+                  Samsung Internet
+                </span>
+                .
               </p>
             </div>
 
@@ -131,7 +142,9 @@ export function PwaInstallModal({ isOpen, onClose, isIOS: initialIsIOS = false }
                 2
               </div>
               <p>
-                اضغط على زر القائمة <MoreVertical className="inline h-4 w-4 mx-1 text-slate-700" /> في زاوية المتصفح العلوية.
+                اضغط على زر القائمة{" "}
+                <MoreVertical className="inline h-4 w-4 mx-1 text-slate-700" />{" "}
+                في زاوية المتصفح العلوية.
               </p>
             </div>
 
@@ -140,7 +153,15 @@ export function PwaInstallModal({ isOpen, onClose, isIOS: initialIsIOS = false }
                 3
               </div>
               <p>
-                اختر <span className="font-bold text-[#F36F21]">"تثبيت التطبيق" (Install App)</span> أو <span className="font-bold text-[#123A68]">"إضافة إلى الشاشة الرئيسية"</span>.
+                اختر{" "}
+                <span className="font-bold text-[#F36F21]">
+                  "تثبيت التطبيق" (Install App)
+                </span>{" "}
+                أو{" "}
+                <span className="font-bold text-[#123A68]">
+                  "إضافة إلى الشاشة الرئيسية"
+                </span>
+                .
               </p>
             </div>
           </div>
@@ -154,7 +175,9 @@ export function PwaInstallModal({ isOpen, onClose, isIOS: initialIsIOS = false }
                 1
               </div>
               <p>
-                افتح الرابط في متصفح <span className="font-bold text-[#123A68]">Safari</span> على الآيفون.
+                افتح الرابط في متصفح{" "}
+                <span className="font-bold text-[#123A68]">Safari</span> على
+                الآيفون.
               </p>
             </div>
 
@@ -163,7 +186,9 @@ export function PwaInstallModal({ isOpen, onClose, isIOS: initialIsIOS = false }
                 2
               </div>
               <p>
-                اضغط على زر المشاركة <Share className="inline h-4 w-4 mx-1 text-blue-600" /> في أسفل شاشة Safari.
+                اضغط على زر المشاركة{" "}
+                <Share className="inline h-4 w-4 mx-1 text-blue-600" /> في أسفل
+                شاشة Safari.
               </p>
             </div>
 
@@ -172,7 +197,13 @@ export function PwaInstallModal({ isOpen, onClose, isIOS: initialIsIOS = false }
                 3
               </div>
               <p>
-                مرر للأسفل واختر <span className="font-bold text-[#123A68]">"إضافة إلى الصفحة الرئيسية"</span> <PlusSquare className="inline h-4 w-4 mx-1 text-slate-700" /> ثم اضغط <span className="font-bold text-[#F36F21]">"إضافة" (Add)</span>.
+                مرر للأسفل واختر{" "}
+                <span className="font-bold text-[#123A68]">
+                  "إضافة إلى الصفحة الرئيسية"
+                </span>{" "}
+                <PlusSquare className="inline h-4 w-4 mx-1 text-slate-700" /> ثم
+                اضغط{" "}
+                <span className="font-bold text-[#F36F21]">"إضافة" (Add)</span>.
               </p>
             </div>
           </div>

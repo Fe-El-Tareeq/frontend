@@ -16,9 +16,7 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message }) => {
   const isUser = message.sender === "user";
 
   return (
-    <div
-      className={`flex flex-col ${isUser ? "items-start" : "items-end"}`}
-    >
+    <div className={`flex flex-col ${isUser ? "items-start" : "items-end"}`}>
       <div
         className={`max-w-[78%] rounded-3xl p-3.5 text-xs leading-relaxed shadow-2xs ${
           isUser
@@ -29,7 +27,9 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message }) => {
         <p className="text-right">{message.text}</p>
         <div
           className={`mt-1 flex items-center gap-1 text-[10px] ${
-            isUser ? "text-white/70 justify-start" : "text-text-muted justify-end"
+            isUser
+              ? "text-white/70 justify-start"
+              : "text-text-muted justify-end"
           }`}
         >
           <span>{message.time}</span>

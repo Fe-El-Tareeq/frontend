@@ -14,9 +14,10 @@ export default function CreateTrip() {
   const { neighborhoods, isLoadingNeighborhoods } = useLocations();
 
   const [destinationKeyword, setDestinationKeyword] = useState("");
-  const [destinationNeighborhoodId, setDestinationNeighborhoodId] = useState("");
+  const [destinationNeighborhoodId, setDestinationNeighborhoodId] =
+    useState("");
   const [departureDate, setDepartureDate] = useState(
-    new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString().split("T")[0]
+    new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString().split("T")[0],
   );
   const [departureTime, setDepartureTime] = useState("10:00");
   const [capacityClass, setCapacityClass] = useState<WeightClass>("MEDIUM");
@@ -36,11 +37,15 @@ export default function CreateTrip() {
 
       const targetNeighborhoodId =
         destinationNeighborhoodId ||
-        (neighborhoods.length > 0 ? neighborhoods[0].id : "60a32850-bd3f-444a-84b4-c750abf6ecb6");
+        (neighborhoods.length > 0
+          ? neighborhoods[0].id
+          : "60a32850-bd3f-444a-84b4-c750abf6ecb6");
 
-      const departureIso = new Date(`${departureDate}T${departureTime}:00`).toISOString();
+      const departureIso = new Date(
+        `${departureDate}T${departureTime}:00`,
+      ).toISOString();
       const returnIso = new Date(
-        new Date(departureIso).getTime() + 4 * 60 * 60 * 1000
+        new Date(departureIso).getTime() + 4 * 60 * 60 * 1000,
       ).toISOString();
 
       await createTrip({
@@ -59,7 +64,7 @@ export default function CreateTrip() {
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
-        "تعذر إنشاء الرحلة، يرجى التأكد من اختيار موعد في المستقبل وتحديد الوجهة."
+        "تعذر إنشاء الرحلة، يرجى التأكد من اختيار موعد في المستقبل وتحديد الوجهة.",
       );
       setErrorMessage(msg);
     }
@@ -124,7 +129,9 @@ export default function CreateTrip() {
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
               >
                 <option value="">
-                  {isLoadingNeighborhoods ? "جاري تحميل الأحياء..." : "اختر حي الوجهة"}
+                  {isLoadingNeighborhoods
+                    ? "جاري تحميل الأحياء..."
+                    : "اختر حي الوجهة"}
                 </option>
                 {neighborhoods.map((n) => (
                   <option key={n.id} value={n.id}>
@@ -223,7 +230,8 @@ export default function CreateTrip() {
             <div className="flex items-center gap-2 rounded-2xl bg-blue-50 p-3 text-xs text-[#123A68]">
               <Info className="h-4 w-4 shrink-0 text-[#123A68]" />
               <span>
-                سيتم احتساب أجر التوصيل العادل آلياً بناءً على مسار الرحلة والمنطقة.
+                سيتم احتساب أجر التوصيل العادل آلياً بناءً على مسار الرحلة
+                والمنطقة.
               </span>
             </div>
 
@@ -234,7 +242,9 @@ export default function CreateTrip() {
               className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white shadow-md hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer disabled:opacity-50"
             >
               <Car className="h-4 w-4" />
-              <span>{isCreating ? "جاري نشر الرحلة..." : "نشر الرحلة الآن"}</span>
+              <span>
+                {isCreating ? "جاري نشر الرحلة..." : "نشر الرحلة الآن"}
+              </span>
             </button>
           </form>
         </div>

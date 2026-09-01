@@ -28,8 +28,12 @@ describe("Progressive Web App (PWA) Configuration", () => {
     expect(manifest.shortcuts).toBeDefined();
     expect(manifest.shortcuts.length).toBeGreaterThanOrEqual(2);
 
-    const errandShortcut = manifest.shortcuts.find((s: any) => s.url === "/errands/new");
-    const tripShortcut = manifest.shortcuts.find((s: any) => s.url === "/trips/new");
+    const errandShortcut = manifest.shortcuts.find(
+      (s: any) => s.url === "/errands/new",
+    );
+    const tripShortcut = manifest.shortcuts.find(
+      (s: any) => s.url === "/trips/new",
+    );
 
     expect(errandShortcut).toBeDefined();
     expect(tripShortcut).toBeDefined();

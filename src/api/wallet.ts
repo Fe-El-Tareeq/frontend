@@ -9,7 +9,7 @@ import type {
 export const walletApi = {
   getWallet: async () => {
     const res = await apiClient.get<ApiSuccessResponse<Wallet>>(
-      ENDPOINTS.WALLET.ME
+      ENDPOINTS.WALLET.ME,
     );
     return res.data;
   },
@@ -17,7 +17,7 @@ export const walletApi = {
   getTransactions: async (params?: { skip?: number; take?: number }) => {
     const res = await apiClient.get<ApiSuccessResponse<WalletTransactionsData>>(
       ENDPOINTS.WALLET.TRANSACTIONS,
-      { params }
+      { params },
     );
     return res.data;
   },

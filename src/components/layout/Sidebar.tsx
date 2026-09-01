@@ -177,8 +177,12 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
                     <Download className="h-4.5 w-4.5" />
                   </div>
                   <div>
-                    <span className="text-xs font-black block leading-tight">تثبيت التطبيق على الهاتف</span>
-                    <span className="text-[10px] text-white/80 block">تنزيل الـ Web App فوراً</span>
+                    <span className="text-xs font-black block leading-tight">
+                      تثبيت التطبيق على الهاتف
+                    </span>
+                    <span className="text-[10px] text-white/80 block">
+                      تنزيل الـ Web App فوراً
+                    </span>
                   </div>
                 </div>
                 <ChevronLeft className="h-4 w-4 text-white/80" />
@@ -194,7 +198,9 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
             onClick={() => handleNavigate("/wallet")}
             className="flex items-center justify-between px-4 py-3 rounded-full bg-[#0D2C50] border border-accent/60 cursor-pointer hover:border-accent transition-all"
           >
-            <span className="text-xs font-bold text-white/80">رصيد التوكنز:</span>
+            <span className="text-xs font-bold text-white/80">
+              رصيد التوكنز:
+            </span>
             <div className="flex items-center gap-1.5 text-accent font-black text-sm">
               <Zap className="h-4 w-4 fill-accent" />
               <span>{tokenBalance || 47}</span>

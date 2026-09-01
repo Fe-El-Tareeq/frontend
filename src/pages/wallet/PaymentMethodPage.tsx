@@ -26,10 +26,14 @@ export default function PaymentMethodPage() {
     features: [],
   };
 
-  const [selectedMethod, setSelectedMethod] = useState<"QR" | "CARD" | "BANK">("QR");
+  const [selectedMethod, setSelectedMethod] = useState<"QR" | "CARD" | "BANK">(
+    "QR",
+  );
 
   const handleProceed = () => {
-    navigate("/wallet/topup-qr", { state: { package: pkg, method: selectedMethod } });
+    navigate("/wallet/topup-qr", {
+      state: { package: pkg, method: selectedMethod },
+    });
   };
 
   return (
@@ -134,7 +138,9 @@ export default function PaymentMethodPage() {
                   : "border-slate-300"
               }`}
             >
-              {selectedMethod === "QR" && <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />}
+              {selectedMethod === "QR" && (
+                <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />
+              )}
             </div>
           </div>
 
@@ -166,7 +172,9 @@ export default function PaymentMethodPage() {
                   : "border-slate-300"
               }`}
             >
-              {selectedMethod === "CARD" && <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />}
+              {selectedMethod === "CARD" && (
+                <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />
+              )}
             </div>
           </div>
 
@@ -198,7 +206,9 @@ export default function PaymentMethodPage() {
                   : "border-slate-300"
               }`}
             >
-              {selectedMethod === "BANK" && <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />}
+              {selectedMethod === "BANK" && (
+                <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />
+              )}
             </div>
           </div>
         </div>
