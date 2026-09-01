@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Plus,
-  Package,
-  Search,
-} from "lucide-react";
+import { Plus, Package, Search } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
@@ -33,20 +29,20 @@ export default function MyErrands() {
     const statusLabel = isWaiting
       ? "قيد الانتظار"
       : isMatched
-      ? "تم التطابق"
-      : isCompleted
-      ? "مكتمل"
-      : e.status === "IN_TRANSIT"
-      ? "جاري التوصيل"
-      : "ملغي";
+        ? "تم التطابق"
+        : isCompleted
+          ? "مكتمل"
+          : e.status === "IN_TRANSIT"
+            ? "جاري التوصيل"
+            : "ملغي";
 
     const statusBadge = isWaiting
       ? "bg-amber-50 text-amber-700 border-amber-200"
       : isMatched
-      ? "bg-blue-50 text-blue-700 border-blue-200"
-      : isCompleted
-      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-      : "bg-red-50 text-red-700 border-red-200";
+        ? "bg-blue-50 text-blue-700 border-blue-200"
+        : isCompleted
+          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+          : "bg-red-50 text-red-700 border-red-200";
 
     const dateStr = e.createdAt
       ? new Date(e.createdAt).toLocaleDateString("ar-EG", {
@@ -63,7 +59,12 @@ export default function MyErrands() {
       id: e.id,
       requesterName,
       avatarInitials: initials,
-      avatarBg: idx % 3 === 0 ? "bg-[#123A68]" : idx % 3 === 1 ? "bg-purple-600" : "bg-[#F36F21]",
+      avatarBg:
+        idx % 3 === 0
+          ? "bg-[#123A68]"
+          : idx % 3 === 1
+            ? "bg-purple-600"
+            : "bg-[#F36F21]",
       status: e.status,
       statusLabel,
       statusBadge,
@@ -74,7 +75,11 @@ export default function MyErrands() {
   });
 
   const filteredErrands = displayErrands.filter((e) => {
-    if (searchQuery && !e.description.includes(searchQuery) && !e.requesterName.includes(searchQuery)) {
+    if (
+      searchQuery &&
+      !e.description.includes(searchQuery) &&
+      !e.requesterName.includes(searchQuery)
+    ) {
       return false;
     }
     if (statusFilter !== "ALL" && e.status !== statusFilter) {
@@ -157,7 +162,10 @@ export default function MyErrands() {
         {isLoading && (
           <div className="space-y-3 pt-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-28 rounded-3xl bg-slate-100 animate-pulse" />
+              <div
+                key={i}
+                className="h-28 rounded-3xl bg-slate-100 animate-pulse"
+              />
             ))}
           </div>
         )}

@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ChevronRight,
-  Eye,
-  EyeOff,
-  Lock,
-} from "lucide-react";
+import { ChevronRight, Eye, EyeOff, Lock } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { ChangePasswordSuccessModal } from "../../components/modals/ChangePasswordSuccessModal";
@@ -98,7 +93,11 @@ export default function ChangePasswordPage() {
                   onClick={() => setShowCurrent(!showCurrent)}
                   className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted hover:text-primary cursor-pointer"
                 >
-                  {showCurrent ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                  {showCurrent ? (
+                    <EyeOff className="h-4.5 w-4.5" />
+                  ) : (
+                    <Eye className="h-4.5 w-4.5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -122,7 +121,11 @@ export default function ChangePasswordPage() {
                   onClick={() => setShowNew(!showNew)}
                   className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted hover:text-primary cursor-pointer"
                 >
-                  {showNew ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                  {showNew ? (
+                    <EyeOff className="h-4.5 w-4.5" />
+                  ) : (
+                    <Eye className="h-4.5 w-4.5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -130,7 +133,8 @@ export default function ChangePasswordPage() {
             {/* Confirm New Password */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
-                تأكيد كلمة المرور الجديدة <span className="text-[#F36F21]">*</span>
+                تأكيد كلمة المرور الجديدة{" "}
+                <span className="text-[#F36F21]">*</span>
               </label>
               <div className="relative">
                 <input
@@ -146,7 +150,11 @@ export default function ChangePasswordPage() {
                   onClick={() => setShowConfirm(!showConfirm)}
                   className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted hover:text-primary cursor-pointer"
                 >
-                  {showConfirm ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                  {showConfirm ? (
+                    <EyeOff className="h-4.5 w-4.5" />
+                  ) : (
+                    <Eye className="h-4.5 w-4.5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -157,7 +165,8 @@ export default function ChangePasswordPage() {
                 شروط كلمة المرور:
               </span>
               <p className="text-[11px] text-text-secondary leading-relaxed">
-                يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وحرف كبير، ورقم، ورمز خاص.
+                يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وحرف كبير، ورقم،
+                ورمز خاص.
               </p>
             </div>
 
@@ -169,7 +178,9 @@ export default function ChangePasswordPage() {
                 className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
               >
                 <Lock className="h-4 w-4" />
-                <span>{isSubmitting ? "جاري الحفظ..." : "حفظ كلمة المرور"}</span>
+                <span>
+                  {isSubmitting ? "جاري الحفظ..." : "حفظ كلمة المرور"}
+                </span>
               </button>
 
               <button

@@ -39,7 +39,9 @@ export const ConversationCard: FC<ConversationCardProps> = ({
         </div>
 
         <div className="text-right">
-          <h3 className="text-xs font-black text-primary">{conversation.name}</h3>
+          <h3 className="text-xs font-black text-primary">
+            {conversation.name}
+          </h3>
           <p className="text-[11px] text-text-secondary mt-0.5 line-clamp-1 max-w-[200px]">
             {conversation.lastMessage}
           </p>
@@ -48,7 +50,9 @@ export const ConversationCard: FC<ConversationCardProps> = ({
 
       {/* Left Side in RTL: Time and Unread Badge */}
       <div className="flex flex-col items-start gap-1">
-        <span className="text-[10.5px] text-text-muted">{conversation.time}</span>
+        <span className="text-[10.5px] text-text-muted">
+          {conversation.time}
+        </span>
         {conversation.unreadCount > 0 && (
           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#F36F21] text-[10.5px] font-black text-white">
             {conversation.unreadCount}

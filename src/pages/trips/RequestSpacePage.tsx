@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  ChevronRight,
-  MessageSquare,
-  Mic,
-  Send,
-  Info,
-} from "lucide-react";
+import { ChevronRight, MessageSquare, Mic, Send, Info } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { RequestSpaceSuccessModal } from "../../components/modals/RequestSpaceSuccessModal";
@@ -186,7 +180,8 @@ export default function RequestSpacePage() {
             <div className="flex items-start gap-2.5 rounded-2xl bg-blue-50 p-3.5 border border-blue-200 text-right">
               <Info className="h-4.5 w-4.5 text-[#123A68] shrink-0 mt-0.5" />
               <p className="text-[11.5px] text-[#123A68] leading-relaxed">
-                سيتم التواصل معك من صاحب الرحلة لتأكيد التفاصيل والموعد قبل تأكيد الحجز.
+                سيتم التواصل معك من صاحب الرحلة لتأكيد التفاصيل والموعد قبل
+                تأكيد الحجز.
               </p>
             </div>
 

@@ -1,8 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNotificationStore, type NotificationType } from "../store/useNotificationStore";
+import {
+  useNotificationStore,
+  type NotificationType,
+} from "../store/useNotificationStore";
 
 export function useNotifications() {
-  const [permission, setPermission] = useState<NotificationPermission>("default");
+  const [permission, setPermission] =
+    useState<NotificationPermission>("default");
   const [isSupported, setIsSupported] = useState(false);
 
   const {
@@ -57,10 +61,17 @@ export function useNotifications() {
       });
 
       // 2. Trigger native device/PWA notification if supported and permitted
-      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+      if (
+        typeof window !== "undefined" &&
+        "Notification" in window &&
+        Notification.permission === "granted"
+      ) {
         try {
           // If Service Worker is ready, use showNotification for better mobile PWA support
-          if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+          if (
+            "serviceWorker" in navigator &&
+            navigator.serviceWorker.controller
+          ) {
             const reg = await navigator.serviceWorker.ready;
             reg.showNotification(options.title, {
               body: options.body,
@@ -94,7 +105,7 @@ export function useNotifications() {
         }
       }
     },
-    [addNotification]
+    [addNotification],
   );
 
   return {

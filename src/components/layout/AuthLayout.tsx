@@ -92,15 +92,18 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
             <div className="mt-3 flex items-center justify-center gap-2">
               {Array.from({ length: totalSteps }).map((_, index) => {
                 const stepNum = index + 1;
-                const isPassedOrCurrent =
-                  currentStep ? stepNum <= currentStep : false;
+                const isPassedOrCurrent = currentStep
+                  ? stepNum <= currentStep
+                  : false;
 
                 return (
                   <span
                     key={index}
                     className={cn(
                       "h-1 rounded-full transition-all duration-300",
-                      isPassedOrCurrent ? "w-10 bg-[#F36F21]" : "w-10 bg-slate-200"
+                      isPassedOrCurrent
+                        ? "w-10 bg-[#F36F21]"
+                        : "w-10 bg-slate-200",
                     )}
                   />
                 );

@@ -51,7 +51,7 @@ export const Header: FC<HeaderProps> = ({
       <header
         className={cn(
           "sticky top-0 z-30 flex h-16 items-center justify-between bg-white px-4 border-b border-border/50 transition-all shadow-2xs",
-          className
+          className,
         )}
       >
         {/* If simple back mode is enabled */}
@@ -148,10 +148,7 @@ export const Header: FC<HeaderProps> = ({
       </header>
 
       {/* Slide-out Sidebar Drawer */}
-      <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-      />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </>
   );
 };

@@ -7,7 +7,7 @@ import type { ApiErrorResponse, ApiValidationErrorDetail } from "../types";
  */
 export const getApiErrorMessage = (
   error: unknown,
-  fallbackMessage = "حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى."
+  fallbackMessage = "حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.",
 ): string => {
   if (!error) return fallbackMessage;
 
@@ -34,13 +34,21 @@ export const getApiErrorMessage = (
     }
 
     // Case 2: General Error message
-    if (data.message && typeof data.message === "string" && data.message.trim() !== "") {
+    if (
+      data.message &&
+      typeof data.message === "string" &&
+      data.message.trim() !== ""
+    ) {
       return data.message;
     }
   }
 
   // Case 3: Standard JS Error
-  if (error instanceof Error && error.message && !error.message.startsWith("Request failed with status code")) {
+  if (
+    error instanceof Error &&
+    error.message &&
+    !error.message.startsWith("Request failed with status code")
+  ) {
     return error.message;
   }
 
@@ -52,16 +60,22 @@ export const getApiErrorMessage = (
  * Strips prefixes like "body." or "query." (e.g., "body.phone" -> "phone")
  * Perfect for React Hook Form's setError() integration.
  */
-export const getApiFieldErrors = (
-  error: unknown
-): Record<string, string> => {
+export const getApiFieldErrors = (error: unknown): Record<string, string> => {
   const result: Record<string, string> = {};
   if (!error) return result;
 
   const axiosError = error as AxiosError<ApiErrorResponse>;
-  if (axiosError?.response?.data?.errors && Array.isArray(axiosError.response.data.errors)) {
+  if (
+    axiosError?.response?.data?.errors &&
+    Array.isArray(axiosError.response.data.errors)
+  ) {
     for (const item of axiosError.response.data.errors) {
-      if (typeof item === "object" && item !== null && "field" in item && "message" in item) {
+      if (
+        typeof item === "object" &&
+        item !== null &&
+        "field" in item &&
+        "message" in item
+      ) {
         const detail = item as ApiValidationErrorDetail;
         if (detail.field && detail.message) {
           // Normalize "body.fieldName" -> "fieldName"

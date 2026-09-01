@@ -83,7 +83,7 @@ export default function RegisterStep2() {
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
-        "تعذر إتمام عملية التسجيل، يرجى المحاولة مرة أخرى."
+        "تعذر إتمام عملية التسجيل، يرجى المحاولة مرة أخرى.",
       );
       setErrorMessage(msg);
     }

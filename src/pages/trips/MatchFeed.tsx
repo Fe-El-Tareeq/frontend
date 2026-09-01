@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Sparkles,
-  MapPin,
-  CheckCircle,
-  XCircle,
-  Zap,
-} from "lucide-react";
+import { Sparkles, MapPin, CheckCircle, XCircle, Zap } from "lucide-react";
 import { AppLayout } from "../../components/layout/AppLayout";
 import { Card } from "../../components/ui/card/Card";
 import { Button } from "../../components/ui/button/Button";
@@ -87,8 +81,12 @@ export default function MatchFeed() {
               <Card key={item.id} className="p-4 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-bold text-sm text-primary">{item.title}</h3>
-                    <p className="text-xs text-text-muted mt-0.5">{item.itemsDescription}</p>
+                    <h3 className="font-bold text-sm text-primary">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-text-muted mt-0.5">
+                      {item.itemsDescription}
+                    </p>
                   </div>
                   <WeightBadge weightClass={item.weightClass} />
                 </div>

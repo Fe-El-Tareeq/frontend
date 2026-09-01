@@ -15,7 +15,10 @@ import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { useNotifications } from "../../hooks/useNotifications";
-import type { AppNotification, NotificationType } from "../../store/useNotificationStore";
+import type {
+  AppNotification,
+  NotificationType,
+} from "../../store/useNotificationStore";
 
 export default function NotificationsPage() {
   const navigate = useNavigate();
@@ -72,7 +75,9 @@ export default function NotificationsPage() {
   const renderIconPill = (type: NotificationType, isRead: boolean) => {
     const isUnread = !isRead;
 
-    const iconClasses = isUnread ? "h-5 w-5 text-white" : "h-5 w-5 text-[#64748B]";
+    const iconClasses = isUnread
+      ? "h-5 w-5 text-white"
+      : "h-5 w-5 text-[#64748B]";
     const containerClasses = isUnread
       ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#123A68] shadow-xs"
       : "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F1F5F9]";
@@ -126,7 +131,9 @@ export default function NotificationsPage() {
               <ChevronRight className="h-6 w-6" />
             </button>
             <div>
-              <h1 className="text-xl font-black text-[#123A68]">بطاقات الإشعارات</h1>
+              <h1 className="text-xl font-black text-[#123A68]">
+                بطاقات الإشعارات
+              </h1>
               {unreadCount > 0 && (
                 <span className="text-[11px] font-bold text-text-muted">
                   لديك {unreadCount} إشعار غير مقروء
@@ -165,7 +172,8 @@ export default function NotificationsPage() {
                   إشعارات الهاتف الفورية (PWA Push)
                 </h3>
                 <p className="text-[10.5px] text-white/75 leading-relaxed mt-0.5">
-                  فعّل الإشعارات لتصلك تنبيهات العروض والرسائل والرحلات مباشرة على شاشة قفل هاتفك.
+                  فعّل الإشعارات لتصلك تنبيهات العروض والرسائل والرحلات مباشرة
+                  على شاشة قفل هاتفك.
                 </p>
               </div>
             </div>

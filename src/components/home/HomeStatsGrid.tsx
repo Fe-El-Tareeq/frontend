@@ -53,7 +53,9 @@ export const HomeStatsGrid: FC<HomeStatsGridProps> = ({
             <Car className="h-4 w-4" />
           </div>
         </div>
-        <div className="text-xl font-black text-primary">{activeTripsCount}</div>
+        <div className="text-xl font-black text-primary">
+          {activeTripsCount}
+        </div>
       </div>
 
       {/* 3. My Errands */}

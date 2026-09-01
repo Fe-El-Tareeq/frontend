@@ -24,9 +24,7 @@ export const ContactSection: FC = () => {
         <span className="text-xs font-black text-[#F36F21] block">
           تواصل معنا
         </span>
-        <h2 className="text-2xl font-black text-[#123A68]">
-          نحن هنا لمساعدتك
-        </h2>
+        <h2 className="text-2xl font-black text-[#123A68]">نحن هنا لمساعدتك</h2>
         <p className="text-xs text-text-secondary leading-relaxed">
           فريق الدعم متاح للإجابة على استفساراتك ومساعدتك على مدار الساعة.
         </p>

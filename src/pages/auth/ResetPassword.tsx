@@ -8,9 +8,7 @@ import { ResetPasswordSuccessModal } from "../../components/modals/ResetPassword
 
 const resetPasswordSchema = z
   .object({
-    password: z
-      .string()
-      .min(8, "كلمة المرور يجب أن تتكون من 8 أحرف على الأقل"),
+    password: z.string().min(8, "كلمة المرور يجب أن تتكون من 8 أحرف على الأقل"),
     confirmPassword: z.string().min(1, "يرجى تأكيد كلمة المرور"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -47,11 +45,7 @@ export default function ResetPassword() {
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
         {/* New Password */}
-        <Form.Field
-          name="password"
-          error={errors.password?.message}
-          required
-        >
+        <Form.Field name="password" error={errors.password?.message} required>
           <Form.Label>كلمة المرور الجديدة</Form.Label>
           <Form.PasswordInput
             placeholder="••••••••"
@@ -82,7 +76,8 @@ export default function ResetPassword() {
             شروط كلمة المرور:
           </span>
           <p className="text-[11px] text-text-secondary leading-relaxed">
-            يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وحرف كبير، ورقم، ورمز خاص.
+            يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وحرف كبير، ورقم، ورمز
+            خاص.
           </p>
         </div>
 

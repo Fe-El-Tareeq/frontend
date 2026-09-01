@@ -21,15 +21,19 @@ export default function MessagesPage() {
    * When empty or pending, renders EmptyState from design system without mock data.
    * ============================================================================
    */
-  const { conversations: backendConversations, isLoading, isError, refetch } =
-    useConversations();
+  const {
+    conversations: backendConversations,
+    isLoading,
+    isError,
+    refetch,
+  } = useConversations();
 
-  const displayConversations: ConversationItemData[] = (backendConversations || []).map((c) => ({
+  const displayConversations: ConversationItemData[] = (
+    backendConversations || []
+  ).map((c) => ({
     id: c.id,
     name: c.recipientName || "مستخدم",
-    avatarInitials: c.recipientName
-      ? c.recipientName.slice(0, 2)
-      : "مس",
+    avatarInitials: c.recipientName ? c.recipientName.slice(0, 2) : "مس",
     avatarBg: "bg-[#123A68]",
     lastMessage: c.lastMessage || "بدء محادثة جديدة",
     time: c.lastMessageAt
@@ -43,9 +47,7 @@ export default function MessagesPage() {
   }));
 
   const filteredConversations = displayConversations.filter(
-    (c) =>
-      c.name.includes(searchQuery) ||
-      c.lastMessage.includes(searchQuery)
+    (c) => c.name.includes(searchQuery) || c.lastMessage.includes(searchQuery),
   );
 
   return (

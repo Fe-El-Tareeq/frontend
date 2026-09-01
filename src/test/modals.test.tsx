@@ -12,7 +12,7 @@ describe("Modals & Feedback Components", () => {
     render(
       <MemoryRouter>
         <RequestSpaceSuccessModal isOpen={true} onClose={() => {}} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("تم إرسال طلبك بنجاح")).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe("Modals & Feedback Components", () => {
     render(
       <MemoryRouter>
         <SubmitOfferSuccessModal isOpen={true} onClose={() => {}} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("تم إرسال عرضك بنجاح")).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe("Modals & Feedback Components", () => {
     render(
       <MemoryRouter>
         <ResetPasswordSuccessModal isOpen={true} onClose={() => {}} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("تم تغيير كلمة المرور بنجاح")).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe("Modals & Feedback Components", () => {
     render(
       <MemoryRouter>
         <ChangePasswordSuccessModal isOpen={true} onClose={() => {}} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("تم حفظ كلمة المرور بنجاح")).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe("Modals & Feedback Components", () => {
     render(
       <MemoryRouter>
         <LandingMenuModal isOpen={true} onClose={() => {}} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("بطريقك")).toBeInTheDocument();

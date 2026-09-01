@@ -7,7 +7,11 @@ export interface WeightBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   weightClass: WeightClass;
 }
 
-export const WeightBadge = ({ weightClass, className, ...props }: WeightBadgeProps) => {
+export const WeightBadge = ({
+  weightClass,
+  className,
+  ...props
+}: WeightBadgeProps) => {
   const config: Record<
     WeightClass,
     { label: string; sub: string; icon: typeof Feather }
@@ -36,13 +40,14 @@ export const WeightBadge = ({ weightClass, className, ...props }: WeightBadgePro
     <span
       className={cn(
         "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-background text-xs font-medium text-text-secondary border border-border",
-        className
+        className,
       )}
       {...props}
     >
       <Icon className="h-3.5 w-3.5 text-primary" />
       <span>
-        {item.label} <span className="text-[10px] text-text-muted">({item.sub})</span>
+        {item.label}{" "}
+        <span className="text-[10px] text-text-muted">({item.sub})</span>
       </span>
     </span>
   );

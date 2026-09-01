@@ -26,7 +26,11 @@ export default function SettingsPage() {
   const [darkMode, setDarkMode] = useState(false);
 
   const handleDeleteAccount = () => {
-    if (confirm("هل أنت متأكد من رغبتك في حذف حسابك نهائياً؟ هذا الإجراء لا يمكن التراجع عنه.")) {
+    if (
+      confirm(
+        "هل أنت متأكد من رغبتك في حذف حسابك نهائياً؟ هذا الإجراء لا يمكن التراجع عنه.",
+      )
+    ) {
       alert("تم إرسال طلب حذف الحساب للإدارة.");
     }
   };
@@ -246,7 +250,9 @@ export default function SettingsPage() {
           </button>
 
           <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-            <span className="font-mono text-text-muted font-bold">1.0.0 (بيتا)</span>
+            <span className="font-mono text-text-muted font-bold">
+              1.0.0 (بيتا)
+            </span>
             <span className="font-bold text-primary">إصدار التطبيق</span>
           </div>
         </div>
@@ -259,7 +265,8 @@ export default function SettingsPage() {
           </div>
 
           <p className="text-xs text-text-secondary leading-relaxed">
-            سيؤدي حذف حسابك إلى مسح كافة بياناتك وسجل رحلاتك وطلباتك نهائياً ولا يمكن استرجاعها.
+            سيؤدي حذف حسابك إلى مسح كافة بياناتك وسجل رحلاتك وطلباتك نهائياً ولا
+            يمكن استرجاعها.
           </p>
 
           <button

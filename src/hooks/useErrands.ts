@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { errandsApi } from "../api/errands";
-import type { ErrandCreateRequest, ErrandFilterParams, ErrandUpdateRequest } from "../types";
+import type {
+  ErrandCreateRequest,
+  ErrandFilterParams,
+  ErrandUpdateRequest,
+} from "../types";
 
 export const ERRAND_KEYS = {
   all: ["errands"] as const,
@@ -28,7 +32,9 @@ export function useErrands(params?: ErrandFilterParams) {
     mutationFn: ({ id, data }: { id: string; data: ErrandUpdateRequest }) =>
       errandsApi.updateErrand(id, data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ERRAND_KEYS.detail(variables.id) });
+      queryClient.invalidateQueries({
+        queryKey: ERRAND_KEYS.detail(variables.id),
+      });
       queryClient.invalidateQueries({ queryKey: ERRAND_KEYS.all });
     },
   });

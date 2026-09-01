@@ -44,31 +44,31 @@ frontend/
 
 ## 🚦 2. مصفوفة شاشات Figma والـ Endpoints المطلوبة (25 شاشة)
 
-| # | شاشة Figma | ملف الواجهة الأمامية | المسار في التطبيق | الـ Endpoint المطلوب | حالة الربط بالـ Backend |
-| :-: | :--- | :--- | :--- | :--- | :---: |
-| 1 | **بطاقة التعريف** | `src/pages/LandingPage.tsx` | `/` أو `/welcome` | واجهة ثابتة واستعراضية |  مكتمل |
-| 2 | **الرئيسية** | `src/pages/Home.tsx` | `/` (عند تسجيل الدخول) | `GET /api/v1/dashboard/summary` + `GET /api/v1/trips` |  مكتمل |
-| 3 | **القائمة الجانبية** | `src/components/layout/Sidebar.tsx` | Drawer من كل الصفحات | `GET /api/v1/users/me` |  مكتمل |
-| 4 | **تسجيل الدخول** | `src/pages/auth/Login.tsx` | `/login` | `POST /api/v1/auth/login` |  مكتمل |
-| 5 | **تسجيل حساب جديد 1** | `src/pages/auth/RegisterStep1.tsx` | `/register-step1` | Client Step State |  مكتمل |
-| 6 | **تسجيل حساب جديد 2** | `src/pages/auth/RegisterStep2.tsx` | `/register-step2` | `POST /api/v1/auth/register` |  مكتمل |
-| 7 | **تأكيد OTP / نسيت المرور**| `src/pages/auth/VerifyOtp.tsx` | `/verify-otp` | `POST /api/v1/auth/verify-otp` |  مكتمل |
-| 8 | **تعيين كلمة مرور جديدة**| `src/pages/auth/ResetPassword.tsx` | `/reset-password` | `POST /api/v1/auth/reset-password` | 🟡 بانتظار Endpoint الباك إند |
-| 9 | **الطلبات** | `src/pages/errands/MyErrands.tsx` | `/errands` | `GET /api/v1/errands` |  مكتمل |
-| 10 | **إنشاء طلب جديد** | `src/pages/errands/CreateErrand.tsx` | `/errands/new` | `POST /api/v1/errands` |  مكتمل |
-| 11 | **تفاصيل الطلب** | `src/pages/errands/ErrandDetail.tsx` | `/errands/:id` | `GET /api/v1/errands/:id` |  مكتمل |
-| 12 | **تقديم عرض للطلب** | `src/pages/errands/SubmitOfferPage.tsx`| `/errands/:id/offer` | `POST /api/v1/errands/:id/offers` | 🟡 بانتظار Endpoint الباك إند |
-| 13 | **الرحلات** | `src/pages/trips/TripsPage.tsx` | `/trips` | `GET /api/v1/trips` | 🟡 بانتظار Endpoint الباك إند |
-| 14 | **إضافة رحلة جديدة** | `src/pages/trips/CreateTrip.tsx` | `/trips/new` | `POST /api/v1/trips` | 🟡 بانتظار Endpoint الباك إند |
-| 15 | **تفاصيل الرحلة** | `src/pages/trips/TripDetailPage.tsx` | `/trips/:id` | `GET /api/v1/trips/:id` | 🟡 بانتظار Endpoint الباك إند |
-| 16 | **طلب مكان بالرحلة** | `src/pages/trips/RequestSpacePage.tsx`| `/trips/:id/request-space` | `POST /api/v1/trips/:id/book` | 🟡 بانتظار Endpoint الباك إند |
-| 17 | **قائمة الرسائل** | `src/pages/chat/MessagesPage.tsx` | `/messages` | `GET /api/v1/conversations` | 🟡 بانتظار Endpoint الباك إند |
-| 18 | **صفحة المحادثة** | `src/pages/chat/ChatPage.tsx` | `/chat/:id` | `GET /api/v1/chat/:id/messages` | 🟡 بانتظار WebSocket/API |
-| 19 | **المحفظة وسجل العمليات**| `src/pages/wallet/WalletPage.tsx` | `/wallet` | `GET /api/v1/wallet/ledger` |  مكتمل (Mock fallback) |
-| 20 | **الملف الشخصي** | `src/pages/profile/ProfilePage.tsx` | `/profile` | `GET /api/v1/users/me` |  مكتمل |
-| 21 | **تعديل الملف الشخصي** | `src/pages/profile/EditProfile.tsx` | `/profile/edit` | `PATCH /api/v1/users/me` |  مكتمل |
-| 22 | **الإعدادات والتنبيهات**| `src/pages/profile/SettingsPage.tsx` | `/settings` | `PATCH /api/v1/users/settings` | 🟡 بانتظار Endpoint الباك إند |
-| 23 | **تغيير كلمة المرور** | `src/pages/profile/ChangePasswordPage.tsx` | `/settings/change-password` | `PUT /api/v1/auth/change-password` | 🟡 بانتظار Endpoint الباك إند |
+|  #  | شاشة Figma                  | ملف الواجهة الأمامية                       | المسار في التطبيق           | الـ Endpoint المطلوب                                  |    حالة الربط بالـ Backend    |
+| :-: | :-------------------------- | :----------------------------------------- | :-------------------------- | :---------------------------------------------------- | :---------------------------: |
+|  1  | **بطاقة التعريف**           | `src/pages/LandingPage.tsx`                | `/` أو `/welcome`           | واجهة ثابتة واستعراضية                                |             مكتمل             |
+|  2  | **الرئيسية**                | `src/pages/Home.tsx`                       | `/` (عند تسجيل الدخول)      | `GET /api/v1/dashboard/summary` + `GET /api/v1/trips` |             مكتمل             |
+|  3  | **القائمة الجانبية**        | `src/components/layout/Sidebar.tsx`        | Drawer من كل الصفحات        | `GET /api/v1/users/me`                                |             مكتمل             |
+|  4  | **تسجيل الدخول**            | `src/pages/auth/Login.tsx`                 | `/login`                    | `POST /api/v1/auth/login`                             |             مكتمل             |
+|  5  | **تسجيل حساب جديد 1**       | `src/pages/auth/RegisterStep1.tsx`         | `/register-step1`           | Client Step State                                     |             مكتمل             |
+|  6  | **تسجيل حساب جديد 2**       | `src/pages/auth/RegisterStep2.tsx`         | `/register-step2`           | `POST /api/v1/auth/register`                          |             مكتمل             |
+|  7  | **تأكيد OTP / نسيت المرور** | `src/pages/auth/VerifyOtp.tsx`             | `/verify-otp`               | `POST /api/v1/auth/verify-otp`                        |             مكتمل             |
+|  8  | **تعيين كلمة مرور جديدة**   | `src/pages/auth/ResetPassword.tsx`         | `/reset-password`           | `POST /api/v1/auth/reset-password`                    | 🟡 بانتظار Endpoint الباك إند |
+|  9  | **الطلبات**                 | `src/pages/errands/MyErrands.tsx`          | `/errands`                  | `GET /api/v1/errands`                                 |             مكتمل             |
+| 10  | **إنشاء طلب جديد**          | `src/pages/errands/CreateErrand.tsx`       | `/errands/new`              | `POST /api/v1/errands`                                |             مكتمل             |
+| 11  | **تفاصيل الطلب**            | `src/pages/errands/ErrandDetail.tsx`       | `/errands/:id`              | `GET /api/v1/errands/:id`                             |             مكتمل             |
+| 12  | **تقديم عرض للطلب**         | `src/pages/errands/SubmitOfferPage.tsx`    | `/errands/:id/offer`        | `POST /api/v1/errands/:id/offers`                     | 🟡 بانتظار Endpoint الباك إند |
+| 13  | **الرحلات**                 | `src/pages/trips/TripsPage.tsx`            | `/trips`                    | `GET /api/v1/trips`                                   | 🟡 بانتظار Endpoint الباك إند |
+| 14  | **إضافة رحلة جديدة**        | `src/pages/trips/CreateTrip.tsx`           | `/trips/new`                | `POST /api/v1/trips`                                  | 🟡 بانتظار Endpoint الباك إند |
+| 15  | **تفاصيل الرحلة**           | `src/pages/trips/TripDetailPage.tsx`       | `/trips/:id`                | `GET /api/v1/trips/:id`                               | 🟡 بانتظار Endpoint الباك إند |
+| 16  | **طلب مكان بالرحلة**        | `src/pages/trips/RequestSpacePage.tsx`     | `/trips/:id/request-space`  | `POST /api/v1/trips/:id/book`                         | 🟡 بانتظار Endpoint الباك إند |
+| 17  | **قائمة الرسائل**           | `src/pages/chat/MessagesPage.tsx`          | `/messages`                 | `GET /api/v1/conversations`                           | 🟡 بانتظار Endpoint الباك إند |
+| 18  | **صفحة المحادثة**           | `src/pages/chat/ChatPage.tsx`              | `/chat/:id`                 | `GET /api/v1/chat/:id/messages`                       |   🟡 بانتظار WebSocket/API    |
+| 19  | **المحفظة وسجل العمليات**   | `src/pages/wallet/WalletPage.tsx`          | `/wallet`                   | `GET /api/v1/wallet/ledger`                           |     مكتمل (Mock fallback)     |
+| 20  | **الملف الشخصي**            | `src/pages/profile/ProfilePage.tsx`        | `/profile`                  | `GET /api/v1/users/me`                                |             مكتمل             |
+| 21  | **تعديل الملف الشخصي**      | `src/pages/profile/EditProfile.tsx`        | `/profile/edit`             | `PATCH /api/v1/users/me`                              |             مكتمل             |
+| 22  | **الإعدادات والتنبيهات**    | `src/pages/profile/SettingsPage.tsx`       | `/settings`                 | `PATCH /api/v1/users/settings`                        | 🟡 بانتظار Endpoint الباك إند |
+| 23  | **تغيير كلمة المرور**       | `src/pages/profile/ChangePasswordPage.tsx` | `/settings/change-password` | `PUT /api/v1/auth/change-password`                    | 🟡 بانتظار Endpoint الباك إند |
 
 ---
 
@@ -93,6 +93,7 @@ frontend/
 عندما ينتهي فريق الـ Backend من أي Endpoint، اتبع الخطوات التالية:
 
 ### الخطوة 1: تسجيل مسار الـ Endpoint في `src/api/endpoints.ts`:
+
 ```typescript
 export const API_ENDPOINTS = {
   // ...
@@ -104,17 +105,24 @@ export const API_ENDPOINTS = {
 ```
 
 ### الخطوة 2: كتابة دالة الخدمة في مجلد `src/api/`:
+
 ```typescript
 // src/api/trips.ts
 import apiClient from "./client";
 import { API_ENDPOINTS } from "./endpoints";
-import type { ApiResponse, CreateTripRequestDTO, TripResponseDTO } from "../types";
+import type {
+  ApiResponse,
+  CreateTripRequestDTO,
+  TripResponseDTO,
+} from "../types";
 
 export const tripsApi = {
-  createTrip: async (payload: CreateTripRequestDTO): Promise<TripResponseDTO> => {
+  createTrip: async (
+    payload: CreateTripRequestDTO,
+  ): Promise<TripResponseDTO> => {
     const res = await apiClient.post<ApiResponse<TripResponseDTO>>(
       API_ENDPOINTS.TRIPS.CREATE,
-      payload
+      payload,
     );
     return res.data.data;
   },
@@ -122,6 +130,7 @@ export const tripsApi = {
 ```
 
 ### الخطوة 3: إنشاء Hook بـ React Query واستدعاؤه في الصفحة:
+
 ```typescript
 // src/hooks/useTrips.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -145,6 +154,7 @@ export const useCreateTrip = () => {
 يعتمد الـ Backend على نمطين من الاستجابة للأخطاء:
 
 ### أ) في حالة أخطاء التحقق من الحقول (Validation Errors):
+
 ```json
 {
   "success": false,
@@ -159,6 +169,7 @@ export const useCreateTrip = () => {
 ```
 
 ### ب) في حالة الأخطاء العامة (General Errors):
+
 ```json
 {
   "success": false,
@@ -172,6 +183,7 @@ export const useCreateTrip = () => {
 ### 🛡️ دوال المعالجة المتاحة في الواجهة الأمامية (`src/utils/apiError.ts`):
 
 1. **استخراج رسالة خطأ واحدة واضحة (`getApiErrorMessage`):**
+
 ```typescript
 import { getApiErrorMessage } from "../utils/apiError";
 
@@ -184,6 +196,7 @@ try {
 ```
 
 2. **ربط أخطاء الحقول تلقائياً مع React Hook Form (`getApiFieldErrors`):**
+
 ```typescript
 import { getApiFieldErrors, getApiErrorMessage } from "../utils/apiError";
 

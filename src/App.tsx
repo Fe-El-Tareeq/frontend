@@ -2,7 +2,10 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useAuthStore } from "./store/useAuthStore";
-import { ProtectedRoute, PublicOnlyRoute } from "./components/auth/ProtectedRoute";
+import {
+  ProtectedRoute,
+  PublicOnlyRoute,
+} from "./components/auth/ProtectedRoute";
 import { PwaInstallBanner } from "./components/pwa/PwaInstallBanner";
 
 // Lazy-loaded pages matching Figma structure
@@ -19,7 +22,9 @@ const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const CreateErrand = lazy(() => import("./pages/errands/CreateErrand"));
 const ErrandDetail = lazy(() => import("./pages/errands/ErrandDetail"));
 const SubmitOfferPage = lazy(() => import("./pages/errands/SubmitOfferPage"));
-const IncomingOffersPage = lazy(() => import("./pages/errands/IncomingOffersPage"));
+const IncomingOffersPage = lazy(
+  () => import("./pages/errands/IncomingOffersPage"),
+);
 const OrderTracking = lazy(() => import("./pages/errands/OrderTracking"));
 const RatingPage = lazy(() => import("./pages/errands/RatingPage"));
 const MyErrands = lazy(() => import("./pages/errands/MyErrands"));
@@ -34,16 +39,26 @@ const MessagesPage = lazy(() => import("./pages/chat/MessagesPage"));
 const ChatPage = lazy(() => import("./pages/chat/ChatPage"));
 
 const WalletPage = lazy(() => import("./pages/wallet/WalletPage"));
-const BuyTokensPackages = lazy(() => import("./pages/wallet/BuyTokensPackages"));
-const PaymentMethodPage = lazy(() => import("./pages/wallet/PaymentMethodPage"));
+const BuyTokensPackages = lazy(
+  () => import("./pages/wallet/BuyTokensPackages"),
+);
+const PaymentMethodPage = lazy(
+  () => import("./pages/wallet/PaymentMethodPage"),
+);
 const TopUpQRPage = lazy(() => import("./pages/wallet/TopUpQRPage"));
-const PaymentSuccessPage = lazy(() => import("./pages/wallet/PaymentSuccessPage"));
+const PaymentSuccessPage = lazy(
+  () => import("./pages/wallet/PaymentSuccessPage"),
+);
 
 const ProfilePage = lazy(() => import("./pages/profile/ProfilePage"));
 const EditProfile = lazy(() => import("./pages/profile/EditProfile"));
 const SettingsPage = lazy(() => import("./pages/profile/SettingsPage"));
-const ChangePasswordPage = lazy(() => import("./pages/profile/ChangePasswordPage"));
-const NotificationsPage = lazy(() => import("./pages/notifications/NotificationsPage"));
+const ChangePasswordPage = lazy(
+  () => import("./pages/profile/ChangePasswordPage"),
+);
+const NotificationsPage = lazy(
+  () => import("./pages/notifications/NotificationsPage"),
+);
 const TermsPage = lazy(() => import("./pages/legal/TermsPage"));
 
 // Clean Mobile Loading Fallback
@@ -104,7 +119,10 @@ function App() {
               </PublicOnlyRoute>
             }
           />
-          <Route path="/register" element={<Navigate to="/register-step1" replace />} />
+          <Route
+            path="/register"
+            element={<Navigate to="/register-step1" replace />}
+          />
           <Route
             path="/verify-otp"
             element={

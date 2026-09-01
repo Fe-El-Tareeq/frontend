@@ -74,13 +74,13 @@ export const BottomNav = () => {
                 "flex flex-1 flex-col items-center justify-center py-1 transition-colors focus:outline-none",
                 isActive
                   ? "text-accent font-bold"
-                  : "text-text-secondary hover:text-primary font-medium"
+                  : "text-text-secondary hover:text-primary font-medium",
               )}
             >
               <Icon
                 className={cn(
                   "h-5 w-5 transition-transform",
-                  isActive && "scale-110"
+                  isActive && "scale-110",
                 )}
               />
               <span className="mt-1 text-xs leading-none">{item.label}</span>

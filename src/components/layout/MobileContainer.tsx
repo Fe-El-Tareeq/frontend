@@ -18,7 +18,7 @@ export const MobileContainer: FC<MobileContainerProps> = ({
       <div
         className={cn(
           "w-full max-w-[430px] min-h-screen bg-white flex flex-col shadow-2xl relative overflow-x-hidden border-x border-border/40 text-right",
-          className
+          className,
         )}
       >
         {children}

@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  ChevronRight,
-  Play,
-  Pause,
-  Send,
-  Zap,
-  Package,
-} from "lucide-react";
+import { ChevronRight, Play, Pause, Send, Zap, Package } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
@@ -125,19 +118,19 @@ export default function ErrandDetail() {
                 errand.status === "OPEN"
                   ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                   : errand.status === "MATCHED"
-                  ? "bg-blue-50 text-blue-700 border-blue-200"
-                  : errand.status === "COMPLETED"
-                  ? "bg-slate-100 text-text-secondary border-slate-200"
-                  : "bg-red-50 text-red-700 border-red-200"
+                    ? "bg-blue-50 text-blue-700 border-blue-200"
+                    : errand.status === "COMPLETED"
+                      ? "bg-slate-100 text-text-secondary border-slate-200"
+                      : "bg-red-50 text-red-700 border-red-200"
               }`}
             >
               {errand.status === "OPEN"
                 ? "مفتوح"
                 : errand.status === "MATCHED"
-                ? "تم التطابق"
-                : errand.status === "COMPLETED"
-                ? "مكتمل"
-                : "ملغي"}
+                  ? "تم التطابق"
+                  : errand.status === "COMPLETED"
+                    ? "مكتمل"
+                    : "ملغي"}
             </span>
           </div>
 
@@ -171,7 +164,9 @@ export default function ErrandDetail() {
 
           {/* Voice Note Player Component */}
           <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 space-y-2 text-right">
-            <span className="text-[10.5px] text-text-muted block">رسالة صوتية</span>
+            <span className="text-[10.5px] text-text-muted block">
+              رسالة صوتية
+            </span>
             <div className="flex items-center justify-between gap-3 bg-white p-2.5 rounded-xl border border-slate-200">
               <button
                 type="button"
@@ -193,7 +188,9 @@ export default function ErrandDetail() {
                 />
               </div>
 
-              <span className="text-[11px] font-bold text-text-muted">0:18</span>
+              <span className="text-[11px] font-bold text-text-muted">
+                0:18
+              </span>
             </div>
           </div>
 

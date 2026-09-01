@@ -27,7 +27,10 @@ export function useWallet() {
   };
 }
 
-export function useWalletTransactions(params?: { skip?: number; take?: number }) {
+export function useWalletTransactions(params?: {
+  skip?: number;
+  take?: number;
+}) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const transactionsQuery = useQuery({

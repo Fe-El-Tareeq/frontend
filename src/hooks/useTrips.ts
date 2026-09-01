@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { tripsApi } from "../api/trips";
-import type { CreateTripRequest, TripFilterParams, UpdateTripRequest } from "../types";
+import type {
+  CreateTripRequest,
+  TripFilterParams,
+  UpdateTripRequest,
+} from "../types";
 
 export const TRIPS_QUERY_KEY = ["trips"] as const;
 

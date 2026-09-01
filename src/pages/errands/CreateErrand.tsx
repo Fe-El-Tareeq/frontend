@@ -3,13 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  ChevronRight,
-  MessageSquare,
-  Mic,
-  Zap,
-  Package,
-} from "lucide-react";
+import { ChevronRight, MessageSquare, Mic, Zap, Package } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { Form } from "../../components/ui/form/Form";
@@ -63,7 +57,9 @@ export default function CreateErrand() {
     }
 
     if (tokenBalance < 1) {
-      setErrorMessage("رصيدك من التوكنز غير كافٍ لنشر طلب جديد. يرجى شحن محفظتك.");
+      setErrorMessage(
+        "رصيدك من التوكنز غير كافٍ لنشر طلب جديد. يرجى شحن محفظتك.",
+      );
       return;
     }
 
@@ -91,7 +87,7 @@ export default function CreateErrand() {
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
-        "تعذر نشر الطلب، يرجى التأكد من اكتمال بيانات ملفك الشخصي."
+        "تعذر نشر الطلب، يرجى التأكد من اكتمال بيانات ملفك الشخصي.",
       );
       setErrorMessage(msg);
     }
@@ -111,7 +107,9 @@ export default function CreateErrand() {
             <ChevronRight className="h-6 w-6" />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#123A68]">إنشاء طلب جديد</h1>
+            <h1 className="text-xl font-black text-[#123A68]">
+              إنشاء طلب جديد
+            </h1>
             <p className="text-xs text-text-secondary">
               صف ما تحتاجه وسيجدك المسافرون المناسبون
             </p>
@@ -164,7 +162,9 @@ export default function CreateErrand() {
 
             {/* Neighborhood */}
             <div className="mt-3 space-y-1">
-              <label className="block text-xs font-bold text-primary">الحي</label>
+              <label className="block text-xs font-bold text-primary">
+                الحي
+              </label>
               <select
                 disabled={isLoadingNeighborhoods}
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-accent focus:outline-none"
@@ -214,7 +214,11 @@ export default function CreateErrand() {
                 }`}
               >
                 <Mic className="h-4 w-4" />
-                <span>{isRecording ? "جاري التسجيل... اضغط للإيقاف" : "اضغط للتسجيل"}</span>
+                <span>
+                  {isRecording
+                    ? "جاري التسجيل... اضغط للإيقاف"
+                    : "اضغط للتسجيل"}
+                </span>
               </button>
             </div>
 

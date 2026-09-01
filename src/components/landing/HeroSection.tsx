@@ -22,8 +22,10 @@ export const HeroSection: FC<HeroSectionProps> = ({
       {/* Main Headline matching Figma */}
       <div className="space-y-3">
         <h1 className="text-3xl font-black leading-tight text-white tracking-tight">
-          بطريقك..<br />
-          <span className="text-[#F36F21]">غرضك يوصل</span><br />
+          بطريقك..
+          <br />
+          <span className="text-[#F36F21]">غرضك يوصل</span>
+          <br />
           مع شخص في الطريق
         </h1>
         <p className="text-xs text-slate-200 leading-relaxed max-w-[340px] mx-auto opacity-90">

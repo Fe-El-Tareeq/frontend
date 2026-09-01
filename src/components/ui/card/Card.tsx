@@ -22,14 +22,14 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
         className={cn(
           "rounded-2xl p-5 text-right transition-all",
           variants[variant],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </div>
     );
-  }
+  },
 );
 CardRoot.displayName = "Card";
 
@@ -41,7 +41,7 @@ const CardHeader = ({
   <div
     className={cn(
       "flex items-start justify-between gap-3 pb-3 border-b border-border/50",
-      className
+      className,
     )}
     {...props}
   >
@@ -94,7 +94,7 @@ const CardFooter = ({
   <div
     className={cn(
       "pt-3 border-t border-border/50 flex items-center justify-between gap-3",
-      className
+      className,
     )}
     {...props}
   >

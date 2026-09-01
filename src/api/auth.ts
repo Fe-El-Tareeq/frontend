@@ -19,7 +19,7 @@ export const authApi = {
   register: async (payload: RegisterRequest) => {
     const res = await apiClient.post<ApiSuccessResponse<RegisterResponseData>>(
       ENDPOINTS.AUTH.REGISTER,
-      payload
+      payload,
     );
     return res.data;
   },
@@ -27,23 +27,22 @@ export const authApi = {
   login: async (payload: LoginRequest) => {
     const res = await apiClient.post<ApiSuccessResponse<LoginResponseData>>(
       ENDPOINTS.AUTH.LOGIN,
-      payload
+      payload,
     );
     return res.data;
   },
 
   requestOtp: async (payload: OtpRequest) => {
-    const res = await apiClient.post<ApiSuccessResponse<OtpRequestResponseData>>(
-      ENDPOINTS.AUTH.REQUEST_OTP,
-      payload
-    );
+    const res = await apiClient.post<
+      ApiSuccessResponse<OtpRequestResponseData>
+    >(ENDPOINTS.AUTH.REQUEST_OTP, payload);
     return res.data;
   },
 
   verifyOtp: async (payload: OtpVerifyRequest) => {
     const res = await apiClient.post<ApiSuccessResponse<VerifyOtpData>>(
       ENDPOINTS.AUTH.VERIFY_OTP,
-      payload
+      payload,
     );
     return res.data;
   },
@@ -51,14 +50,14 @@ export const authApi = {
   logout: async (payload: RefreshTokenRequest) => {
     const res = await apiClient.post<ApiSuccessResponse<null>>(
       ENDPOINTS.AUTH.LOGOUT,
-      payload
+      payload,
     );
     return res.data;
   },
 
   getMe: async () => {
     const res = await apiClient.get<ApiSuccessResponse<UserProfile>>(
-      ENDPOINTS.USERS.ME
+      ENDPOINTS.USERS.ME,
     );
     return res.data;
   },
@@ -66,7 +65,7 @@ export const authApi = {
   updateMe: async (payload: UserProfileUpdateRequest) => {
     const res = await apiClient.patch<ApiSuccessResponse<UserProfile>>(
       ENDPOINTS.USERS.ME,
-      payload
+      payload,
     );
     return res.data;
   },

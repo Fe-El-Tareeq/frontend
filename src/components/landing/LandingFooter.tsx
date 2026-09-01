@@ -19,11 +19,7 @@ export const LandingFooter: FC<LandingFooterProps> = ({
         className="flex items-center justify-center gap-2 cursor-pointer select-none"
       >
         <span className="text-base font-black text-[#123A68]">بطريقك</span>
-        <img
-          src="/logo.png"
-          alt="بطريقك"
-          className="h-8 w-8 object-contain"
-        />
+        <img src="/logo.png" alt="بطريقك" className="h-8 w-8 object-contain" />
       </div>
 
       {/* Copyright */}

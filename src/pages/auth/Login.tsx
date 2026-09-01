@@ -44,13 +44,16 @@ export default function Login() {
     } catch (err: unknown) {
       const serverMessage = getApiErrorMessage(
         err,
-        "تعذر تسجيل الدخول، يرجى التأكد من صحة البيانات."
+        "تعذر تسجيل الدخول، يرجى التأكد من صحة البيانات.",
       );
       setErrorMessage(serverMessage);
 
       // If phone number is unverified, redirect to OTP verification
       const axiosErr = err as { response?: { status?: number } };
-      if (serverMessage.includes("verified") || axiosErr?.response?.status === 403) {
+      if (
+        serverMessage.includes("verified") ||
+        axiosErr?.response?.status === 403
+      ) {
         navigate("/verify-otp", { state: { phone: data.phone } });
       }
     }

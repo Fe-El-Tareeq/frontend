@@ -2,7 +2,8 @@ import type { PaginationMeta } from "./api";
 import type { Neighborhood } from "./locations";
 
 export type WeightClass = "LIGHT" | "MEDIUM" | "HEAVY";
-export type ErrandStatus = "OPEN" | "MATCHED" | "IN_TRANSIT" | "COMPLETED" | "CANCELLED" | "EXPIRED";
+export type ErrandStatus =
+  "OPEN" | "MATCHED" | "IN_TRANSIT" | "COMPLETED" | "CANCELLED" | "EXPIRED";
 
 export interface ErrandCategory {
   id: string;

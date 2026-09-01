@@ -35,7 +35,9 @@ export const messagesApi = {
   // Fetch all user conversations
   getConversations: async (): Promise<ConversationDto[]> => {
     try {
-      const response = await apiClient.get<ConversationDto[]>(ENDPOINTS.MESSAGES.CONVERSATIONS);
+      const response = await apiClient.get<ConversationDto[]>(
+        ENDPOINTS.MESSAGES.CONVERSATIONS,
+      );
       return response.data;
     } catch {
       // Fallback empty list for empty state presentation
@@ -44,9 +46,13 @@ export const messagesApi = {
   },
 
   // Fetch single chat message history
-  getChatMessages: async (conversationId: string): Promise<ChatMessageDto[]> => {
+  getChatMessages: async (
+    conversationId: string,
+  ): Promise<ChatMessageDto[]> => {
     try {
-      const response = await apiClient.get<ChatMessageDto[]>(ENDPOINTS.MESSAGES.CHAT(conversationId));
+      const response = await apiClient.get<ChatMessageDto[]>(
+        ENDPOINTS.MESSAGES.CHAT(conversationId),
+      );
       return response.data;
     } catch {
       return [];
@@ -54,10 +60,16 @@ export const messagesApi = {
   },
 
   // Send a message
-  sendMessage: async (conversationId: string, text: string): Promise<ChatMessageDto> => {
-    const response = await apiClient.post<ChatMessageDto>(ENDPOINTS.MESSAGES.SEND(conversationId), {
-      text,
-    });
+  sendMessage: async (
+    conversationId: string,
+    text: string,
+  ): Promise<ChatMessageDto> => {
+    const response = await apiClient.post<ChatMessageDto>(
+      ENDPOINTS.MESSAGES.SEND(conversationId),
+      {
+        text,
+      },
+    );
     return response.data;
   },
 };

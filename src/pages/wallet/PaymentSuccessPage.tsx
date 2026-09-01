@@ -73,7 +73,11 @@ export default function PaymentSuccessPage() {
             تمّ الشراء بنجاح! 🎉
           </h2>
           <p className="text-xs text-text-secondary">
-            أضيف <strong className="text-[#F36F21] font-black">{pkg.tokens} توكن</strong> إلى رصيدك فوراً
+            أضيف{" "}
+            <strong className="text-[#F36F21] font-black">
+              {pkg.tokens} توكن
+            </strong>{" "}
+            إلى رصيدك فوراً
           </p>
         </div>
 
@@ -104,7 +108,9 @@ export default function PaymentSuccessPage() {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="font-mono font-bold text-slate-700">#TXN-MT8HEYO5</span>
+            <span className="font-mono font-bold text-slate-700">
+              #TXN-MT8HEYO5
+            </span>
             <span className="text-text-muted">رقم العملية</span>
           </div>
 

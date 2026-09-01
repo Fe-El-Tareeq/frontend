@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-export type NotificationType = "TRIP" | "MESSAGE" | "ERRAND" | "WALLET" | "SYSTEM";
+export type NotificationType =
+  "TRIP" | "MESSAGE" | "ERRAND" | "WALLET" | "SYSTEM";
 
 export interface AppNotification {
   id: string;
@@ -18,7 +19,9 @@ interface NotificationStoreState {
   notifications: AppNotification[];
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
-  addNotification: (notification: Omit<AppNotification, "id" | "createdAt" | "isRead">) => void;
+  addNotification: (
+    notification: Omit<AppNotification, "id" | "createdAt" | "isRead">,
+  ) => void;
   deleteNotification: (id: string) => void;
   clearAll: () => void;
 }
@@ -75,13 +78,16 @@ export const useNotificationStore = create<NotificationStoreState>()(
       markAsRead: (id) =>
         set((state) => ({
           notifications: state.notifications.map((n) =>
-            n.id === id ? { ...n, isRead: true } : n
+            n.id === id ? { ...n, isRead: true } : n,
           ),
         })),
 
       markAllAsRead: () =>
         set((state) => ({
-          notifications: state.notifications.map((n) => ({ ...n, isRead: true })),
+          notifications: state.notifications.map((n) => ({
+            ...n,
+            isRead: true,
+          })),
         })),
 
       addNotification: (item) =>
@@ -110,6 +116,6 @@ export const useNotificationStore = create<NotificationStoreState>()(
     {
       name: "bitareeqak-notifications",
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );

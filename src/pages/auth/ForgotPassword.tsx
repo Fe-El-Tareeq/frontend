@@ -49,7 +49,7 @@ export default function ForgotPassword() {
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
-        "تعذر إرسال رمز استعادة الحساب، يرجى التحقق من الرقم."
+        "تعذر إرسال رمز استعادة الحساب، يرجى التحقق من الرقم.",
       );
       setErrorMessage(msg);
     }

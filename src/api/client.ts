@@ -20,7 +20,7 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Concurrency-safe Token Refresh Queue
@@ -45,9 +45,15 @@ const processQueue = (error: Error | null, token: string | null = null) => {
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
-    if (!error.response || error.response.status !== 401 || originalRequest._retry) {
+    if (
+      !error.response ||
+      error.response.status !== 401 ||
+      originalRequest._retry
+    ) {
       return Promise.reject(error);
     }
 
@@ -87,7 +93,7 @@ apiClient.interceptors.response.use(
     try {
       const response = await axios.post<ApiSuccessResponse<AuthTokens>>(
         `${API_BASE_URL}${ENDPOINTS.AUTH.REFRESH}`,
-        { refreshToken }
+        { refreshToken },
       );
 
       const newTokens = response.data.data;
@@ -107,5 +113,5 @@ apiClient.interceptors.response.use(
     } finally {
       isRefreshing = false;
     }
-  }
+  },
 );

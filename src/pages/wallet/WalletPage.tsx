@@ -11,10 +11,7 @@ import type { WalletTransaction } from "../../types/wallet";
 export default function WalletPage() {
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const {
-    tokenBalance,
-    isLoadingWallet,
-  } = useWallet();
+  const { tokenBalance, isLoadingWallet } = useWallet();
 
   const {
     transactions,
@@ -32,13 +29,18 @@ export default function WalletPage() {
 
   const totalSpent = transactions
     .filter((t: WalletTransaction) => t.tokenAmount < 0)
-    .reduce((acc: number, t: WalletTransaction) => acc + Math.abs(t.tokenAmount), 0);
+    .reduce(
+      (acc: number, t: WalletTransaction) => acc + Math.abs(t.tokenAmount),
+      0,
+    );
 
   // Format real dynamic transactions
   const displayTransactions = transactions.map((t: WalletTransaction) => {
     let typeLabel = "حركة توكنز";
-    if (t.transactionType === "SIGNUP_BONUS") typeLabel = "هدية التسجيل الترحيبية";
-    else if (t.transactionType === "TOKEN_TOP_UP") typeLabel = "شراء باقة توكنز";
+    if (t.transactionType === "SIGNUP_BONUS")
+      typeLabel = "هدية التسجيل الترحيبية";
+    else if (t.transactionType === "TOKEN_TOP_UP")
+      typeLabel = "شراء باقة توكنز";
     else if (t.description) typeLabel = t.description;
 
     return {
@@ -132,7 +134,10 @@ export default function WalletPage() {
           {isLoadingTransactions && (
             <div className="space-y-2">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-14 rounded-2xl bg-slate-100 animate-pulse" />
+                <div
+                  key={i}
+                  className="h-14 rounded-2xl bg-slate-100 animate-pulse"
+                />
               ))}
             </div>
           )}
@@ -147,44 +152,48 @@ export default function WalletPage() {
           )}
 
           {/* Empty */}
-          {!isLoadingTransactions && !isErrorTransactions && displayTransactions.length === 0 && (
-            <EmptyState
-              icon={<Zap className="h-8 w-8 text-[#F36F21]" />}
-              title="لا توجد معاملات مسجلة"
-              description="ستظهر هنا كافة عمليات شحن واستهلاك التوكنز والجوائز الترويجية."
-              actionText="شحن توكنز الآن"
-              onAction={() => navigate("/wallet/buy-tokens")}
-            />
-          )}
+          {!isLoadingTransactions &&
+            !isErrorTransactions &&
+            displayTransactions.length === 0 && (
+              <EmptyState
+                icon={<Zap className="h-8 w-8 text-[#F36F21]" />}
+                title="لا توجد معاملات مسجلة"
+                description="ستظهر هنا كافة عمليات شحن واستهلاك التوكنز والجوائز الترويجية."
+                actionText="شحن توكنز الآن"
+                onAction={() => navigate("/wallet/buy-tokens")}
+              />
+            )}
 
           {/* Transactions List */}
-          {!isLoadingTransactions && !isErrorTransactions && displayTransactions.length > 0 && (
-            <div className="rounded-3xl bg-white p-2 border border-slate-200/90 shadow-2xs divide-y divide-slate-100">
-              {displayTransactions.map((tx) => (
-                <div
-                  key={tx.id}
-                  className="flex items-center justify-between p-3.5 hover:bg-slate-50 transition-colors"
-                >
-                  <div className="text-right space-y-0.5">
-                    <span className="text-xs font-black text-[#123A68] block">
-                      {tx.type}
-                    </span>
-                    <span className="text-[10.5px] text-text-muted">
-                      {tx.date}
-                    </span>
-                  </div>
-
+          {!isLoadingTransactions &&
+            !isErrorTransactions &&
+            displayTransactions.length > 0 && (
+              <div className="rounded-3xl bg-white p-2 border border-slate-200/90 shadow-2xs divide-y divide-slate-100">
+                {displayTransactions.map((tx) => (
                   <div
-                    className={`text-sm font-black ${
-                      tx.isPositive ? "text-emerald-600" : "text-[#F36F21]"
-                    }`}
+                    key={tx.id}
+                    className="flex items-center justify-between p-3.5 hover:bg-slate-50 transition-colors"
                   >
-                    {tx.tokens} توكن
+                    <div className="text-right space-y-0.5">
+                      <span className="text-xs font-black text-[#123A68] block">
+                        {tx.type}
+                      </span>
+                      <span className="text-[10.5px] text-text-muted">
+                        {tx.date}
+                      </span>
+                    </div>
+
+                    <div
+                      className={`text-sm font-black ${
+                        tx.isPositive ? "text-emerald-600" : "text-[#F36F21]"
+                      }`}
+                    >
+                      {tx.tokens} توكن
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
         </div>
       </div>
     </MobileContainer>

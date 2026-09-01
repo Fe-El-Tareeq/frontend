@@ -12,10 +12,8 @@ const queryClient = new QueryClient({
 function renderWithProviders(ui: React.ReactNode) {
   return render(
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-        {ui}
-      </MemoryRouter>
-    </QueryClientProvider>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>,
   );
 }
 

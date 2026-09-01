@@ -1,8 +1,4 @@
-import {
-  createContext,
-  useContext,
-  forwardRef,
-} from "react";
+import { createContext, useContext, forwardRef } from "react";
 import type {
   FormHTMLAttributes,
   HTMLAttributes,
@@ -38,7 +34,7 @@ const FormRoot = forwardRef<HTMLFormElement, FormProps>(
         {children}
       </form>
     );
-  }
+  },
 );
 FormRoot.displayName = "Form";
 
@@ -85,7 +81,7 @@ const FormLabel = ({
     <label
       className={cn(
         "block text-[14px] font-medium text-primary mb-1.5 text-right",
-        className
+        className,
       )}
       {...props}
     >
@@ -103,19 +99,20 @@ const FormInput = forwardRef<HTMLInputElement, InputProps>(
     const hasError = propError ?? contextError;
 
     return <Input ref={ref} error={hasError} {...props} />;
-  }
+  },
 );
 FormInput.displayName = "FormInput";
 
 // Form PasswordInput
-const FormPasswordInput = forwardRef<HTMLInputElement, Omit<InputProps, "type">>(
-  ({ error: propError, ...props }, ref) => {
-    const { error: contextError } = useFormField();
-    const hasError = propError ?? contextError;
+const FormPasswordInput = forwardRef<
+  HTMLInputElement,
+  Omit<InputProps, "type">
+>(({ error: propError, ...props }, ref) => {
+  const { error: contextError } = useFormField();
+  const hasError = propError ?? contextError;
 
-    return <PasswordInput ref={ref} error={hasError} {...props} />;
-  }
-);
+  return <PasswordInput ref={ref} error={hasError} {...props} />;
+});
 FormPasswordInput.displayName = "FormPasswordInput";
 
 // Form Select
@@ -125,7 +122,7 @@ const FormSelect = forwardRef<HTMLSelectElement, SelectProps>(
     const hasError = propError ?? contextError;
 
     return <Select ref={ref} error={hasError} {...props} />;
-  }
+  },
 );
 FormSelect.displayName = "FormSelect";
 
@@ -136,7 +133,7 @@ const FormTextarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const hasError = propError ?? contextError;
 
     return <Textarea ref={ref} error={hasError} {...props} />;
-  }
+  },
 );
 FormTextarea.displayName = "FormTextarea";
 
@@ -160,7 +157,7 @@ const FormErrorMessage = ({
     <p
       className={cn(
         "mt-1.5 text-right text-[12px] font-medium text-error flex items-center gap-1",
-        className
+        className,
       )}
       {...props}
     >
@@ -182,7 +179,7 @@ const FormHelperText = ({
     <p
       className={cn(
         "mt-1.5 text-right text-[12px] text-text-secondary leading-relaxed",
-        className
+        className,
       )}
       {...props}
     >

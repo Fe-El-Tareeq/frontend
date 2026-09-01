@@ -1,12 +1,20 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { ProtectedRoute, PublicOnlyRoute } from "../components/auth/ProtectedRoute";
+import {
+  ProtectedRoute,
+  PublicOnlyRoute,
+} from "../components/auth/ProtectedRoute";
 import { useAuthStore } from "../store/useAuthStore";
 
 describe("Strict ProtectedRoute & PublicOnlyRoute Architecture", () => {
   it("should redirect unauthenticated users away from /home, /trips, /errands to /login", () => {
-    useAuthStore.setState({ isAuthenticated: false, accessToken: null, refreshToken: null, user: null });
+    useAuthStore.setState({
+      isAuthenticated: false,
+      accessToken: null,
+      refreshToken: null,
+      user: null,
+    });
 
     render(
       <MemoryRouter initialEntries={["/trips"]}>
@@ -21,7 +29,7 @@ describe("Strict ProtectedRoute & PublicOnlyRoute Architecture", () => {
           />
           <Route path="/login" element={<div>Redirected Login Page</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.queryByText("Trips Feed Protected")).not.toBeInTheDocument();
@@ -29,7 +37,12 @@ describe("Strict ProtectedRoute & PublicOnlyRoute Architecture", () => {
   });
 
   it("should redirect unauthenticated users away from /errands to /login", () => {
-    useAuthStore.setState({ isAuthenticated: false, accessToken: null, refreshToken: null, user: null });
+    useAuthStore.setState({
+      isAuthenticated: false,
+      accessToken: null,
+      refreshToken: null,
+      user: null,
+    });
 
     render(
       <MemoryRouter initialEntries={["/errands"]}>
@@ -44,10 +57,12 @@ describe("Strict ProtectedRoute & PublicOnlyRoute Architecture", () => {
           />
           <Route path="/login" element={<div>Redirected Login Page</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    expect(screen.queryByText("Errands Feed Protected")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Errands Feed Protected"),
+    ).not.toBeInTheDocument();
     expect(screen.getByText("Redirected Login Page")).toBeInTheDocument();
   });
 
@@ -67,7 +82,7 @@ describe("Strict ProtectedRoute & PublicOnlyRoute Architecture", () => {
           />
           <Route path="/home" element={<div>Home Dashboard Redirected</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.queryByText("Signup Form")).not.toBeInTheDocument();

@@ -33,9 +33,15 @@ describe("Trips Domain & Schemas", () => {
     expect(ENDPOINTS.TRIPS.LIST).toBe("/api/v1/trips");
     expect(ENDPOINTS.TRIPS.CREATE).toBe("/api/v1/trips");
     expect(ENDPOINTS.TRIPS.DETAIL(tripId)).toBe(`/api/v1/trips/${tripId}`);
-    expect(ENDPOINTS.TRIPS.CANCEL(tripId)).toBe(`/api/v1/trips/${tripId}/cancel`);
+    expect(ENDPOINTS.TRIPS.CANCEL(tripId)).toBe(
+      `/api/v1/trips/${tripId}/cancel`,
+    );
     expect(ENDPOINTS.TRIPS.BOOK(tripId)).toBe(`/api/v1/trips/${tripId}/book`);
-    expect(ENDPOINTS.MATCHING.TRIP_ERRANDS(tripId)).toBe(`/api/v1/matching/trips/${tripId}`);
-    expect(ENDPOINTS.MATCHING.ERRAND_TRIPS(tripId)).toBe(`/api/v1/matching/errands/${tripId}`);
+    expect(ENDPOINTS.MATCHING.TRIP_ERRANDS(tripId)).toBe(
+      `/api/v1/matching/trips/${tripId}`,
+    );
+    expect(ENDPOINTS.MATCHING.ERRAND_TRIPS(tripId)).toBe(
+      `/api/v1/matching/errands/${tripId}`,
+    );
   });
 });

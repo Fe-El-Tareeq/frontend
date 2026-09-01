@@ -22,13 +22,14 @@ const queryClient = new QueryClient({
   },
 });
 
-function renderWithProviders(component: React.ReactNode, initialEntries = ["/"]) {
+function renderWithProviders(
+  component: React.ReactNode,
+  initialEntries = ["/"],
+) {
   return render(
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={initialEntries}>
-        {component}
-      </MemoryRouter>
-    </QueryClientProvider>
+      <MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>
+    </QueryClientProvider>,
   );
 }
 
@@ -114,7 +115,9 @@ describe("E2E User Simulation & Flows Test Suite", () => {
     // Step 3: QR Code
     const { unmount: unmount2 } = renderWithProviders(<TopUpQRPage />);
     expect(screen.getAllByText("إتمام الدفع")[0]).toBeInTheDocument();
-    expect(screen.getByText("افتح تطبيق البنك أو جوال باي على هاتفك")).toBeInTheDocument();
+    expect(
+      screen.getByText("افتح تطبيق البنك أو جوال باي على هاتفك"),
+    ).toBeInTheDocument();
     expect(screen.getByText("لقد أتممت الدفع")).toBeInTheDocument();
     unmount2();
 
