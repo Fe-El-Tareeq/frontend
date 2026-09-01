@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Plus,
@@ -6,6 +7,8 @@ import {
   Package,
   MessageSquare,
   ArrowLeft,
+  Download,
+  Sparkles,
 } from "lucide-react";
 import { Header } from "../components/layout/Header";
 import { MobileContainer } from "../components/layout/MobileContainer";
@@ -13,6 +16,8 @@ import { useAuth } from "../hooks/useAuth";
 import { useWallet } from "../hooks/useWallet";
 import { useErrands } from "../hooks/useErrands";
 import { useTrips } from "../hooks/useTrips";
+import { usePWA } from "../hooks/usePWA";
+import { PwaInstallModal } from "../components/pwa/PwaInstallModal";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -27,7 +32,15 @@ export default function Home() {
 
   const currentTokens = tokenBalance ?? 47;
   const activeTripsCount = trips.length > 0 ? trips.length : 3;
-  const activeErrandsCount = errands.length > 0 ? errands.length : 2;
+  const { isInstalled, isIOS, triggerInstall } = usePWA();
+  const [showInstallModal, setShowInstallModal] = useState(false);
+
+  const handleInstallClick = async () => {
+    const result = await triggerInstall();
+    if (result === "ios" || result === "fallback") {
+      setShowInstallModal(true);
+    }
+  };
 
   // Nearby Trips (Preview 3 items matching Figma)
   const nearbyTrips = [
@@ -109,6 +122,38 @@ export default function Home() {
             إليك ملخص نشاطك اليوم في {userCityNeighborhood}
           </p>
         </div>
+
+        {/* PWA Download Banner on Home (for mobile/desktop users) */}
+        {!isInstalled && (
+          <div
+            onClick={handleInstallClick}
+            className="flex items-center justify-between gap-3 rounded-3xl bg-gradient-to-r from-[#123A68] to-[#1D4A7F] p-4 text-white shadow-md hover:shadow-lg active:scale-[0.99] transition-all cursor-pointer text-right"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F36F21] text-white shadow-xs">
+                <Download className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-xs font-black text-white">
+                    تثبيت تطبيق بطريقك على هاتفك
+                  </h3>
+                  <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                </div>
+                <p className="text-[10.5px] text-white/80 leading-tight mt-0.5">
+                  استمتع بتجربة تطبيق أسرع بدون شريط المتصفح
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="shrink-0 rounded-xl bg-white/15 px-3 py-1.5 text-[11px] font-black text-white hover:bg-white/25 transition-all"
+            >
+              تثبيت
+            </button>
+          </div>
+        )}
 
         {/* 2x2 Stats Summary Grid matching Batch 4 image 3 */}
         <div className="grid grid-cols-2 gap-3">
@@ -313,6 +358,13 @@ export default function Home() {
           </button>
         </div>
       </div>
+
+      {/* PWA Install Guide Modal */}
+      <PwaInstallModal
+        isOpen={showInstallModal}
+        onClose={() => setShowInstallModal(false)}
+        isIOS={isIOS}
+      />
     </MobileContainer>
   );
 }
