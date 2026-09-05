@@ -15,7 +15,7 @@ export interface TokenPackage {
   name: string;
   subtitle: string;
   tokens: number;
-  priceUsd: number;
+  priceNis: number;
   ratePerToken: string;
   isPopular?: boolean;
   features: string[];
@@ -27,31 +27,31 @@ export const TOKEN_PACKAGES: TokenPackage[] = [
     name: "الباقة الأساسية",
     subtitle: "للاستخدام الخفيف والتجربة",
     tokens: 5,
-    priceUsd: 5,
-    ratePerToken: "1.00$ لكل توكن",
-    features: ["نشر الطلبات فوراً", "صلاحية 3 أشهر"],
+    priceNis: 5,
+    ratePerToken: "1.00 شيكل لكل توكن",
+    features: ["نشر أو قبول الطلبات فوراً", "صلاحية غير محدودة"],
   },
   {
     id: "pkg-medium",
     name: "الباقة المتوسطة",
     subtitle: "الأكثر شيوعاً للمستخدم العادي",
     tokens: 20,
-    priceUsd: 15,
-    ratePerToken: "0.75$ لكل توكن",
+    priceNis: 15,
+    ratePerToken: "0.75 شيكل لكل توكن",
     isPopular: true,
-    features: ["نشر الطلبات فوراً", "صلاحية 3 أشهر", "خصم 25%"],
+    features: ["نشر أو قبول الطلبات فوراً", "خصم 25%", "صلاحية غير محدودة"],
   },
   {
     id: "pkg-pro",
     name: "الباقة الاحترافية",
     subtitle: "للمستخدمين الدائمين والنشطين",
     tokens: 50,
-    priceUsd: 30,
-    ratePerToken: "0.60$ لكل توكن",
+    priceNis: 30,
+    ratePerToken: "0.60 شيكل لكل توكن",
     features: [
-      "نشر الطلبات فوراً",
-      "صلاحية 3 أشهر",
+      "نشر أو قبول الطلبات فوراً",
       "خصم 40%",
+      "صلاحية غير محدودة",
       "أولوية في البحث",
     ],
   },
@@ -60,12 +60,12 @@ export const TOKEN_PACKAGES: TokenPackage[] = [
     name: "الباقة المؤسسية",
     subtitle: "لأصحاب الأعمال والاستخدام المكثف",
     tokens: 100,
-    priceUsd: 50,
-    ratePerToken: "0.50$ لكل توكن",
+    priceNis: 50,
+    ratePerToken: "0.50 شيكل لكل توكن",
     features: [
-      "نشر الطلبات فوراً",
-      "صلاحية 3 أشهر",
+      "نشر أو قبول الطلبات فوراً",
       "خصم 50%",
+      "صلاحية غير محدودة",
       "أولوية في البحث",
     ],
   },
@@ -175,7 +175,7 @@ export default function BuyTokensPackages() {
 
                   <div className="text-left">
                     <span className="text-xl font-black text-[#F36F21]">
-                      {pkg.priceUsd}$
+                      {pkg.priceNis} شيكل
                     </span>
                     <p className="text-[10px] text-emerald-600 font-bold">
                       ✓ {pkg.ratePerToken}
@@ -222,12 +222,12 @@ export default function BuyTokensPackages() {
           <span>•</span>
           <div className="flex items-center gap-1">
             <RefreshCw className="h-3.5 w-3.5 text-blue-600" />
-            <span>استرداد خلال 7 أيام</span>
+            <span>دفع آمن بالكامل</span>
           </div>
           <span>•</span>
           <div className="flex items-center gap-1">
             <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-            <span>دفع آمن ومشفر</span>
+            <span>محفظة موثقة</span>
           </div>
         </div>
       </div>

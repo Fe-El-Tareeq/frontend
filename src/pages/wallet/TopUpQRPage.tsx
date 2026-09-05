@@ -13,8 +13,8 @@ export default function TopUpQRPage() {
     name: "الباقة الاحترافية",
     subtitle: "للمستخدمين الدائمين والنشطين",
     tokens: 50,
-    priceUsd: 30,
-    ratePerToken: "0.60$ لكل توكن",
+    priceNis: 30,
+    ratePerToken: "0.60 شيكل لكل توكن",
     features: [],
   };
 
@@ -38,7 +38,7 @@ export default function TopUpQRPage() {
           <div>
             <h1 className="text-xl font-black text-[#123A68]">إتمام الدفع</h1>
             <p className="text-xs text-text-secondary">
-              امسح رمز QR بتطبيقك البنكي / جوال باي
+              امسح رمز QR بتطبيق جوال باي
             </p>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function TopUpQRPage() {
             </span>
           </div>
           <span className="text-sm font-black text-[#123A68]">
-            {pkg.priceUsd}$
+            {pkg.priceNis} شيكل
           </span>
         </div>
 

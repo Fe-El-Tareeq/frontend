@@ -49,6 +49,8 @@ export interface Errand {
 export interface ErrandCreateRequest {
   clientRequestKey: string;
   categoryId: string;
+  pickupNeighborhoodId?: string;
+  neighborhoodId?: string;
   title: string;
   itemsDescription: string;
   destinationKeyword: string;

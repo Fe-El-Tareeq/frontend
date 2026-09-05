@@ -69,4 +69,26 @@ export const authApi = {
     );
     return res.data;
   },
+
+  uploadProfileImage: async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    const res = await apiClient.put<ApiSuccessResponse<UserProfile>>(
+      ENDPOINTS.USERS.PROFILE_IMAGE,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return res.data;
+  },
+
+  deleteProfileImage: async () => {
+    const res = await apiClient.delete<ApiSuccessResponse<UserProfile>>(
+      ENDPOINTS.USERS.PROFILE_IMAGE,
+    );
+    return res.data;
+  },
 };

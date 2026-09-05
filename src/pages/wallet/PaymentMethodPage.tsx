@@ -3,11 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   ChevronRight,
   QrCode,
-  CreditCard,
   Building2,
   CheckCircle,
   Zap,
   ArrowLeft,
+  Lock,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -21,14 +21,12 @@ export default function PaymentMethodPage() {
     name: "الباقة الاحترافية",
     subtitle: "للمستخدمين الدائمين والنشطين",
     tokens: 50,
-    priceUsd: 30,
-    ratePerToken: "0.60$ لكل توكن",
+    priceNis: 30,
+    ratePerToken: "0.60 شيكل لكل توكن",
     features: [],
   };
 
-  const [selectedMethod, setSelectedMethod] = useState<"QR" | "CARD" | "BANK">(
-    "QR",
-  );
+  const [selectedMethod] = useState<"QR" | "BANK">("QR");
 
   const handleProceed = () => {
     navigate("/wallet/topup-qr", {
@@ -103,113 +101,64 @@ export default function PaymentMethodPage() {
               {pkg.tokens} توكن
             </span>
             <span className="text-xs font-bold text-text-muted">
-              {pkg.priceUsd}$
+              {pkg.priceNis} شيكل
             </span>
           </div>
         </div>
 
         {/* Payment Methods List */}
         <div className="space-y-3 pt-1">
-          {/* Method 1: QR Code (Active) */}
+          {/* Method 1: QR Code - Jawwal Pay (Active) */}
           <div
-            onClick={() => setSelectedMethod("QR")}
-            className={`flex items-center justify-between rounded-3xl p-4.5 border transition-all cursor-pointer ${
-              selectedMethod === "QR"
-                ? "bg-white border-[#123A68] ring-2 ring-[#123A68]/15 shadow-sm"
-                : "bg-white border-border hover:border-slate-300"
-            }`}
+            className="flex items-center justify-between rounded-3xl p-4.5 border border-[#123A68] bg-white ring-2 ring-[#123A68]/15 shadow-sm transition-all cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#123A68] text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#123A68] text-white shadow-xs">
                 <QrCode className="h-6 w-6" />
               </div>
               <div className="text-right">
-                <h4 className="text-sm font-black text-[#123A68]">رمز QR</h4>
-                <p className="text-[11px] text-text-muted">
-                  ادفع بمسح رمز QR من تطبيقك البنكي / جوال باي
+                <div className="flex items-center gap-1.5">
+                  <h4 className="text-sm font-black text-[#123A68]">
+                    محفظة جوال باي (QR Code)
+                  </h4>
+                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[9.5px] font-black text-emerald-700 border border-emerald-200">
+                    متاح الآن
+                  </span>
+                </div>
+                <p className="text-[11px] text-text-muted mt-0.5">
+                  امسح رمز QR السريع من تطبيق جوال باي للدفع المباشر
                 </p>
               </div>
             </div>
 
-            <div
-              className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
-                selectedMethod === "QR"
-                  ? "border-[#123A68] bg-[#123A68] text-white"
-                  : "border-slate-300"
-              }`}
-            >
-              {selectedMethod === "QR" && (
-                <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />
-              )}
+            <div className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#123A68] bg-[#123A68] text-white">
+              <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />
             </div>
           </div>
 
-          {/* Method 2: Credit Card */}
+          {/* Method 2: Bank Transfer (Disabled until screen is ready) */}
           <div
-            onClick={() => setSelectedMethod("CARD")}
-            className={`flex items-center justify-between rounded-3xl p-4.5 border transition-all cursor-pointer ${
-              selectedMethod === "CARD"
-                ? "bg-white border-[#123A68] ring-2 ring-[#123A68]/15 shadow-sm"
-                : "bg-white border-border hover:border-slate-300"
-            }`}
+            className="flex items-center justify-between rounded-3xl p-4.5 border border-slate-200 bg-slate-50/70 opacity-60 cursor-not-allowed select-none transition-all"
           >
             <div className="flex items-center gap-3.5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
-                <CreditCard className="h-6 w-6" />
-              </div>
-              <div className="text-right">
-                <h4 className="text-sm font-black text-primary">بطاقة بنكية</h4>
-                <p className="text-[11px] text-text-muted">
-                  أو بطاقة محلية / Visa / Mastercard
-                </p>
-              </div>
-            </div>
-
-            <div
-              className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
-                selectedMethod === "CARD"
-                  ? "border-[#123A68] bg-[#123A68] text-white"
-                  : "border-slate-300"
-              }`}
-            >
-              {selectedMethod === "CARD" && (
-                <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />
-              )}
-            </div>
-          </div>
-
-          {/* Method 3: Bank Transfer */}
-          <div
-            onClick={() => setSelectedMethod("BANK")}
-            className={`flex items-center justify-between rounded-3xl p-4.5 border transition-all cursor-pointer ${
-              selectedMethod === "BANK"
-                ? "bg-white border-[#123A68] ring-2 ring-[#123A68]/15 shadow-sm"
-                : "bg-white border-border hover:border-slate-300"
-            }`}
-          >
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-200 text-slate-500">
                 <Building2 className="h-6 w-6" />
               </div>
               <div className="text-right">
-                <h4 className="text-sm font-black text-primary">تحويل بنكي</h4>
-                <p className="text-[11px] text-text-muted">
-                  تحويل مباشر لحساب المنصة
+                <div className="flex items-center gap-1.5">
+                  <h4 className="text-sm font-bold text-slate-500">تحويل بنكي</h4>
+                  <span className="flex items-center gap-1 rounded-full bg-slate-200 px-2 py-0.5 text-[9.5px] font-bold text-slate-600">
+                    <Lock className="h-2.5 w-2.5" />
+                    قريباً
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  التحويل المباشر عبر الحسابات البنكية (فلسطين / الإسلامي)
                 </p>
               </div>
             </div>
 
-            <div
-              className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
-                selectedMethod === "BANK"
-                  ? "border-[#123A68] bg-[#123A68] text-white"
-                  : "border-slate-300"
-              }`}
-            >
-              {selectedMethod === "BANK" && (
-                <CheckCircle className="h-3.5 w-3.5 fill-white text-[#123A68]" />
-              )}
-            </div>
+            <div className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-300" />
           </div>
         </div>
 

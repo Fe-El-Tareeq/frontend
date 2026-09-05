@@ -2,23 +2,25 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Check, Package, Wallet } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { useWallet } from "../../hooks/useWallet";
 import type { TokenPackage } from "./BuyTokensPackages";
 
 export default function PaymentSuccessPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { tokenBalance } = useWallet();
 
   const pkg: TokenPackage = location.state?.package || {
     id: "pkg-pro",
     name: "الباقة الاحترافية",
     subtitle: "للمستخدمين الدائمين والنشطين",
     tokens: 50,
-    priceUsd: 30,
-    ratePerToken: "0.60$ لكل توكن",
+    priceNis: 30,
+    ratePerToken: "0.60 شيكل لكل توكن",
     features: [],
   };
 
-  const newBalance = 47 + pkg.tokens;
+  const newBalance = (tokenBalance ?? 0) + pkg.tokens;
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
@@ -98,12 +100,12 @@ export default function PaymentSuccessPage() {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="font-black text-[#123A68]">{pkg.priceUsd}$</span>
+            <span className="font-black text-[#123A68]">{pkg.priceNis} شيكل</span>
             <span className="text-text-muted">المبلغ المدفوع</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="font-bold text-primary">رمز QR</span>
+            <span className="font-bold text-primary">رمز QR (جوال باي)</span>
             <span className="text-text-muted">طريقة الدفع</span>
           </div>
 
@@ -115,7 +117,9 @@ export default function PaymentSuccessPage() {
           </div>
 
           <div className="flex items-center justify-between pt-1 border-t border-slate-100">
-            <span className="font-bold text-slate-700">12:47 م</span>
+            <span className="font-bold text-slate-700">
+              {new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}
+            </span>
             <span className="text-text-muted">الوقت</span>
           </div>
         </div>

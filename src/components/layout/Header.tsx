@@ -131,16 +131,24 @@ export const Header: FC<HeaderProps> = ({
                 className="flex items-center gap-1.5 rounded-full bg-[#FFF5EE] px-3.5 py-1.5 border border-[#FDE0CE] text-xs font-black text-accent hover:bg-[#FEECE0] transition-colors"
               >
                 <Zap className="h-4 w-4 fill-accent text-accent" />
-                <span>{tokenBalance || 47}</span>
+                <span>{tokenBalance ?? 0}</span>
               </button>
 
               {/* User Avatar Circle */}
               <button
                 type="button"
                 onClick={() => navigate("/profile")}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white shadow-xs hover:opacity-90 transition-opacity"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white shadow-xs hover:opacity-90 transition-opacity overflow-hidden"
               >
-                {userInitials}
+                {profile?.profileImageUrl ? (
+                  <img
+                    src={profile.profileImageUrl}
+                    alt={profile.fullName || "User"}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  userInitials
+                )}
               </button>
             </div>
           </div>

@@ -1,21 +1,25 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronRight, MessageSquare, Mic, Send, Info } from "lucide-react";
+import { ChevronRight, Send, Info } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { RequestSpaceSuccessModal } from "../../components/modals/RequestSpaceSuccessModal";
+import { VoiceNoteRecorder } from "../../components/common/VoiceNoteRecorder";
 import { tripsApi } from "../../api/trips";
+import { useAuth } from "../../hooks/useAuth";
+import type { VoiceNoteData } from "../../hooks/useVoiceRecorder";
 
 export default function RequestSpacePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { profile } = useAuth();
 
   const [description, setDescription] = useState("");
   const [size, setSize] = useState("LIGHT");
   const [pickupPoint, setPickupPoint] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(profile?.phone || "");
   const [notes, setNotes] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
+  const [recordedVoice, setRecordedVoice] = useState<VoiceNoteData | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -26,7 +30,9 @@ export default function RequestSpacePage() {
     try {
       if (id) {
         await tripsApi.bookSpace(id, {
-          notes: `${description} (${size}) - نقطة الاستلام: ${pickupPoint} - هاتف: ${phone}. ${notes}`,
+          notes: `${description} (${size}) - نقطة الاستلام: ${pickupPoint} - هاتف: ${phone}. ${notes}${
+            recordedVoice ? ` [ملاحظة صوتية: ${recordedVoice.durationSec} ثانية]` : ""
+          }`,
         });
       }
       setShowSuccessModal(true);
@@ -129,38 +135,10 @@ export default function RequestSpacePage() {
             </div>
 
             {/* Voice note option */}
-            <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 space-y-2 text-right">
-              <div className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-[#123A68]">
-                  <MessageSquare className="h-4 w-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-primary">
-                    تسجيل رسالة صوتية (اختياري)
-                  </h4>
-                  <p className="text-[10.5px] text-text-muted">
-                    اشرح طلبك بصوتك لمزيد من الوضوح
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsRecording(!isRecording)}
-                className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-xs font-bold transition-all cursor-pointer ${
-                  isRecording
-                    ? "border-red-400 bg-red-50 text-red-600 animate-pulse"
-                    : "border-slate-300 bg-white text-primary hover:border-accent"
-                }`}
-              >
-                <Mic className="h-4 w-4" />
-                <span>
-                  {isRecording
-                    ? "جاري التسجيل... اضغط للإيقاف"
-                    : "اضغط للتسجيل"}
-                </span>
-              </button>
-            </div>
+            <VoiceNoteRecorder
+              storageKey={`space_${id || "draft"}`}
+              onVoiceNoteReady={(note) => setRecordedVoice(note)}
+            />
 
             {/* Additional notes */}
             <div className="space-y-1">
@@ -168,42 +146,33 @@ export default function RequestSpacePage() {
                 ملاحظات إضافية
               </label>
               <textarea
-                rows={3}
+                rows={2}
+                maxLength={100}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="أي تفاصيل تساعد صاحب الرحلة على تجهيز طلبك"
+                placeholder="أي تعليمات أو تفاصيل أخرى تود إضافتها..."
                 className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] p-3.5 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none text-right"
               />
             </div>
 
-            {/* Info notice box */}
-            <div className="flex items-start gap-2.5 rounded-2xl bg-blue-50 p-3.5 border border-blue-200 text-right">
-              <Info className="h-4.5 w-4.5 text-[#123A68] shrink-0 mt-0.5" />
-              <p className="text-[11.5px] text-[#123A68] leading-relaxed">
-                سيتم التواصل معك من صاحب الرحلة لتأكيد التفاصيل والموعد قبل
-                تأكيد الحجز.
+            {/* Security Tip Box */}
+            <div className="rounded-2xl bg-blue-50/50 p-3 border border-blue-100 flex items-start gap-2.5 text-right">
+              <Info className="h-4 w-4 text-[#123A68] shrink-0 mt-0.5" />
+              <p className="text-[11px] text-text-secondary leading-relaxed">
+                سيتلقى السائق إشعاراً فورياً بطلبك. لن يتم مشاركة أي معلومات حساسة
+                حتى يتم تأكيد الحجز المتبادل.
               </p>
             </div>
 
-            {/* Actions */}
-            <div className="pt-2 flex items-center gap-3">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
-              >
-                <Send className="h-4 w-4 -rotate-45" />
-                <span>{isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="px-4 py-3 text-xs font-bold text-text-secondary hover:text-primary cursor-pointer"
-              >
-                إلغاء
-              </button>
-            </div>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
+            >
+              <Send className="h-4 w-4" />
+              <span>{isSubmitting ? "جاري الإرسال..." : "إرسال طلب الحجز"}</span>
+            </button>
           </form>
         </div>
       </div>
@@ -211,8 +180,10 @@ export default function RequestSpacePage() {
       {/* Success Modal */}
       <RequestSpaceSuccessModal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        tripId={id}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/trips");
+        }}
       />
     </MobileContainer>
   );
