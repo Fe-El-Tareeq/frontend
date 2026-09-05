@@ -8,7 +8,7 @@ describe("Wallet Domain & Multi-Step Purchase Flow", () => {
 
     TOKEN_PACKAGES.forEach((pkg) => {
       expect(pkg.tokens).toBeGreaterThan(0);
-      expect(pkg.priceUsd).toBeGreaterThan(0);
+      expect(pkg.priceNis).toBeGreaterThan(0);
       expect(pkg.name).toBeTruthy();
       expect(pkg.ratePerToken).toBeTruthy();
     });
@@ -18,7 +18,7 @@ describe("Wallet Domain & Multi-Step Purchase Flow", () => {
     const popularPkg = TOKEN_PACKAGES.find((p) => p.isPopular);
     expect(popularPkg).toBeDefined();
     expect(popularPkg?.tokens).toBe(20);
-    expect(popularPkg?.priceUsd).toBe(15);
+    expect(popularPkg?.priceNis).toBe(15);
   });
 
   it("should verify wallet endpoints", () => {

@@ -4,30 +4,27 @@ import {
   ChevronRight,
   Calendar,
   Clock,
-  MessageSquare,
-  Mic,
   Send,
-  Zap,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { SubmitOfferSuccessModal } from "../../components/modals/SubmitOfferSuccessModal";
+import { VoiceNoteRecorder } from "../../components/common/VoiceNoteRecorder";
 import { useLocations } from "../../hooks/useLocations";
-import { useWallet } from "../../hooks/useWallet";
 import { errandsApi } from "../../api/errands";
+import type { VoiceNoteData } from "../../hooks/useVoiceRecorder";
 
 export default function SubmitOfferPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { neighborhoods } = useLocations();
-  const { tokenBalance } = useWallet();
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [origin, setOrigin] = useState("");
   const [proposedPrice, setProposedPrice] = useState("");
   const [message, setMessage] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
+  const [recordedVoice, setRecordedVoice] = useState<VoiceNoteData | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -40,7 +37,7 @@ export default function SubmitOfferPage() {
         await errandsApi.submitOffer(id, {
           priceNis: Number(proposedPrice) || 0,
           departureTime: `${date} ${time}`,
-          notes: message,
+          notes: message + (recordedVoice ? ` [ملاحظة صوتية: ${recordedVoice.durationSec} ثانية]` : ""),
         });
       }
       setShowSuccessModal(true);
@@ -138,13 +135,13 @@ export default function SubmitOfferPage() {
             {/* Proposed Price */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-primary">
-                السعر المقترح (اختياري)
+                أجر التوصيل المقترح بالشيكل (اختياري)
               </label>
               <input
-                type="text"
+                type="number"
                 value={proposedPrice}
                 onChange={(e) => setProposedPrice(e.target.value)}
-                placeholder="مثال: مجاني، أو حدد مبلغ للتوصيل"
+                placeholder="مثال: 5 شيكل"
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none text-right"
               />
             </div>
@@ -168,75 +165,20 @@ export default function SubmitOfferPage() {
             </div>
 
             {/* Voice Note Option */}
-            <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 space-y-2 text-right">
-              <div className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-[#123A68]">
-                  <MessageSquare className="h-4 w-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-primary">
-                    تسجيل رسالة صوتية (اختياري)
-                  </h4>
-                  <p className="text-[10.5px] text-text-muted">
-                    اشرح طلبك بصوتك لمزيد من الوضوح
-                  </p>
-                </div>
-              </div>
+            <VoiceNoteRecorder
+              storageKey={`offer_${id || "draft"}`}
+              onVoiceNoteReady={(note) => setRecordedVoice(note)}
+            />
 
-              <button
-                type="button"
-                onClick={() => setIsRecording(!isRecording)}
-                className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-xs font-bold transition-all cursor-pointer ${
-                  isRecording
-                    ? "border-red-400 bg-red-50 text-red-600 animate-pulse"
-                    : "border-slate-300 bg-white text-primary hover:border-accent"
-                }`}
-              >
-                <Mic className="h-4 w-4" />
-                <span>
-                  {isRecording
-                    ? "جاري التسجيل... اضغط للإيقاف"
-                    : "اضغط للتسجيل"}
-                </span>
-              </button>
-            </div>
-
-            {/* Token Fee Box: RTL Order (Text on RIGHT, Pill on LEFT) */}
-            <div className="flex items-center justify-between rounded-2xl bg-[#FFF5EE] p-3.5 border border-[#FDE0CE]">
-              <div className="text-right">
-                <span className="text-xs font-black text-[#123A68] block">
-                  تكلفة تقديم العرض
-                </span>
-                <span className="text-[10.5px] text-text-secondary">
-                  رصيدك {tokenBalance ?? 47} توكن
-                </span>
-              </div>
-
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#F36F21]">
-                <Zap className="h-4 w-4 fill-[#F36F21]" />
-                <span>توكن واحد</span>
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div className="pt-2 flex items-center gap-3">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
-              >
-                <Send className="h-4 w-4 -rotate-45" />
-                <span>{isSubmitting ? "جاري الإرسال..." : "إرسال العرض"}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="px-4 py-3 text-xs font-bold text-text-secondary hover:text-primary cursor-pointer"
-              >
-                إلغاء
-              </button>
-            </div>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
+            >
+              <Send className="h-4 w-4" />
+              <span>{isSubmitting ? "جاري الإرسال..." : "إرسال العرض الآن"}</span>
+            </button>
           </form>
         </div>
       </div>
@@ -244,8 +186,10 @@ export default function SubmitOfferPage() {
       {/* Success Modal */}
       <SubmitOfferSuccessModal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        errandId={id}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/errands");
+        }}
       />
     </MobileContainer>
   );

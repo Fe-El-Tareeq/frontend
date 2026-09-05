@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ChevronRight, MessageSquare, Mic, Zap, Package } from "lucide-react";
+import { ChevronRight, Zap, Package } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { Form } from "../../components/ui/form/Form";
 import { Alert } from "../../components/ui/feedback/Alert";
+import { VoiceNoteRecorder } from "../../components/common/VoiceNoteRecorder";
 import { useErrands } from "../../hooks/useErrands";
 import { useWallet } from "../../hooks/useWallet";
 import { useAuth } from "../../hooks/useAuth";
 import { useLocations } from "../../hooks/useLocations";
 import { getApiErrorMessage } from "../../utils/apiError";
+import type { VoiceNoteData } from "../../hooks/useVoiceRecorder";
 
 const createErrandSchema = z.object({
   description: z
@@ -27,12 +29,12 @@ type CreateErrandFormData = z.infer<typeof createErrandSchema>;
 
 export default function CreateErrand() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const { tokenBalance } = useWallet();
   const { neighborhoods, isLoadingNeighborhoods } = useLocations();
   const { createErrand, isCreating } = useErrands();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isRecording, setIsRecording] = useState(false);
+  const [recordedVoice, setRecordedVoice] = useState<VoiceNoteData | null>(null);
 
   const {
     register,
@@ -44,7 +46,7 @@ export default function CreateErrand() {
     defaultValues: {
       description: "",
       city: "غزة",
-      neighborhoodId: "",
+      neighborhoodId: profile?.neighborhoodId || "",
     },
   });
 
@@ -72,22 +74,31 @@ export default function CreateErrand() {
 
       const defaultCategoryId = "60a32850-bd3f-444a-84b4-c750abf6ecb6";
 
+      // Ensure pickupNeighborhoodId is always a valid string UUID
+      const pickupNeighborhoodId =
+        data.neighborhoodId ||
+        profile?.neighborhoodId ||
+        (neighborhoods.length > 0 ? neighborhoods[0].id : "60a32850-bd3f-444a-84b4-c750abf6ecb6");
+
       await createErrand({
         clientRequestKey,
         categoryId: defaultCategoryId,
+        pickupNeighborhoodId,
         title: data.description.slice(0, 40) + "...",
         itemsDescription: data.description,
         destinationKeyword: data.city || "غزة",
         weightClass: "LIGHT",
         isUrgent: false,
         isInterZone: false,
+        voiceNoteUrl: recordedVoice?.base64 || null,
+        voiceNoteDurationSec: recordedVoice?.durationSec || null,
       });
 
       navigate("/errands");
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
-        "تعذر نشر الطلب، يرجى التأكد من اكتمال بيانات ملفك الشخصي.",
+        "تعذر نشر الطلب، يرجى التأكد من اختيار الحي واكتمال بيانات الطلب.",
       );
       setErrorMessage(msg);
     }
@@ -163,7 +174,7 @@ export default function CreateErrand() {
             {/* Neighborhood */}
             <div className="mt-3 space-y-1">
               <label className="block text-xs font-bold text-primary">
-                الحي
+                الحي <span className="text-[#F36F21]">*</span>
               </label>
               <select
                 disabled={isLoadingNeighborhoods}
@@ -173,11 +184,11 @@ export default function CreateErrand() {
                 <option value="">
                   {isLoadingNeighborhoods
                     ? "جاري تحميل الأحياء..."
-                    : "حيّك أو الحي المطلوب"}
+                    : "اختر الحي / المنطقة"}
                 </option>
                 {neighborhoods.map((n) => (
                   <option key={n.id} value={n.id}>
-                    {n.name}
+                    {n.name} - {n.governorate}
                   </option>
                 ))}
               </select>
@@ -188,38 +199,12 @@ export default function CreateErrand() {
               )}
             </div>
 
-            {/* Voice Note Option */}
-            <div className="mt-4 rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 space-y-2.5 text-right">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-[#123A68]">
-                  <MessageSquare className="h-4 w-4" />
-                </div>
-                <div className="text-right">
-                  <h4 className="text-xs font-black text-primary">
-                    تسجيل رسالة صوتية (اختياري)
-                  </h4>
-                  <p className="text-[10.5px] text-text-muted">
-                    اشرح طلبك بصوتك لمزيد من الوضوح
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsRecording(!isRecording)}
-                className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-xs font-bold transition-all cursor-pointer ${
-                  isRecording
-                    ? "border-red-400 bg-red-50 text-red-600 animate-pulse"
-                    : "border-slate-300 bg-white text-primary hover:border-accent"
-                }`}
-              >
-                <Mic className="h-4 w-4" />
-                <span>
-                  {isRecording
-                    ? "جاري التسجيل... اضغط للإيقاف"
-                    : "اضغط للتسجيل"}
-                </span>
-              </button>
+            {/* Voice Note Option with Audio Player and Offline Caching */}
+            <div className="mt-4">
+              <VoiceNoteRecorder
+                storageKey="create_errand"
+                onVoiceNoteReady={(note) => setRecordedVoice(note)}
+              />
             </div>
 
             {/* Token Fee Alert Box */}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +28,7 @@ export default function EditProfile() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<EditProfileFormData>({
     resolver: zodResolver(editProfileSchema),
@@ -37,11 +38,29 @@ export default function EditProfile() {
     },
   });
 
+  // Sync profile when loaded
+  useEffect(() => {
+    if (profile) {
+      reset({
+        fullName: profile.fullName || "",
+        neighborhoodId: profile.neighborhoodId || "",
+      });
+    }
+  }, [profile, reset]);
+
   const onSubmit = async (data: EditProfileFormData) => {
     setErrorMessage(null);
     setSuccessMessage(false);
     try {
-      await updateProfile(data);
+      const targetNeighborhoodId =
+        data.neighborhoodId ||
+        profile?.neighborhoodId ||
+        (neighborhoods.length > 0 ? neighborhoods[0].id : "");
+
+      await updateProfile({
+        fullName: data.fullName,
+        neighborhoodId: targetNeighborhoodId,
+      });
       setSuccessMessage(true);
       setTimeout(() => {
         navigate("/profile");

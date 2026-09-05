@@ -119,16 +119,24 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
           >
             <div className="text-right">
               <h3 className="text-sm font-bold text-white leading-tight">
-                {profile?.fullName || "هديل محمد"}
+                {profile?.fullName || "المستخدم"}
               </h3>
               <p className="text-xs text-white/70 mt-0.5">
                 {profile?.neighborhood?.name
-                  ? `غزة - ${profile.neighborhood.name}`
-                  : "غزة - الرمال"}
+                  ? `${profile.neighborhood.governorate || "غزة"} - ${profile.neighborhood.name}`
+                  : "غزة"}
               </p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] border border-white/20 text-xs font-black text-white">
-              {userInitials}
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] border border-white/20 text-xs font-black text-white overflow-hidden">
+              {profile?.profileImageUrl ? (
+                <img
+                  src={profile.profileImageUrl}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                userInitials
+              )}
             </div>
           </div>
 

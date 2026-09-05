@@ -67,11 +67,17 @@ export default function RegisterStep2() {
     setErrorMessage(null);
 
     try {
+      const targetNeighborhoodId =
+        data.neighborhoodId ||
+        (neighborhoods.length > 0
+          ? neighborhoods[0].id
+          : "60a32850-bd3f-444a-84b4-c750abf6ecb6");
+
       await registerApi({
         fullName: step1Data.fullName!,
         phone: step1Data.phone!,
         password: step1Data.password!,
-        neighborhoodId: data.neighborhoodId,
+        neighborhoodId: targetNeighborhoodId,
       });
 
       navigate("/verify-otp", {

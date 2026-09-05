@@ -72,6 +72,20 @@ export function useAuth() {
     },
   });
 
+  const uploadProfileImageMutation = useMutation({
+    mutationFn: (file: File) => authApi.uploadProfileImage(file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: AUTH_KEYS.me });
+    },
+  });
+
+  const deleteProfileImageMutation = useMutation({
+    mutationFn: () => authApi.deleteProfileImage(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: AUTH_KEYS.me });
+    },
+  });
+
   return {
     user,
     isAuthenticated,
@@ -91,5 +105,9 @@ export function useAuth() {
     logout: logoutMutation.mutateAsync,
     updateProfile: updateProfileMutation.mutateAsync,
     isUpdatingProfile: updateProfileMutation.isPending,
+    uploadProfileImage: uploadProfileImageMutation.mutateAsync,
+    isUploadingProfileImage: uploadProfileImageMutation.isPending,
+    deleteProfileImage: deleteProfileImageMutation.mutateAsync,
+    isDeletingProfileImage: deleteProfileImageMutation.isPending,
   };
 }

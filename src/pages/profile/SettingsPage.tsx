@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { SettingsNotificationToggle } from "../../components/profile/SettingsNotificationToggle";
 import { usePWA } from "../../hooks/usePWA";
 import { PwaInstallModal } from "../../components/pwa/PwaInstallModal";
 
@@ -62,16 +63,11 @@ export default function SettingsPage() {
         {!isInstalled && (
           <div className="rounded-3xl bg-gradient-to-r from-[#123A68] to-[#0A1F38] p-5 text-white shadow-md space-y-3">
             <div className="flex items-center justify-between">
-              <button
-                type="button"
-                onClick={handleInstallClick}
-                className="flex items-center gap-1.5 rounded-xl bg-[#F36F21] px-3.5 py-2 text-xs font-black text-white shadow-md hover:bg-[#E05E12] active:scale-95 transition-all cursor-pointer"
-              >
-                <Download className="h-4 w-4" />
-                <span>تثبيت الآن</span>
-              </button>
-
-              <div className="flex items-center gap-2 text-right">
+              {/* Right item in RTL: Icon and Title */}
+              <div className="flex items-center gap-3 text-right">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-[#F36F21]">
+                  <Smartphone className="h-5 w-5" />
+                </div>
                 <div>
                   <h3 className="text-xs font-black text-white">
                     تطبيق بطريقك على هاتفك
@@ -80,10 +76,17 @@ export default function SettingsPage() {
                     تصفح أسرع وإشعارات فورية
                   </p>
                 </div>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-[#F36F21]">
-                  <Smartphone className="h-5 w-5" />
-                </div>
               </div>
+
+              {/* Left item in RTL: Install Button */}
+              <button
+                type="button"
+                onClick={handleInstallClick}
+                className="flex items-center gap-1.5 rounded-xl bg-[#F36F21] px-3.5 py-2 text-xs font-black text-white shadow-md hover:bg-[#E05E12] active:scale-95 transition-all cursor-pointer"
+              >
+                <Download className="h-4 w-4" />
+                <span>تثبيت الآن</span>
+              </button>
             </div>
           </div>
         )}
@@ -97,68 +100,27 @@ export default function SettingsPage() {
             </h2>
           </div>
 
-          {/* Toggle 1 */}
-          <div className="flex items-center justify-between">
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={appNotifications}
-                onChange={() => setAppNotifications(!appNotifications)}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#123A68]" />
-            </label>
-            <div className="text-right">
-              <span className="text-xs font-bold text-primary block">
-                إشعارات التطبيق
-              </span>
-              <span className="text-[10.5px] text-text-muted">
-                تلقي إشعارات عامة وتحديثات مهمة
-              </span>
-            </div>
-          </div>
+          <SettingsNotificationToggle
+            title="إشعارات التطبيق"
+            description="تلقي إشعارات عامة وتحديثات مهمة"
+            checked={appNotifications}
+            onChange={setAppNotifications}
+          />
 
-          {/* Toggle 2 */}
-          <div className="flex items-center justify-between">
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={offerNotifications}
-                onChange={() => setOfferNotifications(!offerNotifications)}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#123A68]" />
-            </label>
-            <div className="text-right">
-              <span className="text-xs font-bold text-primary block">
-                عروض الطلبات
-              </span>
-              <span className="text-[10.5px] text-text-muted">
-                تنبيه عند تقديم عرض جديد على طلبك
-              </span>
-            </div>
-          </div>
+          <SettingsNotificationToggle
+            title="عروض الطلبات"
+            description="تنبيه عند تقديم عرض جديد على طلبك"
+            checked={offerNotifications}
+            onChange={setOfferNotifications}
+          />
 
-          {/* Toggle 3 */}
-          <div className="flex items-center justify-between">
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={messageNotifications}
-                onChange={() => setMessageNotifications(!messageNotifications)}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#123A68]" />
-            </label>
-            <div className="text-right">
-              <span className="text-xs font-bold text-primary block">
-                الرسائل والمحادثات
-              </span>
-              <span className="text-[10.5px] text-text-muted">
-                تنبيه فوري عند استلام رسالة جديدة
-              </span>
-            </div>
-          </div>
+          <SettingsNotificationToggle
+            title="الرسائل والمحادثات"
+            description="تنبيه فوري عند استلام رسالة جديدة"
+            checked={messageNotifications}
+            onChange={setMessageNotifications}
+            borderBottom={false}
+          />
         </div>
 
         {/* Section 2: المظهر واللغة */}
@@ -170,6 +132,15 @@ export default function SettingsPage() {
 
           {/* Dark Mode Toggle */}
           <div className="flex items-center justify-between">
+            <div className="text-right">
+              <span className="text-xs font-bold text-primary block">
+                الوضع الليلي
+              </span>
+              <span className="text-[10.5px] text-text-muted">
+                تفعيل المظهر الداكن المريح للعين
+              </span>
+            </div>
+
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -179,22 +150,10 @@ export default function SettingsPage() {
               />
               <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#123A68]" />
             </label>
-            <div className="text-right">
-              <span className="text-xs font-bold text-primary block">
-                الوضع الليلي
-              </span>
-              <span className="text-[10.5px] text-text-muted">
-                تفعيل المظهر الداكن المريح للعين
-              </span>
-            </div>
           </div>
 
           {/* Language Selector */}
-          <div className="flex items-center justify-between pt-1 border-t border-slate-100">
-            <select className="h-9 rounded-xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs font-bold text-primary focus:border-accent focus:outline-none">
-              <option value="ar">العربية ⌵</option>
-              <option value="en">English</option>
-            </select>
+          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
             <div className="text-right">
               <span className="text-xs font-bold text-primary block">
                 لغة التطبيق
@@ -203,6 +162,11 @@ export default function SettingsPage() {
                 اللغة الافتراضية للواجهة
               </span>
             </div>
+
+            <select className="h-9 rounded-xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs font-bold text-primary focus:border-accent focus:outline-none cursor-pointer">
+              <option value="ar">العربية ⌵</option>
+              <option value="en">English</option>
+            </select>
           </div>
         </div>
 
@@ -218,8 +182,8 @@ export default function SettingsPage() {
             onClick={() => navigate("/terms")}
             className="flex w-full items-center justify-between text-xs font-bold text-primary hover:text-[#F36F21] transition-colors cursor-pointer"
           >
-            <ChevronLeft className="h-4 w-4 text-text-muted" />
             <span>شروط الاستخدام</span>
+            <ChevronLeft className="h-4 w-4 text-text-muted" />
           </button>
 
           <button
@@ -227,8 +191,8 @@ export default function SettingsPage() {
             onClick={() => navigate("/terms")}
             className="flex w-full items-center justify-between text-xs font-bold text-primary hover:text-[#F36F21] transition-colors cursor-pointer"
           >
-            <ChevronLeft className="h-4 w-4 text-text-muted" />
             <span>سياسة الخصوصية</span>
+            <ChevronLeft className="h-4 w-4 text-text-muted" />
           </button>
 
           <button
@@ -236,8 +200,8 @@ export default function SettingsPage() {
             onClick={() => navigate("/landing")}
             className="flex w-full items-center justify-between text-xs font-bold text-primary hover:text-[#F36F21] transition-colors cursor-pointer"
           >
-            <ChevronLeft className="h-4 w-4 text-text-muted" />
             <span>الأسئلة الشائعة</span>
+            <ChevronLeft className="h-4 w-4 text-text-muted" />
           </button>
 
           <button
@@ -245,15 +209,15 @@ export default function SettingsPage() {
             onClick={() => navigate("/landing")}
             className="flex w-full items-center justify-between text-xs font-bold text-primary hover:text-[#F36F21] transition-colors cursor-pointer"
           >
-            <ChevronLeft className="h-4 w-4 text-text-muted" />
             <span>تواصل معنا</span>
+            <ChevronLeft className="h-4 w-4 text-text-muted" />
           </button>
 
           <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+            <span className="font-bold text-primary">إصدار التطبيق</span>
             <span className="font-mono text-text-muted font-bold">
               1.0.0 (بيتا)
             </span>
-            <span className="font-bold text-primary">إصدار التطبيق</span>
           </div>
         </div>
 
