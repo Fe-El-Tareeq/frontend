@@ -7,8 +7,8 @@ import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Form } from "../../components/ui/form/Form";
 import { Button } from "../../components/ui/button/Button";
 import { useAuth } from "../../hooks/useAuth";
-
 import { getApiErrorMessage } from "../../utils/apiError";
+import { translateSuccessMessage } from "../../i18n";
 
 const forgotPasswordSchema = z.object({
   phone: z
@@ -21,8 +21,8 @@ type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
-  const { requestOtp, isRequestingOtp } = useAuth();
-  const [isSuccess, setIsSuccess] = useState(false);
+  const { forgotPassword, isForgotPasswordPending } = useAuth();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
@@ -38,12 +38,15 @@ export default function ForgotPassword() {
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     setErrorMessage(null);
+    setSuccessMessage(null);
     try {
-      await requestOtp({ phone: data.phone });
-      setIsSuccess(true);
+      const res = await forgotPassword({ phone: data.phone });
+      setSuccessMessage(
+        translateSuccessMessage(res.message, "إذا كان الحساب مسجلاً، تم إرسال رمز استعادة كلمة المرور.")
+      );
       setTimeout(() => {
-        navigate("/verify-otp", {
-          state: { phone: data.phone, isResetPassword: true },
+        navigate("/reset-password", {
+          state: { phone: data.phone },
         });
       }, 1500);
     } catch (err: unknown) {
@@ -65,9 +68,9 @@ export default function ForgotPassword() {
       footerActionText="العودة لتسجيل الدخول"
       onFooterAction={() => navigate("/login")}
     >
-      {isSuccess && (
+      {successMessage && (
         <div className="mb-4 rounded-[14px] bg-success-light p-3.5 text-right text-[13px] font-bold text-success border border-success/20">
-          تم إرسال رمز التحقق بنجاح! جاري توجيهك...
+          {successMessage}
         </div>
       )}
 
@@ -95,7 +98,7 @@ export default function ForgotPassword() {
           variant="accent"
           size="md"
           fullWidth
-          isLoading={isRequestingOtp}
+          isLoading={isForgotPasswordPending}
           className="mt-4"
         >
           إرسال رمز التحقق

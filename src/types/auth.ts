@@ -81,6 +81,21 @@ export interface RefreshTokenRequest {
   refreshToken: string;
 }
 
+export interface ForgotPasswordRequest {
+  phone: string;
+  channel?: "SMS" | "WHATSAPP";
+}
+
+export interface ForgotPasswordResponseData {
+  expiresInMinutes: number;
+}
+
+export interface ResetPasswordRequest {
+  phone: string;
+  otp: string;
+  newPassword: string;
+}
+
 export interface UserProfileUpdateRequest {
   fullName?: string;
   neighborhoodId?: string;

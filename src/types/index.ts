@@ -5,3 +5,8 @@ export * from "./errands";
 export * from "./trips";
 export * from "./wallet";
 export * from "./chat";
+export * from "./assignments";
+export * from "./ratings";
+export * from "./payments";
+export * from "./pricing";
+export * from "./matching";
