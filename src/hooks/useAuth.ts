@@ -6,6 +6,8 @@ import type {
   OtpRequest,
   OtpVerifyRequest,
   RegisterRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
   UserProfileUpdateRequest,
 } from "../types";
 
@@ -41,6 +43,14 @@ export function useAuth() {
       setAuth(userData, { accessToken, refreshToken });
       queryClient.invalidateQueries({ queryKey: AUTH_KEYS.me });
     },
+  });
+
+  const forgotPasswordMutation = useMutation({
+    mutationFn: (data: ForgotPasswordRequest) => authApi.forgotPassword(data),
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: (data: ResetPasswordRequest) => authApi.resetPassword(data),
   });
 
   const logoutMutation = useMutation({
@@ -102,6 +112,10 @@ export function useAuth() {
     verifyOtp: verifyOtpMutation.mutateAsync,
     isVerifyingOtp: verifyOtpMutation.isPending,
     verifyOtpError: verifyOtpMutation.error,
+    forgotPassword: forgotPasswordMutation.mutateAsync,
+    isForgotPasswordPending: forgotPasswordMutation.isPending,
+    resetPassword: resetPasswordMutation.mutateAsync,
+    isResetPasswordPending: resetPasswordMutation.isPending,
     logout: logoutMutation.mutateAsync,
     updateProfile: updateProfileMutation.mutateAsync,
     isUpdatingProfile: updateProfileMutation.isPending,

@@ -11,8 +11,12 @@ import type {
   OtpVerifyRequest,
   VerifyOtpData,
   RefreshTokenRequest,
+  ForgotPasswordRequest,
+  ForgotPasswordResponseData,
+  ResetPasswordRequest,
   UserProfile,
   UserProfileUpdateRequest,
+  AuthTokens,
 } from "../types";
 
 export const authApi = {
@@ -47,9 +51,32 @@ export const authApi = {
     return res.data;
   },
 
+  refreshToken: async (payload: RefreshTokenRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<AuthTokens>>(
+      ENDPOINTS.AUTH.REFRESH,
+      payload,
+    );
+    return res.data;
+  },
+
   logout: async (payload: RefreshTokenRequest) => {
     const res = await apiClient.post<ApiSuccessResponse<null>>(
       ENDPOINTS.AUTH.LOGOUT,
+      payload,
+    );
+    return res.data;
+  },
+
+  forgotPassword: async (payload: ForgotPasswordRequest) => {
+    const res = await apiClient.post<
+      ApiSuccessResponse<ForgotPasswordResponseData>
+    >(ENDPOINTS.AUTH.FORGOT_PASSWORD, payload);
+    return res.data;
+  },
+
+  resetPassword: async (payload: ResetPasswordRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<null>>(
+      ENDPOINTS.AUTH.RESET_PASSWORD,
       payload,
     );
     return res.data;

@@ -44,7 +44,7 @@ export const Header: FC<HeaderProps> = ({
         .map((n) => n[0])
         .join("")
         .slice(0, 2)
-    : "هم";
+    : "";
 
   return (
     <>

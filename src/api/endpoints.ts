@@ -12,7 +12,6 @@ export const ENDPOINTS = {
     LOGOUT: "/api/v1/auth/logout",
     FORGOT_PASSWORD: "/api/v1/auth/forgot-password",
     RESET_PASSWORD: "/api/v1/auth/reset-password",
-    CHANGE_PASSWORD: "/api/v1/auth/change-password",
   },
   LOCATIONS: {
     NEIGHBORHOODS: "/api/v1/locations/neighborhoods",
@@ -20,8 +19,6 @@ export const ENDPOINTS = {
   USERS: {
     ME: "/api/v1/users/me",
     PROFILE_IMAGE: "/api/v1/users/me/profile-image",
-    PROFILE: "/api/v1/users/profile",
-    SETTINGS: "/api/v1/users/settings",
   },
   ERRANDS: {
     LIST: "/api/v1/errands",
@@ -43,18 +40,49 @@ export const ENDPOINTS = {
     ERRAND_TRIPS: (id: string) => `/api/v1/matching/errands/${id}`,
     TRIP_ERRANDS: (id: string) => `/api/v1/matching/trips/${id}`,
   },
+  ASSIGNMENTS: {
+    LIST: "/api/v1/assignments",
+    CREATE: "/api/v1/assignments",
+    DETAIL: (id: string) => `/api/v1/assignments/${id}`,
+    PICKUP: (id: string) => `/api/v1/assignments/${id}/pickup`,
+    START_DELIVERY: (id: string) => `/api/v1/assignments/${id}/start-delivery`,
+    COMPLETE: (id: string) => `/api/v1/assignments/${id}/complete`,
+    CANCEL: (id: string) => `/api/v1/assignments/${id}/cancel`,
+  },
+  CHAT: {
+    ROOMS: "/api/v1/chat-rooms",
+    ROOM_DETAIL: (roomId: string) => `/api/v1/chat-rooms/${roomId}`,
+    MESSAGES: (roomId: string) => `/api/v1/chat-rooms/${roomId}/messages`,
+    SEND_MESSAGE: (roomId: string) => `/api/v1/chat-rooms/${roomId}/messages`,
+    SYNC: (roomId: string) => `/api/v1/chat-rooms/${roomId}/sync`,
+    READ: (roomId: string) => `/api/v1/chat-rooms/${roomId}/read`,
+  },
+  RATINGS: {
+    SUBMIT: "/api/v1/ratings",
+    PENDING: "/api/v1/ratings/pending",
+    ME_RECEIVED: "/api/v1/ratings/me/received",
+    ME_SUMMARY: "/api/v1/ratings/me/summary",
+    ASSIGNMENT: (assignmentId: string) => `/api/v1/ratings/assignments/${assignmentId}`,
+  },
   DELIVERY_PRICING: {
     QUOTE: "/api/v1/delivery-pricing/quote",
-  },
-  MESSAGES: {
-    CONVERSATIONS: "/api/v1/messages/conversations",
-    CHAT: (id: string) => `/api/v1/messages/conversations/${id}`,
-    SEND: (id: string) => `/api/v1/messages/conversations/${id}/send`,
   },
   WALLET: {
     ME: "/api/v1/wallet",
     TRANSACTIONS: "/api/v1/wallet/transactions",
-    TOPUP: "/api/v1/wallet/topup",
+  },
+  PAYMENTS: {
+    PACKAGES: "/api/v1/payments/packages",
+    INVOICES: "/api/v1/payments/invoices",
+    INVOICE_DETAIL: (id: string) => `/api/v1/payments/invoices/${id}`,
+    MOCK_PAY: (id: string) => `/api/v1/payments/mock/invoices/${id}/pay`,
+    MOCK_WEBHOOK: "/api/v1/payments/webhooks/mock",
+  },
+  MESSAGES: {
+    CONVERSATIONS: "/api/v1/chat-rooms",
+    CHAT: (id: string) => `/api/v1/chat-rooms/${id}/messages`,
+    SEND: (id: string) => `/api/v1/chat-rooms/${id}/messages`,
   },
   HEALTH: "/health",
+  TEST_VALIDATION: "/api/test/validation",
 } as const;

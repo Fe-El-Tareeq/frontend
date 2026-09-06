@@ -1,8 +1,9 @@
 import type { AxiosError } from "axios";
 import type { ApiErrorResponse, ApiValidationErrorDetail } from "../types";
+import { translateApiMessage } from "../i18n";
 
 /**
- * Safely extracts a single human-readable error message from backend ApiErrorResponse
+ * Safely extracts and translates a single human-readable error message from backend ApiErrorResponse
  * Handles both Validation errors (with field messages) and General errors.
  */
 export const getApiErrorMessage = (
@@ -28,8 +29,8 @@ export const getApiErrorMessage = (
         .filter(Boolean) as string[];
 
       if (fieldErrors.length > 0) {
-        // Return the first specific validation error message
-        return fieldErrors[0];
+        // Translate and return the first specific validation error message
+        return translateApiMessage(fieldErrors[0], fallbackMessage);
       }
     }
 
@@ -39,7 +40,7 @@ export const getApiErrorMessage = (
       typeof data.message === "string" &&
       data.message.trim() !== ""
     ) {
-      return data.message;
+      return translateApiMessage(data.message, fallbackMessage);
     }
   }
 
@@ -49,14 +50,14 @@ export const getApiErrorMessage = (
     error.message &&
     !error.message.startsWith("Request failed with status code")
   ) {
-    return error.message;
+    return translateApiMessage(error.message, fallbackMessage);
   }
 
   return fallbackMessage;
 };
 
 /**
- * Extracts a map of field-specific errors: { [fieldName]: errorMessage }
+ * Extracts a map of field-specific errors: { [fieldName]: translatedErrorMessage }
  * Strips prefixes like "body." or "query." (e.g., "body.phone" -> "phone")
  * Perfect for React Hook Form's setError() integration.
  */
@@ -80,7 +81,7 @@ export const getApiFieldErrors = (error: unknown): Record<string, string> => {
         if (detail.field && detail.message) {
           // Normalize "body.fieldName" -> "fieldName"
           const cleanField = detail.field.replace(/^(body|query|params)\./, "");
-          result[cleanField] = detail.message;
+          result[cleanField] = translateApiMessage(detail.message);
         }
       }
     }
