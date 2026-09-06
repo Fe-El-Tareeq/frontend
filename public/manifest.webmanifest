@@ -6,8 +6,8 @@
   "id": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#123A68",
-  "theme_color": "#123A68",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "lang": "ar",
   "dir": "rtl",
   "categories": ["lifestyle", "social", "utilities"],
@@ -22,12 +22,19 @@
       "src": "/logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     },
     {
       "src": "/favicon.png",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "shortcuts": [

@@ -7,8 +7,8 @@ describe("Progressive Web App (PWA) Configuration", () => {
     expect(manifest.short_name).toBe("بطريقك");
     expect(manifest.start_url).toBe("/");
     expect(manifest.display).toBe("standalone");
-    expect(manifest.theme_color).toBe("#123A68");
-    expect(manifest.background_color).toBe("#123A68");
+    expect(manifest.theme_color).toBe("#ffffff");
+    expect(manifest.background_color).toBe("#ffffff");
     expect(manifest.dir).toBe("rtl");
     expect(manifest.lang).toBe("ar");
   });
