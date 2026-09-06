@@ -34,7 +34,7 @@ export function PwaInstallBanner() {
               <img
                 src="/logo.png"
                 alt="بطريقك"
-                className="h-full w-full object-contain"
+                className="h-full rounded-full w-full object-contain"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = "none";
                 }}
