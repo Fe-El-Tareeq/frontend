@@ -8,17 +8,23 @@ import RegisterStep1 from "./pages/auth/RegisterStep1";
 import RegisterStep2 from "./pages/auth/RegisterStep2";
 import Register from "./pages/auth/Register";
 
-import DashboardLayout from "./pages/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Trips from "./pages/Trips";
+import AddTrip from "./pages/AddTrip";
 
 function App() {
+
   return (
     <BrowserRouter>
 
       <Routes>
 
-        <Route path="/" element={<Home />} />
+        {/* ================= AUTH ================= */}
+
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
         <Route
           path="/landing"
@@ -45,19 +51,23 @@ function App() {
           element={<Register />}
         />
 
-        <Route element={<DashboardLayout />}>
 
-          <Route
-            path="/dashboard"
-            element={<Dashboard />}
-          />
+        {/* ================= APP ================= */}
 
-          <Route
-            path="/trips"
-            element={<Trips />}
-          />
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
 
-        </Route>
+        <Route
+          path="/trips"
+          element={<Trips />}
+        />
+
+        <Route
+          path="/add-trip"
+          element={<AddTrip />}
+        />
 
       </Routes>
 

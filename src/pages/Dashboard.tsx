@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 function Dashboard() {
   const navigate = useNavigate();
 
-  // فتح وإغلاق الـ Sidebar على الهاتف
+  // فتح وإغلاق Sidebar في الجوال
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -16,13 +16,23 @@ function Dashboard() {
       {/* =====================================================
           HEADER
       ===================================================== */}
-      <header className="fixed right-0 top-0 z-30 flex h-[82px] w-full items-center justify-between bg-white px-5 shadow-sm lg:pr-[280px]">
+      <header
+        className="
+          fixed right-0 top-0 z-30
+          flex h-[82px] w-full
+          items-center justify-between
+          bg-white px-5
+          shadow-sm
+          lg:pr-[280px]
+        "
+      >
 
-        {/* Menu Button */}
+        {/* ================= MENU ================= */}
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
-          className="text-[#263F61]"
+          className="flex h-[42px] w-[42px] items-center justify-center rounded-[12px] text-[#263F61]"
+          aria-label="فتح القائمة"
         >
           <svg
             width="24"
@@ -40,10 +50,18 @@ function Dashboard() {
         </button>
 
 
-        {/* Location */}
+        {/* ================= LOCATION ================= */}
         <button
           type="button"
-          className="hidden h-[42px] w-[42px] items-center justify-center rounded-[12px] border border-[#E1E5EA] bg-[#FAFBFC] text-[#FF7817] sm:flex"
+          className="
+            hidden sm:flex
+            h-[42px] w-[42px]
+            items-center justify-center
+            rounded-[12px]
+            border border-[#E1E5EA]
+            bg-[#FAFBFC]
+            text-[#FF7817]
+          "
         >
           <svg
             width="20"
@@ -59,10 +77,10 @@ function Dashboard() {
         </button>
 
 
-        {/* Notification */}
+        {/* ================= NOTIFICATION ================= */}
         <button
           type="button"
-          className="hidden text-[#5C6675] sm:block"
+          className="hidden sm:block text-[#5C6675]"
         >
           <svg
             width="23"
@@ -78,9 +96,17 @@ function Dashboard() {
         </button>
 
 
-        {/* Balance */}
-        <div className="hidden items-center gap-2 rounded-full bg-[#FFF1E8] px-4 py-2 text-[#FF7817] sm:flex">
-
+        {/* ================= BALANCE ================= */}
+        <div
+          className="
+            hidden sm:flex
+            items-center gap-2
+            rounded-full
+            bg-[#FFF1E8]
+            px-4 py-2
+            text-[#FF7817]
+          "
+        >
           <svg
             width="19"
             height="19"
@@ -92,14 +118,23 @@ function Dashboard() {
             <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" />
           </svg>
 
-          {/* سيتم وضع الرصيد من Backend */}
+          {/* البيانات ستأتي من Backend */}
           <span className="font-bold"></span>
-
         </div>
 
 
-        {/* User */}
-        <div className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#234A7D] text-[13px] font-bold text-white">
+        {/* ================= USER ================= */}
+        <div
+          className="
+            flex h-[42px] w-[42px]
+            items-center justify-center
+            rounded-full
+            bg-[#234A7D]
+            text-[13px]
+            font-bold
+            text-white
+          "
+        >
           هـم
         </div>
 
@@ -112,7 +147,11 @@ function Dashboard() {
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="
+            fixed inset-0 z-40
+            bg-black/40
+            lg:hidden
+          "
         />
       )}
 
@@ -137,31 +176,45 @@ function Dashboard() {
         `}
       >
 
-        {/* Close Button - Mobile */}
-        <div className="flex h-[45px] items-center justify-start px-4 lg:hidden">
-
+        {/* ================= MOBILE CLOSE ================= */}
+        <div
+          className="
+            flex h-[45px]
+            items-center justify-start
+            px-4
+            lg:hidden
+          "
+        >
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
-            className="text-[28px] leading-none text-white"
+            className="
+              text-[28px]
+              leading-none
+              text-white
+            "
+            aria-label="إغلاق القائمة"
           >
             ×
           </button>
-
         </div>
 
 
         {/* =================================================
             LOGO
         ================================================= */}
-        <div className="flex h-[87px] items-center justify-center bg-white">
-
+        <div
+          className="
+            flex h-[87px]
+            items-center justify-center
+            bg-white
+          "
+        >
           <img
             src="/logo.png"
             alt="بطريقك"
             className="h-[65px] w-[68px] object-contain"
           />
-
         </div>
 
 
@@ -202,10 +255,18 @@ function Dashboard() {
           <Link
             to="/dashboard"
             onClick={() => setSidebarOpen(false)}
-            className="mb-1 flex h-[48px] w-full items-center gap-4 rounded-[15px] bg-[#FF7817] px-4 font-bold text-white"
+            className="
+              mb-1
+              flex h-[48px] w-full
+              items-center gap-4
+              rounded-[15px]
+              bg-[#FF7817]
+              px-4
+              font-bold
+              text-white
+            "
           >
 
-            {/* Home Icon */}
             <svg
               width="21"
               height="21"
@@ -232,10 +293,18 @@ function Dashboard() {
           <Link
             to="/trips"
             onClick={() => setSidebarOpen(false)}
-            className="mb-1 flex h-[48px] w-full items-center gap-4 rounded-[15px] px-4 text-white/75 transition hover:bg-white/10"
+            className="
+              mb-1
+              flex h-[48px] w-full
+              items-center gap-4
+              rounded-[15px]
+              px-4
+              text-white/75
+              transition
+              hover:bg-white/10
+            "
           >
 
-            {/* Car Icon */}
             <svg
               width="21"
               height="21"
@@ -262,10 +331,18 @@ function Dashboard() {
           {/* ================= الطلبات ================= */}
           <button
             type="button"
-            className="mb-1 flex h-[48px] w-full items-center gap-4 rounded-[15px] px-4 text-white/75 transition hover:bg-white/10"
+            className="
+              mb-1
+              flex h-[48px] w-full
+              items-center gap-4
+              rounded-[15px]
+              px-4
+              text-white/75
+              transition
+              hover:bg-white/10
+            "
           >
 
-            {/* Box Icon */}
             <svg
               width="21"
               height="21"
@@ -289,10 +366,18 @@ function Dashboard() {
           {/* ================= الرسائل ================= */}
           <button
             type="button"
-            className="mb-1 flex h-[48px] w-full items-center gap-4 rounded-[15px] px-4 text-white/75 transition hover:bg-white/10"
+            className="
+              mb-1
+              flex h-[48px] w-full
+              items-center gap-4
+              rounded-[15px]
+              px-4
+              text-white/75
+              transition
+              hover:bg-white/10
+            "
           >
 
-            {/* Message Icon */}
             <svg
               width="21"
               height="21"
@@ -304,14 +389,12 @@ function Dashboard() {
               <path d="M4 5h16v12H8l-4 4V5Z" />
             </svg>
 
-
             <span>
               الرسائل
             </span>
 
-
-            {/* Notification Number */}
-            <span className="mr-auto flex h-[20px] w-[20px] items-center justify-center rounded-full bg-[#FF3B45] text-[10px] font-bold text-white">
+            {/* الرقم سيأتي من Backend */}
+            <span className="mr-auto">
             </span>
 
           </button>
@@ -320,10 +403,18 @@ function Dashboard() {
           {/* ================= المحفظة ================= */}
           <button
             type="button"
-            className="mb-1 flex h-[48px] w-full items-center gap-4 rounded-[15px] px-4 text-white/75 transition hover:bg-white/10"
+            className="
+              mb-1
+              flex h-[48px] w-full
+              items-center gap-4
+              rounded-[15px]
+              px-4
+              text-white/75
+              transition
+              hover:bg-white/10
+            "
           >
 
-            {/* Wallet Icon */}
             <svg
               width="21"
               height="21"
@@ -355,10 +446,18 @@ function Dashboard() {
           {/* ================= حسابي ================= */}
           <button
             type="button"
-            className="mb-1 flex h-[48px] w-full items-center gap-4 rounded-[15px] px-4 text-white/75 transition hover:bg-white/10"
+            className="
+              mb-1
+              flex h-[48px] w-full
+              items-center gap-4
+              rounded-[15px]
+              px-4
+              text-white/75
+              transition
+              hover:bg-white/10
+            "
           >
 
-            {/* User Icon */}
             <svg
               width="21"
               height="21"
@@ -386,10 +485,18 @@ function Dashboard() {
           {/* ================= الإعدادات ================= */}
           <button
             type="button"
-            className="mb-1 flex h-[48px] w-full items-center gap-4 rounded-[15px] px-4 text-white/75 transition hover:bg-white/10"
+            className="
+              mb-1
+              flex h-[48px] w-full
+              items-center gap-4
+              rounded-[15px]
+              px-4
+              text-white/75
+              transition
+              hover:bg-white/10
+            "
           >
 
-            {/* Settings Icon */}
             <svg
               width="21"
               height="21"
@@ -421,27 +528,47 @@ function Dashboard() {
         {/* =================================================
             SIDEBAR BOTTOM
         ================================================= */}
-        <div className="absolute bottom-0 right-0 w-full px-3 pb-5">
+        <div
+          className="
+            absolute bottom-0 right-0
+            w-full
+            px-3 pb-5
+          "
+        >
 
-          {/* Balance */}
-          <div className="mb-4 flex h-[40px] items-center justify-between rounded-full border border-[#FF7817] px-4">
+          {/* ================= BALANCE ================= */}
+          <div
+            className="
+              mb-4
+              flex h-[40px]
+              items-center justify-between
+              rounded-full
+              border border-[#FF7817]
+              px-4
+            "
+          >
 
             <span className="text-[12px] text-white">
               رصيد التوكيز
             </span>
 
-            {/* Backend Balance */}
+            {/* البيانات ستأتي من Backend */}
             <span className="font-bold text-[#FF7817]">
             </span>
 
           </div>
 
 
-          {/* Logout */}
+          {/* ================= LOGOUT ================= */}
           <button
             type="button"
             onClick={() => navigate("/welcome")}
-            className="flex h-[45px] w-full items-center gap-4 px-4 text-[#FF9696]"
+            className="
+              flex h-[45px] w-full
+              items-center gap-4
+              px-4
+              text-[#FF9696]
+            "
           >
 
             <svg
@@ -472,21 +599,48 @@ function Dashboard() {
       {/* =====================================================
           MAIN CONTENT
       ===================================================== */}
-      <main className="min-h-screen pt-[82px] lg:mr-[256px]">
+      <main
+        className="
+          min-h-screen
+          pt-[82px]
+          lg:mr-[256px]
+        "
+      >
 
-        <div className="mx-auto max-w-[1000px] px-4 py-7 sm:px-6">
-
+        <div
+          className="
+            mx-auto
+            max-w-[1000px]
+            px-4
+            py-7
+            sm:px-6
+          "
+        >
 
           {/* =================================================
               WELCOME
           ================================================= */}
           <section className="mb-6">
 
-            <h1 className="text-right text-[25px] font-bold text-[#102F57]">
+            <h1
+              className="
+                text-right
+                text-[25px]
+                font-bold
+                text-[#102F57]
+              "
+            >
               مرحبًا بك في بطريقك 👋
             </h1>
 
-            <p className="mt-1 text-right text-[14px] text-[#7B8494]">
+            <p
+              className="
+                mt-1
+                text-right
+                text-[14px]
+                text-[#7B8494]
+              "
+            >
               إليك ملخص نشاطك اليوم
             </p>
 
@@ -496,11 +650,26 @@ function Dashboard() {
           {/* =================================================
               FOUR CARDS
           ================================================= */}
-          <section className="mb-8 grid grid-cols-2 gap-4">
-
+          <section
+            className="
+              mb-8
+              grid
+              grid-cols-2
+              gap-4
+            "
+          >
 
             {/* ================= CARD 1 ================= */}
-            <div className="min-h-[140px] rounded-[20px] border border-[#E3E7EC] bg-white p-4 shadow-sm">
+            <div
+              className="
+                min-h-[140px]
+                rounded-[20px]
+                border border-[#E3E7EC]
+                bg-white
+                p-4
+                shadow-sm
+              "
+            >
 
               <div className="flex items-start justify-between">
 
@@ -519,8 +688,15 @@ function Dashboard() {
 
                 </div>
 
-
-                <div className="flex h-[44px] w-[44px] items-center justify-center rounded-[14px] bg-[#FF7817] text-white">
+                <div
+                  className="
+                    flex h-[44px] w-[44px]
+                    items-center justify-center
+                    rounded-[14px]
+                    bg-[#FF7817]
+                    text-white
+                  "
+                >
 
                   <svg
                     width="23"
@@ -541,7 +717,16 @@ function Dashboard() {
 
 
             {/* ================= CARD 2 ================= */}
-            <div className="min-h-[140px] rounded-[20px] border border-[#E3E7EC] bg-white p-4 shadow-sm">
+            <div
+              className="
+                min-h-[140px]
+                rounded-[20px]
+                border border-[#E3E7EC]
+                bg-white
+                p-4
+                shadow-sm
+              "
+            >
 
               <div className="flex items-start justify-between">
 
@@ -560,8 +745,15 @@ function Dashboard() {
 
                 </div>
 
-
-                <div className="flex h-[44px] w-[44px] items-center justify-center rounded-[14px] bg-[#234A7D] text-white">
+                <div
+                  className="
+                    flex h-[44px] w-[44px]
+                    items-center justify-center
+                    rounded-[14px]
+                    bg-[#234A7D]
+                    text-white
+                  "
+                >
 
                   <svg
                     width="23"
@@ -570,8 +762,6 @@ function Dashboard() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   >
                     <path d="M3 17h2l2-6h8l4 3h2v3h-2" />
                     <path d="M5 17a2 2 0 1 0 4 0" />
@@ -586,7 +776,16 @@ function Dashboard() {
 
 
             {/* ================= CARD 3 ================= */}
-            <div className="min-h-[140px] rounded-[20px] border border-[#E3E7EC] bg-white p-4 shadow-sm">
+            <div
+              className="
+                min-h-[140px]
+                rounded-[20px]
+                border border-[#E3E7EC]
+                bg-white
+                p-4
+                shadow-sm
+              "
+            >
 
               <div className="flex items-start justify-between">
 
@@ -605,8 +804,15 @@ function Dashboard() {
 
                 </div>
 
-
-                <div className="flex h-[44px] w-[44px] items-center justify-center rounded-[14px] bg-[#9B12FF] text-white">
+                <div
+                  className="
+                    flex h-[44px] w-[44px]
+                    items-center justify-center
+                    rounded-[14px]
+                    bg-[#9B12FF]
+                    text-white
+                  "
+                >
 
                   <svg
                     width="23"
@@ -627,7 +833,16 @@ function Dashboard() {
 
 
             {/* ================= CARD 4 ================= */}
-            <div className="min-h-[140px] rounded-[20px] border border-[#E3E7EC] bg-white p-4 shadow-sm">
+            <div
+              className="
+                min-h-[140px]
+                rounded-[20px]
+                border border-[#E3E7EC]
+                bg-white
+                p-4
+                shadow-sm
+              "
+            >
 
               <div className="flex items-start justify-between">
 
@@ -646,8 +861,15 @@ function Dashboard() {
 
                 </div>
 
-
-                <div className="flex h-[44px] w-[44px] items-center justify-center rounded-[14px] bg-[#00A394] text-white">
+                <div
+                  className="
+                    flex h-[44px] w-[44px]
+                    items-center justify-center
+                    rounded-[14px]
+                    bg-[#00A394]
+                    text-white
+                  "
+                >
 
                   <svg
                     width="23"
@@ -678,13 +900,23 @@ function Dashboard() {
 
             <div className="mb-4 flex items-center justify-between">
 
-              <h2 className="text-[19px] font-bold text-[#102F57]">
+              <h2
+                className="
+                  text-[19px]
+                  font-bold
+                  text-[#102F57]
+                "
+              >
                 الرحلات المتاحة بالقرب منك
               </h2>
 
               <Link
                 to="/trips"
-                className="text-[13px] font-bold text-[#FF7817]"
+                className="
+                  text-[13px]
+                  font-bold
+                  text-[#FF7817]
+                "
               >
                 عرض الكل ←
               </Link>
@@ -693,17 +925,18 @@ function Dashboard() {
 
 
             {/* Backend Container */}
-            <div className="min-h-[180px] rounded-[20px] border border-[#E3E7EC] bg-white p-4 shadow-sm">
+            <div
+              className="
+                min-h-[180px]
+                rounded-[20px]
+                border border-[#E3E7EC]
+                bg-white
+                p-4
+                shadow-sm
+              "
+            >
 
-              {/*
-
-                الرحلات ستأتي من Backend
-
-                مثال مستقبلي:
-
-                trips.map(...)
-
-              */}
+              {/* البيانات ستأتي من Backend */}
 
             </div>
 
@@ -717,13 +950,23 @@ function Dashboard() {
 
             <div className="mb-4 flex items-center justify-between">
 
-              <h2 className="text-[19px] font-bold text-[#102F57]">
+              <h2
+                className="
+                  text-[19px]
+                  font-bold
+                  text-[#102F57]
+                "
+              >
                 الطلبات القريبة
               </h2>
 
               <button
                 type="button"
-                className="text-[13px] font-bold text-[#FF7817]"
+                className="
+                  text-[13px]
+                  font-bold
+                  text-[#FF7817]
+                "
               >
                 عرض الكل ←
               </button>
@@ -732,17 +975,18 @@ function Dashboard() {
 
 
             {/* Backend Container */}
-            <div className="min-h-[180px] rounded-[20px] border border-[#E3E7EC] bg-white p-4 shadow-sm">
+            <div
+              className="
+                min-h-[180px]
+                rounded-[20px]
+                border border-[#E3E7EC]
+                bg-white
+                p-4
+                shadow-sm
+              "
+            >
 
-              {/*
-
-                الطلبات ستأتي من Backend
-
-                مثال مستقبلي:
-
-                requests.map(...)
-
-              */}
+              {/* البيانات ستأتي من Backend */}
 
             </div>
 
@@ -752,13 +996,34 @@ function Dashboard() {
           {/* =================================================
               BOTTOM BUTTONS
           ================================================= */}
-          <div className="flex gap-3 pb-8">
+          <div
+            className="
+              flex
+              gap-3
+              pb-8
+            "
+          >
 
-
-            {/* إضافة رحلة */}
+            {/* ================= إضافة رحلة ================= */}
             <button
               type="button"
-              className="flex h-[52px] flex-1 items-center justify-center gap-2 rounded-[17px] bg-[#234A7D] text-[15px] font-bold text-white shadow-sm"
+              onClick={() => navigate("/add-trip")}
+              className="
+                flex h-[52px]
+                flex-1
+                items-center
+                justify-center
+                gap-2
+                rounded-[17px]
+                bg-[#234A7D]
+                text-[15px]
+                font-bold
+                text-white
+                shadow-sm
+                transition
+                hover:bg-[#1b3d68]
+                active:scale-[0.99]
+              "
             >
 
               <svg
@@ -776,22 +1041,42 @@ function Dashboard() {
                 <path d="M17 17a2 2 0 1 0 4 0" />
               </svg>
 
-              إضافة رحلة
+              <span>
+                إضافة رحلة
+              </span>
 
             </button>
 
 
-            {/* إنشاء طلب جديد */}
+            {/* ================= إنشاء طلب جديد ================= */}
             <button
               type="button"
-              className="flex h-[52px] flex-1 items-center justify-center gap-2 rounded-[17px] bg-[#FF7817] text-[15px] font-bold text-white shadow-sm"
+              onClick={() => navigate("/requests")}
+              className="
+                flex h-[52px]
+                flex-1
+                items-center
+                justify-center
+                gap-2
+                rounded-[17px]
+                bg-[#FF7817]
+                text-[15px]
+                font-bold
+                text-white
+                shadow-sm
+                transition
+                hover:bg-[#e9690c]
+                active:scale-[0.99]
+              "
             >
 
               <span className="text-[22px]">
                 +
               </span>
 
-              إنشاء طلب جديد
+              <span>
+                إنشاء طلب جديد
+              </span>
 
             </button>
 

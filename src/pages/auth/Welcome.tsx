@@ -73,11 +73,12 @@ function Welcome() {
 
           {/* Login Button */}
           <button
-            type="submit"
-            className="mt-[24px] h-[51px] w-full rounded-[16px] bg-accent text-[16px] font-bold text-white shadow-sm transition hover:bg-accent-hover active:scale-[0.99]"
-          >
-            تسجيل الدخول
-          </button>
+           type="button"
+           onClick={() => navigate("/dashboard")}
+           className="mt-[24px] h-[51px] w-full rounded-[16px] bg-accent text-[16px] font-bold text-white shadow-sm transition hover:bg-accent-hover active:scale-[0.99]"
+           >
+             تسجيل الدخول
+           </button>
         </form>
 
         {/* Create Account */}
