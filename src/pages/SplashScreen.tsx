@@ -13,48 +13,55 @@ export default function SplashScreen() {
       } else {
         navigate("/", { replace: true });
       }
-    }, 2000);
+    }, 1800);
 
     return () => clearTimeout(timer);
   }, [isAuthenticated, navigate]);
 
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-between bg-gradient-to-b from-[#123A68] to-[#0A1F38] p-8 text-white select-none animate-fade-in"
+      className="flex min-h-screen flex-col items-center justify-between bg-white px-6 py-10 select-none animate-fade-in"
       dir="rtl"
     >
-      <div />
+      {/* Top spacing */}
+      <div className="w-full h-8" />
 
-      {/* Center Brand Icon & Typography */}
-      <div className="flex flex-col items-center text-center space-y-4">
-        {/* App Icon Container */}
-        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-white shadow-2xl ring-4 ring-white/10 p-2">
+      {/* Center Brand Icon & Title */}
+      <div className="flex flex-col items-center justify-center text-center space-y-5 my-auto">
+        {/* App Logo Container - Proportional & Responsive across all screen sizes */}
+        <div className="relative flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28 max-w-[32vw] max-h-[32vw] aspect-square rounded-3xl bg-white shadow-lg shadow-slate-100/80 border border-slate-100 p-3 transition-transform duration-500 hover:scale-105">
           <img
             src="/logo.png"
             alt="بطريقك"
-            className="h-full w-full object-contain"
+            className="h-full w-full object-contain drop-shadow-sm select-none"
+            loading="eager"
             onError={(e) => {
-              // Fallback to text logo if image is missing
               (e.target as HTMLElement).style.display = "none";
             }}
           />
         </div>
 
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tight text-white">
+        {/* Brand Name & Tagline */}
+        <div className="space-y-1.5">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#123A68]">
             بطريقك
           </h1>
-          <p className="text-xs font-bold text-orange-400">
-            وصل أغراضك ووفر وقتك
+          <p className="text-xs sm:text-sm font-semibold text-slate-500">
+            منصة التوصيل المجتمعي التضامني
           </p>
         </div>
       </div>
 
-      {/* Bottom Loading Dots */}
-      <div className="flex items-center gap-1.5 pb-6">
-        <span className="h-2 w-2 rounded-full bg-orange-400 animate-bounce" />
-        <span className="h-2 w-2 rounded-full bg-orange-400 animate-bounce [animation-delay:0.2s]" />
-        <span className="h-2 w-2 rounded-full bg-orange-400 animate-bounce [animation-delay:0.4s]" />
+      {/* Bottom Loading Indicator */}
+      <div className="flex flex-col items-center space-y-3 pb-4">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-[#123A68] animate-bounce [animation-delay:-0.3s]" />
+          <span className="h-2 w-2 rounded-full bg-[#F36F21] animate-bounce [animation-delay:-0.15s]" />
+          <span className="h-2 w-2 rounded-full bg-[#123A68] animate-bounce" />
+        </div>
+        <span className="text-[11px] font-medium text-slate-400">
+          جاري التحميل...
+        </span>
       </div>
     </div>
   );

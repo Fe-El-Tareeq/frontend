@@ -14,7 +14,7 @@ export default function Welcome() {
           <img
             src="/logo.png"
             alt="بطريقك"
-            className="h-18.75 w-19.5 object-contain drop-shadow-sm"
+            className="h-16 w-16 sm:h-20 sm:w-20 object-contain drop-shadow-sm"
           />
         </div>
 
