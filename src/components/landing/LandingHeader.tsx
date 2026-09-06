@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FC } from "react";
-import { Menu, Download } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Menu, Download, LogIn } from "lucide-react";
 import { usePWA } from "../../hooks/usePWA";
 import { PwaInstallModal } from "../pwa/PwaInstallModal";
 
@@ -13,6 +14,7 @@ export const LandingHeader: FC<LandingHeaderProps> = ({
   onOpenMenu,
   onNavigateHome,
 }) => {
+  const navigate = useNavigate();
   const { isInstalled, isIOS, triggerInstall } = usePWA();
   const [showInstallModal, setShowInstallModal] = useState(false);
 
@@ -39,18 +41,27 @@ export const LandingHeader: FC<LandingHeaderProps> = ({
           <span className="text-base font-black text-[#123A68]">بطريقك</span>
         </div>
 
-        {/* Left side in RTL: Install App Button & Hamburger Menu Icon */}
+        {/* Left side in RTL: Install App Button, Login Button & Hamburger Menu Icon */}
         <div className="flex items-center gap-2">
           {!isInstalled && (
             <button
               type="button"
               onClick={handleInstallClick}
-              className="flex items-center gap-1.5 rounded-full bg-[#FFF5EE] px-3 py-1.5 border border-[#FDE0CE] text-xs font-black text-[#F36F21] hover:bg-[#FEECE0] active:scale-95 transition-all cursor-pointer"
+              className="hidden sm:flex items-center gap-1.5 rounded-full bg-[#FFF5EE] px-3 py-1.5 border border-[#FDE0CE] text-xs font-black text-[#F36F21] hover:bg-[#FEECE0] active:scale-95 transition-all cursor-pointer"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>تثبيت التطبيق</span>
+              <span>تثبيت</span>
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => navigate("/login")}
+            className="flex items-center gap-1.5 rounded-xl bg-[#123A68] px-3 py-1.5 text-xs font-black text-white hover:bg-[#0D2C50] active:scale-95 transition-all cursor-pointer shadow-xs"
+          >
+            <LogIn className="h-3.5 w-3.5" />
+            <span>دخول</span>
+          </button>
 
           <button
             type="button"

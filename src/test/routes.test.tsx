@@ -67,7 +67,17 @@ describe("Strict ProtectedRoute & PublicOnlyRoute Architecture", () => {
   });
 
   it("should redirect authenticated users away from /login and /register to /home", () => {
-    useAuthStore.setState({ isAuthenticated: true });
+    useAuthStore.setState({
+      user: {
+        id: "1",
+        phone: "0599123456",
+        role: "USER" as const,
+        status: "ACTIVE" as const,
+      },
+      accessToken: "mock-jwt-token",
+      refreshToken: "mock-refresh-token",
+      isAuthenticated: true,
+    });
 
     render(
       <MemoryRouter initialEntries={["/register-step1"]}>

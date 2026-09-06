@@ -56,8 +56,8 @@ export default function LandingPage() {
       <div className="px-4 pt-4 space-y-6">
         {/* Hero Section */}
         <HeroSection
-          onNeedItem={() => navigate("/register-step1")}
-          onTraveler={() => navigate("/register-step1")}
+          onNeedItem={() => navigate("/login")}
+          onTraveler={() => navigate("/login")}
         />
 
         {/* How It Works (ثلاث خطوات بسيطة) */}
