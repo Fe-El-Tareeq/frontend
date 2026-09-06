@@ -4,7 +4,9 @@ import { useAuthStore } from "../store/useAuthStore";
 
 export default function SplashScreen() {
   const navigate = useNavigate();
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = Boolean(user && accessToken);
 
   useEffect(() => {
     const timer = setTimeout(() => {

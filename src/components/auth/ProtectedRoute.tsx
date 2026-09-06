@@ -7,7 +7,9 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = Boolean(user && accessToken);
   const location = useLocation();
 
   if (!isAuthenticated) {
@@ -19,7 +21,9 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 }
 
 export function PublicOnlyRoute({ children }: ProtectedRouteProps) {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = Boolean(user && accessToken);
 
   if (isAuthenticated) {
     return <Navigate to="/home" replace />;
