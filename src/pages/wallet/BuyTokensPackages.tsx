@@ -6,6 +6,7 @@ import {
   ShieldCheck,
   RefreshCw,
   Sparkles,
+  Check,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -25,33 +26,33 @@ export const TOKEN_PACKAGES: TokenPackage[] = [
   {
     id: "pkg-basic",
     name: "الباقة الأساسية",
-    subtitle: "للاستخدام الخفيف والتجربة",
-    tokens: 5,
+    subtitle: "للاستخدام الخفيف والتجريب",
+    tokens: 10,
     priceNis: 5,
-    ratePerToken: "1.00 شيكل لكل توكن",
-    features: ["نشر أو قبول الطلبات فوراً", "صلاحية غير محدودة"],
+    ratePerToken: "2 ₪ لكل توكن مع 2 توكن هدية من منصة بطريقك",
+    features: ["نشر الطلبات فوراً", "صلاحية 3 أشهر"],
   },
   {
     id: "pkg-medium",
     name: "الباقة المتوسطة",
     subtitle: "الأكثر شيوعاً للمستخدم العادي",
-    tokens: 20,
-    priceNis: 15,
-    ratePerToken: "0.75 شيكل لكل توكن",
+    tokens: 25,
+    priceNis: 10,
+    ratePerToken: "2 ₪ لكل توكن نسبة التوفير 20%",
     isPopular: true,
-    features: ["نشر أو قبول الطلبات فوراً", "خصم 25%", "صلاحية غير محدودة"],
+    features: ["نشر الطلبات فوراً", "صلاحية 3 أشهر", "خصم 20%"],
   },
   {
     id: "pkg-pro",
     name: "الباقة الاحترافية",
     subtitle: "للمستخدمين الدائمين والنشطين",
     tokens: 50,
-    priceNis: 30,
-    ratePerToken: "0.60 شيكل لكل توكن",
+    priceNis: 15,
+    ratePerToken: "2 ₪ لكل توكن نسبة التوفير 40%",
     features: [
-      "نشر أو قبول الطلبات فوراً",
+      "نشر الطلبات فوراً",
+      "صلاحية 3 أشهر",
       "خصم 40%",
-      "صلاحية غير محدودة",
       "أولوية في البحث",
     ],
   },
@@ -60,12 +61,12 @@ export const TOKEN_PACKAGES: TokenPackage[] = [
     name: "الباقة المؤسسية",
     subtitle: "لأصحاب الأعمال والاستخدام المكثف",
     tokens: 100,
-    priceNis: 50,
-    ratePerToken: "0.50 شيكل لكل توكن",
+    priceNis: 25,
+    ratePerToken: "2 ₪ لكل توكن نسبة التوفير 50%",
     features: [
-      "نشر أو قبول الطلبات فوراً",
+      "نشر الطلبات فوراً",
+      "صلاحية 3 أشهر",
       "خصم 50%",
-      "صلاحية غير محدودة",
       "أولوية في البحث",
     ],
   },
@@ -84,24 +85,26 @@ export default function BuyTokensPackages() {
 
       <div className="px-4 pt-4 space-y-4">
         {/* Title */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between">
+          <div className="text-right">
+            <h1 className="text-xl font-black text-[#123A68]">شراء توكنز</h1>
+            <p className="text-xs text-text-secondary mt-0.5">
+              اختر الباقة الأنسب لاحتياجك
+            </p>
+          </div>
           <button
+            type="button"
             onClick={() => navigate(-1)}
+            aria-label="الرجوع للخلف"
             className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
-          <div>
-            <h1 className="text-xl font-black text-[#123A68]">شراء توكنز</h1>
-            <p className="text-xs text-text-secondary">
-              اختر الحزمة الأنسب لاحتياجاتك
-            </p>
-          </div>
         </div>
 
         {/* 4-Step Progress Bar (Step 1 Active) */}
-        <div className="flex items-center justify-between rounded-2xl bg-white p-3.5 border border-border shadow-2xs text-[11px] font-bold text-center">
-          <div className="flex items-center gap-1.5 text-primary">
+        <div className="flex items-center justify-between rounded-2xl bg-white p-3 border border-slate-200/80 shadow-2xs text-[11px] font-bold text-center">
+          <div className="flex items-center gap-1.5 text-[#123A68] font-black">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123A68] text-white text-[10px]">
               1
             </span>
@@ -131,7 +134,7 @@ export default function BuyTokensPackages() {
         </div>
 
         {/* Packages Cards */}
-        <div className="space-y-3.5 pt-1">
+        <div className="space-y-4 pt-1">
           {TOKEN_PACKAGES.map((pkg) => {
             return (
               <div
@@ -139,12 +142,12 @@ export default function BuyTokensPackages() {
                 className={`relative rounded-3xl p-5 border transition-all ${
                   pkg.isPopular
                     ? "bg-white border-[#F36F21] shadow-md ring-1 ring-[#F36F21]/20"
-                    : "bg-white border-border shadow-xs hover:border-[#123A68]/30"
+                    : "bg-white border-slate-200/90 shadow-xs hover:border-[#123A68]/30"
                 }`}
               >
                 {pkg.isPopular && (
-                  <span className="absolute -top-3 right-6 rounded-full bg-[#F36F21] px-3 py-0.5 text-[10.5px] font-black text-white shadow-xs">
-                    ⭐ الأكثر شيوعاً
+                  <span className="absolute -top-3 right-8 rounded-full bg-[#F36F21] px-3 py-0.5 text-[10.5px] font-black text-white shadow-xs">
+                    ★ الأكثر شيوعاً
                   </span>
                 )}
 
@@ -158,37 +161,50 @@ export default function BuyTokensPackages() {
                     </p>
                   </div>
 
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-50 text-[#F36F21]">
-                    <Zap className="h-5 w-5 fill-[#F36F21]" />
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
+                      pkg.isPopular
+                        ? "bg-orange-500 text-white"
+                        : "bg-[#123A68] text-white"
+                    }`}
+                  >
+                    <Zap className="h-5 w-5 fill-white" />
                   </div>
                 </div>
 
-                <div className="my-3.5 flex items-baseline justify-between border-y border-slate-100 py-3">
-                  <div className="text-right">
-                    <span className="text-2xl font-black text-[#123A68]">
+                <div className="my-3 space-y-1">
+                  <div className="flex items-baseline gap-1 text-right">
+                    <span className="text-3xl font-black text-[#123A68]">
                       {pkg.tokens}
                     </span>
-                    <span className="text-xs font-bold text-text-muted mr-1.5">
+                    <span className="text-xs font-bold text-text-muted">
                       توكن
                     </span>
                   </div>
 
-                  <div className="text-left">
-                    <span className="text-xl font-black text-[#F36F21]">
-                      {pkg.priceNis} شيكل
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-black text-[#123A68]">
+                      {pkg.priceNis}
                     </span>
-                    <p className="text-[10px] text-emerald-600 font-bold">
-                      ✓ {pkg.ratePerToken}
-                    </p>
+                    <span className="text-base font-black text-[#123A68]">
+                      ₪
+                    </span>
                   </div>
+
+                  <p className="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
+                    <Check className="h-3.5 w-3.5 inline text-emerald-600 stroke-[3]" />
+                    <span>{pkg.ratePerToken}</span>
+                  </p>
                 </div>
 
+                <hr className="border-slate-100 my-3" />
+
                 {/* Features */}
-                <div className="space-y-1.5 text-xs text-text-secondary pb-4">
+                <div className="space-y-2 text-xs text-slate-600 pb-4 text-right">
                   {pkg.features.map((feat, idx) => (
                     <div key={idx} className="flex items-center gap-2">
-                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-bold">
-                        ✓
+                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold">
+                        <Check className="h-2.5 w-2.5 stroke-[3]" />
                       </span>
                       <span>{feat}</span>
                     </div>
@@ -216,18 +232,18 @@ export default function BuyTokensPackages() {
         {/* Bottom Trust Badges */}
         <div className="flex items-center justify-around rounded-2xl bg-white p-3.5 border border-slate-200 text-[10.5px] font-bold text-text-muted">
           <div className="flex items-center gap-1">
-            <Sparkles className="h-3.5 w-3.5 text-[#F36F21]" />
+            <Sparkles className="h-3.5 w-3.5 text-[#123A68]" />
             <span>تفعيل فوري بعد الدفع</span>
           </div>
-          <span>•</span>
+          <span className="text-slate-300">•</span>
           <div className="flex items-center gap-1">
             <RefreshCw className="h-3.5 w-3.5 text-blue-600" />
-            <span>دفع آمن بالكامل</span>
+            <span>استرداد خلال 7 أيام</span>
           </div>
-          <span>•</span>
+          <span className="text-slate-300">•</span>
           <div className="flex items-center gap-1">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-            <span>محفظة موثقة</span>
+            <ShieldCheck className="h-3.5 w-3.5 text-slate-500" />
+            <span>دفع آمن ومشفر</span>
           </div>
         </div>
       </div>

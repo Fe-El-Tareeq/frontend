@@ -46,6 +46,7 @@ const PaymentMethodPage = lazy(
   () => import("./pages/wallet/PaymentMethodPage"),
 );
 const TopUpQRPage = lazy(() => import("./pages/wallet/TopUpQRPage"));
+const BankTransferPage = lazy(() => import("./pages/wallet/BankTransferPage"));
 const PaymentSuccessPage = lazy(
   () => import("./pages/wallet/PaymentSuccessPage"),
 );
@@ -342,6 +343,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <TopUpQRPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet/bank-transfer"
+            element={
+              <ProtectedRoute>
+                <BankTransferPage />
               </ProtectedRoute>
             }
           />

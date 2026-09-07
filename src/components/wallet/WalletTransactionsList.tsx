@@ -5,9 +5,9 @@ export interface TransactionRowData {
   date: string;
   type: string;
   amount: string;
-  status: string;
-  statusText: string;
-  statusClass: string;
+  isPositive: boolean;
+  status: "COMPLETED" | "FAILED" | "PENDING";
+  statusText?: string;
 }
 
 interface WalletTransactionsListProps {
@@ -18,47 +18,63 @@ export const WalletTransactionsList: FC<WalletTransactionsListProps> = ({
   transactions,
 }) => {
   return (
-    <div className="space-y-2.5 pt-2">
-      <h2 className="text-sm font-black text-[#123A68]">سجل المعاملات</h2>
+    <div className="rounded-3xl bg-white border border-slate-200/90 shadow-2xs overflow-hidden">
+      {/* Table Header (4 columns) */}
+      <div className="grid grid-cols-4 bg-white px-4 py-3 text-right text-xs font-bold text-text-muted border-b border-slate-100">
+        <span className="text-right">التاريخ</span>
+        <span className="text-center">نوع العملية</span>
+        <span className="text-center">التوكنز</span>
+        <span className="text-center">الحالة</span>
+      </div>
 
-      <div className="rounded-3xl bg-white border border-border shadow-xs overflow-hidden">
-        {/* Table Header */}
-        <div className="grid grid-cols-4 bg-[#F8FAFC] p-3 text-center text-[10.5px] font-black text-text-muted border-b border-slate-100">
-          <span>التاريخ</span>
-          <span>نوع العملية</span>
-          <span>التوكنز</span>
-          <span>الحالة</span>
-        </div>
+      {/* Table Rows */}
+      <div className="divide-y divide-slate-100 text-xs">
+        {transactions.map((tx) => {
+          const isFailed = tx.status === "FAILED";
+          const statusLabel =
+            tx.statusText || (isFailed ? "فشلت" : "مكتمل");
 
-        {/* Table Rows */}
-        <div className="divide-y divide-slate-100 text-xs">
-          {transactions.map((tx) => (
+          return (
             <div
               key={tx.id}
-              className="grid grid-cols-4 items-center p-3 text-center"
+              className="grid grid-cols-4 items-center px-4 py-3.5 hover:bg-slate-50/70 transition-colors"
             >
-              <span className="text-[10px] text-text-muted">{tx.date}</span>
-              <span className="font-bold text-primary">{tx.type}</span>
+              {/* Date */}
+              <span className="text-[11px] font-bold text-slate-700 text-right">
+                {tx.date}
+              </span>
+
+              {/* Type */}
+              <span className="text-xs font-black text-[#123A68] text-center truncate">
+                {tx.type}
+              </span>
+
+              {/* Tokens */}
               <span
-                className={`font-black ${
-                  tx.amount.startsWith("+")
-                    ? "text-emerald-600"
-                    : "text-[#F36F21]"
+                className={`text-xs font-black text-center ${
+                  tx.isPositive ? "text-emerald-600" : "text-[#F36F21]"
                 }`}
               >
                 {tx.amount}
               </span>
-              <div>
+
+              {/* Status Badge */}
+              <div className="flex justify-center">
                 <span
-                  className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold border ${tx.statusClass}`}
+                  className={`inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-[10.5px] font-bold border ${
+                    isFailed
+                      ? "bg-[#FFF1F2] text-[#E11D48] border-[#FECDD3]"
+                      : "bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]"
+                  }`}
                 >
-                  {tx.statusText}
+                  {statusLabel}
                 </span>
               </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );
 };
+

@@ -3,34 +3,37 @@ import { Zap } from "lucide-react";
 
 interface WalletBalanceHeroProps {
   tokenBalance: number;
-  userName: string;
+  userName?: string;
+  isLoading?: boolean;
 }
 
 export const WalletBalanceHero: FC<WalletBalanceHeroProps> = ({
   tokenBalance,
-  userName,
+  userName = "المستخدم",
+  isLoading = false,
 }) => {
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-[#123A68] p-5 text-white shadow-md">
-      {/* Circular decorations */}
-      <div className="absolute -left-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
-      <div className="absolute right-0 bottom-0 h-28 w-28 rounded-full bg-black/15" />
-
-      <div className="relative z-10 space-y-3">
-        <span className="text-xs text-white/80 block">رصيدك الحالي</span>
-        <div className="flex items-baseline gap-2">
-          <span className="text-4xl font-black text-white">{tokenBalance}</span>
-          <span className="text-lg font-bold text-white/90">توكن</span>
+    <div className="relative overflow-hidden rounded-3xl bg-[#123A68] p-5 text-white shadow-md space-y-4">
+      <div className="text-right">
+        <span className="text-xs text-white/70 block">رصيدك الحالي</span>
+        <div className="flex items-baseline gap-2 mt-1">
+          <span className="text-4xl font-black text-white">
+            {isLoading ? "..." : tokenBalance}
+          </span>
+          <span className="text-lg font-black text-white/90">توكن</span>
         </div>
-        <p className="text-[11px] text-white/70">
-          يكفي لنشر {tokenBalance} طلب
+        <p className="text-[11px] text-white/60 mt-1">
+          يكفي لنشر {tokenBalance} رحلة/ طلب
         </p>
+      </div>
 
-        <div className="flex items-center justify-between pt-2 border-t border-white/15">
-          <span className="text-xs font-bold text-white">{userName}</span>
-          <Zap className="h-5 w-5 text-[#F36F21] fill-[#F36F21]" />
+      <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs">
+        <div className="flex items-center gap-1.5 text-white/90">
+          <Zap className="h-4 w-4 text-[#F36F21] fill-[#F36F21]" />
+          <span className="font-bold">{userName}</span>
         </div>
       </div>
     </div>
   );
 };
+

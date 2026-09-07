@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { ChevronRight, Zap, CheckCircle, Download } from "lucide-react";
+import { ChevronRight, Zap, Check, Download } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import type { TokenPackage } from "./BuyTokensPackages";
@@ -13,13 +13,15 @@ export default function TopUpQRPage() {
     name: "الباقة الاحترافية",
     subtitle: "للمستخدمين الدائمين والنشطين",
     tokens: 50,
-    priceNis: 30,
-    ratePerToken: "0.60 شيكل لكل توكن",
+    priceNis: 15,
+    ratePerToken: "2 ₪ لكل توكن نسبة التوفير 40%",
     features: [],
   };
 
   const handleCompleted = () => {
-    navigate("/wallet/payment-success", { state: { package: pkg } });
+    navigate("/wallet/payment-success", {
+      state: { package: pkg, method: "QR" },
+    });
   };
 
   return (
@@ -28,35 +30,41 @@ export default function TopUpQRPage() {
 
       <div className="px-4 pt-4 space-y-4">
         {/* Title */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between">
+          <div className="text-right">
+            <h1 className="text-xl font-black text-[#123A68]">إتمام الدفع</h1>
+            <p className="text-xs text-text-secondary mt-0.5">
+              امسح رمز QR بتطبيقك البنكي
+            </p>
+          </div>
           <button
+            type="button"
             onClick={() => navigate(-1)}
+            aria-label="الرجوع للخلف"
             className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
-          <div>
-            <h1 className="text-xl font-black text-[#123A68]">إتمام الدفع</h1>
-            <p className="text-xs text-text-secondary">
-              امسح رمز QR بتطبيق جوال باي
-            </p>
-          </div>
         </div>
 
         {/* 4-Step Progress Bar (Step 3 Active) */}
-        <div className="flex items-center justify-between rounded-2xl bg-white p-3.5 border border-border shadow-2xs text-[11px] font-bold text-center">
-          <div className="flex items-center gap-1 text-emerald-600">
-            <CheckCircle className="h-4.5 w-4.5" />
+        <div className="flex items-center justify-between rounded-2xl bg-white p-3 border border-slate-200/80 shadow-2xs text-[11px] font-bold text-center">
+          <div className="flex items-center gap-1.5 text-emerald-600 font-bold">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white text-[10px]">
+              <Check className="h-3 w-3 stroke-[3]" />
+            </span>
             <span>اختر الباقة</span>
           </div>
           <span className="text-emerald-500">──</span>
-          <div className="flex items-center gap-1 text-emerald-600">
-            <CheckCircle className="h-4.5 w-4.5" />
+          <div className="flex items-center gap-1.5 text-emerald-600 font-bold">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white text-[10px]">
+              <Check className="h-3 w-3 stroke-[3]" />
+            </span>
             <span>طريقة الدفع</span>
           </div>
           <span className="text-emerald-500">──</span>
-          <div className="flex items-center gap-1 text-primary font-black">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123A68] text-white text-[10px] shadow-xs">
+          <div className="flex items-center gap-1.5 text-[#123A68] font-black">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123A68] text-white text-[10px]">
               3
             </span>
             <span>إتمام الدفع</span>
@@ -71,20 +79,24 @@ export default function TopUpQRPage() {
         </div>
 
         {/* Selected Package Banner */}
-        <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 border border-border shadow-2xs">
+        <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3.5 border border-slate-200/90 shadow-2xs">
+          <div className="flex items-baseline gap-0.5">
+            <span className="text-sm font-black text-[#123A68]">
+              {pkg.priceNis}
+            </span>
+            <span className="text-xs font-black text-[#123A68]">₪</span>
+          </div>
+
           <div className="flex items-center gap-2">
-            <Zap className="h-4.5 w-4.5 text-[#F36F21] fill-[#F36F21]" />
             <span className="text-xs font-black text-[#123A68]">
               {pkg.name} — {pkg.tokens} توكن
             </span>
+            <Zap className="h-4.5 w-4.5 text-[#F36F21] fill-[#F36F21]" />
           </div>
-          <span className="text-sm font-black text-[#123A68]">
-            {pkg.priceNis} شيكل
-          </span>
         </div>
 
         {/* Main QR Card */}
-        <div className="rounded-3xl bg-white p-5 border border-border shadow-xs text-center space-y-4">
+        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-xs text-center space-y-4">
           {/* Stylized QR Code matching Figma */}
           <div className="relative mx-auto flex h-56 w-56 items-center justify-center rounded-3xl bg-[#F8FAFC] p-3 border border-slate-200 shadow-inner">
             <div className="relative flex h-full w-full items-center justify-center rounded-2xl bg-white p-2">
@@ -155,12 +167,12 @@ export default function TopUpQRPage() {
           </div>
 
           {/* Numbered Steps in dark navy circles */}
-          <div className="space-y-2.5 text-xs text-text-secondary text-right pt-1">
+          <div className="space-y-2.5 text-xs text-slate-700 text-right pt-1 font-bold">
             <div className="flex items-center gap-3">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
                 1
               </span>
-              <span>افتح تطبيق البنك أو جوال باي على هاتفك</span>
+              <span>افتح تطبيق البنك على هاتفك</span>
             </div>
 
             <div className="flex items-center gap-3">
@@ -192,14 +204,14 @@ export default function TopUpQRPage() {
               onClick={handleCompleted}
               className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
             >
-              <CheckCircle className="h-4 w-4" />
+              <Check className="h-4 w-4 stroke-[3]" />
               <span>لقد أتممت الدفع</span>
             </button>
 
             <button
               type="button"
               onClick={() => alert("تم حفظ رمز الـ QR في ألبوم الصور.")}
-              className="flex h-12 px-4 items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white text-xs font-black text-primary hover:border-accent active:scale-98 transition-all cursor-pointer"
+              className="flex h-12 px-4 items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white text-xs font-black text-[#123A68] hover:border-slate-300 active:scale-98 transition-all cursor-pointer"
             >
               <Download className="h-4 w-4" />
               <span>حفظ QR</span>
