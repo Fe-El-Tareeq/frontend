@@ -1,126 +1,19 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
 
 function AddTrip() {
   const navigate = useNavigate();
-
-  // Sidebar مغلق تمامًا عند دخول الصفحة
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div
       dir="rtl"
       className="min-h-screen bg-[#F5F7FA]"
     >
-
-      {/* =====================================================
-          SIDEBAR
-          لا يتم رسمه نهائيًا عندما يكون مغلقًا
-      ===================================================== */}
-
-      {sidebarOpen && (
-        <>
-          {/* الخلفية الشفافة */}
-
-          <div
-            onClick={() => setSidebarOpen(false)}
-            className="
-              fixed
-              inset-0
-              z-40
-              bg-black/40
-            "
-          />
-
-          {/* القائمة الجانبية */}
-
-          <Sidebar
-            onClose={() => setSidebarOpen(false)}
-          />
-        </>
-      )}
-
-
       {/* =====================================================
           HEADER
       ===================================================== */}
 
-      <header
-        className="
-          fixed
-          right-0
-          top-0
-          z-30
-          flex
-          h-[82px]
-          w-full
-          items-center
-          justify-between
-          bg-white
-          px-5
-          shadow-sm
-        "
-      >
-
-        {/* ===================================================
-            زر الثلاث خطوط
-        =================================================== */}
-
-        <button
-          type="button"
-          onClick={() => setSidebarOpen(true)}
-          className="
-            flex
-            h-[45px]
-            w-[45px]
-            items-center
-            justify-center
-            rounded-lg
-            text-[#234A7D]
-            transition
-            hover:bg-gray-100
-          "
-        >
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          >
-            <line x1="4" y1="6" x2="20" y2="6" />
-            <line x1="4" y1="12" x2="20" y2="12" />
-            <line x1="4" y1="18" x2="20" y2="18" />
-          </svg>
-
-        </button>
-
-
-        {/* ===================================================
-            عنوان الصفحة
-        =================================================== */}
-
-        <div className="text-right">
-
-          <p
-            className="
-              text-[17px]
-              font-bold
-              text-[#102F57]
-            "
-          >
-            إضافة رحلة جديدة
-          </p>
-
-        </div>
-
-      </header>
-
+      <Header />
 
       {/* =====================================================
           MAIN
@@ -132,22 +25,20 @@ function AddTrip() {
           px-5
           pb-10
           pt-[110px]
+          lg:mr-[256px]
         "
       >
-
         <div
           className="
             mx-auto
             max-w-[900px]
           "
         >
-
           {/* =================================================
               عنوان الصفحة
           ================================================= */}
 
           <div className="mb-7">
-
             <h1
               className="
                 text-[25px]
@@ -167,9 +58,7 @@ function AddTrip() {
             >
               شارك رحلتك القادمة وساعد أبناء منطقتك
             </p>
-
           </div>
-
 
           {/* =================================================
               FORM CARD
@@ -186,13 +75,11 @@ function AddTrip() {
               sm:p-7
             "
           >
-
             {/* =================================================
                 منطقة الانطلاق
             ================================================= */}
 
             <div className="mb-5">
-
               <label
                 className="
                   mb-2
@@ -224,16 +111,13 @@ function AddTrip() {
                   focus:border-[#FF7817]
                 "
               />
-
             </div>
-
 
             {/* =================================================
                 الوجهة
             ================================================= */}
 
             <div className="mb-5">
-
               <label
                 className="
                   mb-2
@@ -265,16 +149,13 @@ function AddTrip() {
                   focus:border-[#FF7817]
                 "
               />
-
             </div>
-
 
             {/* =================================================
                 المدينة
             ================================================= */}
 
             <div className="mb-5">
-
               <label
                 className="
                   mb-2
@@ -304,11 +185,7 @@ function AddTrip() {
                   focus:border-[#FF7817]
                 "
               >
-
-                <option
-                  value=""
-                  disabled
-                >
+                <option value="" disabled>
                   اختر المدينة
                 </option>
 
@@ -331,18 +208,14 @@ function AddTrip() {
                 <option value="rafah">
                   رفح
                 </option>
-
               </select>
-
             </div>
-
 
             {/* =================================================
                 الحي
             ================================================= */}
 
             <div className="mb-5">
-
               <label
                 className="
                   mb-2
@@ -374,18 +247,14 @@ function AddTrip() {
                   focus:border-[#FF7817]
                 "
               />
-
             </div>
-
 
             {/* =================================================
                 التاريخ والوقت
             ================================================= */}
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-
               <div className="mb-5">
-
                 <label
                   className="
                     mb-2
@@ -413,12 +282,9 @@ function AddTrip() {
                     focus:border-[#FF7817]
                   "
                 />
-
               </div>
 
-
               <div className="mb-5">
-
                 <label
                   className="
                     mb-2
@@ -446,18 +312,14 @@ function AddTrip() {
                     focus:border-[#FF7817]
                   "
                 />
-
               </div>
-
             </div>
-
 
             {/* =================================================
                 السعة
             ================================================= */}
 
             <div className="mb-5">
-
               <label
                 className="
                   mb-2
@@ -487,11 +349,7 @@ function AddTrip() {
                   focus:border-[#FF7817]
                 "
               >
-
-                <option
-                  value=""
-                  disabled
-                >
+                <option value="" disabled>
                   اختر الطاقة
                 </option>
 
@@ -506,11 +364,8 @@ function AddTrip() {
                 <option value="large">
                   كبيرة
                 </option>
-
               </select>
-
             </div>
-
 
             {/* =================================================
                 ملاحظة السعر
@@ -531,17 +386,14 @@ function AddTrip() {
                 text-[#8B7A40]
               "
             >
-              عند اختيار منطقة الانطلاق والوجهة سيتم عرض
-              السعر تلقائيًا
+              عند اختيار منطقة الانطلاق والوجهة سيتم عرض السعر تلقائيًا
             </div>
-
 
             {/* =================================================
                 السعر
             ================================================= */}
 
             <div className="mb-5">
-
               <label
                 className="
                   mb-2
@@ -568,16 +420,13 @@ function AddTrip() {
                   outline-none
                 "
               />
-
             </div>
-
 
             {/* =================================================
                 ملاحظات إضافية
             ================================================= */}
 
             <div className="mb-6">
-
               <label
                 className="
                   mb-2
@@ -609,9 +458,7 @@ function AddTrip() {
                   focus:border-[#FF7817]
                 "
               />
-
             </div>
-
 
             {/* =================================================
                 الأزرار
@@ -625,29 +472,25 @@ function AddTrip() {
                 sm:flex-row
               "
             >
-
               {/* نشر الرحلة */}
 
               <button
                 type="button"
-                onClick={() => {
-                  console.log("Trip submitted");
-                }}
+                onClick={() => navigate("/trip-created")}
                 className="
-                  h-[50px]
-                  flex-1
+                  h-[48px]
+                  w-full
                   rounded-[12px]
                   bg-[#FF7817]
-                  text-[14px]
+                  text-[15px]
                   font-bold
                   text-white
                   transition
-                  hover:opacity-90
+                  hover:bg-[#e96b0d]
                 "
               >
                 نشر الرحلة
               </button>
-
 
               {/* إلغاء */}
 
@@ -670,15 +513,10 @@ function AddTrip() {
               >
                 إلغاء
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       </main>
-
     </div>
   );
 }

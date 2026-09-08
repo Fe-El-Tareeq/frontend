@@ -111,16 +111,17 @@ function RegisterStep2() {
 </button>
 
         {/* Login */}
-        <div className="mt-[25px] text-center text-[14px] text-text-secondary">
-          <span>لديك حساب بالفعل؟ </span>
-         <button
-          type="button"
-           onClick={() => navigate("/")}
-           className="..."
-     >
-            تسجيل الدخول
-         </button>
-        </div>
+         <div className="mt-[25px] text-center text-[14px] text-text-secondary">
+         <span>لديك حساب بالفعل؟ </span>
+
+          <button
+           type="button"
+           onClick={() => navigate("/welcome")}
+           className="font-bold text-accent hover:text-accent-hover"
+            >
+        تسجيل الدخول
+             </button>
+          </div>
 
       </div>
     </main>

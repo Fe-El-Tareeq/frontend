@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
 
 function Trips() {
   const navigate = useNavigate();
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div
@@ -14,161 +11,16 @@ function Trips() {
     >
 
       {/* =====================================================
-          HEADER
+          HEADER COMPONENT
       ===================================================== */}
-      <header
-        className="
-          fixed right-0 top-0 z-30
-          flex h-[82px] w-full
-          items-center justify-between
-          bg-white
-          px-5
-          shadow-sm
-          lg:pr-[280px]
-        "
-      >
 
-        {/* Menu */}
-        <button
-          type="button"
-          onClick={() => setSidebarOpen(true)}
-          className="
-            flex h-[42px] w-[42px]
-            items-center justify-center
-            text-[#263F61]
-          "
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          >
-            <line x1="4" y1="7" x2="20" y2="7" />
-            <line x1="4" y1="12" x2="20" y2="12" />
-            <line x1="4" y1="17" x2="20" y2="17" />
-          </svg>
-        </button>
+      <Header />
 
 
-        {/* Location */}
-        <button
-          type="button"
-          className="
-            hidden sm:flex
-            h-[42px] w-[42px]
-            items-center justify-center
-            rounded-[12px]
-            border border-[#E1E5EA]
-            bg-[#FAFBFC]
-            text-[#FF7817]
-          "
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
-            <circle cx="12" cy="10" r="2.5" />
-          </svg>
-        </button>
-
-
-        {/* Notification */}
-        <button
-          type="button"
-          className="hidden text-[#5C6675] sm:block"
-        >
-          <svg
-            width="23"
-            height="23"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
-            <path d="M10 21h4" />
-          </svg>
-        </button>
-
-
-        {/* Balance */}
-        <div
-          className="
-            hidden sm:flex
-            items-center gap-2
-            rounded-full
-            bg-[#FFF1E8]
-            px-4 py-2
-            text-[#FF7817]
-          "
-        >
-          <svg
-            width="19"
-            height="19"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" />
-          </svg>
-
-          {/* Backend */}
-          <span className="font-bold">
-            47
-          </span>
-        </div>
-
-
-        {/* User */}
-        <div
-          className="
-            flex h-[42px] w-[42px]
-            items-center justify-center
-            rounded-full
-            bg-[#234A7D]
-            text-[13px]
-            font-bold
-            text-white
-          "
-        >
-          هـم
-        </div>
-
-      </header>
-
-
-      
-    {/* =====================================================
-                         SIDEBAR
-     ===================================================== */}
-
-       {sidebarOpen && (
-        <>
-         {/* Overlay */}
-         <div
-          onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 z-40 bg-black/40"
-           />
-
-           {/* Sidebar */}
-            <Sidebar
-            onClose={() => setSidebarOpen(false)}
-            />
-            </>
-           )}
       {/* =====================================================
           MAIN CONTENT
       ===================================================== */}
+
       <main
         className="
           min-h-screen
@@ -190,6 +42,7 @@ function Trips() {
           {/* =================================================
               PAGE TITLE
           ================================================= */}
+
           <section className="mb-5">
 
             <div className="flex items-center justify-between">
@@ -220,6 +73,7 @@ function Trips() {
 
 
               {/* إضافة رحلة */}
+
               <button
                 type="button"
                 onClick={() => navigate("/add-trip")}
@@ -235,6 +89,8 @@ function Trips() {
                   font-bold
                   text-white
                   shadow-sm
+                  transition
+                  hover:bg-[#e96b0f]
                 "
               >
                 <span className="text-[20px]">
@@ -252,6 +108,7 @@ function Trips() {
           {/* =================================================
               SEARCH & FILTER
           ================================================= */}
+
           <section
             className="
               mb-8
@@ -264,6 +121,7 @@ function Trips() {
           >
 
             {/* البحث */}
+
             <div className="mb-3">
 
               <div
@@ -316,6 +174,7 @@ function Trips() {
 
 
             {/* المدينة */}
+
             <div
               className="
                 mb-3
@@ -342,6 +201,7 @@ function Trips() {
                 "
                 defaultValue=""
               >
+
                 <option value="" disabled>
                   كل المدن
                 </option>
@@ -365,12 +225,14 @@ function Trips() {
                 <option value="rafah">
                   رفح
                 </option>
+
               </select>
 
             </div>
 
 
             {/* الترتيب */}
+
             <div
               className="
                 flex
@@ -424,6 +286,7 @@ function Trips() {
 
 
             {/* ================= TRIP 1 ================= */}
+
             <div
               className="
                 rounded-[20px]
@@ -437,6 +300,7 @@ function Trips() {
               <div className="flex items-start justify-between">
 
                 {/* User */}
+
                 <div className="flex items-center gap-3">
 
                   <div
@@ -468,6 +332,7 @@ function Trips() {
 
 
                 {/* Rating */}
+
                 <div className="text-[12px] text-[#687386]">
                   ⭐ 4.9
                 </div>
@@ -476,6 +341,7 @@ function Trips() {
 
 
               {/* Route */}
+
               <div
                 className="
                   my-4
@@ -519,6 +385,7 @@ function Trips() {
 
 
               {/* Date */}
+
               <div
                 className="
                   mb-3
@@ -530,6 +397,7 @@ function Trips() {
                   text-[#7B8494]
                 "
               >
+
                 <span>
                   📅 ٢٣ يوليو ٢٠٢٦
                 </span>
@@ -537,10 +405,12 @@ function Trips() {
                 <span>
                   🕐 ١٠:٣٠ ص
                 </span>
+
               </div>
 
 
               {/* Note */}
+
               <div
                 className="
                   mb-3
@@ -560,6 +430,7 @@ function Trips() {
 
 
               {/* Button */}
+
               <button
                 type="button"
                 className="
@@ -579,6 +450,7 @@ function Trips() {
 
 
             {/* ================= TRIP 2 ================= */}
+
             <div
               className="
                 rounded-[20px]
@@ -637,11 +509,13 @@ function Trips() {
               >
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#234A7D]" />
 
                   <span className="text-[14px] text-[#234A7D]">
                     خان يونس
                   </span>
+
                 </div>
 
                 <div
@@ -655,11 +529,13 @@ function Trips() {
                 />
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#FF7817]" />
 
                   <span className="text-[14px] text-[#FF7817]">
                     غزة - الشجاعية
                   </span>
+
                 </div>
 
               </div>
@@ -675,8 +551,15 @@ function Trips() {
                   text-[#7B8494]
                 "
               >
-                <span>📅 ٢٤ يوليو ٢٠٢٦</span>
-                <span>🕐 ٢:٠٠ م</span>
+
+                <span>
+                  📅 ٢٤ يوليو ٢٠٢٦
+                </span>
+
+                <span>
+                  🕐 ٢:٠٠ م
+                </span>
+
               </div>
 
 
@@ -699,6 +582,7 @@ function Trips() {
 
 
             {/* ================= TRIP 3 ================= */}
+
             <div
               className="
                 rounded-[20px]
@@ -757,11 +641,13 @@ function Trips() {
               >
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#234A7D]" />
 
                   <span className="text-[14px] text-[#234A7D]">
                     دير البلح
                   </span>
+
                 </div>
 
                 <div
@@ -775,11 +661,13 @@ function Trips() {
                 />
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#FF7817]" />
 
                   <span className="text-[14px] text-[#FF7817]">
                     بيت لاهيا
                   </span>
+
                 </div>
 
               </div>
@@ -795,8 +683,15 @@ function Trips() {
                   text-[#7B8494]
                 "
               >
-                <span>📅 ٢٥ يوليو ٢٠٢٦</span>
-                <span>🕐 ٩:٠٠ ص</span>
+
+                <span>
+                  📅 ٢٥ يوليو ٢٠٢٦
+                </span>
+
+                <span>
+                  🕐 ٩:٠٠ ص
+                </span>
+
               </div>
 
 
@@ -837,6 +732,7 @@ function Trips() {
 
 
             {/* ================= TRIP 4 ================= */}
+
             <div
               className="
                 rounded-[20px]
@@ -895,11 +791,13 @@ function Trips() {
               >
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#234A7D]" />
 
                   <span className="text-[14px] text-[#234A7D]">
                     غزة - التفاح
                   </span>
+
                 </div>
 
                 <div
@@ -913,11 +811,13 @@ function Trips() {
                 />
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#FF7817]" />
 
                   <span className="text-[14px] text-[#FF7817]">
                     خان يونس
                   </span>
+
                 </div>
 
               </div>
@@ -933,8 +833,15 @@ function Trips() {
                   text-[#7B8494]
                 "
               >
-                <span>📅 ٢٦ يوليو ٢٠٢٦</span>
-                <span>🕐 ١١:٣٠ ص</span>
+
+                <span>
+                  📅 ٢٦ يوليو ٢٠٢٦
+                </span>
+
+                <span>
+                  🕐 ١١:٣٠ ص
+                </span>
+
               </div>
 
 
@@ -957,6 +864,7 @@ function Trips() {
 
 
             {/* ================= TRIP 5 ================= */}
+
             <div
               className="
                 rounded-[20px]
@@ -1015,11 +923,13 @@ function Trips() {
               >
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#234A7D]" />
 
                   <span className="text-[14px] text-[#234A7D]">
                     رفح
                   </span>
+
                 </div>
 
                 <div
@@ -1033,11 +943,13 @@ function Trips() {
                 />
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#FF7817]" />
 
                   <span className="text-[14px] text-[#FF7817]">
                     غزة - النصر
                   </span>
+
                 </div>
 
               </div>
@@ -1053,8 +965,15 @@ function Trips() {
                   text-[#7B8494]
                 "
               >
-                <span>📅 ٢٧ يوليو ٢٠٢٦</span>
-                <span>🕐 ٨:٠٠ ص</span>
+
+                <span>
+                  📅 ٢٧ يوليو ٢٠٢٦
+                </span>
+
+                <span>
+                  🕐 ٨:٠٠ ص
+                </span>
+
               </div>
 
 
@@ -1095,6 +1014,7 @@ function Trips() {
 
 
             {/* ================= TRIP 6 ================= */}
+
             <div
               className="
                 rounded-[20px]
@@ -1153,11 +1073,13 @@ function Trips() {
               >
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#234A7D]" />
 
                   <span className="text-[14px] text-[#234A7D]">
                     بيت حانون
                   </span>
+
                 </div>
 
                 <div
@@ -1171,11 +1093,13 @@ function Trips() {
                 />
 
                 <div className="flex items-center gap-3">
+
                   <div className="h-[8px] w-[8px] rounded-full bg-[#FF7817]" />
 
                   <span className="text-[14px] text-[#FF7817]">
                     دير البلح
                   </span>
+
                 </div>
 
               </div>
@@ -1191,8 +1115,15 @@ function Trips() {
                   text-[#7B8494]
                 "
               >
-                <span>📅 ٢٨ يوليو ٢٠٢٦</span>
-                <span>🕐 ٣:٠٠ م</span>
+
+                <span>
+                  📅 ٢٨ يوليو ٢٠٢٦
+                </span>
+
+                <span>
+                  🕐 ٣:٠٠ م
+                </span>
+
               </div>
 
 
