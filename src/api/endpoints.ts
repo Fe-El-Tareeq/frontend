@@ -1,6 +1,27 @@
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "https://fe-el-tareeq-api-staging.onrender.com";
+const FALLBACK_API_BASE_URL = "https://fe-el-tareeq-api-staging.onrender.com";
+
+function normalizeApiBaseUrl(value: string) {
+  const trimmed = value.trim().replace(/\/+$/, "");
+  return trimmed.replace(/\/api\/v1$/, "");
+}
+
+function resolveApiBaseUrl() {
+  const configured = import.meta.env.VITE_API_BASE_URL;
+
+  if (configured) {
+    return normalizeApiBaseUrl(configured);
+  }
+
+  if (import.meta.env.PROD) {
+    throw new Error(
+      "VITE_API_BASE_URL must be set to the backend origin for production builds.",
+    );
+  }
+
+  return FALLBACK_API_BASE_URL;
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
 
 export const ENDPOINTS = {
   AUTH: {
