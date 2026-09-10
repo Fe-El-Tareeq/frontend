@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ChevronRight, Zap, Package } from "lucide-react";
@@ -27,6 +27,11 @@ const createErrandSchema = z.object({
 
 type CreateErrandFormData = z.infer<typeof createErrandSchema>;
 
+const createClientRequestKey = () =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : "req-" + Math.random().toString(36).substring(2, 15);
+
 export default function CreateErrand() {
   const navigate = useNavigate();
   const { isAuthenticated, profile } = useAuth();
@@ -39,7 +44,7 @@ export default function CreateErrand() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<CreateErrandFormData>({
     resolver: zodResolver(createErrandSchema),
@@ -50,7 +55,7 @@ export default function CreateErrand() {
     },
   });
 
-  const descriptionValue = watch("description") || "";
+  const descriptionValue = useWatch({ control, name: "description" }) || "";
 
   const onSubmit = async (data: CreateErrandFormData) => {
     if (!isAuthenticated) {
@@ -67,10 +72,7 @@ export default function CreateErrand() {
 
     setErrorMessage(null);
     try {
-      const clientRequestKey =
-        typeof crypto !== "undefined" && crypto.randomUUID
-          ? crypto.randomUUID()
-          : "req-" + Math.random().toString(36).substring(2, 15);
+      const clientRequestKey = createClientRequestKey();
 
       const defaultCategoryId = "60a32850-bd3f-444a-84b4-c750abf6ecb6";
 

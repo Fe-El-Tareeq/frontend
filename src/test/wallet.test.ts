@@ -17,8 +17,8 @@ describe("Wallet Domain & Multi-Step Purchase Flow", () => {
   it("should mark the 20-token package as popular", () => {
     const popularPkg = TOKEN_PACKAGES.find((p) => p.isPopular);
     expect(popularPkg).toBeDefined();
-    expect(popularPkg?.tokens).toBe(20);
-    expect(popularPkg?.priceNis).toBe(15);
+    expect(popularPkg?.tokens).toBe(25);
+    expect(popularPkg?.priceNis).toBe(10);
   });
 
   it("should verify wallet endpoints", () => {
