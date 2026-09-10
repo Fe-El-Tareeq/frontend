@@ -54,6 +54,10 @@ const PaymentSuccessPage = lazy(
 const ProfilePage = lazy(() => import("./pages/profile/ProfilePage"));
 const EditProfile = lazy(() => import("./pages/profile/EditProfile"));
 const SettingsPage = lazy(() => import("./pages/profile/SettingsPage"));
+const SupportPage = lazy(() => import("./pages/settings/SupportPage"));
+const ReportIssuePage = lazy(
+  () => import("./pages/settings/ReportIssuePage"),
+);
 const ChangePasswordPage = lazy(
   () => import("./pages/profile/ChangePasswordPage"),
 );
@@ -385,6 +389,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/support"
+            element={
+              <ProtectedRoute>
+                <SupportPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/report-issue"
+            element={
+              <ProtectedRoute>
+                <ReportIssuePage />
               </ProtectedRoute>
             }
           />
