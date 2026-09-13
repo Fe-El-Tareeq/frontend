@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist", "node_modules"]),
+  globalIgnores(["coverage", "dist", "node_modules"]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
@@ -26,6 +26,16 @@ export default defineConfig([
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-object-type": "off",
       "react-hooks/set-state-in-effect": "off",
+    },
+  },
+  {
+    files: [
+      "src/components/ui/card/Card.tsx",
+      "src/components/ui/form/Form.tsx",
+      "src/pages/wallet/BuyTokensPackages.tsx",
+    ],
+    rules: {
+      "react-refresh/only-export-components": "off",
     },
   },
 ]);

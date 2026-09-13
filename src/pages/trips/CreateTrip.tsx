@@ -8,6 +8,11 @@ import { useLocations } from "../../hooks/useLocations";
 import { getApiErrorMessage } from "../../utils/apiError";
 import type { WeightClass } from "../../types/errands";
 
+const createClientRequestKey = () =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : "req-" + Math.random().toString(36).substring(2, 15);
+
 export default function CreateTrip() {
   const navigate = useNavigate();
   const { createTrip, isCreating } = useTrips();
@@ -16,7 +21,7 @@ export default function CreateTrip() {
   const [destinationKeyword, setDestinationKeyword] = useState("");
   const [destinationNeighborhoodId, setDestinationNeighborhoodId] =
     useState("");
-  const [departureDate, setDepartureDate] = useState(
+  const [departureDate, setDepartureDate] = useState(() =>
     new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString().split("T")[0],
   );
   const [departureTime, setDepartureTime] = useState("10:00");
@@ -30,10 +35,7 @@ export default function CreateTrip() {
     setErrorMessage(null);
 
     try {
-      const clientRequestKey =
-        typeof crypto !== "undefined" && crypto.randomUUID
-          ? crypto.randomUUID()
-          : "req-" + Math.random().toString(36).substring(2, 15);
+      const clientRequestKey = createClientRequestKey();
 
       const targetNeighborhoodId =
         destinationNeighborhoodId ||
