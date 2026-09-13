@@ -87,6 +87,7 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Voice note URL is required.": "رابط التسجيل الصوتي مطلوب.",
   "Voice note duration must be an integer.": "مدة التسجيل الصوتي يجب أن تكون رقماً صحيحاً.",
   "Voice note duration cannot be negative.": "مدة التسجيل الصوتي لا يمكن أن تكون سالبة.",
+  "Voice note duration must not be negative.": "مدة التسجيل الصوتي لا يمكن أن تكون سالبة.",
   "Voice note duration must not exceed 30 seconds.": "يجب ألا تتجاوز مدة التسجيل الصوتي 30 ثانية.",
   "Since must be a valid ISO datetime with timezone.": "تاريخ المزامنة غير صالح.",
 
@@ -110,7 +111,6 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Date must be in the future.": "يجب أن يكون التاريخ في المستقبل.",
   "Voice note URL must be a valid URL.": "رابط التسجيل الصوتي غير صالح.",
   "Voice note URL must not exceed 2048 characters.": "رابط التسجيل الصوتي طويل جداً.",
-  "Voice note duration must not be negative.": "مدة التسجيل الصوتي لا يمكن أن تكون سالبة.",
   "Category ID must be a valid UUID.": "معرف التصنيف غير صالح.",
   "Pickup neighborhood ID must be a valid UUID.": "معرف حي الاستلام غير صالح.",
   "Title must be at least 3 characters.": "يجب ألا يقل عنوان الطلب عن 3 أحرف.",
@@ -202,6 +202,16 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Insufficient token balance": "رصيد التوكنز غير كافٍ لإتمام العملية.",
   "Idempotency key is required for refunds": "مفتاح العملية مطلوب للاسترداد.",
   "Take must not exceed 100.": "العدد المطلوب يجب ألا يتجاوز 100.",
+
+  // Standard generic validation rules
+  "Required": "هذا الحقل مطلوب.",
+  "Invalid input": "القيمة المدخلة غير صالحة.",
+  "Invalid uuid": "المعرف غير صالح.",
+  "Invalid email": "البريد الإلكتروني غير صالح.",
+  "Invalid phone number": "رقم الهاتف غير صالح.",
+  "Expected number, received string": "القيمة يجب أن تكون رقماً.",
+  "Expected string, received number": "القيمة يجب أن تكون نصاً.",
+  "Expected boolean, received string": "القيمة غير صالحة.",
 };
 
 export const SUCCESS_TRANSLATIONS: Record<string, string> = {
@@ -228,6 +238,33 @@ export const SUCCESS_TRANSLATIONS: Record<string, string> = {
   "Payment completed successfully": "تمت عملية الدفع بنجاح.",
   "Invoice created successfully": "تم إنشاء فاتورة الدفع بنجاح.",
   "Validation passed": "تم التحقق من صحة البيانات بنجاح.",
+  "Proposal created successfully": "تم إرسال العرض بنجاح.",
+  "Proposal accepted successfully": "تم قبول العرض بنجاح.",
+  "Proposal rejected successfully": "تم رفض العرض بنجاح.",
+  "Support ticket created successfully": "تم إرسال تذكرة الدعم الفني بنجاح.",
+  "Report submitted successfully": "تم إرسال البلاغ بنجاح.",
+  "Account deactivated successfully": "تم تعطيل الحساب بنجاح.",
+};
+
+const ACTION_MAP: Record<string, string> = {
+  "accept this assignment": "قبول هذا التعيين",
+  "mark this assignment as picked up": "تأكيد استلام هذا التعيين",
+  "start delivery": "بدء توصيل هذا التعيين",
+  "complete this assignment": "إكمال هذا التعيين",
+  "cancel this assignment": "إلغاء هذا التعيين",
+  "modify this errand": "تعديل هذا الطلب",
+  "cancel this errand": "إلغاء هذا الطلب",
+  "manage this trip": "إدارة هذه الرحلة",
+  "cancel this trip": "إلغاء هذه الرحلة",
+};
+
+const LABEL_MAP: Record<string, string> = {
+  Errand: "الطلب",
+  Trip: "الرحلة",
+  Assignment: "التعيين",
+  errand: "الطلب",
+  trip: "الرحلة",
+  assignment: "التعيين",
 };
 
 export const DYNAMIC_PATTERN_TRANSLATIONS: Array<{
@@ -240,19 +277,33 @@ export const DYNAMIC_PATTERN_TRANSLATIONS: Array<{
   },
   {
     pattern: /^(.*) must have active origin and destination neighborhoods\.$/i,
-    replace: (_, label) => `يجب أن يحتوي ${label} على حي انطلاق ووجهة نشطين.`,
+    replace: (_, label) => {
+      const translatedLabel = LABEL_MAP[label.trim()] || label;
+      return `يجب أن يحتوي ${translatedLabel} على حي انطلاق ووجهة نشطين.`;
+    },
   },
   {
     pattern: /^(.*) neighborhoods are not compatible for assignment\.$/i,
-    replace: (_, label) => `أحياء ${label} غير متوافقة للتعيين.`,
+    replace: (_, label) => {
+      const translatedLabel = LABEL_MAP[label.trim()] || label;
+      return `أحياء ${translatedLabel} غير متوافقة للتعيين.`;
+    },
   },
   {
     pattern: /^Only the traveler can (.*)\.$/i,
-    replace: (_, action) => `فقط المسافر يمكنه ${action}.`,
+    replace: (_, action) => {
+      const trimmedAction = action.trim();
+      const translatedAction = ACTION_MAP[trimmedAction] || trimmedAction;
+      return `فقط المسافر يمكنه ${translatedAction}.`;
+    },
   },
   {
     pattern: /^Only the requester can (.*)\.$/i,
-    replace: (_, action) => `فقط صاحب الطلب يمكنه ${action}.`,
+    replace: (_, action) => {
+      const trimmedAction = action.trim();
+      const translatedAction = ACTION_MAP[trimmedAction] || trimmedAction;
+      return `فقط صاحب الطلب يمكنه ${translatedAction}.`;
+    },
   },
   {
     pattern: /^Limit must not exceed (\d+)\.$/i,
@@ -264,7 +315,10 @@ export const DYNAMIC_PATTERN_TRANSLATIONS: Array<{
   },
   {
     pattern: /^(.*) must have active origin and pickup\/destination neighborhoods before matching\.$/i,
-    replace: (_, label) => `يجب أن يحتوي ${label} على أحياء انطلاق واستلام/وجهة نشطة قبل إجراء المطابقة.`,
+    replace: (_, label) => {
+      const translatedLabel = LABEL_MAP[label.trim()] || label;
+      return `يجب أن يحتوي ${translatedLabel} على أحياء انطلاق واستلام/وجهة نشطة قبل إجراء المطابقة.`;
+    },
   },
   {
     pattern: /^Invoice is (.*)\.$/i,
@@ -279,7 +333,23 @@ export const DYNAMIC_PATTERN_TRANSLATIONS: Array<{
     replace: (_, days) => `لا يمكن أن يكون موعد المغادرة بعد أكثر من ${days} أيام من الآن.`,
   },
   {
-    pattern: /^(Could not upload profile image|Could not delete profile image)\. Storage service is unavailable\.$/i,
-    replace: () => `تعذر تعديل الصورة الشخصية، خدمة التخزين غير متوفرة حالياً.`,
+    pattern: /^(.*) Storage service is unavailable\.$/i,
+    replace: () => `تعذر حفظ أو تعديل الملف، خدمة التخزين غير متوفرة حالياً.`,
+  },
+  {
+    pattern: /^String must contain at least (\d+) character\(s\)$/i,
+    replace: (_, min) => `يجب إدخال ${min} أحرف على الأقل.`,
+  },
+  {
+    pattern: /^String must contain at most (\d+) character\(s\)$/i,
+    replace: (_, max) => `يجب ألا يتجاوز النص ${max} حرفاً.`,
+  },
+  {
+    pattern: /^Number must be greater than (\d+)$/i,
+    replace: (_, val) => `يجب أن تكون القيمة أكبر من ${val}.`,
+  },
+  {
+    pattern: /^Number must be greater than or equal to (\d+)$/i,
+    replace: (_, val) => `يجب أن تكون القيمة أكبر من أو تساوي ${val}.`,
   },
 ];

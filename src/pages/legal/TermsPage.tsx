@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronRight,
@@ -19,20 +19,65 @@ import {
   RefreshCw,
   Mail,
   Edit3,
+  Loader2,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { legalApi } from "../../api/legal";
+import { getApiErrorMessage } from "../../utils/apiError";
+import type { LegalVersionMetadata } from "../../types/legal";
 
 export default function TermsPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"TERMS" | "PRIVACY">("TERMS");
   const [isAgreed, setIsAgreed] = useState(false);
+  const [legalMetadata, setLegalMetadata] = useState<LegalVersionMetadata | null>(
+    null,
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
-  const handleAgreeAndBack = () => {
-    if (isAgreed) {
-      navigate(-1);
+  useEffect(() => {
+    let isMounted = true;
+    legalApi
+      .getCurrentLegal()
+      .then((res) => {
+        if (isMounted && res.data) {
+          setLegalMetadata(res.data);
+        }
+      })
+      .catch(() => {
+        // Fallback to static text
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleAgreeAndBack = async () => {
+    if (!isAgreed || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(null);
+
+    try {
+      const version = legalMetadata?.version || "1.2";
+      await legalApi.acceptLegal({ version });
+      setSubmitSuccess("تم حفظ موافقتك على الشروط بنجاح");
+      setTimeout(() => {
+        navigate(-1);
+      }, 700);
+    } catch (err) {
+      setSubmitError(getApiErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const currentVersion = legalMetadata?.version || "1.2";
+  const effectiveDate = legalMetadata?.effectiveDate || "1 يوليو 2026";
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
@@ -46,7 +91,7 @@ export default function TermsPage() {
               الشروط القانونية والخصوصية
             </h1>
             <p className="text-[11px] text-text-secondary mt-0.5">
-              آخر تحديث: 1 يوليو 2026 • الإصدار 1.2
+              آخر تحديث: {effectiveDate} • الإصدار {currentVersion}
             </p>
           </div>
           <button
@@ -498,6 +543,18 @@ export default function TermsPage() {
             </div>
           </div>
 
+          {submitError && (
+            <div className="rounded-2xl bg-rose-50 p-3 text-xs font-bold text-rose-800 border border-rose-200">
+              {submitError}
+            </div>
+          )}
+
+          {submitSuccess && (
+            <div className="rounded-2xl bg-emerald-50 p-3 text-xs font-bold text-emerald-800 border border-emerald-200">
+              {submitSuccess}
+            </div>
+          )}
+
           {/* Radio / Checkbox Click Area */}
           <button
             type="button"
@@ -529,14 +586,19 @@ export default function TermsPage() {
             <button
               type="button"
               onClick={handleAgreeAndBack}
-              disabled={!isAgreed}
+              disabled={!isAgreed || isSubmitting}
               className={`flex-1 flex h-12 items-center justify-center gap-2 rounded-2xl text-xs font-black transition-all cursor-pointer ${
-                isAgreed
+                isAgreed && !isSubmitting
                   ? "bg-[#059669] text-white shadow-md hover:bg-emerald-700 active:scale-98"
                   : "bg-slate-100 text-slate-400 cursor-not-allowed"
               }`}
             >
-              {isAgreed ? (
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>جاري الحفظ...</span>
+                </>
+              ) : isAgreed ? (
                 <>
                   <Check className="h-4 w-4 stroke-[3]" />
                   <span>تم الموافقة — العودة للإعدادات</span>

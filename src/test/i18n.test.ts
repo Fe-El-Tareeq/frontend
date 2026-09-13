@@ -28,7 +28,7 @@ describe("i18n Translation Catalog & API Error Integration", () => {
     expect(translateApiMessage("Trip not found.")).toBe("الرحلة غير موجودة.");
   });
 
-  it("translates dynamic messages with regex capture groups", () => {
+  it("translates dynamic messages with regex capture groups and action/label mapping", () => {
     expect(
       translateApiMessage(
         "Departure time must be at least 15 minutes from now.",
@@ -49,7 +49,23 @@ describe("i18n Translation Catalog & API Error Integration", () => {
 
     expect(
       translateApiMessage("Only the traveler can accept this assignment."),
-    ).toBe("فقط المسافر يمكنه accept this assignment.");
+    ).toBe("فقط المسافر يمكنه قبول هذا التعيين.");
+
+    expect(
+      translateApiMessage("Only the requester can cancel this errand."),
+    ).toBe("فقط صاحب الطلب يمكنه إلغاء هذا الطلب.");
+
+    expect(
+      translateApiMessage("Errand must have active origin and destination neighborhoods."),
+    ).toBe("يجب أن يحتوي الطلب على حي انطلاق ووجهة نشطين.");
+
+    expect(
+      translateApiMessage("Trip neighborhoods are not compatible for assignment."),
+    ).toBe("أحياء الرحلة غير متوافقة للتعيين.");
+
+    expect(
+      translateApiMessage("String must contain at least 8 character(s)"),
+    ).toBe("يجب إدخال 8 أحرف على الأقل.");
   });
 
   it("translates success messages correctly", () => {
@@ -59,6 +75,9 @@ describe("i18n Translation Catalog & API Error Integration", () => {
     expect(
       translateSuccessMessage("If an account exists, a reset code has been sent."),
     ).toBe("إذا كان الحساب مسجلاً، تم إرسال رمز استعادة كلمة المرور.");
+    expect(
+      translateSuccessMessage("Proposal accepted successfully"),
+    ).toBe("تم قبول العرض بنجاح.");
   });
 
   it("integrates with getApiErrorMessage seamlessly", () => {
@@ -80,3 +99,4 @@ describe("i18n Translation Catalog & API Error Integration", () => {
     expect(getApiErrorMessage(mockAxiosError)).toBe("رقم الهاتف قصير جداً.");
   });
 });
+

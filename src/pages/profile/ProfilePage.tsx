@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronRight,
-  ShieldCheck,
+  ChevronLeft,
   Edit2,
   Lock,
   LogOut,
@@ -11,10 +11,8 @@ import {
   Car,
   Package,
   Plus,
-  ArrowLeft,
-  Calendar,
-  Clock,
-  Coins,
+  Zap,
+  Star,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -34,7 +32,10 @@ export default function ProfilePage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeTab, setActiveTab] = useState<"trips" | "errands">("trips");
-  const [uploadStatus, setUploadStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const userInitials = profile?.fullName
     ? profile.fullName
@@ -62,10 +63,16 @@ export default function ProfilePage() {
       setUploadStatus(null);
       try {
         await uploadProfileImage(file);
-        setUploadStatus({ type: "success", message: "تم تحديث الصورة الشخصية بنجاح!" });
+        setUploadStatus({
+          type: "success",
+          message: "تم تحديث الصورة الشخصية بنجاح!",
+        });
         setTimeout(() => setUploadStatus(null), 3000);
       } catch (err: unknown) {
-        const msg = getApiErrorMessage(err, "تعذر تحديث الصورة الشخصية، يرجى المحاولة لاحقاً.");
+        const msg = getApiErrorMessage(
+          err,
+          "تعذر تحديث الصورة الشخصية، يرجى المحاولة لاحقاً.",
+        );
         setUploadStatus({ type: "error", message: msg });
       }
     }
@@ -83,21 +90,19 @@ export default function ProfilePage() {
       <div className="px-4 pt-4 space-y-4">
         {/* Title */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
+          <div className="text-right">
             <h1 className="text-xl font-black text-[#123A68]">الملف الشخصي</h1>
+            <p className="text-xs text-text-secondary mt-0.5">
+              بيانات حسابك ونشاطك على المنصة
+            </p>
           </div>
           <button
-            onClick={() => navigate("/profile/edit")}
-            className="flex items-center gap-1 text-xs font-bold text-[#F36F21] hover:text-[#E05E12] cursor-pointer"
+            type="button"
+            onClick={() => navigate(-1)}
+            aria-label="الرجوع للخلف"
+            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
           >
-            <Edit2 className="h-3.5 w-3.5" />
-            <span>تعديل</span>
+            <ChevronRight className="h-6 w-6" />
           </button>
         </div>
 
@@ -114,8 +119,11 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* Profile Hero Card with Avatar & Name */}
-        <div className="rounded-3xl bg-white p-5 border border-border shadow-xs text-center space-y-3">
+        {/* ========================================================================= */}
+        {/* CARD 1: Profile Main Hero & Personal Details Info */}
+        {/* ========================================================================= */}
+        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-2xs text-center space-y-4">
+          {/* Avatar with Edit Badge */}
           <div className="relative mx-auto w-20">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#123A68] text-xl font-black text-white shadow-md mx-auto overflow-hidden">
               {isUploadingProfileImage ? (
@@ -153,240 +161,240 @@ export default function ProfilePage() {
             />
           </div>
 
+          {/* User Name & Location Subtitle */}
           <div className="space-y-1">
-            <h2 className="text-base font-black text-[#123A68]">
-              {profile?.fullName || "المستخدم"}
+            <h2 className="text-lg font-black text-[#123A68]">
+              {profile?.fullName || "هديل محمد"}
             </h2>
             <p className="text-xs text-text-secondary">
               {profile?.neighborhood?.name
-                ? `${profile.neighborhood.governorate || "خان يونس"} - ${profile.neighborhood.name}`
-                : "محافظة خان يونس - الحي الياباني"}
+                ? `${profile.neighborhood.governorate || "غزة"} - ${profile.neighborhood.name}`
+                : "غزة - الرمال"}
             </p>
-            <div className="flex items-center justify-center gap-2 pt-1 text-[11px] font-bold text-text-muted">
+            {/* 3 Stats Row */}
+            <div className="flex items-center justify-center gap-3 pt-1 text-xs font-bold text-slate-500">
               <span>{errandsCount} طلب</span>
-              <span>•</span>
+              <span className="text-slate-300">|</span>
               <span>{tripsCount} رحلة</span>
-              <span>•</span>
-              <span className="text-amber-500">⭐ {trustScore}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Personal Details Readonly Card with Edit trigger */}
-        <div className="rounded-3xl bg-white p-4.5 border border-border shadow-xs space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-            <h3 className="text-xs font-black text-[#123A68]">البيانات الشخصية</h3>
-            <button
-              type="button"
-              onClick={() => navigate("/profile/edit")}
-              className="flex items-center gap-1 text-[11px] font-bold text-[#F36F21] hover:underline cursor-pointer"
-            >
-              <Edit2 className="h-3 w-3" />
-              <span>تعديل</span>
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div>
-              <span className="text-[10.5px] text-text-muted block">الاسم الكامل</span>
-              <span className="font-bold text-primary block mt-0.5 truncate">
-                {profile?.fullName || "غير محدد"}
-              </span>
-            </div>
-
-            <div>
-              <span className="text-[10.5px] text-text-muted block">رقم الهاتف</span>
-              <span className="font-bold text-primary block mt-0.5 dir-ltr text-right truncate">
-                {profile?.phone || "059-XXXXXXX"}
-              </span>
-            </div>
-
-            <div>
-              <span className="text-[10.5px] text-text-muted block">المحافظة</span>
-              <span className="font-bold text-primary block mt-0.5 truncate">
-                {profile?.neighborhood?.governorate || "خان يونس"}
-              </span>
-            </div>
-
-            <div>
-              <span className="text-[10.5px] text-text-muted block">الحي</span>
-              <span className="font-bold text-primary block mt-0.5 truncate">
-                {profile?.neighborhood?.name || "الحي الياباني"}
+              <span className="text-slate-300">|</span>
+              <span className="flex items-center gap-1">
+                <span>تقييم {trustScore}</span>
+                <span className="text-amber-500">⭐</span>
               </span>
             </div>
           </div>
-        </div>
 
-        {/* 4-Stat Grid */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Stat 1: Tokens */}
-          <div
-            onClick={() => navigate("/wallet")}
-            className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-1 cursor-pointer hover:border-[#123A68]/40 transition-all group"
+          {/* Edit Profile Action Button */}
+          <button
+            type="button"
+            onClick={() => navigate("/profile/edit")}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl bg-[#F0F4F8] text-xs font-black text-[#123A68] hover:bg-[#E2E8F0] active:scale-98 transition-all cursor-pointer border border-slate-200/60"
           >
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] text-text-muted">رصيد التوكنز</span>
-              <Coins className="h-4 w-4 text-[#F36F21]" />
-            </div>
-            <div className="text-xl font-black text-[#123A68]">
-              {tokenBalance ?? 50}{" "}
-              <span className="text-xs font-normal text-text-muted">توكن</span>
-            </div>
-            <span className="text-[10px] font-bold text-[#F36F21] block group-hover:underline">
-              شحن الرصيد ←
+            <Edit2 className="h-3.5 w-3.5 text-[#123A68]" />
+            <span>تعديل</span>
+          </button>
+
+          {/* 4 Read-only Personal Details Fields */}
+          <div className="space-y-3 pt-1 text-right border-t border-slate-100">
+            <span className="text-xs font-black text-[#123A68] block pt-1">
+              البيانات الشخصية
             </span>
-          </div>
 
-          {/* Stat 2: Trips */}
-          <div
-            onClick={() => setActiveTab("trips")}
-            className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-1 cursor-pointer hover:border-border transition-all"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] text-text-muted">الرحلات</span>
-              <Car className="h-4 w-4 text-blue-600" />
+            <div>
+              <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                الاسم الكامل
+              </label>
+              <div className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 flex items-center text-xs font-bold text-slate-700">
+                {profile?.fullName || "هديل محمد"}
+              </div>
             </div>
-            <div className="text-xl font-black text-[#123A68]">
-              {tripsCount}
-            </div>
-            <span className="text-[10px] text-text-muted block">رحلة منجزة</span>
-          </div>
 
-          {/* Stat 3: Errands */}
-          <div
-            onClick={() => setActiveTab("errands")}
-            className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-1 cursor-pointer hover:border-border transition-all"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] text-text-muted">الطلبات</span>
-              <Package className="h-4 w-4 text-emerald-600" />
+            <div>
+              <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                رقم الهاتف
+              </label>
+              <div className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 flex items-center justify-end text-xs font-mono font-bold text-slate-700 dir-ltr text-right">
+                {profile?.phone || "0599-123-456"}
+              </div>
             </div>
-            <div className="text-xl font-black text-[#123A68]">
-              {errandsCount}
-            </div>
-            <span className="text-[10px] text-text-muted block">طلب موصل</span>
-          </div>
 
-          {/* Stat 4: Rating */}
-          <div className="rounded-3xl bg-white p-4 border border-border shadow-2xs text-right space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] text-text-muted">درجة الثقة</span>
-              <span className="text-amber-500 text-xs">⭐</span>
+            <div>
+              <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                المدينة
+              </label>
+              <div className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 flex items-center text-xs font-bold text-slate-700">
+                {profile?.neighborhood?.governorate || "غزة"}
+              </div>
             </div>
-            <div className="text-xl font-black text-amber-500">
-              {trustScore}
+
+            <div>
+              <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                الحي
+              </label>
+              <div className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 flex items-center text-xs font-bold text-slate-700">
+                {profile?.neighborhood?.name || "الرمال"}
+              </div>
             </div>
-            <span className="text-[10px] text-text-muted block">ممتاز (45 تقييم)</span>
           </div>
         </div>
 
-        {/* Verification Status Card */}
-        <div className="flex items-center justify-between rounded-3xl bg-white p-4 border border-border shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div className="text-right">
-              <h3 className="text-xs font-black text-primary">حساب موثّق</h3>
-              <p className="text-[11px] text-text-muted">
-                تم التحقق من الهوية ورقم الهاتف
-              </p>
-            </div>
-          </div>
-          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10.5px] font-bold text-emerald-700 border border-emerald-200">
-            مؤكد ✓
-          </span>
-        </div>
+        {/* ========================================================================= */}
+        {/* CARD 2: الإحصائيات (2x2 Grid matching Figma) */}
+        {/* ========================================================================= */}
+        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-2xs space-y-3.5 text-right">
+          <h2 className="text-sm font-black text-[#123A68]">الإحصائيات</h2>
 
-        {/* Activity Tabs Switcher */}
-        <div className="space-y-3 pt-2">
-          <div className="flex rounded-2xl bg-slate-200/70 p-1">
-            <button
-              type="button"
+          <div className="grid grid-cols-2 gap-2.5">
+            {/* Top Right: Tokens */}
+            <div
+              onClick={() => navigate("/wallet")}
+              className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200/80 hover:border-orange-300 transition-all cursor-pointer text-center space-y-1"
+            >
+              <Zap className="h-5 w-5 text-[#F36F21] fill-[#F36F21]" />
+              <span className="text-xl font-black text-[#F36F21]">
+                {tokenBalance ?? 47}
+              </span>
+              <span className="text-[10.5px] text-text-muted font-bold">
+                رصيد التوكنز
+              </span>
+            </div>
+
+            {/* Top Left: Trips */}
+            <div
               onClick={() => setActiveTab("trips")}
-              className={`flex-1 rounded-xl py-2 text-xs font-bold transition-all cursor-pointer ${
-                activeTab === "trips"
-                  ? "bg-white text-[#123A68] shadow-xs"
-                  : "text-text-muted hover:text-primary"
-              }`}
+              className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200/80 hover:border-blue-300 transition-all cursor-pointer text-center space-y-1"
             >
-              رحلاتي ({tripsCount})
-            </button>
+              <Car className="h-5 w-5 text-[#123A68]" />
+              <span className="text-xl font-black text-[#123A68]">
+                {tripsCount}
+              </span>
+              <span className="text-[10.5px] text-text-muted font-bold">
+                الرحلات
+              </span>
+            </div>
+
+            {/* Bottom Right: Errands */}
+            <div
+              onClick={() => setActiveTab("errands")}
+              className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200/80 hover:border-emerald-300 transition-all cursor-pointer text-center space-y-1"
+            >
+              <Package className="h-5 w-5 text-[#059669]" />
+              <span className="text-xl font-black text-[#059669]">
+                {errandsCount}
+              </span>
+              <span className="text-[10.5px] text-text-muted font-bold">
+                الطلبات
+              </span>
+            </div>
+
+            {/* Bottom Left: Rating */}
+            <div className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200/80 text-center space-y-1">
+              <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
+              <span className="text-xl font-black text-amber-500">
+                {trustScore}
+              </span>
+              <span className="text-[10.5px] text-text-muted font-bold">
+                التقييم
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* CARD 3: رحلاتي / طلباتي Activity Section */}
+        {/* ========================================================================= */}
+        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-2xs space-y-3.5 text-right">
+          <div className="flex items-center justify-between">
             <button
               type="button"
-              onClick={() => setActiveTab("errands")}
-              className={`flex-1 rounded-xl py-2 text-xs font-bold transition-all cursor-pointer ${
-                activeTab === "errands"
-                  ? "bg-white text-[#123A68] shadow-xs"
-                  : "text-text-muted hover:text-primary"
-              }`}
+              onClick={() =>
+                navigate(activeTab === "trips" ? "/trips" : "/my-errands")
+              }
+              className="flex items-center gap-1 text-xs font-bold text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
             >
-              طلباتي ({errandsCount})
+              <ChevronLeft className="h-4 w-4" />
+              <span>عرض الكل</span>
             </button>
+
+            {/* Segmented Tab Pill */}
+            <div className="flex rounded-2xl bg-[#F1F5F9] p-1 border border-slate-200/60">
+              <button
+                type="button"
+                onClick={() => setActiveTab("errands")}
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                  activeTab === "errands"
+                    ? "bg-white text-[#123A68] shadow-xs"
+                    : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                طلباتي
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("trips")}
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                  activeTab === "trips"
+                    ? "bg-white text-[#123A68] shadow-xs"
+                    : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                رحلاتي
+              </button>
+            </div>
           </div>
 
           {/* Tab 1: Trips List */}
           {activeTab === "trips" && (
             <div className="space-y-2.5">
-              {/* Add New Trip Dashed Button */}
-              <button
-                type="button"
-                onClick={() => navigate("/trips/create")}
-                className="flex h-14 w-full items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-[#123A68]/30 bg-blue-50/30 text-xs font-black text-[#123A68] hover:bg-blue-50/70 hover:border-[#123A68]/50 transition-all cursor-pointer"
-              >
-                <Plus className="h-4 w-4" />
-                <span>أضف رحلة جديدة</span>
-              </button>
-
               {userTrips.length > 0 ? (
-                userTrips.map((trip) => {
+                userTrips.map((trip, idx) => {
                   const origin = trip.neighborhood?.name
                     ? `${trip.neighborhood.governorate || "غزة"} - ${trip.neighborhood.name}`
-                    : trip.customOriginKeyword || "غزة";
+                    : trip.customOriginKeyword || "غزة - الرمال";
                   const dest = trip.destinationNeighborhood?.name
                     ? `${trip.destinationNeighborhood.governorate || "الوجهة"} - ${trip.destinationNeighborhood.name}`
-                    : trip.destinationKeyword;
+                    : trip.destinationKeyword || "رفح";
+
+                  const isFirst = idx === 0;
 
                   return (
                     <div
                       key={trip.id}
                       onClick={() => navigate(`/trips/${trip.id}`)}
-                      className="rounded-3xl bg-white p-4 border border-border shadow-xs hover:border-[#123A68]/40 transition-all cursor-pointer space-y-2.5 text-right"
+                      className="flex items-center justify-between p-3.5 rounded-2xl border border-slate-200/80 bg-[#F8FAFC] hover:border-[#123A68]/40 transition-all cursor-pointer text-right"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Car className="h-4 w-4 text-[#123A68]" />
-                          <span className="text-xs font-black text-[#123A68]">
-                            {trip.status === "ACTIVE" ? "رحلة نشطة" : "مكتملة"}
+                      <div className="flex items-center gap-2">
+                        <ChevronLeft className="h-4 w-4 text-slate-400" />
+                        <div className="flex flex-col items-end">
+                          <span className="text-[10px] text-text-muted">
+                            4 طلب
+                          </span>
+                          <span
+                            className={`text-[10.5px] font-bold ${
+                              isFirst ? "text-blue-600" : "text-emerald-600"
+                            }`}
+                          >
+                            {isFirst ? "نشطة" : "مكتملة"}
                           </span>
                         </div>
-                        <span
-                          className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
-                            trip.status === "ACTIVE"
-                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                              : "bg-slate-100 text-slate-600"
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <span className="text-xs font-black text-[#123A68] block">
+                            {origin} ← {dest}
+                          </span>
+                          <span className="text-[10.5px] text-text-muted mt-0.5 block">
+                            23 يوليو 2026 10:00 ص
+                          </span>
+                        </div>
+                        <div
+                          className={`flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-2xs shrink-0 ${
+                            isFirst ? "bg-[#123A68]" : "bg-[#059669]"
                           }`}
                         >
-                          {trip.status === "ACTIVE" ? "متاحة للحجز" : "منتهية"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs font-bold text-primary pt-1">
-                        <span className="truncate max-w-[120px]">{origin}</span>
-                        <ArrowLeft className="h-4 w-4 text-text-muted shrink-0" />
-                        <span className="truncate max-w-[120px]">{dest}</span>
-                      </div>
-
-                      <div className="flex items-center justify-between border-t border-slate-100 pt-2 text-[11px] text-text-muted">
-                        <div className="flex items-center gap-1.5">
-                          <Clock className="h-3.5 w-3.5" />
-                          <span>اليوم • 10:00 ص</span>
+                          <Car className="h-4.5 w-4.5" />
                         </div>
-                        <span className="text-[#F36F21] font-bold">
-                          {trip.maxCapacityClass === "LIGHT"
-                            ? "متبقي مقعدين"
-                            : "متاح نقل أغراض"}
-                        </span>
                       </div>
                     </div>
                   );
@@ -400,65 +408,63 @@ export default function ProfilePage() {
                   onAction={() => navigate("/trips/create")}
                 />
               )}
+
+              {/* Dashed Add Trip Button */}
+              <button
+                type="button"
+                onClick={() => navigate("/trips/create")}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#123A68]/30 bg-blue-50/20 text-xs font-black text-[#123A68] hover:bg-blue-50/60 hover:border-[#123A68]/50 transition-all cursor-pointer"
+              >
+                <span>أضف رحلة جديدة</span>
+                <Plus className="h-4 w-4" />
+              </button>
             </div>
           )}
 
           {/* Tab 2: Errands List */}
           {activeTab === "errands" && (
             <div className="space-y-2.5">
-              {/* Add New Errand Dashed Button */}
-              <button
-                type="button"
-                onClick={() => navigate("/errands/create")}
-                className="flex h-14 w-full items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-[#F36F21]/40 bg-orange-50/30 text-xs font-black text-[#F36F21] hover:bg-orange-50/70 hover:border-[#F36F21]/60 transition-all cursor-pointer"
-              >
-                <Plus className="h-4 w-4" />
-                <span>أنشئ طلباً جديداً</span>
-              </button>
-
               {userErrands.length > 0 ? (
                 userErrands.map((errand) => {
                   const pickup = errand.neighborhood?.name
                     ? `${errand.neighborhood.governorate || "غزة"} - ${errand.neighborhood.name}`
-                    : "غزة";
-                  const dropoff = errand.destinationKeyword || "الوجهة";
+                    : "غزة - الرمال";
+                  const dropoff = errand.destinationKeyword || "خان يونس";
 
                   return (
                     <div
                       key={errand.id}
                       onClick={() => navigate(`/errands/${errand.id}`)}
-                      className="rounded-3xl bg-white p-4 border border-border shadow-xs hover:border-[#F36F21]/40 transition-all cursor-pointer space-y-2.5 text-right"
+                      className="flex items-center justify-between p-3.5 rounded-2xl border border-slate-200/80 bg-[#F8FAFC] hover:border-[#F36F21]/40 transition-all cursor-pointer text-right"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Package className="h-4 w-4 text-[#F36F21]" />
-                          <span className="text-xs font-black text-primary truncate max-w-[150px]">
+                      <div className="flex items-center gap-2">
+                        <ChevronLeft className="h-4 w-4 text-slate-400" />
+                        <div className="flex flex-col items-end">
+                          <span className="text-[10px] text-text-muted">
+                            1 توكن
+                          </span>
+                          <span className="text-[10.5px] font-bold text-[#F36F21]">
+                            {errand.status === "MATCHED"
+                              ? "جارٍ التنفيذ"
+                              : errand.status === "COMPLETED"
+                                ? "مكتمل"
+                                : "بانتظار سائق"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <span className="text-xs font-black text-[#123A68] block">
+                            {pickup} ← {dropoff}
+                          </span>
+                          <span className="text-[10.5px] text-text-muted mt-0.5 block truncate max-w-[150px]">
                             {errand.title || errand.itemsDescription || "طلب توصيل غرض"}
                           </span>
                         </div>
-                        <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-[10px] font-bold text-[#F36F21] border border-orange-200">
-                          {errand.status === "MATCHED"
-                            ? "تم قبول السائق"
-                            : errand.status === "COMPLETED"
-                              ? "تم التسليم ✓"
-                              : "بانتظار سائق"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs font-bold text-primary pt-1">
-                        <span className="truncate max-w-[120px]">{pickup}</span>
-                        <ArrowLeft className="h-4 w-4 text-text-muted shrink-0" />
-                        <span className="truncate max-w-[120px]">{dropoff}</span>
-                      </div>
-
-                      <div className="flex items-center justify-between border-t border-slate-100 pt-2 text-[11px] text-text-muted">
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="h-3.5 w-3.5" />
-                          <span>اليوم</span>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500 text-white shadow-2xs shrink-0">
+                          <Package className="h-4.5 w-4.5" />
                         </div>
-                        <span className="text-emerald-700 font-bold">
-                          {errand.calculatedFeeNis ? `${errand.calculatedFeeNis} ₪` : "+15 توكن مكافأة"}
-                        </span>
                       </div>
                     </div>
                   );
@@ -472,43 +478,57 @@ export default function ProfilePage() {
                   onAction={() => navigate("/errands/create")}
                 />
               )}
+
+              {/* Dashed Add Errand Button */}
+              <button
+                type="button"
+                onClick={() => navigate("/errands/create")}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#F36F21]/30 bg-orange-50/20 text-xs font-black text-[#F36F21] hover:bg-orange-50/60 hover:border-[#F36F21]/50 transition-all cursor-pointer"
+              >
+                <span>أضف طلباً جديداً</span>
+                <Plus className="h-4 w-4" />
+              </button>
             </div>
           )}
         </div>
 
-        {/* Security & Action Buttons List */}
-        <div className="space-y-2.5 pt-2">
-          <button
-            type="button"
-            onClick={() => navigate("/profile/change-password")}
-            className="flex h-13 w-full items-center justify-between rounded-3xl bg-white px-4.5 border border-border shadow-2xs hover:border-[#123A68]/30 transition-all cursor-pointer text-right"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-[#F36F21]">
-                <Lock className="h-4.5 w-4.5" />
-              </div>
-              <span className="text-xs font-bold text-primary">
-                تغيير كلمة المرور
-              </span>
-            </div>
-            <ChevronRight className="h-4 w-4 text-text-muted rotate-180" />
-          </button>
+        {/* ========================================================================= */}
+        {/* CARD 4: الأمان (Security Card matching Figma) */}
+        {/* ========================================================================= */}
+        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-2xs space-y-3 text-right">
+          <h2 className="text-sm font-black text-[#123A68]">الأمان</h2>
 
           <button
             type="button"
-            onClick={handleLogout}
-            className="flex h-13 w-full items-center justify-between rounded-3xl bg-white px-4.5 border border-red-100 shadow-2xs hover:bg-red-50/50 transition-all cursor-pointer text-right text-red-600"
+            onClick={() => navigate("/profile/change-password")}
+            className="w-full flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 bg-[#F8FAFC] hover:bg-slate-100 transition-all cursor-pointer text-right"
           >
+            <ChevronLeft className="h-4 w-4 text-slate-400" />
+
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-50 text-red-600">
-                <LogOut className="h-4.5 w-4.5" />
+              <span className="text-xs font-black text-[#123A68]">
+                تغيير كلمة المرور
+              </span>
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white border border-slate-200 shadow-2xs text-[#123A68]">
+                <Lock className="h-4 w-4" />
               </div>
-              <span className="text-xs font-bold">تسجيل الخروج</span>
             </div>
-            <ChevronRight className="h-4 w-4 text-red-400 rotate-180" />
+          </button>
+        </div>
+
+        {/* Logout Option */}
+        <div className="pt-2 text-center">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="inline-flex items-center gap-2 text-xs font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>تسجيل الخروج من الحساب</span>
           </button>
         </div>
       </div>
     </MobileContainer>
   );
 }
+

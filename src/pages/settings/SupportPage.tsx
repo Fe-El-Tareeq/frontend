@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronRight,
@@ -14,9 +14,13 @@ import {
   Globe,
   Hourglass,
   Users,
+  Loader2,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { supportApi } from "../../api/support";
+import { getApiErrorMessage } from "../../utils/apiError";
+import type { SupportConfig } from "../../types/support";
 
 interface FaqItem {
   question: string;
@@ -63,6 +67,7 @@ export default function SupportPage() {
   const [activeModal, setActiveModal] = useState<"CHAT" | "EMAIL" | "PHONE" | null>(
     null,
   );
+  const [supportConfig, setSupportConfig] = useState<SupportConfig | null>(null);
 
   // Chat Modal State
   const [chatMessages, setChatMessages] = useState<
@@ -79,7 +84,26 @@ export default function SupportPage() {
   // Email Modal State
   const [emailTopic, setEmailTopic] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
-  const [emailSent, setEmailSent] = useState(false);
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [emailSuccess, setEmailSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    supportApi
+      .getConfig()
+      .then((res) => {
+        if (isMounted && res.data) {
+          setSupportConfig(res.data);
+        }
+      })
+      .catch(() => {
+        // Silently use defaults
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleSendChatMessage = (textToSend?: string) => {
     const text = textToSend || chatInput;
@@ -112,17 +136,33 @@ export default function SupportPage() {
     }, 800);
   };
 
-  const handleSendEmail = (e: React.FormEvent) => {
+  const handleSendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailTopic || !emailMessage.trim()) return;
-    setEmailSent(true);
-    setTimeout(() => {
-      setEmailSent(false);
-      setActiveModal(null);
+
+    setEmailSubmitting(true);
+    setEmailError(null);
+    setEmailSuccess(null);
+
+    try {
+      await supportApi.createTicket({
+        subject: emailTopic,
+        category: emailTopic,
+        message: emailMessage.trim(),
+        priority: "NORMAL",
+      });
+      setEmailSuccess("تم إرسال تذكرتك لفريق الدعم بنجاح!");
       setEmailTopic("");
       setEmailMessage("");
-      alert("تم إرسال رسالتك لفريق الدعم بنجاح!");
-    }, 1200);
+      setTimeout(() => {
+        setActiveModal(null);
+        setEmailSuccess(null);
+      }, 1500);
+    } catch (err) {
+      setEmailError(getApiErrorMessage(err));
+    } finally {
+      setEmailSubmitting(false);
+    }
   };
 
   return (
@@ -413,7 +453,7 @@ export default function SupportPage() {
                     مراسلة فريق الدعم
                   </h3>
                   <p className="text-[10px] text-text-muted">
-                    رد خلال 24 ساعة • support@btareeqak.com
+                    رد خلال 24 ساعة • {supportConfig?.contactEmail || "support@btareeqak.com"}
                   </p>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-xs">
@@ -421,6 +461,18 @@ export default function SupportPage() {
                 </div>
               </div>
             </div>
+
+            {emailError && (
+              <div className="rounded-2xl bg-rose-50 p-3 text-xs font-bold text-rose-800 border border-rose-200">
+                {emailError}
+              </div>
+            )}
+
+            {emailSuccess && (
+              <div className="rounded-2xl bg-emerald-50 p-3 text-xs font-bold text-emerald-800 border border-emerald-200">
+                {emailSuccess}
+              </div>
+            )}
 
             <form onSubmit={handleSendEmail} className="space-y-3.5 text-right">
               <div>
@@ -457,11 +509,20 @@ export default function SupportPage() {
 
               <button
                 type="submit"
-                disabled={emailSent}
+                disabled={emailSubmitting}
                 className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md disabled:opacity-60"
               >
-                <Send className="h-4 w-4" />
-                <span>{emailSent ? "جاري الإرسال..." : "إرسال الرسالة"}</span>
+                {emailSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>جاري الإرسال...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    <span>إرسال الرسالة</span>
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -491,7 +552,7 @@ export default function SupportPage() {
               <div>
                 <span className="text-xs text-white/80 block">رقم الدعم الموحّد</span>
                 <h3 className="text-2xl font-black text-white tracking-wider mt-0.5">
-                  059-WASEL
+                  {supportConfig?.contactPhone || "059-WASEL"}
                 </h3>
                 <span className="text-[11px] text-white/70 block dir-ltr mt-0.5">
                   (0599-92735)
@@ -503,7 +564,7 @@ export default function SupportPage() {
             <div className="p-5 space-y-3.5 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-[#123A68]">
-                  الأحد–الخميس 9:00 ص – 5:00 م
+                  {supportConfig?.workingHours || "الأحد–الخميس 9:00 ص – 5:00 م"}
                 </span>
                 <div className="flex items-center gap-2 text-text-muted">
                   <span>ساعات العمل</span>
@@ -538,7 +599,7 @@ export default function SupportPage() {
               {/* Call Button */}
               <div className="pt-2">
                 <a
-                  href="tel:059992735"
+                  href={`tel:${supportConfig?.contactPhone || "059992735"}`}
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#059669] text-xs font-black text-white hover:bg-emerald-700 active:scale-98 transition-all cursor-pointer shadow-md"
                 >
                   <Phone className="h-4 w-4" />

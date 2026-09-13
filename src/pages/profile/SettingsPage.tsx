@@ -1,29 +1,92 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
   Shield,
   HelpCircle,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { authApi } from "../../api/auth";
+import { useAuthStore } from "../../store/useAuthStore";
+import { getApiErrorMessage } from "../../utils/apiError";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
   const [tripNotifications, setTripNotifications] = useState(true);
   const [messageNotifications, setMessageNotifications] = useState(true);
   const [orderNotifications, setOrderNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
+  const [isLoadingSettings, setIsLoadingSettings] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDeleteAccount = () => {
+  // Fetch current notification preferences from backend
+  useEffect(() => {
+    let isMounted = true;
+    const loadSettings = async () => {
+      try {
+        setIsLoadingSettings(true);
+        const res = await authApi.getSettings();
+        if (isMounted && res.data?.notifications) {
+          const n = res.data.notifications;
+          if (typeof n.tripAlerts === "boolean") setTripNotifications(n.tripAlerts);
+          if (typeof n.chatAlerts === "boolean") setMessageNotifications(n.chatAlerts);
+          if (typeof n.errandAlerts === "boolean") setOrderNotifications(n.errandAlerts);
+        }
+      } catch {
+        // Fallback to default state if offline or settings endpoint not configured yet
+      } finally {
+        if (isMounted) setIsLoadingSettings(false);
+      }
+    };
+
+    loadSettings();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleToggleNotification = async (
+    key: "tripAlerts" | "chatAlerts" | "errandAlerts",
+    value: boolean,
+  ) => {
+    if (key === "tripAlerts") setTripNotifications(value);
+    if (key === "chatAlerts") setMessageNotifications(value);
+    if (key === "errandAlerts") setOrderNotifications(value);
+
+    try {
+      await authApi.updateNotificationSettings({
+        notifications: {
+          [key]: value,
+        },
+      });
+    } catch {
+      // Revert silently on network failure
+    }
+  };
+
+  const handleDeleteAccount = async () => {
     if (
       confirm(
-        "هل أنت متأكد من رغبتك في حذف حسابك نهائياً؟ هذا الإجراء لا يمكن التراجع عنه.",
+        "هل أنت متأكد من رغبتك في تعطيل/حذف حسابك؟ سيتم إيقاف ظهور بياناتك وأنشطتك في المنصة.",
       )
     ) {
-      alert("تم إرسال طلب حذف الحساب للإدارة.");
+      try {
+        setIsDeleting(true);
+        await authApi.deactivateAccount();
+        logout();
+        alert("تم تعطيل الحساب بنجاح.");
+        navigate("/login");
+      } catch (err: unknown) {
+        const msg = getApiErrorMessage(err, "تعذر تعطيل الحساب، يرجى المحاولة لاحقاً.");
+        alert(msg);
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -39,7 +102,12 @@ export default function SettingsPage() {
 
         {/* Section 1: الإشعارات */}
         <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-2xs space-y-4 text-right">
-          <h2 className="text-base font-black text-[#123A68]">الإشعارات</h2>
+          <div className="flex items-center justify-between">
+            {isLoadingSettings && (
+              <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+            )}
+            <h2 className="text-base font-black text-[#123A68]">الإشعارات</h2>
+          </div>
 
           {/* Toggle 1: إشعارات الرحلات الجديدة */}
           <div className="flex items-center justify-between">
@@ -47,7 +115,9 @@ export default function SettingsPage() {
               <input
                 type="checkbox"
                 checked={tripNotifications}
-                onChange={() => setTripNotifications(!tripNotifications)}
+                onChange={(e) =>
+                  handleToggleNotification("tripAlerts", e.target.checked)
+                }
                 className="sr-only peer"
               />
               <div className="w-12 h-6.5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2.5px] after:left-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5.5 after:w-5.5 after:transition-all peer-checked:bg-[#123A68]" />
@@ -69,7 +139,9 @@ export default function SettingsPage() {
               <input
                 type="checkbox"
                 checked={messageNotifications}
-                onChange={() => setMessageNotifications(!messageNotifications)}
+                onChange={(e) =>
+                  handleToggleNotification("chatAlerts", e.target.checked)
+                }
                 className="sr-only peer"
               />
               <div className="w-12 h-6.5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2.5px] after:left-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5.5 after:w-5.5 after:transition-all peer-checked:bg-[#123A68]" />
@@ -91,7 +163,9 @@ export default function SettingsPage() {
               <input
                 type="checkbox"
                 checked={orderNotifications}
-                onChange={() => setOrderNotifications(!orderNotifications)}
+                onChange={(e) =>
+                  handleToggleNotification("errandAlerts", e.target.checked)
+                }
                 className="sr-only peer"
               />
               <div className="w-12 h-6.5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2.5px] after:left-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5.5 after:w-5.5 after:transition-all peer-checked:bg-[#123A68]" />
@@ -219,13 +293,16 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={handleDeleteAccount}
-            className="text-xs font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer"
+            disabled={isDeleting}
+            className="text-xs font-bold text-red-500 hover:text-red-700 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
           >
-            حذف الحساب
+            {isDeleting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            <span>حذف الحساب</span>
           </button>
         </div>
       </div>
     </MobileContainer>
   );
 }
+
 
