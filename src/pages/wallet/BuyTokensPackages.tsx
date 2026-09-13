@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronRight,
@@ -7,9 +8,11 @@ import {
   RefreshCw,
   Sparkles,
   Check,
+  Loader2,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { paymentsApi } from "../../api/payments";
 
 export interface TokenPackage {
   id: string;
@@ -74,6 +77,51 @@ export const TOKEN_PACKAGES: TokenPackage[] = [
 
 export default function BuyTokensPackages() {
   const navigate = useNavigate();
+  const [packages, setPackages] = useState<TokenPackage[]>(TOKEN_PACKAGES);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchBackendPackages = async () => {
+      try {
+        setIsLoading(true);
+        const res = await paymentsApi.getPackages();
+        if (isMounted && res.data?.packages && res.data.packages.length > 0) {
+          const mapped: TokenPackage[] = res.data.packages.map((p) => ({
+            id: p.id,
+            name: p.name,
+            subtitle: p.bonusTokens
+              ? `يشمل ${p.bonusTokens} توكن هدية`
+              : "الخيار الأفضل للبدء",
+            tokens: p.totalTokens || p.tokenAmount + (p.bonusTokens || 0),
+            priceNis: p.priceNis,
+            ratePerToken: `${(
+              p.priceNis / (p.totalTokens || p.tokenAmount || 1)
+            ).toFixed(1)} ₪ لكل توكن`,
+            isPopular: p.tokenAmount === 25 || p.totalTokens === 25,
+            features: [
+              "نشر الطلبات فوراً",
+              "صلاحية 3 أشهر",
+              ...(p.bonusTokens ? [`+${p.bonusTokens} توكن هدية`] : []),
+            ],
+          }));
+          setPackages(mapped);
+        }
+      } catch (err) {
+        if (isMounted) {
+          // Fallback to static packages
+          setPackages(TOKEN_PACKAGES);
+        }
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+
+    fetchBackendPackages();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleSelectPackage = (pkg: TokenPackage) => {
     navigate("/wallet/payment-method", { state: { package: pkg } });
@@ -135,7 +183,13 @@ export default function BuyTokensPackages() {
 
         {/* Packages Cards */}
         <div className="space-y-4 pt-1">
-          {TOKEN_PACKAGES.map((pkg) => {
+          {isLoading && (
+            <div className="flex justify-center py-6">
+              <Loader2 className="h-7 w-7 animate-spin text-[#123A68]" />
+            </div>
+          )}
+
+          {packages.map((pkg) => {
             return (
               <div
                 key={pkg.id}

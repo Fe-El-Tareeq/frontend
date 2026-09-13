@@ -116,14 +116,14 @@ describe("E2E User Simulation & Flows Test Suite", () => {
     const { unmount: unmount2 } = renderWithProviders(<TopUpQRPage />);
     expect(screen.getAllByText("إتمام الدفع")[0]).toBeInTheDocument();
     expect(
-      screen.getByText("افتح تطبيق البنك أو جوال باي على هاتفك"),
+      screen.getByText("افتح تطبيق البنك على هاتفك"),
     ).toBeInTheDocument();
     expect(screen.getByText("لقد أتممت الدفع")).toBeInTheDocument();
     unmount2();
 
     // Step 4: Success Receipt
     renderWithProviders(<PaymentSuccessPage />);
-    expect(screen.getByText("تمّ الشراء بنجاح! 🎉")).toBeInTheDocument();
+    expect(screen.getByText("تمّ الشراء بنجاح!")).toBeInTheDocument();
     expect(screen.getByText("ملخّص العملية")).toBeInTheDocument();
     expect(screen.getByText("رصيدك الجديد")).toBeInTheDocument();
   });
@@ -132,14 +132,14 @@ describe("E2E User Simulation & Flows Test Suite", () => {
   it("Flow 8: User inspects Profile and modifies Settings options", () => {
     const { unmount: unmountProfile } = renderWithProviders(<ProfilePage />);
     expect(screen.getAllByText("الملف الشخصي")[0]).toBeInTheDocument();
-    expect(screen.getByText("تعديل الملف الشخصي")).toBeInTheDocument();
-    expect(screen.getByText("تغيير كلمة المرور")).toBeInTheDocument();
+    expect(screen.getByText("البيانات الشخصية")).toBeInTheDocument();
+    expect(screen.getAllByText("تعديل")[0]).toBeInTheDocument();
     unmountProfile();
 
     renderWithProviders(<SettingsPage />);
     expect(screen.getAllByText("الإعدادات")[0]).toBeInTheDocument();
-    expect(screen.getByText("الإشعارات والتنبيهات")).toBeInTheDocument();
-    expect(screen.getByText("المظهر واللغة")).toBeInTheDocument();
+    expect(screen.getByText("الإشعارات")).toBeInTheDocument();
+    expect(screen.getByText("المظهر")).toBeInTheDocument();
     expect(screen.getByText("عن التطبيق")).toBeInTheDocument();
     expect(screen.getByText("حذف الحساب")).toBeInTheDocument();
   });

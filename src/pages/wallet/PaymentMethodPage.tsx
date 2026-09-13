@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   ChevronRight,
   QrCode,
+  CreditCard,
   Building2,
   Check,
   Zap,
@@ -25,10 +26,10 @@ export default function PaymentMethodPage() {
     features: [],
   };
 
-  const [selectedMethod, setSelectedMethod] = useState<"QR" | "BANK">("QR");
+  const [selectedMethod, setSelectedMethod] = useState<"QR" | "CARD" | "BANK">("QR");
 
   const handleProceed = () => {
-    if (selectedMethod === "QR") {
+    if (selectedMethod === "QR" || selectedMethod === "CARD") {
       navigate("/wallet/topup-qr", {
         state: { package: pkg, method: selectedMethod },
       });
@@ -164,7 +165,48 @@ export default function PaymentMethodPage() {
             </div>
           </button>
 
-          {/* Method 2: Bank Transfer */}
+          {/* Method 2: Credit Card */}
+          <button
+            type="button"
+            onClick={() => setSelectedMethod("CARD")}
+            className={`w-full flex items-center justify-between rounded-3xl p-4.5 border transition-all cursor-pointer text-right ${
+              selectedMethod === "CARD"
+                ? "border-[#123A68] bg-white ring-2 ring-[#123A68]/15 shadow-sm"
+                : "border-slate-200 bg-white hover:border-slate-300"
+            }`}
+          >
+            <div className="flex items-center gap-3.5">
+              <div
+                className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-xs ${
+                  selectedMethod === "CARD"
+                    ? "bg-[#123A68] text-white"
+                    : "bg-slate-100 text-slate-600"
+                }`}
+              >
+                <CreditCard className="h-6 w-6" />
+              </div>
+              <div className="text-right">
+                <h4 className="text-sm font-black text-[#123A68]">بطاقة بنكية</h4>
+                <p className="text-[11px] text-text-muted mt-0.5">
+                  أو بطاقة محلية / Visa / Mastercard
+                </p>
+              </div>
+            </div>
+
+            <div
+              className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
+                selectedMethod === "CARD"
+                  ? "border-[#123A68] bg-[#123A68] text-white"
+                  : "border-slate-300 bg-white"
+              }`}
+            >
+              {selectedMethod === "CARD" && (
+                <Check className="h-3 w-3 stroke-[3]" />
+              )}
+            </div>
+          </button>
+
+          {/* Method 3: Bank Transfer */}
           <button
             type="button"
             onClick={() => setSelectedMethod("BANK")}

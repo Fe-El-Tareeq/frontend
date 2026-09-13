@@ -17,6 +17,10 @@ import type {
   UserProfile,
   UserProfileUpdateRequest,
   AuthTokens,
+  CancelDeletionRequestOtpRequest,
+  CancelDeletionConfirmRequest,
+  UserSettingsResponseData,
+  UpdateNotificationSettingsRequest,
 } from "../types";
 
 export const authApi = {
@@ -82,6 +86,21 @@ export const authApi = {
     return res.data;
   },
 
+  requestCancelDeletionOtp: async (payload: CancelDeletionRequestOtpRequest) => {
+    const res = await apiClient.post<
+      ApiSuccessResponse<{ expiresInMinutes: number }>
+    >(ENDPOINTS.AUTH.CANCEL_DELETION_REQUEST_OTP, payload);
+    return res.data;
+  },
+
+  confirmCancelDeletion: async (payload: CancelDeletionConfirmRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<VerifyOtpData>>(
+      ENDPOINTS.AUTH.CANCEL_DELETION_CONFIRM,
+      payload,
+    );
+    return res.data;
+  },
+
   getMe: async () => {
     const res = await apiClient.get<ApiSuccessResponse<UserProfile>>(
       ENDPOINTS.USERS.ME,
@@ -92,6 +111,21 @@ export const authApi = {
   updateMe: async (payload: UserProfileUpdateRequest) => {
     const res = await apiClient.patch<ApiSuccessResponse<UserProfile>>(
       ENDPOINTS.USERS.ME,
+      payload,
+    );
+    return res.data;
+  },
+
+  getSettings: async () => {
+    const res = await apiClient.get<ApiSuccessResponse<UserSettingsResponseData>>(
+      ENDPOINTS.USERS.SETTINGS,
+    );
+    return res.data;
+  },
+
+  updateNotificationSettings: async (payload: UpdateNotificationSettingsRequest) => {
+    const res = await apiClient.patch<ApiSuccessResponse<UserSettingsResponseData>>(
+      ENDPOINTS.USERS.NOTIFICATIONS,
       payload,
     );
     return res.data;
@@ -118,4 +152,12 @@ export const authApi = {
     );
     return res.data;
   },
+
+  deactivateAccount: async () => {
+    const res = await apiClient.delete<ApiSuccessResponse<null>>(
+      ENDPOINTS.USERS.DEACTIVATE,
+    );
+    return res.data;
+  },
 };
+
