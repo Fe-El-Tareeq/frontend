@@ -16,7 +16,8 @@ import Trips from "./pages/Trips";
 import AddTrip from "./pages/AddTrip";
 import TripCreated from "./pages/TripCreated";
 import Requests from "./pages/Requests";
-
+import CreateRequest from "./pages/CreateRequest";
+import RequestCreated from "./pages/RequestCreated";
 function App() {
   return (
     <BrowserRouter>
@@ -106,7 +107,22 @@ function App() {
           element={<Requests />}
         />
 
-      </Routes>
+        {/* Create Request */}
+        <Route
+          path="/create-request"
+          element={<CreateRequest />}
+        />
+
+    
+        <Route
+       path="/request-created"
+        element={<RequestCreated />}
+        />
+
+
+
+        </Routes>
+
     </BrowserRouter>
   );
 }
