@@ -100,3 +100,33 @@ export interface UserProfileUpdateRequest {
   fullName?: string;
   neighborhoodId?: string;
 }
+
+export interface CancelDeletionRequestOtpRequest {
+  phone: string;
+  channel?: "SMS" | "WHATSAPP";
+}
+
+export interface CancelDeletionConfirmRequest {
+  phone: string;
+  otp: string;
+}
+
+export interface UserNotificationSettings {
+  emailNotifications?: boolean;
+  pushNotifications?: boolean;
+  smsNotifications?: boolean;
+  whatsappNotifications?: boolean;
+  tripAlerts?: boolean;
+  errandAlerts?: boolean;
+  chatAlerts?: boolean;
+}
+
+export interface UserSettingsResponseData {
+  notifications: UserNotificationSettings;
+  privacy?: Record<string, unknown>;
+}
+
+export interface UpdateNotificationSettingsRequest {
+  notifications: Partial<UserNotificationSettings>;
+}
+

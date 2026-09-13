@@ -33,13 +33,19 @@ export const ENDPOINTS = {
     LOGOUT: "/api/v1/auth/logout",
     FORGOT_PASSWORD: "/api/v1/auth/forgot-password",
     RESET_PASSWORD: "/api/v1/auth/reset-password",
+    CANCEL_DELETION_REQUEST_OTP: "/api/v1/auth/cancel-deletion/request-otp",
+    CANCEL_DELETION_CONFIRM: "/api/v1/auth/cancel-deletion/confirm",
   },
   LOCATIONS: {
     NEIGHBORHOODS: "/api/v1/locations/neighborhoods",
+    SCAFFOLD: "/api/v1/locations/",
   },
   USERS: {
     ME: "/api/v1/users/me",
+    SETTINGS: "/api/v1/users/me/settings",
+    NOTIFICATIONS: "/api/v1/users/me/settings/notifications",
     PROFILE_IMAGE: "/api/v1/users/me/profile-image",
+    DEACTIVATE: "/api/v1/users/me",
   },
   ERRANDS: {
     LIST: "/api/v1/errands",
@@ -47,6 +53,7 @@ export const ENDPOINTS = {
     DETAIL: (id: string) => `/api/v1/errands/${id}`,
     UPDATE: (id: string) => `/api/v1/errands/${id}`,
     CANCEL: (id: string) => `/api/v1/errands/${id}/cancel`,
+    PROPOSALS: (id: string) => `/api/v1/errands/${id}/proposals`,
     OFFERS: (id: string) => `/api/v1/errands/${id}/offers`,
   },
   TRIPS: {
@@ -55,7 +62,15 @@ export const ENDPOINTS = {
     DETAIL: (id: string) => `/api/v1/trips/${id}`,
     UPDATE: (id: string) => `/api/v1/trips/${id}`,
     CANCEL: (id: string) => `/api/v1/trips/${id}/cancel`,
+    PROPOSALS: (id: string) => `/api/v1/trips/${id}/proposals`,
     BOOK: (id: string) => `/api/v1/trips/${id}/book`,
+  },
+  PROPOSALS: {
+    CREATE: "/api/v1/proposals",
+    ACCEPT: (id: string) => `/api/v1/proposals/${id}/accept`,
+    REJECT: (id: string) => `/api/v1/proposals/${id}/reject`,
+    ERRAND_PROPOSALS: (errandId: string) => `/api/v1/errands/${errandId}/proposals`,
+    TRIP_PROPOSALS: (tripId: string) => `/api/v1/trips/${tripId}/proposals`,
   },
   MATCHING: {
     ERRAND_TRIPS: (id: string) => `/api/v1/matching/errands/${id}`,
@@ -99,6 +114,28 @@ export const ENDPOINTS = {
     MOCK_PAY: (id: string) => `/api/v1/payments/mock/invoices/${id}/pay`,
     MOCK_WEBHOOK: "/api/v1/payments/webhooks/mock",
   },
+  NOTIFICATIONS: {
+    LIST: "/api/v1/notifications",
+    UNREAD_COUNT: "/api/v1/notifications/unread-count",
+    READ_ALL: "/api/v1/notifications/read-all",
+    READ_ONE: (id: string) => `/api/v1/notifications/${id}/read`,
+  },
+  LEGAL: {
+    CURRENT: "/api/v1/legal/current",
+    ACCEPTANCES: "/api/v1/legal/acceptances",
+  },
+  SUPPORT: {
+    CONFIG: "/api/v1/support/config",
+    TICKETS: "/api/v1/support/tickets",
+    TICKET_DETAIL: (id: string) => `/api/v1/support/tickets/${id}`,
+    TICKET_MESSAGES: (id: string) => `/api/v1/support/tickets/${id}/messages`,
+    ADMIN_TICKETS: "/api/v1/support/admin/tickets",
+    ADMIN_TICKET_STATUS: (id: string) => `/api/v1/support/admin/tickets/${id}/status`,
+    REPORTS: "/api/v1/support/reports",
+    REPORT_DETAIL: (id: string) => `/api/v1/support/reports/${id}`,
+    ADMIN_REPORTS: "/api/v1/support/reports/admin",
+    ADMIN_REPORT_UPDATE: (id: string) => `/api/v1/support/reports/admin/${id}`,
+  },
   MESSAGES: {
     CONVERSATIONS: "/api/v1/chat-rooms",
     CHAT: (id: string) => `/api/v1/chat-rooms/${id}/messages`,
@@ -107,3 +144,4 @@ export const ENDPOINTS = {
   HEALTH: "/health",
   TEST_VALIDATION: "/api/test/validation",
 } as const;
+

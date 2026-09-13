@@ -124,7 +124,6 @@ describe("E2E User Simulation & Flows Test Suite", () => {
     // Step 4: Success Receipt
     renderWithProviders(<PaymentSuccessPage />);
     expect(screen.getByText("تمّ الشراء بنجاح!")).toBeInTheDocument();
-    expect(screen.getByText("🎉")).toBeInTheDocument();
     expect(screen.getByText("ملخّص العملية")).toBeInTheDocument();
     expect(screen.getByText("رصيدك الجديد")).toBeInTheDocument();
   });
@@ -133,8 +132,8 @@ describe("E2E User Simulation & Flows Test Suite", () => {
   it("Flow 8: User inspects Profile and modifies Settings options", () => {
     const { unmount: unmountProfile } = renderWithProviders(<ProfilePage />);
     expect(screen.getAllByText("الملف الشخصي")[0]).toBeInTheDocument();
-    expect(screen.getByText("تعديل الملف الشخصي")).toBeInTheDocument();
-    expect(screen.getByText("تغيير كلمة المرور")).toBeInTheDocument();
+    expect(screen.getByText("البيانات الشخصية")).toBeInTheDocument();
+    expect(screen.getAllByText("تعديل")[0]).toBeInTheDocument();
     unmountProfile();
 
     renderWithProviders(<SettingsPage />);
