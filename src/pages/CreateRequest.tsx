@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 
 function CreateRequest() {
   const navigate = useNavigate();
+
+  const [city, setCity] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [note, setNote] = useState("");
 
   return (
     <div
@@ -10,15 +15,13 @@ function CreateRequest() {
       className="min-h-screen bg-[#F5F7FA]"
     >
       {/* =====================================================
-          HEADER + SIDEBAR
+          HEADER
       ===================================================== */}
-
       <Header />
 
       {/* =====================================================
           MAIN
       ===================================================== */}
-
       <main
         className="
           min-h-screen
@@ -26,134 +29,222 @@ function CreateRequest() {
           pb-12
           pt-[105px]
           lg:mr-[256px]
+          lg:px-8
         "
       >
-        <div className="mx-auto max-w-[900px]">
+        <div className="mx-auto w-full max-w-[900px]">
 
           {/* =================================================
               PAGE TITLE
           ================================================= */}
+          <div className="mb-8 flex items-center gap-3">
 
-          <div className="mb-6 text-right">
+            <button
+              type="button"
+              onClick={() => navigate("/requests")}
+              className="
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                text-[28px]
+                text-[#52627A]
+              "
+            >
+              ‹
+            </button>
 
-            <div className="flex items-center justify-between">
+            <div>
+              <h1
+                className="
+                  text-[25px]
+                  font-bold
+                  text-[#102F57]
+                "
+              >
+                إنشاء طلب جديد
+              </h1>
 
-              <div>
-                <h1
+              <p
+                className="
+                  mt-1
+                  text-[14px]
+                  text-[#7B8494]
+                "
+              >
+                صف ما تحتاجه وسيجدك المسافرون المناسبون
+              </p>
+            </div>
+          </div>
+
+          {/* =================================================
+              WHAT DO YOU NEED?
+          ================================================= */}
+          <section
+            className="
+              mb-5
+              rounded-[18px]
+              border
+              border-[#E4E7EC]
+              bg-white
+              p-5
+              shadow-[0_2px_6px_rgba(16,47,87,0.08)]
+            "
+          >
+
+            {/* Header */}
+            <div className="flex items-start justify-between gap-3">
+
+              <div className="flex-1">
+
+                <h2
                   className="
-                    text-[25px]
+                    text-[17px]
                     font-bold
                     text-[#102F57]
                   "
                 >
-                  إنشاء طلب جديد
-                </h1>
+                  ماذا تحتاج؟
+                  <span className="text-[#FF7817]">*</span>
+                </h2>
 
                 <p
                   className="
-                    mt-2
-                    text-[13px]
-                    text-[#7B8494]
+                    mt-1
+                    text-[11px]
+                    text-[#A2AAB7]
                   "
                 >
-                  صف ما تحتاجه وسيجدك المسافرون المناسبون
+                  يمكنك إضافة أكثر من فئة في نفس الطلب
                 </p>
+
               </div>
 
-              {/* العودة */}
-
+              {/* =================================================
+                  ADD CATEGORY BUTTON
+              ================================================= */}
               <button
                 type="button"
-                onClick={() => navigate("/requests")}
+                onClick={() => navigate("/add-category")}
                 className="
-                  text-[28px]
-                  text-[#52647A]
+                  flex
+                  h-[40px]
+                  shrink-0
+                  items-center
+                  gap-2
+                  rounded-[14px]
+                  bg-[#234A7D]
+                  px-5
+                  text-[14px]
+                  font-bold
+                  text-white
                   transition
-                  hover:text-[#FF7817]
+                  hover:bg-[#1C3D68]
+                  active:scale-[0.98]
                 "
               >
-                ‹
+                <span className="text-[20px] leading-none">
+                  +
+                </span>
+
+                <span>
+                  إضافة فئة
+                </span>
               </button>
 
             </div>
 
-          </div>
-
-
-          {/* =================================================
-              REQUEST CARD
-          ================================================= */}
-
-          <div
-            className="
-              mx-auto
-              w-full
-              max-w-[900px]
-              rounded-[20px]
-              border
-              border-[#E3E7EC]
-              bg-white
-              p-5
-              shadow-sm
-              sm:p-7
-            "
-          >
-
             {/* =================================================
-                WHAT DO YOU NEED?
+                EMPTY CATEGORY BOX
             ================================================= */}
+            <div
+              className="
+                mt-4
+                flex
+                min-h-[84px]
+                items-center
+                justify-center
+                rounded-[17px]
+                border-2
+                border-dashed
+                border-[#D4DCE7]
+                bg-[#FAFBFC]
+              "
+            >
 
-            <div className="mb-5">
+              <div className="text-center">
 
-              <label
+                <p
+                  className="
+                    text-[14px]
+                    font-bold
+                    text-[#A3ACBA]
+                  "
+                >
+                  أضف أول فئة
+                </p>
+
+                <p
+                  className="
+                    mt-1
+                    text-[11px]
+                    text-[#A8B0BC]
+                  "
+                >
+                  دواء، وثائق، طرد، ملابس...
+                </p>
+
+              </div>
+
+              <div
                 className="
-                  mb-2
-                  block
-                  text-[14px]
-                  font-medium
-                  text-[#102F57]
+                  mr-3
+                  flex
+                  h-[40px]
+                  w-[40px]
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-[#F0F2F5]
+                  text-[24px]
+                  text-[#A6AFBD]
                 "
               >
-                ماذا تحتاج؟
-
-                <span className="mr-1 text-[#FF7817]">
-                  *
-                </span>
-              </label>
-
-              <textarea
-                rows={4}
-                placeholder="صف طلبك بالتفصيل: نوع الغرض، الحجم، الكمية، وأي تفاصيل أخرى..."
-                className="
-                  h-[120px]
-                  w-full
-                  resize-none
-                  rounded-[16px]
-                  border
-                  border-[#E1E5EA]
-                  bg-[#FAFBFC]
-                  p-4
-                  text-right
-                  text-[14px]
-                  text-[#263F61]
-                  outline-none
-                  transition
-                  placeholder:text-[#A7B0BE]
-                  focus:border-[#FF7817]
-                "
-              />
-
-              <p className="mt-2 text-[10px] text-[#9AA5B5]">
-                0/500 حرف
-              </p>
+                +
+              </div>
 
             </div>
 
+          </section>
 
-            {/* =================================================
-                CITY
-            ================================================= */}
+          {/* =================================================
+              LOCATION
+          ================================================= */}
+          <section
+            className="
+              mb-5
+              rounded-[18px]
+              border
+              border-[#E4E7EC]
+              bg-white
+              p-5
+              shadow-[0_2px_6px_rgba(16,47,87,0.08)]
+            "
+          >
 
+            <h2
+              className="
+                mb-5
+                text-[18px]
+                font-bold
+                text-[#102F57]
+              "
+            >
+              الموقع
+            </h2>
+
+            {/* City */}
             <div className="mb-5">
 
               <label
@@ -168,56 +259,71 @@ function CreateRequest() {
                 المدينة المطلوبة
               </label>
 
-              <select
-                defaultValue=""
-                className="
-                  h-[50px]
-                  w-full
-                  rounded-[16px]
-                  border
-                  border-[#E1E5EA]
-                  bg-[#FAFBFC]
-                  px-4
-                  text-right
-                  text-[14px]
-                  text-[#263F61]
-                  outline-none
-                  focus:border-[#FF7817]
-                "
-              >
-                <option value="" disabled>
-                  اختر المدينة
-                </option>
+              <div className="relative">
 
-                <option value="gaza">
-                  غزة
-                </option>
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="
+                    h-[52px]
+                    w-full
+                    appearance-none
+                    rounded-[16px]
+                    border-2
+                    border-[#E0E4EA]
+                    bg-[#FAFBFC]
+                    px-4
+                    text-[15px]
+                    text-[#263F61]
+                    outline-none
+                    focus:border-[#234A7D]
+                  "
+                >
+                  <option value="">
+                    اختر المدينة
+                  </option>
 
-                <option value="north-gaza">
-                  شمال غزة
-                </option>
+                  <option value="غزة">
+                    غزة
+                  </option>
 
-                <option value="middle">
-                  الوسطى
-                </option>
+                  <option value="شمال غزة">
+                    شمال غزة
+                  </option>
 
-                <option value="khan-younis">
-                  خانيونس
-                </option>
+                  <option value="خانيونس">
+                    خانيونس
+                  </option>
 
-                <option value="rafah">
-                  رفح
-                </option>
-              </select>
+                  <option value="الوسطى">
+                    الوسطى
+                  </option>
+
+                  <option value="رفح">
+                    رفح
+                  </option>
+                </select>
+
+                <span
+                  className="
+                    pointer-events-none
+                    absolute
+                    left-4
+                    top-1/2
+                    -translate-y-1/2
+                    text-[18px]
+                    text-[#9AA3AF]
+                  "
+                >
+                  ⌄
+                </span>
+
+              </div>
 
             </div>
 
-
-            {/* =================================================
-                NEIGHBORHOOD
-            ================================================= */}
-
-            <div className="mb-5">
+            {/* Neighborhood */}
+            <div>
 
               <label
                 className="
@@ -233,149 +339,75 @@ function CreateRequest() {
 
               <input
                 type="text"
-                placeholder="حيّك أو الحي المطلوب"
+                value={neighborhood}
+                onChange={(e) =>
+                  setNeighborhood(e.target.value)
+                }
+                placeholder="حيّ أو الحي المطلوب"
                 className="
-                  h-[50px]
+                  h-[52px]
                   w-full
                   rounded-[16px]
-                  border
-                  border-[#E1E5EA]
+                  border-2
+                  border-[#E0E4EA]
                   bg-[#FAFBFC]
                   px-4
-                  text-right
-                  text-[14px]
+                  text-[15px]
                   text-[#263F61]
                   outline-none
-                  transition
-                  placeholder:text-[#A7B0BE]
-                  focus:border-[#FF7817]
+                  placeholder:text-[#A8B0BC]
+                  focus:border-[#234A7D]
                 "
               />
 
             </div>
 
+          </section>
 
-            {/* =================================================
-                VOICE MESSAGE
-            ================================================= */}
+          {/* =================================================
+              VOICE + IMAGE
+          ================================================= */}
+          <section
+            className="
+              mb-5
+              rounded-[18px]
+              border
+              border-[#E4E7EC]
+              bg-white
+              p-5
+              shadow-[0_3px_7px_rgba(16,47,87,0.10)]
+            "
+          >
 
+            {/* Voice */}
             <div
               className="
-                mb-5
+                mb-4
                 rounded-[16px]
                 border
-                border-[#DCE3EC]
+                border-[#DDE2E8]
                 bg-[#FAFBFC]
                 p-4
               "
             >
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-start gap-3">
 
                 <div
                   className="
                     flex
-                    h-[42px]
-                    w-[42px]
+                    h-[40px]
+                    w-[40px]
                     shrink-0
                     items-center
                     justify-center
                     rounded-[12px]
-                    bg-[#E9EEF5]
-                    text-[22px]
-                    text-[#234A7D]
-                  "
-                >
-                  💬
-                </div>
-
-                <div>
-
-                  <p
-                    className="
-                      text-[14px]
-                      font-bold
-                      text-[#102F57]
-                    "
-                  >
-                    تسجيل رسالة صوتية
-
-                    <span className="font-normal">
-                      {" "} (اختياري)
-                    </span>
-                  </p>
-
-                  <p
-                    className="
-                      mt-1
-                      text-[11px]
-                      text-[#8A95A5]
-                    "
-                  >
-                    اشرح طلبك بشكل مختصر من الصوت
-                  </p>
-
-                </div>
-
-              </div>
-
-
-              <button
-                type="button"
-                className="
-                  mt-3
-                  h-[45px]
-                  w-full
-                  rounded-[14px]
-                  border
-                  border-dashed
-                  border-[#B8C7DA]
-                  bg-white
-                  text-[14px]
-                  font-medium
-                  text-[#234A7D]
-                  transition
-                  hover:bg-[#F5F7FA]
-                "
-              >
-                اضغط للتسجيل 🎙
-              </button>
-
-            </div>
-
-
-            {/* =================================================
-                IMAGE
-            ================================================= */}
-
-            <div
-              className="
-                mb-5
-                rounded-[16px]
-                border
-                border-[#DCE3EC]
-                bg-[#FAFBFC]
-                p-4
-              "
-            >
-
-              <div className="flex items-center gap-3">
-
-                <div
-                  className="
-                    flex
-                    h-[42px]
-                    w-[42px]
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-[12px]
-                    bg-[#E9EEF5]
+                    bg-[#E9EDF3]
                     text-[21px]
                     text-[#234A7D]
                   "
                 >
-                  🖼
+                  ♧
                 </div>
 
                 <div>
@@ -383,77 +415,231 @@ function CreateRequest() {
                   <p
                     className="
                       text-[14px]
-                      font-bold
+                      font-medium
                       text-[#102F57]
                     "
                   >
-                    إرسال صورة للمنتج
-
-                    <span className="font-normal">
-                      {" "} (اختياري)
-                    </span>
+                    تسجيل رسالة صوتية (اختياري)
                   </p>
 
                   <p
                     className="
                       mt-1
                       text-[11px]
-                      text-[#8A95A5]
+                      text-[#8B95A3]
                     "
                   >
-                    قم بإرسال صورة معينة لمزيد من الوضوح
+                    اشرح طلبك بصوتك لمزيد من الوضوح
                   </p>
 
                 </div>
 
               </div>
 
+              <button
+                type="button"
+                className="
+                  mt-3
+                  flex
+                  h-[43px]
+                  w-full
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-[14px]
+                  border-2
+                  border-dashed
+                  border-[#B9CBE0]
+                  bg-white
+                  text-[14px]
+                  font-medium
+                  text-[#234A7D]
+                "
+              >
+                <span>
+                  اضغط للتسجيل
+                </span>
+
+                <span>
+                  🎙
+                </span>
+              </button>
+
+            </div>
+
+            {/* Image */}
+            <div
+              className="
+                rounded-[16px]
+                border
+                border-[#DDE2E8]
+                bg-[#FAFBFC]
+                p-4
+              "
+            >
+
+              <div className="flex items-start gap-3">
+
+                <div
+                  className="
+                    flex
+                    h-[40px]
+                    w-[40px]
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-[12px]
+                    bg-[#E9EDF3]
+                    text-[20px]
+                    text-[#234A7D]
+                  "
+                >
+                  ▧
+                </div>
+
+                <div>
+
+                  <p
+                    className="
+                      text-[14px]
+                      font-medium
+                      text-[#102F57]
+                    "
+                  >
+                    إرسال صورة للغرض (اختياري)
+                  </p>
+
+                  <p
+                    className="
+                      mt-1
+                      text-[11px]
+                      text-[#8B95A3]
+                    "
+                  >
+                    قم بإرسال صورة لمزيد من الوضوح
+                  </p>
+
+                </div>
+
+              </div>
 
               <button
                 type="button"
                 className="
                   mt-3
-                  h-[45px]
+                  flex
+                  h-[43px]
                   w-full
+                  items-center
+                  justify-center
+                  gap-3
                   rounded-[14px]
-                  border
+                  border-2
                   border-dashed
-                  border-[#B8C7DA]
+                  border-[#B9CBE0]
                   bg-white
                   text-[14px]
                   font-medium
                   text-[#234A7D]
-                  transition
-                  hover:bg-[#F5F7FA]
                 "
               >
-                اضغط للتصوير 📷
+                <span>
+                  اضغط للتصوير
+                </span>
+
+                <span>
+                  📷
+                </span>
               </button>
 
             </div>
 
+          </section>
 
-            {/* =================================================
-                COST
-            ================================================= */}
+          {/* =================================================
+              GENERAL NOTE
+          ================================================= */}
+          <section
+            className="
+              mb-5
+              rounded-[18px]
+              border
+              border-[#E4E7EC]
+              bg-white
+              p-5
+              shadow-[0_2px_6px_rgba(16,47,87,0.08)]
+            "
+          >
 
-            <div
+            <label
               className="
-                mb-6
-                rounded-[16px]
-                border
-                border-[#FFD0B0]
-                bg-[#FFF4EC]
-                px-4
-                py-4
+                mb-3
+                block
+                text-[15px]
+                font-medium
+                text-[#102F57]
               "
             >
+              ملاحظة عامة للمسافر (اختياري)
+            </label>
 
-              <div className="flex items-center justify-between">
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              rows={3}
+              placeholder="وقت التسليم المفضل، طريقة التواصل، أي تعليمات عامة..."
+              className="
+                w-full
+                resize-none
+                rounded-[16px]
+                border-2
+                border-[#E0E4EA]
+                bg-[#FAFBFC]
+                px-4
+                py-3
+                text-[14px]
+                leading-6
+                text-[#263F61]
+                outline-none
+                placeholder:text-[#A8B0BC]
+                focus:border-[#234A7D]
+              "
+            />
+
+          </section>
+
+          {/* =================================================
+              COST
+          ================================================= */}
+          <section
+            className="
+              mb-8
+              rounded-[16px]
+              border
+              border-[#FFD0AD]
+              bg-[#FFF0E7]
+              px-5
+              py-4
+            "
+          >
+
+            <div className="flex items-center justify-between">
+
+              {/* Right */}
+              <div className="flex items-start gap-3">
+
+                <span
+                  className="
+                    text-[24px]
+                    text-[#FF7817]
+                  "
+                >
+                  ⚡
+                </span>
 
                 <div>
 
-                  <p
+                  <h3
                     className="
                       text-[14px]
                       font-bold
@@ -461,107 +647,111 @@ function CreateRequest() {
                     "
                   >
                     تكلفة نشر الطلب
-                  </p>
+                  </h3>
 
                   <p
                     className="
                       mt-1
                       text-[11px]
-                      text-[#8A95A5]
+                      text-[#7B8494]
                     "
                   >
-                    سيُخصم توكن واحد من رصيدك
-                  </p>
-
-                </div>
-
-
-                <div className="text-center">
-
-                  <p
-                    className="
-                      text-[17px]
-                      font-bold
-                      text-[#FF7817]
-                    "
-                  >
-                    ⚡ 1 توكن
-                  </p>
-
-                  <p
-                    className="
-                      mt-1
-                      text-[10px]
-                      text-[#8A95A5]
-                    "
-                  >
-                    رصيدك: 47 توكن
+                    سيتم خصم تكلفة واحدة من رصيدك
                   </p>
 
                 </div>
 
               </div>
 
+              {/* Left */}
+              <div className="text-center">
+
+                <div
+                  className="
+                    text-[18px]
+                    font-bold
+                    text-[#FF7817]
+                  "
+                >
+                  1 توكن
+                </div>
+
+                <div
+                  className="
+                    mt-1
+                    text-[11px]
+                    text-[#8D96A3]
+                  "
+                >
+                  رصيدك: 47 توكن
+                </div>
+
+              </div>
+
             </div>
 
+          </section>
 
-            {/* =================================================
-                BUTTONS
-            ================================================= */}
+          {/* =================================================
+              ACTION BUTTONS
+          ================================================= */}
+          <div
+            className="
+              mb-8
+              flex
+              flex-row-reverse
+              items-center
+              gap-5
+            "
+          >
 
-            <div
+            {/* Publish */}
+            <button
+              type="button"
+              onClick={() => navigate("/request-created")}
               className="
                 flex
-                flex-col-reverse
-                gap-3
-                sm:flex-row
-                sm:items-center
+                h-[52px]
+                flex-1
+                items-center
+                justify-center
+                gap-2
+                rounded-[15px]
+                bg-[#FF7817]
+                text-[16px]
+                font-bold
+                text-white
+                shadow-sm
+                transition
+                hover:bg-[#E96B0D]
+                active:scale-[0.99]
               "
             >
+              <span>
+                ▱
+              </span>
 
-              {/* ================= إلغاء ================= */}
+              <span>
+                نشر الطلب
+              </span>
+            </button>
 
-              <button
-                type="button"
-                onClick={() => navigate("/requests")}
-                className="
-                  h-[50px]
-                  px-6
-                  text-[14px]
-                  font-medium
-                  text-[#102F57]
-                  transition
-                  hover:text-[#FF7817]
-                  sm:w-[100px]
-                "
-              >
-                إلغاء
-              </button>
-
-
-              {/* ================= نشر الطلب ================= */}
-
-              <button
-                type="button"
-                onClick={() => navigate("/request-created")}
-                className="
-                  h-[50px]
-                  flex-1
-                  rounded-[14px]
-                  bg-[#FF7817]
-                  text-[15px]
-                  font-bold
-                  text-white
-                  shadow-sm
-                  transition
-                  hover:bg-[#E96B0D]
-                  active:scale-[0.99]
-                "
-              >
-                نشر الطلب 📦
-              </button>
-
-            </div>
+            {/* Cancel */}
+            <button
+              type="button"
+              onClick={() => navigate("/requests")}
+              className="
+                h-[52px]
+                min-w-[65px]
+                text-[15px]
+                font-medium
+                text-[#234A7D]
+                transition
+                hover:text-[#FF7817]
+              "
+            >
+              إلغاء
+            </button>
 
           </div>
 
