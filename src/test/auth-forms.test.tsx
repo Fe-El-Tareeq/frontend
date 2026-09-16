@@ -323,7 +323,7 @@ describe("auth forms", () => {
     fillInput(reset.container, "otp", "123456");
     fillInput(reset.container, "password", "weak");
     fillInput(reset.container, "confirmPassword", "different");
-    fireEvent.click(screen.getByText("حفظ كلمة المرور"));
+    fireEvent.click(screen.getByRole("button", { name: /حفظ/ }));
 
     expect(
       await screen.findByText("كلمة المرور يجب أن تتكون من 8 أحرف على الأقل"),
@@ -340,7 +340,7 @@ describe("auth forms", () => {
     fillInput(container, "otp", "123456");
     fillInput(container, "password", "Password123!");
     fillInput(container, "confirmPassword", "Password123!");
-    fireEvent.click(screen.getByText("حفظ كلمة المرور"));
+    fireEvent.click(screen.getByRole("button", { name: /حفظ/ }));
 
     await waitFor(() =>
       expect(authMock.resetPassword).toHaveBeenCalledWith({
