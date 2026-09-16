@@ -110,6 +110,7 @@ export default function BuyTokensPackages() {
       } catch (err) {
         if (isMounted) {
           // Fallback to static packages
+          console.error("Failed to fetch packages from backend, using static packages.", err);
           setPackages(TOKEN_PACKAGES);
         }
       } finally {
