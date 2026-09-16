@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Form } from "../../components/ui/form/Form";
-import { Button } from "../../components/ui/button/Button";
 import { useAuth } from "../../hooks/useAuth";
 import { getApiErrorMessage } from "../../utils/apiError";
 import { translateSuccessMessage } from "../../i18n";
@@ -42,13 +41,16 @@ export default function ForgotPassword() {
     try {
       const res = await forgotPassword({ phone: data.phone });
       setSuccessMessage(
-        translateSuccessMessage(res.message, "إذا كان الحساب مسجلاً، تم إرسال رمز استعادة كلمة المرور.")
+        translateSuccessMessage(
+          res.message,
+          "إذا كان الحساب مسجلاً، تم إرسال رمز استعادة كلمة المرور.",
+        ),
       );
       setTimeout(() => {
-        navigate("/reset-password", {
-          state: { phone: data.phone },
+        navigate("/verify-otp", {
+          state: { phone: data.phone, isResetPassword: true },
         });
-      }, 1500);
+      }, 1000);
     } catch (err: unknown) {
       const msg = getApiErrorMessage(
         err,
@@ -87,22 +89,19 @@ export default function ForgotPassword() {
             type="tel"
             placeholder="05XX-XXX-XXX"
             dir="ltr"
-            className="text-right"
+            className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
             {...register("phone")}
           />
           <Form.ErrorMessage />
         </Form.Field>
 
-        <Button
+        <button
           type="submit"
-          variant="accent"
-          size="md"
-          fullWidth
-          isLoading={isForgotPasswordPending}
-          className="mt-4"
+          disabled={isForgotPasswordPending}
+          className="mt-4 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
         >
-          إرسال رمز التحقق
-        </Button>
+          {isForgotPasswordPending ? "جاري الإرسال..." : "إرسال رمز التحقق"}
+        </button>
       </Form>
     </AuthLayout>
   );

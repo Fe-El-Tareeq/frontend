@@ -140,15 +140,9 @@ export default function ResetPassword() {
         </Form.Field>
 
         {/* Password Hint */}
-        <div className="rounded-2xl bg-orange-50/70 p-3.5 border border-orange-200/70 text-right space-y-1">
-          <span className="text-[11px] font-bold text-[#F36F21] block">
-            شروط كلمة المرور:
-          </span>
-          <p className="text-[11px] text-text-secondary leading-relaxed">
-            يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وحرف كبير، ورقم، ورمز
-            خاص.
-          </p>
-        </div>
+        <p className="text-[11px] text-text-secondary text-right pt-1 leading-relaxed">
+          يجب أن تتكون من 6 أرقام و حرف كبير على الأقل و رمز مميز .
+        </p>
 
         {/* Save Button */}
         <button
@@ -156,7 +150,7 @@ export default function ResetPassword() {
           disabled={isResetPasswordPending}
           className="mt-4 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md disabled:opacity-50"
         >
-          {isResetPasswordPending ? "جاري الحفظ..." : "حفظ كلمة المرور"}
+          {isResetPasswordPending ? "جاري الحفظ..." : "حفظ"}
         </button>
       </Form>
 
