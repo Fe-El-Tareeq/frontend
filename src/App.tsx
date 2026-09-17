@@ -31,113 +31,155 @@ import AddCategory from "./pages/AddCategory";
 import RequestCreated from "./pages/RequestCreated";
 
 // =====================================================
-// APP
+// SETTINGS PAGES
 // =====================================================
+import Settings from "./pages/Settings";
+import ContactSupport from "./pages/ContactSupport";
+import SupportChat from "./pages/SupportChat";
+import ReportProblem from "./pages/ReportProblem";
+import ReportDetails from "./pages/ReportDetails";
+import ReportSuccess from "./pages/ReportSuccess";
+import LegalTerms from "./pages/LegalTerms";
+
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
         {/* =================================================
-            HOME
+            PUBLIC
         ================================================= */}
+
         <Route
           path="/"
           element={<Home />}
         />
 
-        {/* =================================================
-            LANDING PAGE
-        ================================================= */}
         <Route
           path="/landing"
           element={<LandingPage />}
         />
 
+
         {/* =================================================
-            AUTHENTICATION
+            AUTH
         ================================================= */}
 
-        {/* Login / Welcome */}
         <Route
           path="/welcome"
           element={<Welcome />}
         />
 
-        {/* Register Step 1 */}
         <Route
           path="/register-step1"
           element={<RegisterStep1 />}
         />
 
-        {/* Register Step 2 */}
         <Route
           path="/register-step2"
           element={<RegisterStep2 />}
         />
 
-        {/* Register */}
         <Route
           path="/register"
           element={<Register />}
         />
 
+
         {/* =================================================
             DASHBOARD
         ================================================= */}
+
         <Route
           path="/dashboard"
           element={<Dashboard />}
         />
 
-        {/* =================================================
-            TRIPS
-        ================================================= */}
-
-        {/* All Trips */}
         <Route
           path="/trips"
           element={<Trips />}
         />
 
-        {/* Add New Trip */}
         <Route
           path="/add-trip"
           element={<AddTrip />}
         />
 
-        {/* Trip Created Successfully */}
         <Route
           path="/trip-created"
           element={<TripCreated />}
         />
 
+
         {/* =================================================
             REQUESTS
         ================================================= */}
 
-        {/* All Requests */}
         <Route
           path="/requests"
           element={<Requests />}
         />
 
-        {/* Create Request */}
         <Route
           path="/create-request"
           element={<CreateRequest />}
         />
 
-        {/* Add Category */}
         <Route
           path="/add-category"
           element={<AddCategory />}
         />
 
-        {/* Request Created Successfully */}
         <Route
           path="/request-created"
           element={<RequestCreated />}
+        />
+
+
+        {/* =================================================
+            SETTINGS
+        ================================================= */}
+
+        <Route
+          path="/settings"
+          element={<Settings />}
+        />
+
+        {/* التواصل مع الدعم */}
+        <Route
+          path="/contact-support"
+          element={<ContactSupport />}
+        />
+
+        {/* محادثة الدعم */}
+        <Route
+          path="/support-chat"
+          element={<SupportChat />}
+        />
+
+        {/* الإبلاغ عن مشكلة */}
+        <Route
+          path="/report-problem"
+          element={<ReportProblem />}
+        />
+
+        {/* تفاصيل المشكلة */}
+        <Route
+          path="/report-details"
+          element={<ReportDetails />}
+        />
+
+        {/* نجاح إرسال البلاغ */}
+        <Route
+          path="/report-success"
+          element={<ReportSuccess />}
+        />
+
+        {/* الشروط القانونية والخصوصية */}
+        <Route
+          path="/legal-terms"
+          element={<LegalTerms />}
         />
 
       </Routes>
