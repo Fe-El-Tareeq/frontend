@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // =====================================================
-// PUBLIC PAGES
+// الصفحات الرئيسية
 // =====================================================
 import Home from "./pages/Home";
 import LandingPage from "./pages/LandingPage";
 
 // =====================================================
-// AUTH PAGES
+// صفحات التسجيل والدخول
 // =====================================================
 import Welcome from "./pages/auth/Welcome";
 import RegisterStep1 from "./pages/auth/RegisterStep1";
@@ -15,7 +15,7 @@ import RegisterStep2 from "./pages/auth/RegisterStep2";
 import Register from "./pages/auth/Register";
 
 // =====================================================
-// DASHBOARD PAGES
+// صفحات لوحة التحكم والرحلات
 // =====================================================
 import Dashboard from "./pages/Dashboard";
 import Trips from "./pages/Trips";
@@ -23,7 +23,7 @@ import AddTrip from "./pages/AddTrip";
 import TripCreated from "./pages/TripCreated";
 
 // =====================================================
-// REQUESTS PAGES
+// صفحات الطلبات
 // =====================================================
 import Requests from "./pages/Requests";
 import CreateRequest from "./pages/CreateRequest";
@@ -31,7 +31,7 @@ import AddCategory from "./pages/AddCategory";
 import RequestCreated from "./pages/RequestCreated";
 
 // =====================================================
-// SETTINGS PAGES
+// صفحات الإعدادات والدعم
 // =====================================================
 import Settings from "./pages/Settings";
 import ContactSupport from "./pages/ContactSupport";
@@ -41,6 +41,17 @@ import ReportDetails from "./pages/ReportDetails";
 import ReportSuccess from "./pages/ReportSuccess";
 import LegalTerms from "./pages/LegalTerms";
 
+// =====================================================
+// صفحات المحفظة
+// =====================================================
+import Wallet from "./pages/WalletPages/Wallet";
+import PaymentCard from "./pages/WalletPages/PaymentCard";
+import PaymentQR from "./pages/WalletPages/PaymentQR";
+import PaymentConfirm from "./pages/WalletPages/PaymentConfirm";
+import BuyPoints from "./pages/WalletPages/BuyPoints";
+import PaymentMethod from "./pages/WalletPages/PaymentMethod";
+import PurchaseSuccess from "./pages/WalletPages/PurchaseSuccess";
+
 
 function App() {
   return (
@@ -48,7 +59,7 @@ function App() {
       <Routes>
 
         {/* =================================================
-            PUBLIC
+            الصفحة الرئيسية
         ================================================= */}
 
         <Route
@@ -63,7 +74,7 @@ function App() {
 
 
         {/* =================================================
-            AUTH
+            تسجيل الدخول وإنشاء الحساب
         ================================================= */}
 
         <Route
@@ -88,13 +99,18 @@ function App() {
 
 
         {/* =================================================
-            DASHBOARD
+            لوحة التحكم
         ================================================= */}
 
         <Route
           path="/dashboard"
           element={<Dashboard />}
         />
+
+
+        {/* =================================================
+            الرحلات
+        ================================================= */}
 
         <Route
           path="/trips"
@@ -113,7 +129,7 @@ function App() {
 
 
         {/* =================================================
-            REQUESTS
+            الطلبات
         ================================================= */}
 
         <Route
@@ -138,7 +154,7 @@ function App() {
 
 
         {/* =================================================
-            SETTINGS
+            الإعدادات
         ================================================= */}
 
         <Route
@@ -146,40 +162,89 @@ function App() {
           element={<Settings />}
         />
 
-        {/* التواصل مع الدعم */}
+
+        {/* =================================================
+            الدعم الفني
+        ================================================= */}
+
         <Route
           path="/contact-support"
           element={<ContactSupport />}
         />
 
-        {/* محادثة الدعم */}
         <Route
           path="/support-chat"
           element={<SupportChat />}
         />
 
-        {/* الإبلاغ عن مشكلة */}
+
+        {/* =================================================
+            الإبلاغ عن مشكلة
+        ================================================= */}
+
         <Route
           path="/report-problem"
           element={<ReportProblem />}
         />
 
-        {/* تفاصيل المشكلة */}
         <Route
           path="/report-details"
           element={<ReportDetails />}
         />
 
-        {/* نجاح إرسال البلاغ */}
         <Route
           path="/report-success"
           element={<ReportSuccess />}
         />
 
-        {/* الشروط القانونية والخصوصية */}
+
+        {/* =================================================
+            الشروط والخصوصية
+        ================================================= */}
+
         <Route
           path="/legal-terms"
           element={<LegalTerms />}
+        />
+
+
+        {/* =================================================
+            المحفظة
+        ================================================= */}
+
+        <Route
+          path="/wallet"
+          element={<Wallet />}
+        />
+
+        <Route
+          path="/wallet/payment-card"
+          element={<PaymentCard />}
+        />
+
+        <Route
+          path="/wallet/payment-qr"
+          element={<PaymentQR />}
+        />
+
+        <Route
+          path="/wallet/payment-confirm"
+          element={<PaymentConfirm />}
+        />
+
+        <Route
+          path="/wallet/buy-points"
+          element={<BuyPoints />}
+        />
+
+        <Route
+          path="/wallet/payment-method"
+          element={<PaymentMethod />}
+        />
+
+        <Route
+          path="/wallet/success"
+          element={<PurchaseSuccess />}
         />
 
       </Routes>
