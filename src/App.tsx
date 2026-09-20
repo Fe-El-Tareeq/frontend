@@ -7,6 +7,7 @@ import {
   PublicOnlyRoute,
 } from "./components/auth/ProtectedRoute";
 import { PwaInstallBanner } from "./components/pwa/PwaInstallBanner";
+import { OfflineBanner } from "./components/offline/OfflineBanner";
 
 // Lazy-loaded pages matching Figma structure
 const SplashScreen = lazy(() => import("./pages/SplashScreen"));
@@ -90,6 +91,7 @@ function RootRoute() {
 function App() {
   return (
     <BrowserRouter>
+      <OfflineBanner />
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
           {/* Public Landing & Info Routes */}

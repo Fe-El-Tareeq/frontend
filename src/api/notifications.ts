@@ -4,10 +4,11 @@ import type {
   ApiSuccessResponse,
   NotificationsListResponseData,
   UnreadCountResponseData,
+  NotificationTab,
 } from "../types";
 
 export const notificationsApi = {
-  getNotifications: async (params?: { skip?: number; take?: number }) => {
+  getNotifications: async (params?: { tab?: NotificationTab; skip?: number; take?: number }) => {
     const res = await apiClient.get<
       ApiSuccessResponse<NotificationsListResponseData>
     >(ENDPOINTS.NOTIFICATIONS.LIST, { params });

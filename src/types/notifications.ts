@@ -1,27 +1,33 @@
 ﻿import type { PaginationMeta } from "./api";
 
 export type NotificationType =
-  | "TRIP_ALERT"
-  | "ERRAND_ALERT"
-  | "CHAT_MESSAGE"
-  | "WALLET_TOP_UP"
-  | "ASSIGNMENT_UPDATE"
-  | "SYSTEM";
+  | "NEW_TRIP_IN_AREA"
+  | "NEW_PROPOSAL"
+  | "ASSIGNMENT_ACCEPTED"
+  | "ASSIGNMENT_STATUS_CHANGED"
+  | "ASSIGNMENT_CANCELLED"
+  | "NEW_CHAT_MESSAGE"
+  | "PAYMENT_CONFIRMED"
+  | string;
+
+export type NotificationTab = "all" | "unread" | "trips" | "errands" | "messages";
 
 export interface AppNotification {
   id: string;
-  userId: string;
   type: NotificationType;
+  channel: string;
   title: string;
-  body: string;
+  message: string;
+  status: "PENDING" | "SENT" | "FAILED" | "READ";
   isRead: boolean;
   readAt?: string | null;
-  data?: Record<string, unknown> | null;
+  metadata?: Record<string, unknown> | null;
   createdAt: string;
 }
 
 export interface NotificationsListResponseData {
   notifications: AppNotification[];
+  unreadCount: number;
   pagination: PaginationMeta;
 }
 

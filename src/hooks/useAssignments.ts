@@ -1,6 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { assignmentsApi } from "../api/assignments";
 import type { AssignmentCreateRequest, AssignmentCancelRequest } from "../types";
+import { connectivityMonitor } from "../offline/connectivity";
+
+function requireOnline() {
+  if (connectivityMonitor.getSnapshot() === "OFFLINE") {
+    throw new Error("This assignment action requires an internet connection.");
+  }
+}
 
 export const ASSIGNMENT_KEYS = {
   all: ["assignments"] as const,
@@ -22,14 +29,14 @@ export function useAssignments(params?: { skip?: number; take?: number }) {
 
   const createAssignmentMutation = useMutation({
     mutationFn: (payload: AssignmentCreateRequest) =>
-      assignmentsApi.createAssignment(payload),
+      (requireOnline(), assignmentsApi.createAssignment(payload)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.all });
     },
   });
 
   const pickupMutation = useMutation({
-    mutationFn: (id: string) => assignmentsApi.markPickedUp(id),
+    mutationFn: (id: string) => (requireOnline(), assignmentsApi.markPickedUp(id)),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.detail(id) });
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.lists() });
@@ -37,7 +44,7 @@ export function useAssignments(params?: { skip?: number; take?: number }) {
   });
 
   const startDeliveryMutation = useMutation({
-    mutationFn: (id: string) => assignmentsApi.startDelivery(id),
+    mutationFn: (id: string) => (requireOnline(), assignmentsApi.startDelivery(id)),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.detail(id) });
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.lists() });
@@ -45,7 +52,7 @@ export function useAssignments(params?: { skip?: number; take?: number }) {
   });
 
   const completeMutation = useMutation({
-    mutationFn: (id: string) => assignmentsApi.completeAssignment(id),
+    mutationFn: (id: string) => (requireOnline(), assignmentsApi.completeAssignment(id)),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.detail(id) });
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.lists() });
@@ -59,7 +66,7 @@ export function useAssignments(params?: { skip?: number; take?: number }) {
     }: {
       id: string;
       payload?: AssignmentCancelRequest;
-    }) => assignmentsApi.cancelAssignment(id, payload),
+    }) => (requireOnline(), assignmentsApi.cancelAssignment(id, payload)),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.detail(id) });
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.lists() });

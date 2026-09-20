@@ -53,8 +53,8 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/");
     onClose();
   };

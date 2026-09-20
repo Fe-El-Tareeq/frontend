@@ -1,4 +1,6 @@
+/// <reference types="node" />
 import { describe, it, expect } from "vitest";
+import { existsSync, readFileSync } from "node:fs";
 import manifest from "../../public/manifest.json";
 
 describe("Progressive Web App (PWA) Configuration", () => {
@@ -37,5 +39,28 @@ describe("Progressive Web App (PWA) Configuration", () => {
 
     expect(errandShortcut).toBeDefined();
     expect(tripShortcut).toBeDefined();
+  });
+});
+
+describe("revisioned service worker configuration", () => {
+  const viteConfig = readFileSync("vite.config.ts", "utf8");
+
+  it("uses generated revisioned precaching instead of the legacy static worker", () => {
+    expect(viteConfig).toContain("VitePWA");
+    expect(viteConfig).toContain("cleanupOutdatedCaches: true");
+    expect(viteConfig).toContain('navigateFallback: "/index.html"');
+    expect(viteConfig).toContain("html,js,css,png,svg,ico,woff,woff2,webmanifest");
+    expect(existsSync("public/sw.js")).toBe(false);
+  });
+
+  it("does not configure authenticated API runtime caching", () => {
+    expect(viteConfig).toContain("navigateFallbackDenylist");
+    expect(viteConfig).not.toContain('cacheName: "bitareeqak-api"');
+  });
+
+  it("keeps a new deployment waiting until a safe activation point", () => {
+    expect(viteConfig).toContain('registerType: "prompt"');
+    expect(viteConfig).toContain("skipWaiting: false");
+    expect(viteConfig).toContain("clientsClaim: false");
   });
 });

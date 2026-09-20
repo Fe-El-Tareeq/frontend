@@ -1,123 +1,62 @@
-import { useState, useEffect, useCallback } from "react";
-import {
-  useNotificationStore,
-  type NotificationType,
-} from "../store/useNotificationStore";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { notificationsApi } from "../api/notifications";
+import { useOfflineStatus } from "../offline/offlineContext";
+import { useAuthStore } from "../store/useAuthStore";
+import type { AppNotification, NotificationTab } from "../types";
 
-export function useNotifications() {
-  const [permission, setPermission] =
-    useState<NotificationPermission>("default");
-  const [isSupported, setIsSupported] = useState(false);
+export const NOTIFICATION_KEYS = {
+  all: ["notifications"] as const,
+  list: (tab: NotificationTab) => ["notifications", "list", tab] as const,
+};
 
-  const {
-    notifications,
-    markAsRead,
-    markAllAsRead,
-    addNotification,
-    deleteNotification,
-    clearAll,
-  } = useNotificationStore();
+const ERRAND_TYPES = new Set([
+  "NEW_PROPOSAL",
+  "ASSIGNMENT_ACCEPTED",
+  "ASSIGNMENT_STATUS_CHANGED",
+  "ASSIGNMENT_CANCELLED",
+]);
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+export function filterNotifications(items: AppNotification[], tab: NotificationTab) {
+  if (tab === "unread") return items.filter((item) => !item.isRead);
+  if (tab === "trips") return items.filter((item) => item.type === "NEW_TRIP_IN_AREA");
+  if (tab === "errands") return items.filter((item) => ERRAND_TYPES.has(item.type));
+  if (tab === "messages") return items.filter((item) => item.type === "NEW_CHAT_MESSAGE");
+  return items;
+}
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && "Notification" in window) {
-      setIsSupported(true);
-      setPermission(Notification.permission);
-    }
-  }, []);
+export function useNotifications(tab: NotificationTab = "all") {
+  const queryClient = useQueryClient();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { isOffline, lastSyncedAt } = useOfflineStatus();
+  const allQuery = useQuery({
+    queryKey: NOTIFICATION_KEYS.list("all"),
+    queryFn: () => notificationsApi.getNotifications({ tab: "all", take: 50 }),
+    enabled: isAuthenticated && !isOffline,
+    select: (response) => response.data,
+  });
+  const tabQuery = useQuery({
+    queryKey: NOTIFICATION_KEYS.list(tab),
+    queryFn: () => notificationsApi.getNotifications({ tab, take: 50 }),
+    enabled: isAuthenticated && !isOffline && tab !== "all",
+    select: (response) => response.data,
+  });
 
-  // Request browser/phone permission for notifications
-  const requestPermission = useCallback(async (): Promise<boolean> => {
-    if (typeof window === "undefined" || !("Notification" in window)) {
-      return false;
-    }
-
-    try {
-      const res = await Notification.requestPermission();
-      setPermission(res);
-      return res === "granted";
-    } catch {
-      return false;
-    }
-  }, []);
-
-  // Send a native phone / browser notification + store in in-app store
-  const sendNotification = useCallback(
-    async (options: {
-      title: string;
-      body: string;
-      type: NotificationType;
-      actionUrl?: string;
-      timeAgo?: string;
-    }) => {
-      // 1. Add to in-app store
-      addNotification({
-        title: options.title,
-        body: options.body,
-        type: options.type,
-        timeAgo: options.timeAgo || "الآن",
-        actionUrl: options.actionUrl,
-      });
-
-      // 2. Trigger native device/PWA notification if supported and permitted
-      if (
-        typeof window !== "undefined" &&
-        "Notification" in window &&
-        Notification.permission === "granted"
-      ) {
-        try {
-          // If Service Worker is ready, use showNotification for better mobile PWA support
-          if (
-            "serviceWorker" in navigator &&
-            navigator.serviceWorker.controller
-          ) {
-            const reg = await navigator.serviceWorker.ready;
-            reg.showNotification(options.title, {
-              body: options.body,
-              icon: "/logo.png",
-              badge: "/logo.png",
-              dir: "rtl",
-              lang: "ar",
-              data: {
-                url: options.actionUrl || "/notifications",
-              },
-            });
-          } else {
-            // Standard Web Notification fallback
-            const notif = new Notification(options.title, {
-              body: options.body,
-              icon: "/logo.png",
-              dir: "rtl",
-              lang: "ar",
-            });
-
-            notif.onclick = () => {
-              window.focus();
-              if (options.actionUrl) {
-                window.location.href = options.actionUrl;
-              }
-              notif.close();
-            };
-          }
-        } catch (e) {
-          console.warn("Could not display native notification:", e);
-        }
-      }
-    },
-    [addNotification],
-  );
+  const source = isOffline || tab === "all" ? allQuery.data : tabQuery.data;
+  const notifications = isOffline
+    ? filterNotifications(allQuery.data?.notifications ?? [], tab)
+    : source?.notifications ?? [];
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.all });
+  const markRead = useMutation({ mutationFn: notificationsApi.markAsRead, onSuccess: invalidate });
+  const markAllRead = useMutation({ mutationFn: notificationsApi.markAllAsRead, onSuccess: invalidate });
 
   return {
     notifications,
-    unreadCount,
-    isSupported,
-    permission,
-    requestPermission,
-    sendNotification,
-    markAsRead,
-    markAllAsRead,
-    deleteNotification,
-    clearAll,
+    unreadCount: source?.unreadCount ?? allQuery.data?.unreadCount ?? 0,
+    isLoading: allQuery.isLoading || (tab !== "all" && tabQuery.isLoading),
+    isError: allQuery.isError || tabQuery.isError,
+    isOffline,
+    lastSyncedAt,
+    markAsRead: (id: string) => markRead.mutateAsync(id),
+    markAllAsRead: () => markAllRead.mutateAsync(),
   };
 }

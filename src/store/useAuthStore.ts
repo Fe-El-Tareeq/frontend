@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { UserSummary } from "../types/auth";
+import { API_BASE_URL } from "../api/endpoints";
+import { purgeUserOfflineData } from "../offline/storage";
 
 interface AuthState {
   user: UserSummary | null;
@@ -13,7 +15,7 @@ interface AuthState {
   ) => void;
   setAccessToken: (accessToken: string) => void;
   setUser: (user: UserSummary) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -44,13 +46,16 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: Boolean(user && state.accessToken),
         })),
 
-      logout: () =>
+      logout: async () => {
+        const userId = useAuthStore.getState().user?.id;
         set({
           user: null,
           accessToken: null,
           refreshToken: null,
           isAuthenticated: false,
-        }),
+        });
+        if (userId) await purgeUserOfflineData(userId, API_BASE_URL);
+      },
     }),
     {
       name: "bitareeqak-auth",

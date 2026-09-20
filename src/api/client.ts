@@ -6,6 +6,7 @@ import type { ApiSuccessResponse, AuthTokens } from "../types";
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 15_000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -108,7 +109,10 @@ apiClient.interceptors.response.use(
       return apiClient(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError as Error, null);
-      logout();
+      const refreshStatus = (refreshError as AxiosError).response?.status;
+      if (refreshStatus && [400, 401, 403].includes(refreshStatus)) {
+        void logout();
+      }
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

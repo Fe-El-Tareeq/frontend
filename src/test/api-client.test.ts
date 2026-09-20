@@ -139,4 +139,27 @@ describe("apiClient", () => {
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
     expect(useAuthStore.getState().accessToken).toBeNull();
   });
+
+  it("preserves the cached session when refresh fails without a server response", async () => {
+    useAuthStore.setState({
+      user,
+      accessToken: "expired-token",
+      refreshToken: "refresh-token-1",
+      isAuthenticated: true,
+    });
+
+    server.use(
+      http.post(`${API_BASE_URL}${ENDPOINTS.AUTH.REFRESH}`, () => HttpResponse.error()),
+      http.get(`${API_BASE_URL}${ENDPOINTS.USERS.ME}`, () =>
+        HttpResponse.json(
+          { success: false, message: "Expired token", errors: [] },
+          { status: 401 },
+        ),
+      ),
+    );
+
+    await expect(apiClient.get(ENDPOINTS.USERS.ME)).rejects.toBeTruthy();
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
+    expect(useAuthStore.getState().user?.id).toBe(user.id);
+  });
 });

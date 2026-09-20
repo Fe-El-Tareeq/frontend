@@ -63,7 +63,7 @@ export function useAuth() {
           // Ignore network failure on logout
         }
       }
-      logout();
+      await logout();
       queryClient.clear();
     },
   });

@@ -13,9 +13,12 @@ import { WalletStatsSummary } from "../../components/wallet/WalletStatsSummary";
 import { useWallet, useWalletTransactions } from "../../hooks/useWallet";
 import { useAuth } from "../../hooks/useAuth";
 import type { WalletTransaction } from "../../types/wallet";
+import { useOfflineStatus } from "../../offline/offlineContext";
+import { WifiOff } from "lucide-react";
 
 export default function WalletPage() {
   const navigate = useNavigate();
+  const { isOffline, lastSyncedAt } = useOfflineStatus();
   const { profile } = useAuth();
   const { tokenBalance, isLoadingWallet } = useWallet();
 
@@ -26,7 +29,7 @@ export default function WalletPage() {
     refetchTransactions,
   } = useWalletTransactions();
 
-  const currentBalance = tokenBalance ?? 47;
+  const currentBalance = tokenBalance;
 
   // Calculate dynamic totals from transaction history
   const totalBought = transactions
@@ -78,7 +81,9 @@ export default function WalletPage() {
           <button
             type="button"
             onClick={() => navigate("/wallet/buy-tokens")}
-            className="flex h-10 items-center justify-center gap-1.5 rounded-2xl bg-[#F36F21] px-4 text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-[#E05E12]"
+            disabled={isOffline}
+            title={isOffline ? "يتطلب اتصالاً بالإنترنت" : undefined}
+            className="flex h-10 items-center justify-center gap-1.5 rounded-2xl bg-[#F36F21] px-4 text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-[#E05E12] disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Plus className="h-4 w-4 stroke-[3]" />
             <span>شراء توكنز</span>
@@ -86,6 +91,16 @@ export default function WalletPage() {
 
           <h1 className="text-xl font-black text-[#123A68]">المحفظة</h1>
         </div>
+
+        {isOffline && (
+          <div className="flex items-center gap-2 border-y border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            <WifiOff className="h-4 w-4 shrink-0" />
+            <span>
+              المحفظة غير متاحة دون اتصال. لا يمكن استخدام رصيد محفوظ لإجراء عملية مالية
+              {lastSyncedAt ? ` · آخر اتصال ${new Date(lastSyncedAt).toLocaleString("ar")}` : ""}
+            </span>
+          </div>
+        )}
 
         {/* Current Balance Hero Card */}
         <WalletBalanceHero
@@ -96,8 +111,8 @@ export default function WalletPage() {
 
         {/* 2 Total Stats Cards (إجمالي الشراء / إجمالي الإنفاق) */}
         <WalletStatsSummary
-          totalPurchased={totalBought > 0 ? totalBought : 70}
-          totalSpent={totalSpent > 0 ? totalSpent : 23}
+          totalPurchased={totalBought}
+          totalSpent={totalSpent}
           isLoading={isLoadingTransactions}
         />
 

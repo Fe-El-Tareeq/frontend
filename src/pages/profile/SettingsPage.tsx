@@ -78,7 +78,7 @@ export default function SettingsPage() {
       try {
         setIsDeleting(true);
         await authApi.deactivateAccount();
-        logout();
+        await logout();
         alert("تم تعطيل الحساب بنجاح.");
         navigate("/login");
       } catch (err: unknown) {
