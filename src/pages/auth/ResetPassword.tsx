@@ -5,7 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Form } from "../../components/ui/form/Form";
-import { ResetPasswordSuccessModal } from "../../components/modals/ResetPasswordSuccessModal";
+import { Alert } from "../../components/ui/feedback/Alert";
+import { AuthSuccessModal } from "../../components/auth/AuthSuccessModal";
 import { useAuth } from "../../hooks/useAuth";
 import { getApiErrorMessage } from "../../utils/apiError";
 
@@ -35,7 +36,9 @@ export default function ResetPassword() {
   const location = useLocation();
   const navigate = useNavigate();
   const { resetPassword, isResetPasswordPending } = useAuth();
-  const phoneFromState = (location.state as { phone?: string })?.phone || "";
+  const stateData = location.state as { phone?: string; otp?: string } | null;
+  const phoneFromState = stateData?.phone || "";
+  const otpFromState = stateData?.otp || "";
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -48,7 +51,7 @@ export default function ResetPassword() {
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       phone: phoneFromState,
-      otp: "",
+      otp: otpFromState,
       password: "",
       confirmPassword: "",
     },
@@ -65,7 +68,10 @@ export default function ResetPassword() {
       setShowSuccessModal(true);
     } catch (err: unknown) {
       setErrorMessage(
-        getApiErrorMessage(err, "تعذر إعادة تعيين كلمة المرور، يرجى التأكد من الرمز والمحاولة ثانية.")
+        getApiErrorMessage(
+          err,
+          "تعذر إعادة تعيين كلمة المرور، يرجى التأكد من الرمز والمحاولة ثانية.",
+        ),
       );
     }
   };
@@ -78,8 +84,10 @@ export default function ResetPassword() {
       onBack={() => navigate(-1)}
     >
       {errorMessage && (
-        <div className="mb-4 rounded-md bg-error-light p-3 text-right text-[13px] font-medium text-error border border-error/20">
-          {errorMessage}
+        <div className="mb-4">
+          <Alert variant="error" onClose={() => setErrorMessage(null)}>
+            {errorMessage}
+          </Alert>
         </div>
       )}
 
@@ -92,14 +100,14 @@ export default function ResetPassword() {
               type="tel"
               placeholder="05XX-XXX-XXX"
               dir="ltr"
-              className="text-right"
+              className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
               {...register("phone")}
             />
             <Form.ErrorMessage />
           </Form.Field>
         )}
 
-        {/* OTP Code */}
+        {/* OTP Code if not already provided or to allow editing */}
         <Form.Field name="otp" error={errors.otp?.message} required>
           <Form.Label>رمز التحقق (OTP)</Form.Label>
           <Form.Input
@@ -107,7 +115,7 @@ export default function ResetPassword() {
             maxLength={6}
             placeholder="123456"
             dir="ltr"
-            className="text-center font-mono tracking-widest text-lg font-bold"
+            className="text-center font-mono tracking-widest text-lg font-bold h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
             {...register("otp")}
           />
           <Form.ErrorMessage />
@@ -140,8 +148,8 @@ export default function ResetPassword() {
         </Form.Field>
 
         {/* Password Hint */}
-        <p className="text-[11px] text-text-secondary text-right pt-1 leading-relaxed">
-          يجب أن تتكون من 6 أرقام و حرف كبير على الأقل و رمز مميز .
+        <p className="text-[11px] text-text-secondary text-right -mt-2 mb-1 leading-relaxed">
+          يجب أن تتكون من 8 خانات، وتحتوي على حرف كبير ورقم ورمز خاص.
         </p>
 
         {/* Save Button */}
@@ -155,8 +163,9 @@ export default function ResetPassword() {
       </Form>
 
       {/* Success Modal */}
-      <ResetPasswordSuccessModal
+      <AuthSuccessModal
         isOpen={showSuccessModal}
+        variant="changed"
         onClose={() => {
           setShowSuccessModal(false);
           navigate("/login");

@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Form } from "../../components/ui/form/Form";
+import { Alert } from "../../components/ui/feedback/Alert";
 import { useAuth } from "../../hooks/useAuth";
 import { getApiErrorMessage } from "../../utils/apiError";
 import { translateSuccessMessage } from "../../i18n";
@@ -71,14 +72,18 @@ export default function ForgotPassword() {
       onFooterAction={() => navigate("/login")}
     >
       {successMessage && (
-        <div className="mb-4 rounded-[14px] bg-success-light p-3.5 text-right text-[13px] font-bold text-success border border-success/20">
-          {successMessage}
+        <div className="mb-4">
+          <Alert variant="success" onClose={() => setSuccessMessage(null)}>
+            {successMessage}
+          </Alert>
         </div>
       )}
 
       {errorMessage && (
-        <div className="mb-4 rounded-md bg-error-light p-3 text-right text-[13px] font-medium text-error border border-error/20">
-          {errorMessage}
+        <div className="mb-4">
+          <Alert variant="error" onClose={() => setErrorMessage(null)}>
+            {errorMessage}
+          </Alert>
         </div>
       )}
 

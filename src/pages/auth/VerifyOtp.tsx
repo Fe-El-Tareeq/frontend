@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Form } from "../../components/ui/form/Form";
+import { OtpCodeInput } from "../../components/auth/OtpCodeInput";
+import { Alert } from "../../components/ui/feedback/Alert";
 import { useAuth } from "../../hooks/useAuth";
 import { getApiErrorMessage } from "../../utils/apiError";
 
@@ -48,7 +50,7 @@ export default function VerifyOtp() {
   }, [resendTimer]);
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<OtpFormData>({
@@ -119,33 +121,53 @@ export default function VerifyOtp() {
       onBack={handleBack}
     >
       {errorMessage && (
-        <div className="mb-4 rounded-xl bg-red-50 p-3 text-right text-xs font-bold text-red-600 border border-red-100">
-          {errorMessage}
+        <div className="mb-4">
+          <Alert variant="error" onClose={() => setErrorMessage(null)}>
+            {errorMessage}
+          </Alert>
         </div>
       )}
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        {/* OTP Input */}
+      <Form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Form.Field name="otp" error={errors.otp?.message} required>
-          <Form.Input
-            type="text"
-            maxLength={6}
-            placeholder="• • • • • •"
-            className="h-14 rounded-2xl bg-[#F8FAFC] border-slate-200 text-center tracking-[0.5em] text-xl font-bold"
-            {...register("otp")}
+          <Controller
+            name="otp"
+            control={control}
+            render={({ field }) => (
+              <>
+                {/* 6-box OTP visual entry */}
+                <div className="py-2">
+                  <OtpCodeInput
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    error={Boolean(errors.otp)}
+                  />
+                </div>
+
+                <input
+                  type="text"
+                  name="otp"
+                  value={field.value || ""}
+                  onChange={field.onChange}
+                  className="sr-only"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                />
+              </>
+            )}
           />
-          <Form.ErrorMessage />
+          <Form.ErrorMessage className="justify-center text-center" />
         </Form.Field>
 
         {/* Resend Timer */}
-        <div className="flex items-center justify-between text-xs pt-1">
+        <div className="flex items-center justify-between text-xs pt-1 px-1">
           <button
             type="button"
             onClick={handleResendOtp}
             disabled={resendTimer > 0 || isRequestingOtp}
-            className={`font-bold transition-colors ${
+            className={`font-bold transition-colors cursor-pointer ${
               resendTimer > 0
-                ? "text-text-muted cursor-not-allowed"
+                ? "text-text-muted cursor-not-allowed opacity-70"
                 : "text-[#F36F21] hover:underline"
             }`}
           >
@@ -153,7 +175,7 @@ export default function VerifyOtp() {
           </button>
 
           {resendTimer > 0 && (
-            <span className="text-text-muted font-medium">
+            <span className="text-text-muted font-mono font-medium" dir="ltr">
               00:{resendTimer < 10 ? `0${resendTimer}` : resendTimer}
             </span>
           )}
@@ -163,7 +185,7 @@ export default function VerifyOtp() {
         <button
           type="submit"
           disabled={isVerifyingOtp}
-          className="mt-5 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-60"
+          className="mt-5 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
         >
           {isVerifyingOtp
             ? "جاري التحقق..."
