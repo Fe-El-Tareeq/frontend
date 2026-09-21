@@ -14,7 +14,12 @@ const step1Schema = z.object({
     .string()
     .min(8, "رقم الهاتف يجب أن يتكون من 8 أرقام على الأقل")
     .max(20, "رقم الهاتف غير صالح"),
-  password: z.string().min(6, "كلمة المرور يجب ألا تقل عن 6 أحرف"),
+  password: z
+    .string()
+    .min(8, "كلمة المرور يجب ألا تقل عن 8 أحرف")
+    .regex(/[A-Z]/, "يجب أن تحتوي على حرف كبير واحد على الأقل")
+    .regex(/[0-9]/, "يجب أن تحتوي على رقم واحد على الأقل")
+    .regex(/[^A-Za-z0-9]/, "يجب أن تحتوي على رمز خاص واحد على الأقل"),
 });
 
 type Step1FormData = z.infer<typeof step1Schema>;
@@ -94,17 +99,22 @@ export default function RegisterStep1() {
         <Form.Field name="password" error={errors.password?.message} required>
           <Form.Label>كلمة المرور</Form.Label>
           <Form.PasswordInput
-            placeholder="يجب أن تتكون من 6 أرقام و حرف كبير على الأقل و رمز مميز ."
+            placeholder="يجب أن تتكون من 8 خانات وتحتوي على حرف كبير ورقم ورمز خاص"
             className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200 text-xs"
             {...register("password")}
           />
           <Form.ErrorMessage />
         </Form.Field>
 
+        {/* Password Helper Hint */}
+        <p className="text-[11px] text-text-secondary text-right -mt-2 mb-1 leading-relaxed">
+          يجب أن تتكون من 8 خانات، وتحتوي على حرف كبير ورقم ورمز خاص.
+        </p>
+
         {/* Next Button (Orange matching Figma) */}
         <button
           type="submit"
-          className="mt-4 flex h-12 w-full items-center justify-center rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all"
+          className="mt-3 flex h-12 w-full items-center justify-center rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all cursor-pointer shadow-md"
         >
           التالي
         </button>

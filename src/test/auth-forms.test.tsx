@@ -189,7 +189,7 @@ describe("auth forms", () => {
 
     fillInput(container, "fullName", "هديل محمد");
     fillInput(container, "phone", "0599123456");
-    fillInput(container, "password", "Pass12!");
+    fillInput(container, "password", "Pass1234!");
     fireEvent.click(screen.getByText("التالي"));
 
     await waitFor(() =>

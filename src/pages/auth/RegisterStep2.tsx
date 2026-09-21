@@ -6,6 +6,7 @@ import { z } from "zod";
 import { ChevronRight } from "lucide-react";
 import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Form } from "../../components/ui/form/Form";
+import { Alert } from "../../components/ui/feedback/Alert";
 import { useLocations } from "../../hooks/useLocations";
 import { useAuth } from "../../hooks/useAuth";
 import { getApiErrorMessage } from "../../utils/apiError";
@@ -108,8 +109,10 @@ export default function RegisterStep2() {
       onFooterAction={() => navigate("/login")}
     >
       {errorMessage && (
-        <div className="mb-4 rounded-xl bg-red-50 p-3 text-right text-xs font-bold text-red-600 border border-red-100">
-          {errorMessage}
+        <div className="mb-4">
+          <Alert variant="error" onClose={() => setErrorMessage(null)}>
+            {errorMessage}
+          </Alert>
         </div>
       )}
 
@@ -186,7 +189,7 @@ export default function RegisterStep2() {
           <button
             type="submit"
             disabled={isRegistering}
-            className="flex h-12 w-full items-center justify-center rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60"
+            className="flex h-12 w-full items-center justify-center rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
           >
             {isRegistering ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
           </button>
@@ -194,7 +197,7 @@ export default function RegisterStep2() {
           <button
             type="button"
             onClick={handleGoBackToStep1}
-            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white text-xs font-bold text-text-secondary hover:bg-slate-50 transition-colors"
+            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white text-xs font-bold text-text-secondary hover:bg-slate-50 transition-colors cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
             <span>الرجوع للخطوة السابقة (تعديل البيانات)</span>
