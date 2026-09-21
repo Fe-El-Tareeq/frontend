@@ -12,6 +12,7 @@ import { SubmitOfferSuccessModal } from "../../components/modals/SubmitOfferSucc
 import { VoiceNoteRecorder } from "../../components/common/VoiceNoteRecorder";
 import { useLocations } from "../../hooks/useLocations";
 import { errandsApi } from "../../api/errands";
+import { getApiErrorMessage } from "../../utils/apiError";
 import type { VoiceNoteData } from "../../hooks/useVoiceRecorder";
 
 export default function SubmitOfferPage() {
@@ -27,9 +28,11 @@ export default function SubmitOfferPage() {
   const [recordedVoice, setRecordedVoice] = useState<VoiceNoteData | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     setIsSubmitting(true);
 
     try {
@@ -41,8 +44,12 @@ export default function SubmitOfferPage() {
         });
       }
       setShowSuccessModal(true);
-    } catch {
-      setShowSuccessModal(true);
+    } catch (err: unknown) {
+      const msg = getApiErrorMessage(
+        err,
+        "تعذر إرسال العرض، يرجى التأكد من البيانات والمحاولة مجدداً.",
+      );
+      setErrorMessage(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -70,6 +77,13 @@ export default function SubmitOfferPage() {
             </p>
           </div>
         </div>
+
+        {/* Error Alert */}
+        {errorMessage && (
+          <div className="rounded-2xl bg-red-50 p-3.5 border border-red-200 text-xs font-bold text-red-700 text-right animate-shake">
+            {errorMessage}
+          </div>
+        )}
 
         {/* Form Card */}
         <div className="rounded-3xl bg-white p-5 border border-border shadow-xs text-right">

@@ -53,7 +53,7 @@ describe("E2E User Simulation & Flows Test Suite", () => {
   it("Flow 2: User manages Errands, filters status, and navigates to Incoming Offers", () => {
     renderWithProviders(<MyErrands />);
 
-    expect(screen.getAllByText("طلبات الأغراض")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("طلباتي")[0]).toBeInTheDocument();
     expect(screen.getAllByText("العروض الواردة")[0]).toBeInTheDocument();
 
     const searchInput = screen.getByPlaceholderText("ابحث في الطلبات...");

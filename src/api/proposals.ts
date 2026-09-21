@@ -1,4 +1,4 @@
-﻿import { apiClient } from "./client";
+import { apiClient } from "./client";
 import { ENDPOINTS } from "./endpoints";
 import type {
   ApiSuccessResponse,
@@ -28,6 +28,45 @@ export const proposalsApi = {
     const res = await apiClient.post<
       ApiSuccessResponse<RejectProposalResponseData>
     >(ENDPOINTS.PROPOSALS.REJECT(id), {});
+    return res.data;
+  },
+
+  getInboxProposals: async (params?: {
+    status?: string;
+    unread?: boolean;
+    skip?: number;
+    take?: number;
+  }) => {
+    const res = await apiClient.get<
+      ApiSuccessResponse<ProposalListResponseData>
+    >(ENDPOINTS.PROPOSALS.INBOX, { params });
+    return res.data;
+  },
+
+  getSentProposals: async (params?: {
+    status?: string;
+    skip?: number;
+    take?: number;
+  }) => {
+    const res = await apiClient.get<
+      ApiSuccessResponse<ProposalListResponseData>
+    >(ENDPOINTS.PROPOSALS.SENT, { params });
+    return res.data;
+  },
+
+  withdrawProposal: async (id: string) => {
+    const res = await apiClient.post<ApiSuccessResponse<{ withdrawn: boolean }>>(
+      ENDPOINTS.PROPOSALS.WITHDRAW(id),
+      {},
+    );
+    return res.data;
+  },
+
+  markProposalRead: async (id: string) => {
+    const res = await apiClient.post<ApiSuccessResponse<{ read: boolean }>>(
+      ENDPOINTS.PROPOSALS.READ(id),
+      {},
+    );
     return res.data;
   },
 

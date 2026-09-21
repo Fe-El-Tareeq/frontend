@@ -6,6 +6,9 @@ export type UserStatus = "ACTIVE" | "SUSPENDED" | "BANNED";
 export interface UserSummary {
   id: string;
   phone: string;
+  fullName?: string | null;
+  trustScore?: number;
+  profileImageUrl?: string | null;
   role: UserRole;
   status: UserStatus;
 }
@@ -20,6 +23,7 @@ export interface UserProfile {
   neighborhoodId: string | null;
   profileCompleted: boolean;
   phoneVerifiedAt: string | null;
+  isVerified?: boolean;
   status: UserStatus;
   createdAt: string;
   updatedAt: string;

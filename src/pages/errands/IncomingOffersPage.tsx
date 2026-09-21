@@ -4,7 +4,9 @@ import { ChevronRight, ThumbsUp, ThumbsDown, Package } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
+import { ErrorState } from "../../components/ui/feedback/ErrorState";
 import { useErrandDetail } from "../../hooks/useErrands";
+import { useErrandProposals, useProposalsMutations } from "../../hooks/useProposals";
 
 interface IncomingOffer {
   id: string;
@@ -24,37 +26,68 @@ export default function IncomingOffersPage() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { errand } = useErrandDetail(id);
+  const { proposals, isLoading, isError, refetch } = useErrandProposals(id);
+  const { acceptProposal, rejectProposal, isAccepting, isRejecting } = useProposalsMutations();
 
   const [activeTab, setActiveTab] = useState<
     "ALL" | "NEW" | "ACCEPTED" | "REJECTED"
   >("ALL");
 
-  /*
-   * ============================================================================
-   * BACKEND INTEGRATION: Matching Travelers & Errand Offers
-   * Endpoint: GET /api/v1/matching/errands/:id?limit=10
-   * Acceptance Endpoint: POST /api/v1/assignments (Body: { errandId, tripId })
-   * When empty or pending, renders EmptyState from design system without mock data.
-   * ============================================================================
-   */
-  const [offers, setOffers] = useState<IncomingOffer[]>([]);
+  const formattedOffers: IncomingOffer[] = proposals.map((p, idx) => {
+    const travelerName = p.proposer?.fullName || "مسافر نشط";
+    const initials = travelerName
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2);
 
-  const filteredOffers = offers.filter((o) => {
+    const dateStr = p.createdAt
+      ? new Date(p.createdAt).toLocaleDateString("ar-EG", {
+          day: "numeric",
+          month: "short",
+        })
+      : "اليوم";
+
+    return {
+      id: p.id,
+      travelerName,
+      avatarInitials: initials,
+      avatarBg:
+        idx % 3 === 0
+          ? "bg-[#123A68]"
+          : idx % 3 === 1
+            ? "bg-[#F36F21]"
+            : "bg-purple-600",
+      tripsCount: 1,
+      rating: p.proposer?.trustScore ? Number((p.proposer.trustScore / 20).toFixed(1)) : 5.0,
+      timeAgo: dateStr,
+      route: errand?.neighborhood ? `${errand.neighborhood.name} ➔ ${errand.destinationKeyword}` : "مسار التوصيل",
+      dateTime: dateStr,
+      quote: p.notes || "مستعد لتوصيل هذا الطلب في طريقي",
+      status: p.status === "ACCEPTED" ? "ACCEPTED" : p.status === "REJECTED" ? "REJECTED" : "NEW",
+    };
+  });
+
+  const filteredOffers = formattedOffers.filter((o) => {
     if (activeTab === "ALL") return true;
     return o.status === activeTab;
   });
 
-  const handleAcceptOffer = (offerId: string) => {
-    setOffers((prev) =>
-      prev.map((o) => (o.id === offerId ? { ...o, status: "ACCEPTED" } : o)),
-    );
-    navigate(`/errands/${id}/tracking`);
+  const handleAcceptOffer = async (offerId: string) => {
+    try {
+      await acceptProposal(offerId);
+      navigate(`/errands/${id}/tracking`);
+    } catch {
+      // Fallback
+    }
   };
 
-  const handleRejectOffer = (offerId: string) => {
-    setOffers((prev) =>
-      prev.map((o) => (o.id === offerId ? { ...o, status: "REJECTED" } : o)),
-    );
+  const handleRejectOffer = async (offerId: string) => {
+    try {
+      await rejectProposal(offerId);
+    } catch {
+      // Fallback
+    }
   };
 
   return (
@@ -91,7 +124,7 @@ export default function IncomingOffersPage() {
             </span>
           </div>
           <div className="text-2xl font-black text-white">
-            {offers.length}{" "}
+            {formattedOffers.length}{" "}
             <span className="text-xs font-normal">عرض متاح</span>
           </div>
         </div>
@@ -99,10 +132,10 @@ export default function IncomingOffersPage() {
         {/* Tab Badges */}
         <div className="flex items-center gap-2 text-xs font-bold">
           {[
-            { key: "ALL", label: "الكل" },
-            { key: "NEW", label: "جديدة" },
-            { key: "ACCEPTED", label: "مقبولة" },
-            { key: "REJECTED", label: "مرفوضة" },
+            { key: "ALL", label: `الكل (${formattedOffers.length})` },
+            { key: "NEW", label: `جديدة (${formattedOffers.filter(o => o.status === "NEW").length})` },
+            { key: "ACCEPTED", label: `مقبولة (${formattedOffers.filter(o => o.status === "ACCEPTED").length})` },
+            { key: "REJECTED", label: `مرفوضة (${formattedOffers.filter(o => o.status === "REJECTED").length})` },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -110,7 +143,7 @@ export default function IncomingOffersPage() {
               onClick={() => setActiveTab(tab.key as typeof activeTab)}
               className={`rounded-xl px-3.5 py-1.5 transition-all cursor-pointer ${
                 activeTab === tab.key
-                  ? "bg-[#123A68] text-white shadow-xs"
+                  ? "bg-[#123A68] text-white shadow-xs font-black"
                   : "bg-white border border-slate-200 text-text-secondary hover:bg-slate-50"
               }`}
             >
@@ -119,8 +152,29 @@ export default function IncomingOffersPage() {
           ))}
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="space-y-3 pt-2">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-28 rounded-3xl bg-slate-100 animate-pulse"
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Error State */}
+        {isError && !isLoading && (
+          <ErrorState
+            title="تعذر تحميل العروض"
+            message="حدث خطأ أثناء جلب قائمة العروض الواردة من الخادم."
+            onRetry={refetch}
+          />
+        )}
+
         {/* Offers List or Empty State */}
-        {filteredOffers.length === 0 ? (
+        {!isLoading && !isError && filteredOffers.length === 0 ? (
           <EmptyState
             icon={<Package className="h-8 w-8 text-[#123A68]" />}
             title="لا توجد عروض واردة حالياً"
@@ -128,7 +182,7 @@ export default function IncomingOffersPage() {
             actionText="العودة للطلبات"
             onAction={() => navigate("/errands")}
           />
-        ) : (
+        ) : !isLoading && !isError ? (
           <div className="space-y-3">
             {filteredOffers.map((offer) => (
               <div
@@ -172,26 +226,28 @@ export default function IncomingOffersPage() {
                   <div className="flex items-center gap-2 pt-1">
                     <button
                       type="button"
+                      disabled={isAccepting || isRejecting}
                       onClick={() => handleAcceptOffer(offer.id)}
-                      className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 active:scale-98 transition-all cursor-pointer"
+                      className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 active:scale-98 transition-all cursor-pointer disabled:opacity-50"
                     >
                       <ThumbsUp className="h-4 w-4" />
-                      <span>قبول العرض</span>
+                      <span>{isAccepting ? "جاري القبول..." : "قبول العرض"}</span>
                     </button>
                     <button
                       type="button"
+                      disabled={isAccepting || isRejecting}
                       onClick={() => handleRejectOffer(offer.id)}
-                      className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 active:scale-98 transition-all cursor-pointer"
+                      className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 active:scale-98 transition-all cursor-pointer disabled:opacity-50"
                     >
                       <ThumbsDown className="h-4 w-4" />
-                      <span>رفض</span>
+                      <span>{isRejecting ? "جاري الرفض..." : "رفض"}</span>
                     </button>
                   </div>
                 )}
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
     </MobileContainer>
   );

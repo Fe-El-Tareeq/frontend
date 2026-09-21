@@ -26,7 +26,7 @@ export default function WalletPage() {
     refetchTransactions,
   } = useWalletTransactions();
 
-  const currentBalance = tokenBalance ?? 47;
+  const currentBalance = tokenBalance ?? 0;
 
   // Calculate dynamic totals from transaction history
   const totalBought = transactions
@@ -90,14 +90,14 @@ export default function WalletPage() {
         {/* Current Balance Hero Card */}
         <WalletBalanceHero
           tokenBalance={currentBalance}
-          userName={profile?.fullName || "هديل محمد"}
+          userName={profile?.fullName || "المستخدم"}
           isLoading={isLoadingWallet}
         />
 
         {/* 2 Total Stats Cards (إجمالي الشراء / إجمالي الإنفاق) */}
         <WalletStatsSummary
-          totalPurchased={totalBought > 0 ? totalBought : 70}
-          totalSpent={totalSpent > 0 ? totalSpent : 23}
+          totalPurchased={totalBought}
+          totalSpent={totalSpent}
           isLoading={isLoadingTransactions}
         />
 
@@ -150,4 +150,5 @@ export default function WalletPage() {
     </MobileContainer>
   );
 }
+
 

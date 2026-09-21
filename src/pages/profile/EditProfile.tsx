@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { AppLayout } from "../../components/layout/AppLayout";
-import { Form } from "../../components/ui/form/Form";
-import { Button } from "../../components/ui/button/Button";
-import { Alert } from "../../components/ui/feedback/Alert";
+import { ChevronRight, Loader2, Save } from "lucide-react";
+import { Header } from "../../components/layout/Header";
+import { MobileContainer } from "../../components/layout/MobileContainer";
 import { useAuth } from "../../hooks/useAuth";
 import { useLocations } from "../../hooks/useLocations";
 import { getApiErrorMessage } from "../../utils/apiError";
@@ -75,30 +74,49 @@ export default function EditProfile() {
   };
 
   return (
-    <AppLayout
-      headerProps={{
-        title: "تعديل الملف الشخصي",
-        subtitle: "تحديث الاسم والحي السكني النشط",
-        showBack: true,
-      }}
-      showBottomNav={false}
-    >
-      <div className="space-y-4 pb-8">
+    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+      <Header />
+
+      <div className="px-4 pt-4 space-y-4">
+        {/* Title */}
+        <div className="flex items-center justify-between">
+          <div className="text-right">
+            <h1 className="text-xl font-black text-[#123A68]">
+              تعديل الملف الشخصي
+            </h1>
+            <p className="text-xs text-text-secondary mt-0.5">
+              تحديث الاسم والحي السكني النشط
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            aria-label="الرجوع للخلف"
+            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </div>
+
+        {/* Feedback alerts */}
         {successMessage && (
-          <Alert variant="success">تم حفظ التعديلات بنجاح!</Alert>
+          <div className="rounded-2xl bg-emerald-50 p-3.5 border border-emerald-200 text-xs font-bold text-emerald-800 text-right">
+            تم حفظ التعديلات بنجاح!
+          </div>
         )}
 
         {errorMessage && (
-          <Alert variant="error" onClose={() => setErrorMessage(null)}>
+          <div className="rounded-2xl bg-rose-50 p-3.5 border border-rose-200 text-xs font-bold text-rose-800 text-right">
             {errorMessage}
-          </Alert>
+          </div>
         )}
 
-        <div className="rounded-xl bg-white p-6 border border-border shadow-sm">
-          <Form onSubmit={handleSubmit(onSubmit)}>
+        {/* Form Card */}
+        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-2xs">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-right">
             {/* Phone Number (Read-only) */}
-            <div className="mb-3">
-              <label className="block text-[13px] font-medium text-text-secondary mb-1 text-right">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 رقم الهاتف (غير قابل للتعديل)
               </label>
               <input
@@ -106,34 +124,37 @@ export default function EditProfile() {
                 value={profile?.phone || ""}
                 disabled
                 dir="ltr"
-                className="h-12.5 w-full rounded-[16px] border border-border bg-background px-4 text-right text-[14px] text-text-muted font-mono"
+                className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 text-right text-xs font-mono font-bold text-slate-500 cursor-not-allowed"
               />
             </div>
 
             {/* Full Name */}
-            <Form.Field
-              name="fullName"
-              error={errors.fullName?.message}
-              required
-            >
-              <Form.Label>الاسم الكامل</Form.Label>
-              <Form.Input
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                الاسم الكامل *
+              </label>
+              <input
+                type="text"
                 placeholder="أدخل اسمك الكامل"
                 {...register("fullName")}
+                className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 text-xs font-bold text-[#123A68] focus:outline-none focus:border-[#123A68]"
               />
-              <Form.ErrorMessage />
-            </Form.Field>
+              {errors.fullName && (
+                <p className="text-[11px] font-bold text-rose-600 mt-1">
+                  {errors.fullName.message}
+                </p>
+              )}
+            </div>
 
             {/* Neighborhood */}
-            <Form.Field
-              name="neighborhoodId"
-              error={errors.neighborhoodId?.message}
-              required
-            >
-              <Form.Label>الحي السكني</Form.Label>
-              <Form.Select
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                الحي السكني *
+              </label>
+              <select
                 disabled={isLoadingNeighborhoods}
                 {...register("neighborhoodId")}
+                className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs font-bold text-[#123A68] focus:outline-none focus:border-[#123A68] cursor-pointer text-right"
               >
                 <option value="">
                   {isLoadingNeighborhoods
@@ -145,23 +166,37 @@ export default function EditProfile() {
                     {n.name} - {n.governorate}
                   </option>
                 ))}
-              </Form.Select>
-              <Form.ErrorMessage />
-            </Form.Field>
+              </select>
+              {errors.neighborhoodId && (
+                <p className="text-[11px] font-bold text-rose-600 mt-1">
+                  {errors.neighborhoodId.message}
+                </p>
+              )}
+            </div>
 
-            <Button
-              type="submit"
-              variant="accent"
-              size="md"
-              fullWidth
-              isLoading={isUpdatingProfile}
-              className="mt-6"
-            >
-              حفظ التعديلات
-            </Button>
-          </Form>
+            {/* Submit Button */}
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isUpdatingProfile}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 disabled:opacity-60 transition-all cursor-pointer shadow-md"
+              >
+                {isUpdatingProfile ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>جاري الحفظ...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    <span>حفظ التعديلات</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    </AppLayout>
+    </MobileContainer>
   );
 }

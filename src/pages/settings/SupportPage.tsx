@@ -202,7 +202,7 @@ export default function SupportPage() {
           <span>3 وكلاء متاحون</span>
         </div>
 
-        {/* 3 Contact Action Cards */}
+        {/* 3 Contact Action Cards matching Figma */}
         <div className="grid grid-cols-3 gap-2.5">
           {/* Card 1: دردشة مباشرة */}
           <button
@@ -312,15 +312,10 @@ export default function SupportPage() {
 
         {/* Bottom Complaint Banner */}
         <div className="flex items-center justify-between rounded-3xl bg-[#FFF1F2] p-4 border border-[#FECDD3] text-right">
-          <button
-            type="button"
-            onClick={() => navigate("/settings/report-issue")}
-            className="rounded-xl bg-[#E11D48] px-4 py-2 text-xs font-black text-white shadow-xs hover:bg-rose-700 active:scale-95 transition-all cursor-pointer"
-          >
-            إبلاغ
-          </button>
-
           <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-[#E11D48]">
+              <AlertCircle className="h-4.5 w-4.5" />
+            </div>
             <div className="space-y-0.5">
               <h3 className="text-xs font-black text-[#E11D48]">
                 لديك شكوى أو انتهاك؟
@@ -329,10 +324,15 @@ export default function SupportPage() {
                 أبلغ عن محتوى مسيء أو انتهاك لشروط الاستخدام
               </p>
             </div>
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-[#E11D48]">
-              <AlertCircle className="h-4.5 w-4.5" />
-            </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => navigate("/settings/report-issue")}
+            className="rounded-xl bg-[#E11D48] px-4 py-2 text-xs font-black text-white shadow-xs hover:bg-rose-700 active:scale-95 transition-all cursor-pointer shrink-0"
+          >
+            إبلاغ
+          </button>
         </div>
       </div>
 
@@ -411,14 +411,6 @@ export default function SupportPage() {
 
             {/* Chat Input Bar */}
             <div className="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => handleSendChatMessage()}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#123A68] text-white hover:bg-[#0D2C50] active:scale-95 transition-all cursor-pointer shrink-0"
-              >
-                <Send className="h-4 w-4" />
-              </button>
-
               <input
                 type="text"
                 value={chatInput}
@@ -427,6 +419,14 @@ export default function SupportPage() {
                 placeholder="اكتب رسالتك..."
                 className="h-10 flex-1 rounded-xl bg-slate-100 px-3 text-xs text-right focus:outline-none focus:ring-1 focus:ring-[#123A68]"
               />
+
+              <button
+                type="button"
+                onClick={() => handleSendChatMessage()}
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#123A68] text-white hover:bg-[#0D2C50] active:scale-95 transition-all cursor-pointer shrink-0"
+              >
+                <Send className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
@@ -563,37 +563,37 @@ export default function SupportPage() {
             {/* Info Rows */}
             <div className="p-5 space-y-3.5 text-xs">
               <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-text-muted">
+                  <Clock className="h-4 w-4 text-slate-400" />
+                  <span>ساعات العمل</span>
+                </div>
                 <span className="font-bold text-[#123A68]">
                   {supportConfig?.workingHours || "الأحد–الخميس 9:00 ص – 5:00 م"}
                 </span>
-                <div className="flex items-center gap-2 text-text-muted">
-                  <span>ساعات العمل</span>
-                  <Clock className="h-4 w-4 text-slate-400" />
-                </div>
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                <span className="font-bold text-[#123A68]">العربية</span>
                 <div className="flex items-center gap-2 text-text-muted">
-                  <span>اللغة</span>
                   <Globe className="h-4 w-4 text-slate-400" />
+                  <span>اللغة</span>
                 </div>
+                <span className="font-bold text-[#123A68]">العربية</span>
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                <span className="font-bold text-[#123A68]">أقل من 3 دقائق</span>
                 <div className="flex items-center gap-2 text-text-muted">
-                  <span>متوسط وقت الانتظار</span>
                   <Hourglass className="h-4 w-4 text-slate-400" />
+                  <span>متوسط وقت الانتظار</span>
                 </div>
+                <span className="font-bold text-[#123A68]">أقل من 3 دقائق</span>
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                <span className="font-bold text-[#059669]">3 وكلاء الآن</span>
                 <div className="flex items-center gap-2 text-text-muted">
-                  <span>الوكلاء المتاحون</span>
                   <Users className="h-4 w-4 text-slate-400" />
+                  <span>الوكلاء المتاحون</span>
                 </div>
+                <span className="font-bold text-[#059669]">3 وكلاء الآن</span>
               </div>
 
               {/* Call Button */}

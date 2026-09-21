@@ -67,8 +67,12 @@ export const ENDPOINTS = {
   },
   PROPOSALS: {
     CREATE: "/api/v1/proposals",
+    INBOX: "/api/v1/proposals/inbox",
+    SENT: "/api/v1/proposals/sent",
     ACCEPT: (id: string) => `/api/v1/proposals/${id}/accept`,
     REJECT: (id: string) => `/api/v1/proposals/${id}/reject`,
+    WITHDRAW: (id: string) => `/api/v1/proposals/${id}/withdraw`,
+    READ: (id: string) => `/api/v1/proposals/${id}/read`,
     ERRAND_PROPOSALS: (errandId: string) => `/api/v1/errands/${errandId}/proposals`,
     TRIP_PROPOSALS: (tripId: string) => `/api/v1/trips/${tripId}/proposals`,
   },

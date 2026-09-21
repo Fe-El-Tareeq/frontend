@@ -53,6 +53,11 @@ const PaymentSuccessPage = lazy(
 
 const ProfilePage = lazy(() => import("./pages/profile/ProfilePage"));
 const EditProfile = lazy(() => import("./pages/profile/EditProfile"));
+const MyTripsPage = lazy(() => import("./pages/profile/MyTripsPage"));
+const MySubmittedOffersPage = lazy(
+  () => import("./pages/profile/MySubmittedOffersPage"),
+);
+const TripChecklistPage = lazy(() => import("./pages/trips/TripChecklistPage"));
 const SettingsPage = lazy(() => import("./pages/profile/SettingsPage"));
 const SupportPage = lazy(() => import("./pages/settings/SupportPage"));
 const ReportIssuePage = lazy(
@@ -283,6 +288,14 @@ function App() {
             }
           />
           <Route
+            path="/trips/:id/checklist"
+            element={
+              <ProtectedRoute>
+                <TripChecklistPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/trips/:id/request-space"
             element={
               <ProtectedRoute>
@@ -373,6 +386,38 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/trips"
+            element={
+              <ProtectedRoute>
+                <MyTripsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-trips"
+            element={
+              <ProtectedRoute>
+                <MyTripsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/my-offers"
+            element={
+              <ProtectedRoute>
+                <MySubmittedOffersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-offers"
+            element={
+              <ProtectedRoute>
+                <MySubmittedOffersPage />
               </ProtectedRoute>
             }
           />

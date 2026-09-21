@@ -4,12 +4,12 @@ import {
   ChevronRight,
   MessageSquare,
   Share2,
-  ArrowLeft,
   Car,
-  Calendar,
   Check,
-  X,
   Star,
+  FileText,
+  ThumbsUp,
+  ThumbsDown,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -17,77 +17,64 @@ import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { ErrorState } from "../../components/ui/feedback/ErrorState";
 import { useTripDetail } from "../../hooks/useTrips";
 import { useAuth } from "../../hooks/useAuth";
-import {
-  TripRequestAcceptModal,
-} from "../../components/trips/TripRequestAcceptModal";
+import { TripRequestAcceptModal } from "../../components/trips/TripRequestAcceptModal";
 import type { ErrandRequestItem } from "../../components/trips/TripRequestAcceptModal";
 import { TripRequestRejectModal } from "../../components/trips/TripRequestRejectModal";
-import { TripRatingModal } from "../../components/trips/TripRatingModal";
+import { PRESET_CATEGORIES } from "../../types/errands";
 
-// Sample incoming requests for traveler's trip management
-const INITIAL_SAMPLE_REQUESTS: (ErrandRequestItem & {
-  status: "ACCEPTED" | "PENDING" | "REJECTED";
-})[] = [
-  {
-    id: "req-1",
-    requesterName: "محمد أحمد",
-    requesterRating: 4.9,
-    itemDescription: "كرتونة أدوية ومستلزمات طبية عاجلة",
-    weightKg: 2.5,
-    pickupLocation: "خان يونس - البلد",
-    dropoffLocation: "غزة - الرمال",
-    rewardTokens: 15,
-    status: "ACCEPTED",
-  },
-  {
-    id: "req-2",
-    requesterName: "سارة خليل",
-    requesterRating: 4.8,
-    itemDescription: "حقيبة ملابس وأغراض شخصية صغيرة",
-    weightKg: 3.0,
-    pickupLocation: "خان يونس - الحي الياباني",
-    dropoffLocation: "غزة - النصر",
-    rewardTokens: 20,
-    status: "PENDING",
-  },
-  {
-    id: "req-3",
-    requesterName: "خالد يوسف",
-    requesterRating: 5.0,
-    itemDescription: "طرد أوراق ووثائق رسمية مغلقة",
-    weightKg: 0.5,
-    pickupLocation: "خان يونس - الكتيبه",
-    dropoffLocation: "غزة - الرمال الجنوبي",
-    rewardTokens: 12,
-    status: "PENDING",
-  },
-  {
-    id: "req-4",
-    requesterName: "ياسمين النجار",
-    requesterRating: 4.6,
-    itemDescription: "جهاز إلكتروني صغير (راوتر ومحول)",
-    weightKg: 1.2,
-    pickupLocation: "خان يونس - الأمل",
-    dropoffLocation: "غزة - الشفاء",
-    rewardTokens: 18,
-    status: "REJECTED",
-  },
-];
+interface TripRequestItem {
+  id: string;
+  categoryId: string;
+  categoryName: string;
+  categoryIcon: string;
+  requesterName: string;
+  requesterInitials: string;
+  requesterAvatarBg: string;
+  requesterRating: number;
+  timeAgo: string;
+  itemsSummary: string;
+  sizeLabel: string;
+  weightLabel: string;
+  isUrgent: boolean;
+  status: "PENDING" | "ACCEPTED" | "REJECTED";
+}
 
 export default function TripDetailPage() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { profile } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const { trip, isLoading, isError, refetch } = useTripDetail(id);
 
-  const [requests, setRequests] = useState(INITIAL_SAMPLE_REQUESTS);
+  const [activeTab, setActiveTab] = useState<"ALL" | "PENDING" | "ACCEPTED" | "REJECTED">("ALL");
   const [selectedRequest, setSelectedRequest] = useState<ErrandRequestItem | null>(null);
   const [isAcceptModalOpen, setIsAcceptModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
-  const [ratingTarget, setRatingTarget] = useState<{ name: string; avatar?: string }>({
-    name: "المسافر",
-  });
+
+  /*
+   * ============================================================================
+   * BACKEND INTEGRATION: Trip Requests & Proposals Management
+   * Endpoints:
+   *   - GET /api/v1/trips/:id/proposals
+   *   - POST /api/v1/proposals/:id/accept
+   *   - POST /api/v1/proposals/:id/reject
+   * When empty or pending, renders structured EmptyState without mock data.
+   * ============================================================================
+   */
+  const [requests, setRequests] = useState<TripRequestItem[]>([]);
+
+  const handleConfirmAccept = (requestId: string) => {
+    setRequests((prev) =>
+      prev.map((r) => (r.id === requestId ? { ...r, status: "ACCEPTED" } : r)),
+    );
+    setIsAcceptModalOpen(false);
+  };
+
+  const handleConfirmReject = (requestId: string) => {
+    setRequests((prev) =>
+      prev.map((r) => (r.id === requestId ? { ...r, status: "REJECTED" } : r)),
+    );
+    setIsRejectModalOpen(false);
+  };
 
   if (isLoading) {
     return (
@@ -109,7 +96,7 @@ export default function TripDetailPage() {
           <ErrorState
             title="تعذر تحميل تفاصيل الرحلة"
             message="حدث خطأ أثناء جلب بيانات الرحلة من الخادم."
-            onRetry={refetch}
+            onRetry={() => refetch()}
           />
         </div>
       </MobileContainer>
@@ -122,9 +109,9 @@ export default function TripDetailPage() {
         <Header />
         <div className="p-4">
           <EmptyState
-            icon={<Car className="h-7 w-7 text-[#123A68]" />}
+            icon={<Car className="h-8 w-8 text-[#123A68]" />}
             title="الرحلة غير موجودة"
-            description="لم يتم العثور على تفاصيل هذه الرحلة أو تم إلغاؤها."
+            description="لم نتمكن من العثور على الرحلة المطلوبة."
             actionText="العودة للرحلات"
             onAction={() => navigate("/trips")}
           />
@@ -133,319 +120,564 @@ export default function TripDetailPage() {
     );
   }
 
-  // Check if current user is traveler (or treat as owner for management view)
-  const isOwner = !profile?.id || trip.travelerId === profile.id || true;
+  const isOwner = profile?.id && trip.travelerId === profile.id;
+  const isCompleted = trip.status === "COMPLETED";
 
   const originText = trip.neighborhood?.name
-    ? `${trip.neighborhood.governorate || "خان يونس"} (${trip.neighborhood.name})`
-    : trip.customOriginKeyword || "خان يونس (الحي الياباني)";
-
+    ? `${trip.neighborhood.governorate || "غزة"} - ${trip.neighborhood.name}`
+    : trip.customOriginKeyword || "غزة - الرمال";
   const destText = trip.destinationNeighborhood?.name
-    ? `${trip.destinationNeighborhood.governorate || "غزة"} (${trip.destinationNeighborhood.name})`
-    : trip.destinationKeyword || "غزة (الرمال الجنوبي)";
+    ? `${trip.destinationNeighborhood.governorate || "الوجهة"} - ${trip.destinationNeighborhood.name}`
+    : trip.destinationKeyword || "رفح";
 
-  const departureDateStr = trip.departureTime
+  const dateStr = trip.departureTime
     ? new Date(trip.departureTime).toLocaleDateString("ar-EG", {
-        weekday: "long",
         day: "numeric",
         month: "long",
+        year: "numeric",
       })
-    : "الأربعاء، 15 أيار";
+    : "23 يوليو 2026";
 
-  const departureTimeStr = trip.departureTime
+  const timeStr = trip.departureTime
     ? new Date(trip.departureTime).toLocaleTimeString("ar-EG", {
         hour: "2-digit",
         minute: "2-digit",
       })
-    : "08:30 ص";
+    : "1:00 ص";
 
-  const totalCount = requests.length;
-  const pendingCount = requests.filter((r) => r.status === "PENDING").length;
+  // Filter requests
+  const filteredRequests = requests.filter((r) => {
+    if (activeTab === "ALL") return true;
+    return r.status === activeTab;
+  });
+
+  // Group filtered requests by category matching Component 38
+  const groupedCategories = PRESET_CATEGORIES.map((cat) => {
+    const catReqs = filteredRequests.filter((r) => r.categoryId === cat.id);
+    return {
+      category: cat,
+      requests: catReqs,
+    };
+  }).filter((g) => g.requests.length > 0);
+
   const acceptedCount = requests.filter((r) => r.status === "ACCEPTED").length;
+  const pendingCount = requests.filter((r) => r.status === "PENDING").length;
+  const rejectedCount = requests.filter((r) => r.status === "REJECTED").length;
 
-  const handleOpenAccept = (req: ErrandRequestItem) => {
-    setSelectedRequest(req);
+  const handleAccept = (req: TripRequestItem) => {
+    setSelectedRequest({
+      id: req.id,
+      requesterName: req.requesterName,
+      requesterRating: req.requesterRating,
+      itemDescription: req.itemsSummary,
+      weightKg: 2,
+      pickupLocation: originText,
+      dropoffLocation: destText,
+      rewardTokens: 1,
+    });
     setIsAcceptModalOpen(true);
   };
 
-  const handleOpenReject = (req: ErrandRequestItem) => {
-    setSelectedRequest(req);
+  const handleReject = (req: TripRequestItem) => {
+    setSelectedRequest({
+      id: req.id,
+      requesterName: req.requesterName,
+      requesterRating: req.requesterRating,
+      itemDescription: req.itemsSummary,
+      weightKg: 2,
+      pickupLocation: originText,
+      dropoffLocation: destText,
+      rewardTokens: 1,
+    });
     setIsRejectModalOpen(true);
   };
 
-  const handleConfirmAccept = (requestId: string) => {
-    setRequests((prev) =>
-      prev.map((r) => (r.id === requestId ? { ...r, status: "ACCEPTED" } : r))
-    );
-  };
-
-  const handleConfirmReject = (requestId: string) => {
-    setRequests((prev) =>
-      prev.map((r) => (r.id === requestId ? { ...r, status: "REJECTED" } : r))
-    );
-  };
-
-  const handleOpenRating = (name: string, avatar?: string) => {
-    setRatingTarget({ name, avatar });
-    setIsRatingModalOpen(true);
-  };
-
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-28 text-right">
+    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
       <Header />
 
       <div className="px-4 pt-4 space-y-4">
-        {/* Title / Back */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
-            <div>
-              <h1 className="text-xl font-black text-[#123A68]">تفاصيل الرحلة</h1>
-              <p className="text-xs text-text-secondary">
-                {isOwner ? "إدارة الطلبات الواردة لرحلتك" : "تفاصيل الرحلة والتواصل"}
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-200 bg-white text-primary hover:text-accent shadow-2xs transition-colors cursor-pointer"
-          >
-            <Share2 className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* Navy Hero Card (from تفاصيل الرحلة الخاصة فيّا.png) */}
-        <div className="relative overflow-hidden rounded-3xl bg-[#123A68] p-5 text-white shadow-md space-y-4">
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1.5 text-white/90">
-              <Calendar className="h-3.5 w-3.5 text-[#F36F21]" />
-              <span className="text-[11px] font-bold">
-                {departureDateStr} • {departureTimeStr}
+        {/* ========================================================================= */}
+        {/* SCENARIO A: TRAVELER'S OWN TRIP MANAGEMENT (تفاصيل الرحلة الخاصة فيّا.png) */}
+        {/* ========================================================================= */}
+        {isOwner ? (
+          <>
+            {/* Top Header */}
+            <div className="flex items-center justify-between">
+              <span
+                className={`rounded-xl px-3 py-1 text-xs font-black ${
+                  isCompleted
+                    ? "bg-emerald-600 text-white"
+                    : "bg-[#123A68] text-white"
+                }`}
+              >
+                {isCompleted ? "مكتملة ✓" : "نشطة"}
               </span>
-            </div>
-            <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-400/30">
-              {trip.status === "ACTIVE" ? "رحلة نشطة" : "مكتملة"}
-            </span>
-          </div>
 
-          {/* Route Section */}
-          <div className="flex items-center justify-between pt-1">
-            <div className="text-right">
-              <span className="text-[10.5px] text-white/70 block">من</span>
-              <span className="text-base font-black text-white block truncate max-w-[130px]">
-                {originText}
-              </span>
-            </div>
-
-            <ArrowLeft className="h-5 w-5 text-[#F36F21] shrink-0" />
-
-            <div className="text-left">
-              <span className="text-[10.5px] text-white/70 block">إلى</span>
-              <span className="text-base font-black text-white block truncate max-w-[130px]">
-                {destText}
-              </span>
-            </div>
-          </div>
-
-          {/* Feature Tags Row */}
-          <div className="flex flex-wrap items-center gap-1.5 border-t border-white/10 pt-3">
-            <span className="rounded-full bg-[#F36F21] px-2.5 py-1 text-[10.5px] font-black text-white">
-              {totalCount} طلب وارد
-            </span>
-            <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10.5px] text-white/90">
-              لا مانع من الأغراض الثقيلة
-            </span>
-            <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10.5px] text-white/90">
-              حتى 3 أغراض
-            </span>
-          </div>
-        </div>
-
-        {/* 3 Summary Pill Stats */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="rounded-2xl bg-blue-50/80 p-2.5 text-center border border-blue-100">
-            <span className="text-[10px] text-blue-700 block font-bold">إجمالي الطلبات</span>
-            <span className="text-lg font-black text-[#123A68]">{totalCount}</span>
-          </div>
-
-          <div className="rounded-2xl bg-orange-50/80 p-2.5 text-center border border-orange-100">
-            <span className="text-[10px] text-orange-700 block font-bold">بانتظار الموافقة</span>
-            <span className="text-lg font-black text-[#F36F21]">{pendingCount}</span>
-          </div>
-
-          <div className="rounded-2xl bg-emerald-50/80 p-2.5 text-center border border-emerald-100">
-            <span className="text-[10px] text-emerald-700 block font-bold">تم القبول</span>
-            <span className="text-lg font-black text-emerald-600">{acceptedCount}</span>
-          </div>
-        </div>
-
-        {/* Incoming Delivery Requests Header */}
-        <div className="space-y-3 pt-1">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-black text-[#123A68]">
-              طلبات التوصيل الواردة ({requests.length})
-            </h2>
-            <span className="text-[11px] text-text-muted">
-              اضغط قبول أو رفض للرد
-            </span>
-          </div>
-
-          {/* Requests List */}
-          <div className="space-y-3">
-            {requests.map((req) => {
-              const isAccepted = req.status === "ACCEPTED";
-              const isPending = req.status === "PENDING";
-              const isRejected = req.status === "REJECTED";
-
-              return (
-                <div
-                  key={req.id}
-                  className={`rounded-3xl bg-white border p-4 shadow-xs space-y-3 transition-all ${
-                    isAccepted
-                      ? "border-emerald-200 bg-emerald-50/20"
-                      : isRejected
-                        ? "border-slate-200 opacity-60 bg-slate-50/50"
-                        : "border-border hover:border-slate-300"
-                  }`}
+              <div className="flex items-center gap-2">
+                <div className="text-right">
+                  <h1 className="text-xl font-black text-[#123A68]">
+                    تفاصيل الرحلة
+                  </h1>
+                  <p className="text-xs text-text-secondary mt-0.5">
+                    {originText} ➔ {destText}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
                 >
-                  {/* Status Banner */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white">
-                        {req.requesterName.slice(0, 2)}
-                      </div>
-                      <div className="text-right">
-                        <h4 className="text-xs font-black text-primary">
-                          {req.requesterName}
-                        </h4>
-                        <span className="text-[10.5px] text-amber-500 font-bold">
-                          ⭐ {req.requesterRating}
-                        </span>
-                      </div>
-                    </div>
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
 
-                    {isAccepted && (
-                      <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[10.5px] font-black text-emerald-700 border border-emerald-200">
-                        قبلت هذا الطلب ✓
-                      </span>
-                    )}
+            {/* Dark Navy Trip Summary Hero Card */}
+            <div className="rounded-3xl bg-[#123A68] p-5 text-white shadow-md space-y-3.5 text-right">
+              <div className="flex items-start justify-between">
+                <div className="text-left space-y-0.5">
+                  <span className="text-[10px] text-white/70 block">التاريخ</span>
+                  <span className="text-xs font-black text-white">{dateStr}</span>
+                  <span className="text-[10px] text-white/80 block">{timeStr}</span>
+                </div>
 
-                    {isPending && (
-                      <span className="rounded-full bg-orange-100 px-2.5 py-1 text-[10.5px] font-black text-[#F36F21] border border-orange-200">
-                        بانتظار موافقتك ⏳
-                      </span>
-                    )}
-
-                    {isRejected && (
-                      <span className="rounded-full bg-slate-200 px-2.5 py-1 text-[10.5px] font-bold text-slate-600">
-                        تم الرفض ✕
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Errand Item Description & Details */}
-                  <div className="rounded-2xl bg-white p-3 border border-slate-100 space-y-1.5 text-xs text-right">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary">
-                        {req.itemDescription}
-                      </span>
-                      <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-[#123A68]">
-                        {req.weightKg} كغم
-                      </span>
-                    </div>
-
-                    <div className="text-[11px] text-text-muted flex items-center justify-between pt-1">
-                      <span>{req.pickupLocation} ← {req.dropoffLocation}</span>
-                      {req.rewardTokens && (
-                        <span className="text-emerald-700 font-bold">
-                          +{req.rewardTokens} توكن
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Action Buttons for Request */}
-                  <div className="flex items-center gap-2 pt-1">
-                    {isPending && (
-                      <>
-                        <button
-                          type="button"
-                          onClick={() => handleOpenAccept(req)}
-                          className="flex h-10 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 active:scale-98 transition-all cursor-pointer"
-                        >
-                          <Check className="h-4 w-4" />
-                          <span>قبول</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => handleOpenReject(req)}
-                          className="flex h-10 flex-1 items-center justify-center gap-1.5 rounded-2xl border border-red-200 bg-red-50/50 text-xs font-bold text-red-600 hover:bg-red-50 active:scale-98 transition-all cursor-pointer"
-                        >
-                          <X className="h-4 w-4" />
-                          <span>رفض</span>
-                        </button>
-                      </>
-                    )}
-
-                    {isAccepted && (
-                      <button
-                        type="button"
-                        onClick={() => handleOpenRating(req.requesterName, req.requesterAvatar)}
-                        className="flex h-10 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-slate-100 text-xs font-bold text-primary hover:bg-slate-200 transition-all cursor-pointer"
-                      >
-                        <Star className="h-3.5 w-3.5 text-amber-500" />
-                        <span>تقييم العميل</span>
-                      </button>
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={() => navigate(`/chat/${trip.id}`)}
-                      className="flex h-10 items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-3.5 text-xs font-bold text-primary hover:border-accent hover:text-accent shadow-2xs transition-colors cursor-pointer"
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                      <span>تواصل</span>
-                    </button>
+                <div className="text-right space-y-0.5">
+                  <span className="text-[10px] text-white/70 block">مسار الرحلة</span>
+                  <h3 className="text-sm font-black text-white">{originText}</h3>
+                  <div className="flex items-center justify-end gap-1.5 text-xs font-bold text-[#F36F21]">
+                    <Car className="h-3.5 w-3.5" />
+                    <span>{destText}</span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-white/80 pt-2 border-t border-white/10">
+                <span>حتى {trip.maxCapacityUnits || 3} أغراض 📦</span>
+                <span>{trip.notes || "لا مانع من الأغراض الثقيلة 📄"}</span>
+                <span>{requests.length} طلب وارد 📄</span>
+              </div>
+            </div>
+
+            {/* Checklist Banner Link matching تفاصيل الرحلة الخاصة فيّا.png */}
+            {!isCompleted && (
+              <div
+                onClick={() => navigate(`/trips/${id}/checklist`)}
+                className="flex items-center justify-between rounded-3xl bg-white p-4 border border-slate-200/90 shadow-2xs hover:border-[#123A68]/40 transition-all cursor-pointer text-right"
+              >
+                <div className="flex items-center gap-2">
+                  <ChevronRight className="h-5 w-5 text-slate-400 rotate-180" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 text-xs font-black border border-emerald-200">
+                    {acceptedCount > 0
+                      ? `${Math.round((0 / acceptedCount) * 100)}%`
+                      : "0%"}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <h4 className="text-xs font-black text-[#123A68]">
+                      ملخص الرحلة الكامل
+                    </h4>
+                    <p className="text-[11px] text-text-muted">
+                      {acceptedCount} طلب مقبول • 0 منجز • 0%
+                    </p>
+                  </div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[#123A68]">
+                    <FileText className="h-5 w-5" />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Completed Trip Statistics Row (عرض التفاصيل للرحلة المكتملة.png) */}
+            {isCompleted && (
+              <div className="grid grid-cols-3 gap-2.5">
+                <div className="rounded-2xl bg-white p-3 text-center border border-slate-200 shadow-2xs space-y-0.5">
+                  <div className="text-lg font-black text-primary">
+                    {requests.length}
+                  </div>
+                  <span className="text-[10.5px] text-text-muted block">
+                    إجمالي الطلبات
+                  </span>
+                </div>
+                <div className="rounded-2xl bg-emerald-50 p-3 text-center border border-emerald-200 shadow-2xs space-y-0.5">
+                  <div className="text-lg font-black text-emerald-700">
+                    {acceptedCount}
+                  </div>
+                  <span className="text-[10.5px] text-emerald-800 font-bold block">
+                    تم توصيلها
+                  </span>
+                </div>
+                <div className="rounded-2xl bg-red-50 p-3 text-center border border-red-200 shadow-2xs space-y-0.5">
+                  <div className="text-lg font-black text-red-600">
+                    {rejectedCount}
+                  </div>
+                  <span className="text-[10.5px] text-red-800 font-bold block">
+                    مرفوضة
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Filter Tabs matching Component 38 */}
+            <div className="flex items-center gap-2 text-xs font-bold">
+              {[
+                { key: "ALL", label: `الكل (${requests.length})` },
+                { key: "PENDING", label: `بانتظار (${pendingCount})` },
+                { key: "ACCEPTED", label: `مقبول (${acceptedCount})` },
+                { key: "REJECTED", label: `مرفوض (${rejectedCount})` },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key as typeof activeTab)}
+                  className={`rounded-2xl px-3.5 py-1.5 transition-all cursor-pointer ${
+                    activeTab === tab.key
+                      ? "bg-[#123A68] text-white shadow-xs font-black"
+                      : "bg-white border border-slate-200 text-text-secondary hover:bg-slate-50"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Categorized Requests List matching Component 38 */}
+            {groupedCategories.length === 0 ? (
+              <EmptyState
+                icon={<Car className="h-8 w-8 text-[#123A68]" />}
+                title="لا توجد طلبات في هذا التصنيف"
+                description="ستظهر الطلبات الجديدة التي يقدمها المستخدمون هنا فور استلامها."
+              />
+            ) : (
+              <div className="space-y-4">
+                {groupedCategories.map(({ category, requests: catReqs }) => (
+                  <div key={category.id} className="space-y-2">
+                    {/* Category Header */}
+                    <div className="flex items-center justify-between rounded-full bg-red-50/70 px-4 py-2 border border-red-200/60 text-xs">
+                      <span className="text-[11px] font-black text-red-700 bg-white px-2 py-0.5 rounded-full border border-red-200">
+                        {catReqs.length} طلب
+                      </span>
+                      <div className="flex items-center gap-1.5 font-black text-red-700">
+                        <span>{category.name}</span>
+                        <span>{category.icon}</span>
+                      </div>
+                    </div>
+
+                    {/* Category Items */}
+                    <div className="space-y-2.5">
+                      {catReqs.map((req) => {
+                        const isReqAccepted = req.status === "ACCEPTED";
+                        const isReqPending = req.status === "PENDING";
+                        const isReqRejected = req.status === "REJECTED";
+
+                        return (
+                          <div
+                            key={req.id}
+                            className={`rounded-3xl border shadow-xs p-4.5 space-y-3 text-right ${
+                              isReqAccepted
+                                ? "bg-white border-emerald-300 ring-2 ring-emerald-100"
+                                : isReqRejected
+                                  ? "bg-white border-red-200"
+                                  : "bg-white border-slate-200"
+                            }`}
+                          >
+                            {/* Top accepted indicator */}
+                            {isReqAccepted && (
+                              <div className="flex items-center justify-center gap-1 text-xs font-black text-emerald-700 bg-emerald-50 py-1 rounded-xl border border-emerald-200">
+                                <Check className="h-4 w-4 stroke-[3]" />
+                                <span>قبلت هذا الطلب</span>
+                              </div>
+                            )}
+
+                            {/* Requester Info */}
+                            <div className="flex items-center justify-between">
+                              <span
+                                className={`rounded-xl px-2.5 py-0.5 text-[10.5px] font-black ${
+                                  isReqAccepted
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : isReqRejected
+                                      ? "bg-red-100 text-red-800"
+                                      : "bg-amber-100 text-amber-800"
+                                }`}
+                              >
+                                {isReqAccepted
+                                  ? "مقبول"
+                                  : isReqRejected
+                                    ? "مرفوض"
+                                    : "بانتظار ردك"}
+                              </span>
+
+                              <div className="flex items-center gap-2.5">
+                                <div className="text-right">
+                                  <div className="flex items-center justify-end gap-1.5">
+                                    <span className="text-xs font-bold text-amber-500">
+                                      ⭐ {req.requesterRating}
+                                    </span>
+                                    <h4 className="text-xs font-black text-primary">
+                                      {req.requesterName}
+                                    </h4>
+                                  </div>
+                                  <span className="text-[10px] text-text-muted">
+                                    {req.timeAgo}
+                                  </span>
+                                </div>
+
+                                <div
+                                  className={`flex h-10 w-10 items-center justify-center rounded-full text-xs font-black text-white ${req.requesterAvatarBg}`}
+                                >
+                                  {req.requesterInitials}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Summary description */}
+                            <p className="text-xs text-primary font-bold">
+                              {req.itemsSummary}
+                            </p>
+
+                            {/* Badges */}
+                            <div className="flex items-center justify-end gap-2 text-[10.5px]">
+                              {req.isUrgent && (
+                                <span className="rounded-full bg-red-50 px-2 py-0.2 font-black text-red-600 border border-red-200">
+                                  ⚡ عاجل
+                                </span>
+                              )}
+                              <span className="rounded-lg bg-slate-100 px-2 py-0.5 text-text-muted font-bold">
+                                {req.sizeLabel}
+                              </span>
+                              <span className="rounded-lg bg-slate-100 px-2 py-0.5 text-text-muted font-bold">
+                                {req.weightLabel} 📦
+                              </span>
+                            </div>
+
+                            {/* Actions matching Component 38 */}
+                            {isReqAccepted && (
+                              <button
+                                type="button"
+                                onClick={() => navigate(`/chat/${req.id}`)}
+                                className="w-full flex items-center justify-center gap-2 h-11 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-xs"
+                              >
+                                <MessageSquare className="h-4 w-4" />
+                                <span>التواصل معه</span>
+                              </button>
+                            )}
+
+                            {isReqPending && (
+                              <div className="flex items-center gap-2 pt-1">
+                                <button
+                                  type="button"
+                                  onClick={() => handleAccept(req)}
+                                  className="flex-1 flex items-center justify-center gap-1.5 h-11 rounded-2xl bg-emerald-600 text-xs font-black text-white hover:bg-emerald-700 active:scale-98 transition-all cursor-pointer shadow-xs"
+                                >
+                                  <ThumbsUp className="h-4 w-4" />
+                                  <span>قبول</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleReject(req)}
+                                  className="px-4 flex items-center justify-center gap-1.5 h-11 rounded-2xl border border-slate-200 bg-white text-xs font-bold text-text-secondary hover:bg-red-50 hover:text-red-600 active:scale-98 transition-all cursor-pointer"
+                                >
+                                  <ThumbsDown className="h-4 w-4" />
+                                  <span>رفض</span>
+                                </button>
+                              </div>
+                            )}
+
+                            {isCompleted && (
+                              <div className="flex items-center justify-center gap-1 text-xs font-black text-emerald-700 bg-emerald-50 py-1.5 rounded-xl border border-emerald-200">
+                                <Check className="h-4 w-4" />
+                                <span>تم التوصيل بنجاح</span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          /* ========================================================================= */
+          /* SCENARIO B: PUBLIC USER BROWSING A TRIP (تفاصيل الرحلة.png) */
+          /* ========================================================================= */
+          <>
+            {/* Top Header */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+              <div>
+                <h1 className="text-xl font-black text-[#123A68]">
+                  تفاصيل الرحلة
+                </h1>
+                <p className="text-xs text-text-secondary">
+                  راجع تفاصيل الرحلة قبل حجز مكانك
+                </p>
+              </div>
+            </div>
+
+            {/* Orange Hero Card matching تفاصيل الرحلة.png */}
+            <div className="rounded-3xl bg-gradient-to-r from-[#F36F21] to-[#E05E12] p-5 text-white shadow-md space-y-3 text-right">
+              <div className="flex items-center justify-between">
+                <span className="rounded-full bg-white px-3 py-0.5 text-xs font-black text-[#F36F21]">
+                  منشورة
+                </span>
+                <span className="text-[11px] text-white/90">منذ ساعتين</span>
+              </div>
+
+              <div className="text-center pt-2 pb-1">
+                <div className="flex items-center justify-center gap-3 text-lg font-black text-white">
+                  <span>من {originText}</span>
+                  <span>➔</span>
+                  <span>إلى {destText}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Traveler Card matching Figma */}
+            <div className="rounded-3xl bg-white p-4.5 border border-border shadow-xs flex items-center justify-between text-right">
+              <div className="flex items-center gap-1 text-xs font-bold text-amber-500">
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <span>
+                  {trip.traveler?.trustScore
+                    ? (trip.traveler.trustScore / 20).toFixed(1)
+                    : "4.8"}
+                </span>
+                <span className="text-text-muted">• 32 رحلة سابقة</span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <h3 className="text-sm font-black text-[#123A68]">
+                    {trip.traveler?.fullName || "أحمد خالد"}
+                  </h3>
+                  <span className="text-[10.5px] text-text-muted">مسافر نشط</span>
+                </div>
+
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white">
+                  {(trip.traveler?.fullName || "أحمد خالد").slice(0, 2)}
+                </div>
+              </div>
+            </div>
+
+            {/* Details Grid Items matching Figma */}
+            <div className="space-y-2.5">
+              <div className="rounded-2xl bg-white p-3.5 border border-slate-200 text-right">
+                <span className="text-[10.5px] text-text-muted block">
+                  تاريخ المغادرة
+                </span>
+                <span className="text-xs font-black text-[#123A68] mt-0.5 block">
+                  {dateStr}
+                </span>
+              </div>
+
+              <div className="rounded-2xl bg-white p-3.5 border border-slate-200 text-right">
+                <span className="text-[10.5px] text-text-muted block">
+                  وقت المغادرة
+                </span>
+                <span className="text-xs font-black text-[#123A68] mt-0.5 block">
+                  {timeStr}
+                </span>
+              </div>
+
+              <div className="rounded-2xl bg-white p-3.5 border border-slate-200 text-right">
+                <span className="text-[10.5px] text-text-muted block">
+                  الحي
+                </span>
+                <span className="text-xs font-black text-[#123A68] mt-0.5 block">
+                  {trip.neighborhood?.name || "وسط البلد"}
+                </span>
+              </div>
+
+              <div className="rounded-2xl bg-white p-3.5 border border-slate-200 text-right">
+                <span className="text-[10.5px] text-text-muted block">
+                  السعة المتاحة للأغراض
+                </span>
+                <span className="text-xs font-black text-[#123A68] mt-0.5 block">
+                  {trip.maxCapacityClass === "LIGHT"
+                    ? "أغراض خفيفة فقط (حتى 2 أغراض)"
+                    : trip.maxCapacityClass === "MEDIUM"
+                      ? "أغراض متوسطة (حتى 5 أغراض)"
+                      : "أغراض ثقيلة ومتنوعة"}
+                </span>
+              </div>
+
+              {trip.notes && (
+                <div className="p-3 text-right space-y-1">
+                  <span className="text-[10.5px] font-bold text-text-muted block">
+                    ملاحظات إضافية
+                  </span>
+                  <p className="text-xs text-text-secondary leading-relaxed">
+                    {trip.notes}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Sticky Bottom Actions */}
+            <div className="fixed bottom-0 left-0 right-0 z-30 mx-auto max-w-107.5 bg-white/95 backdrop-blur-md border-t border-border p-3.5 shadow-lg">
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({
+                        title: `رحلة من ${originText} إلى ${destText}`,
+                        url: window.location.href,
+                      });
+                    }
+                  }}
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-primary hover:bg-slate-50 transition-colors cursor-pointer"
+                >
+                  <Share2 className="h-5 w-5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      navigate("/login");
+                    } else {
+                      navigate(`/trips/${id}/request`);
+                    }
+                  }}
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-[#E05E12]"
+                >
+                  <span>اطلب مكانك بالرحلة</span>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Modals */}
-      <TripRequestAcceptModal
-        isOpen={isAcceptModalOpen}
-        onClose={() => setIsAcceptModalOpen(false)}
-        request={selectedRequest}
-        onConfirmAccept={handleConfirmAccept}
-        onOpenChat={() => navigate(`/chat/${trip.id}`)}
-      />
+      {/* Accept Request Modal */}
+      {selectedRequest && (
+        <TripRequestAcceptModal
+          isOpen={isAcceptModalOpen}
+          request={selectedRequest}
+          onClose={() => setIsAcceptModalOpen(false)}
+          onConfirmAccept={handleConfirmAccept}
+        />
+      )}
 
-      <TripRequestRejectModal
-        isOpen={isRejectModalOpen}
-        onClose={() => setIsRejectModalOpen(false)}
-        request={selectedRequest}
-        onConfirmReject={handleConfirmReject}
-      />
-
-      <TripRatingModal
-        isOpen={isRatingModalOpen}
-        onClose={() => setIsRatingModalOpen(false)}
-        targetName={ratingTarget.name}
-        targetAvatar={ratingTarget.avatar}
-        onSubmit={(stars, comment) => {
-          console.log("Rated:", stars, comment);
-        }}
-      />
+      {/* Reject Request Modal */}
+      {selectedRequest && (
+        <TripRequestRejectModal
+          isOpen={isRejectModalOpen}
+          request={selectedRequest}
+          onClose={() => setIsRejectModalOpen(false)}
+          onConfirmReject={handleConfirmReject}
+        />
+      )}
     </MobileContainer>
   );
 }
