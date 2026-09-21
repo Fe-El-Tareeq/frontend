@@ -1,7 +1,7 @@
 import type { FC } from "react";
-import { Star, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Car } from "lucide-react";
 
-interface TripItem {
+export interface HomeTripItem {
   id: string;
   travelerName: string;
   avatarInitials: string;
@@ -13,72 +13,87 @@ interface TripItem {
 }
 
 interface HomeActiveTripsProps {
-  trips: TripItem[];
+  trips: HomeTripItem[];
+  isLoading?: boolean;
   onViewAll: () => void;
   onSelectTrip: (id: string) => void;
 }
 
 export const HomeActiveTrips: FC<HomeActiveTripsProps> = ({
   trips,
+  isLoading = false,
   onViewAll,
   onSelectTrip,
 }) => {
   return (
-    <div className="space-y-3 pt-1 text-right">
+    <div className="space-y-2.5 pt-2 text-right">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-black text-[#123A68]">
+        <h2 className="text-sm font-black text-[#123A68]">
           الرحلات المتاحة بالقرب منك
-        </h3>
+        </h2>
         <button
           type="button"
           onClick={onViewAll}
-          className="text-xs font-bold text-accent hover:underline cursor-pointer"
+          className="flex items-center gap-1 text-xs font-black text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
         >
-          عرض الكل ({trips.length})
+          <span>عرض الكل</span>
+          <ArrowLeft className="h-3.5 w-3.5" />
         </button>
       </div>
 
-      <div className="space-y-2.5">
-        {trips.map((trip) => (
-          <div
-            key={trip.id}
-            onClick={() => onSelectTrip(trip.id)}
-            className="rounded-3xl bg-white p-3.5 border border-border shadow-xs hover:border-primary/40 transition-all cursor-pointer space-y-2.5 text-right"
-          >
-            {/* Top row: Avatar + Name on RIGHT (1st child in RTL), Rating on LEFT (2nd child in RTL) */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+      {isLoading ? (
+        <div className="space-y-2.5">
+          {[1, 2].map((i) => (
+            <div
+              key={i}
+              className="h-16 rounded-3xl bg-slate-100 animate-pulse"
+            />
+          ))}
+        </div>
+      ) : trips.length === 0 ? (
+        <div className="rounded-3xl bg-white p-5 text-center border border-slate-100 shadow-2xs space-y-2">
+          <Car className="h-7 w-7 text-slate-400 mx-auto" />
+          <p className="text-xs font-bold text-text-secondary">
+            لا توجد رحلات متاحة في منطقتك حالياً
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-2.5">
+          {trips.map((trip) => (
+            <div
+              key={trip.id}
+              onClick={() => onSelectTrip(trip.id)}
+              className="flex items-center justify-between rounded-3xl bg-white p-3.5 border border-border shadow-2xs hover:border-slate-300 transition-all cursor-pointer text-right"
+            >
+              <div className="flex items-center gap-3">
                 <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-[10px] font-black text-white ${trip.avatarBg}`}
+                  className={`flex h-10 w-10 items-center justify-center rounded-full text-xs font-black text-white ${trip.avatarBg}`}
                 >
                   {trip.avatarInitials}
                 </div>
-                <span className="text-xs font-bold text-primary">
-                  {trip.travelerName}
+                <div className="text-right">
+                  <h3 className="text-xs font-black text-primary">
+                    {trip.travelerName}
+                  </h3>
+                  <p className="text-[11px] text-text-muted">
+                    {trip.from} ➔ {trip.to}
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-left space-y-0.5">
+                <span className="text-[11px] font-bold text-amber-500 block">
+                  ⭐ {trip.rating}
+                </span>
+                <span className="text-[10px] text-text-muted">
+                  {trip.time}
                 </span>
               </div>
-
-              <div className="flex items-center gap-1 text-[11px] font-black text-primary">
-                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                <span>{trip.rating}</span>
-              </div>
             </div>
-
-            {/* Route row: From on the RIGHT, arrow in middle, To on the LEFT */}
-            <div className="flex items-center justify-between rounded-2xl bg-[#F8FAFC] p-2.5 text-xs font-bold">
-              <span className="text-primary">{trip.from}</span>
-              <ArrowLeft className="h-3.5 w-3.5 text-accent" />
-              <span className="text-primary">{trip.to}</span>
-            </div>
-
-            {/* Bottom time */}
-            <div className="flex items-center justify-between text-[11px] text-text-muted">
-              <span>{trip.time}</span>
-              <span>المغادرة اليوم</span>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
+
