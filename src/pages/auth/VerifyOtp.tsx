@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../../components/layout/AuthLayout";
@@ -50,10 +50,8 @@ export default function VerifyOtp() {
   }, [resendTimer]);
 
   const {
-    register,
+    control,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors },
   } = useForm<OtpFormData>({
     resolver: zodResolver(otpSchema),
@@ -61,8 +59,6 @@ export default function VerifyOtp() {
       otp: "",
     },
   });
-
-  const otpValue = watch("otp") || "";
 
   const onSubmit = async (data: OtpFormData) => {
     if (!phone) return;
@@ -134,21 +130,31 @@ export default function VerifyOtp() {
 
       <Form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Form.Field name="otp" error={errors.otp?.message} required>
-          {/* 6-box OTP visual entry */}
-          <div className="py-2">
-            <OtpCodeInput
-              value={otpValue}
-              onChange={(val) => {
-                setValue("otp", val, { shouldValidate: true });
-              }}
-              error={Boolean(errors.otp)}
-            />
-          </div>
+          <Controller
+            name="otp"
+            control={control}
+            render={({ field }) => (
+              <>
+                {/* 6-box OTP visual entry */}
+                <div className="py-2">
+                  <OtpCodeInput
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    error={Boolean(errors.otp)}
+                  />
+                </div>
 
-          <Form.Input
-            type="text"
-            className="sr-only"
-            {...register("otp")}
+                <input
+                  type="text"
+                  name="otp"
+                  value={field.value || ""}
+                  onChange={field.onChange}
+                  className="sr-only"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                />
+              </>
+            )}
           />
           <Form.ErrorMessage className="justify-center text-center" />
         </Form.Field>
