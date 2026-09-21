@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, type ChangeEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   ChevronRight,
@@ -7,6 +7,9 @@ import {
   AlertCircle,
   Copy,
   CheckCheck,
+  Upload,
+  FileCheck,
+  X,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -27,6 +30,9 @@ export default function BankTransferPage() {
   };
 
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [showWarning, setShowWarning] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const transferRef = "ORD-1-MT06H0QG";
   const accountNumber = "PS12 PALS 5678 1234 0000 1234";
@@ -37,7 +43,18 @@ export default function BankTransferPage() {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setReceiptFile(e.target.files[0]);
+      setShowWarning(false);
+    }
+  };
+
   const handleCompleted = () => {
+    if (!receiptFile) {
+      setShowWarning(true);
+      return;
+    }
     navigate("/wallet/payment-success", {
       state: { package: pkg, method: "BANK" },
     });
@@ -129,7 +146,7 @@ export default function BankTransferPage() {
             <div className="flex items-center justify-between pt-1">
               <span className="text-text-muted">اسم المستفيد</span>
               <span className="font-black text-[#123A68]">
-                شركة وصيل للخدمات الرقمية
+                منصة بطريقك
               </span>
             </div>
 
@@ -190,15 +207,80 @@ export default function BankTransferPage() {
             </div>
           </div>
 
-          {/* Action Button */}
-          <div className="pt-3">
+          {/* Receipt Upload Box matching Figma */}
+          <div className="pt-2 space-y-2">
+            <div className="space-y-0.5">
+              <label className="text-xs font-black text-[#123A68] block">
+                📎 إيصال الدفع البنكي *
+              </label>
+              <p className="text-[10.5px] text-text-muted">
+                ارفع صورة إشعار التحويل الصادرة من البنك للمنصة فقط
+              </p>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,application/pdf"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+
+            {!receiptFile ? (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full flex flex-col items-center justify-center p-5 rounded-2xl border-2 border-dashed border-slate-300 hover:border-[#123A68] bg-[#F8FAFC] text-center transition-colors cursor-pointer space-y-1.5"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-[#123A68]">
+                  <Upload className="h-5 w-5" />
+                </div>
+                <span className="text-xs font-black text-[#123A68]">
+                  اضغط لرفع صورة الإيصال
+                </span>
+                <span className="text-[10px] text-text-muted">
+                  حجم أقصى 5 ميغابايت — PNG, JPG, PDF
+                </span>
+              </button>
+            ) : (
+              <div className="flex items-center justify-between rounded-2xl p-3.5 border border-emerald-200 bg-emerald-50/60">
+                <div className="flex items-center gap-2.5">
+                  <FileCheck className="h-5 w-5 text-emerald-600 shrink-0" />
+                  <div className="text-right">
+                    <p className="text-xs font-bold text-emerald-900 truncate max-w-[180px]">
+                      {receiptFile.name}
+                    </p>
+                    <p className="text-[10px] text-emerald-700">
+                      {(receiptFile.size / 1024).toFixed(1)} كيلوبايت
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setReceiptFile(null)}
+                  className="p-1 text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
+            {showWarning && !receiptFile && (
+              <p className="text-[11px] font-bold text-red-500 pt-1">
+                ⚠️ يجب رفع صورة الإيصال قبل التأكيد
+              </p>
+            )}
+          </div>
+
+          {/* Submit Action Button */}
+          <div className="pt-2">
             <button
               type="button"
               onClick={handleCompleted}
               className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
             >
               <Check className="h-4 w-4 stroke-[3]" />
-              <span>أتممت التحويل</span>
+              <span>إرسال الإيصال وتأكيد التحويل</span>
             </button>
           </div>
         </div>
