@@ -20,6 +20,7 @@ export interface UserProfile {
   neighborhoodId: string | null;
   profileCompleted: boolean;
   phoneVerifiedAt: string | null;
+  isVerified?: boolean;
   status: UserStatus;
   createdAt: string;
   updatedAt: string;
