@@ -33,9 +33,9 @@ export default function ProfilePage() {
   const userTrips = trips.filter((t) => !profile?.id || t.travelerId === profile.id).slice(0, 5);
   const userErrands = errands.filter((e) => !profile?.id || e.requesterId === profile.id).slice(0, 5);
 
-  const tripsCount = userTrips.length || 12;
-  const errandsCount = userErrands.length || 23;
-  const trustScore = profile?.trustScore ? (profile.trustScore / 20).toFixed(1) : "4.8";
+  const tripsCount = userTrips.length;
+  const errandsCount = userErrands.length;
+  const trustScore = profile?.trustScore ? (profile.trustScore / 20).toFixed(1) : "5.0";
   const isVerified = Boolean(profile?.isVerified);
 
   const handleImageSelected = async (file: File) => {
@@ -116,13 +116,13 @@ export default function ProfilePage() {
 
         {/* 3. 2x2 Stats Grid Card */}
         <ProfileStats2x2
-          tokenBalance={tokenBalance ?? 47}
+          tokenBalance={tokenBalance ?? 0}
           tripsCount={tripsCount}
           errandsCount={errandsCount}
           trustScore={trustScore}
           onTokensClick={() => navigate("/wallet")}
-          onTripsClick={() => setActiveTab("trips")}
-          onErrandsClick={() => setActiveTab("errands")}
+          onTripsClick={() => navigate("/profile/trips")}
+          onErrandsClick={() => navigate("/my-errands")}
         />
 
         {/* 4. Trips / Errands Activity Section */}
@@ -132,12 +132,12 @@ export default function ProfilePage() {
           trips={userTrips}
           errands={userErrands}
           onViewAll={() =>
-            navigate(activeTab === "trips" ? "/trips" : "/my-errands")
+            navigate(activeTab === "trips" ? "/profile/trips" : "/my-errands")
           }
           onTripClick={(id) => navigate(`/trips/${id}`)}
           onErrandClick={(id) => navigate(`/errands/${id}`)}
-          onAddTrip={() => navigate("/trips/create")}
-          onAddErrand={() => navigate("/errands/create")}
+          onAddTrip={() => navigate("/trips/new")}
+          onAddErrand={() => navigate("/errands/new")}
         />
 
         {/* 5. Security Card */}

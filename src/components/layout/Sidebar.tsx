@@ -14,6 +14,7 @@ import {
   X,
   Download,
   ChevronLeft,
+  Briefcase,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useWallet } from "../../hooks/useWallet";
@@ -33,7 +34,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { isInstalled, isIOS, triggerInstall } = usePWA();
   const [showInstallModal, setShowInstallModal] = useState(false);
 
-  const navItems = [
+  const mainNavItems = [
     { label: "الرئيسية", path: "/home", icon: Home },
     { label: "الرحلات", path: "/trips", icon: Car },
     { label: "الطلبات", path: "/errands", icon: Package },
@@ -41,9 +42,17 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: "الرسائل",
       path: "/messages",
       icon: MessageSquare,
-      badge: 3,
     },
     { label: "المحفظة", path: "/wallet", icon: Wallet },
+  ];
+
+  const activityNavItems = [
+    { label: "رحلاتي", path: "/profile/trips", icon: Car },
+    { label: "طلباتي", path: "/my-errands", icon: Package },
+    { label: "عروضي المقدمة", path: "/profile/my-offers", icon: Briefcase },
+  ];
+
+  const accountNavItems = [
     { label: "حسابي", path: "/profile", icon: User },
     { label: "الإعدادات", path: "/settings", icon: Settings },
   ];
@@ -93,7 +102,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
         }`}
       >
         {/* Top Section */}
-        <div className="space-y-6 overflow-y-auto">
+        <div className="space-y-5 overflow-y-auto pr-1">
           {/* Header with Logo and Close */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div className="flex items-center gap-2">
@@ -140,9 +149,12 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Main Navigation Links */}
           <nav className="space-y-1">
-            {navItems.map((item) => {
+            <span className="text-[10.5px] font-bold text-white/50 px-2 uppercase tracking-wider block">
+              القائمة الرئيسية
+            </span>
+            {mainNavItems.map((item) => {
               const Icon = item.icon;
               const isActive =
                 item.path === "/"
@@ -153,22 +165,69 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <button
                   key={item.path}
                   onClick={() => handleNavigate(item.path)}
-                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-bold transition-all ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     isActive
-                      ? "bg-white/15 text-white"
+                      ? "bg-[#F36F21] text-white shadow-xs font-black"
                       : "text-white/80 hover:bg-white/10 hover:text-white"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4.5 w-4.5" />
                     <span>{item.label}</span>
                   </div>
+                </button>
+              );
+            })}
+          </nav>
 
-                  {item.badge !== undefined && item.badge > 0 && (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[11px] font-black text-white">
-                      {item.badge}
-                    </span>
-                  )}
+          {/* Activity Section */}
+          <nav className="space-y-1 pt-2 border-t border-white/10">
+            <span className="text-[10.5px] font-bold text-white/50 px-2 uppercase tracking-wider block">
+              نشاطي
+            </span>
+            {activityNavItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname.startsWith(item.path);
+
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => handleNavigate(item.path)}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-[#F36F21] text-white shadow-xs font-black"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="h-4.5 w-4.5" />
+                    <span>{item.label}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Account Section */}
+          <nav className="space-y-1 pt-2 border-t border-white/10">
+            {accountNavItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname.startsWith(item.path);
+
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => handleNavigate(item.path)}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-[#F36F21] text-white shadow-xs font-black"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="h-4.5 w-4.5" />
+                    <span>{item.label}</span>
+                  </div>
                 </button>
               );
             })}
@@ -211,14 +270,14 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
             </span>
             <div className="flex items-center gap-1.5 text-accent font-black text-sm">
               <Zap className="h-4 w-4 fill-accent" />
-              <span>{tokenBalance || 47}</span>
+              <span>{tokenBalance ?? 0}</span>
             </div>
           </div>
 
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-bold text-red-400 hover:text-red-300 transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-bold text-red-400 hover:text-red-300 transition-colors cursor-pointer"
           >
             <LogOut className="h-5 w-5 rotate-180" />
             <span>تسجيل الخروج</span>
@@ -238,3 +297,4 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
     </>
   );
 };
+

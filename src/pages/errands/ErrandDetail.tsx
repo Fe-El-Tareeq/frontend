@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronRight, Play, Pause, Send, Zap, Package } from "lucide-react";
+import { ChevronRight, Play, Pause, Send, Zap, Package, MapPin, Eye, Star, Trash2 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
@@ -11,7 +11,7 @@ import { useAuth } from "../../hooks/useAuth";
 export default function ErrandDetail() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
 
   /*
    * ============================================================================
@@ -22,6 +22,8 @@ export default function ErrandDetail() {
    */
   const { errand, isLoading, isError } = useErrandDetail(id);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const isOwner = Boolean(profile?.id && errand?.requesterId === profile.id);
 
   if (isLoading) {
     return (
@@ -66,8 +68,12 @@ export default function ErrandDetail() {
     );
   }
 
+  const isWaiting = errand.status === "OPEN";
+  const isInProgress = errand.status === "MATCHED" || errand.status === "IN_TRANSIT";
+  const isCompleted = errand.status === "COMPLETED";
+
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] pb-28 text-right">
       <Header />
 
       <div className="px-4 pt-4 space-y-4">
@@ -80,9 +86,13 @@ export default function ErrandDetail() {
             <ChevronRight className="h-6 w-6" />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#123A68]">تفاصيل الطلب</h1>
+            <h1 className="text-xl font-black text-[#123A68]">
+              {isOwner ? "تفاصيل طلبي" : "تفاصيل الطلب"}
+            </h1>
             <p className="text-xs text-text-secondary">
-              راجع تفاصيل الطلب قبل حجز مكانك أو تقديم عرضك
+              {isOwner
+                ? "إدارة حالة طلبك والعروض المقدمة عليه"
+                : "راجع تفاصيل الطلب قبل حجز مكانك أو تقديم عرضك"}
             </p>
           </div>
         </div>
@@ -100,7 +110,7 @@ export default function ErrandDetail() {
 
               <div className="text-right">
                 <h3 className="text-sm font-black text-primary">
-                  {errand.requester?.fullName || "مستخدم مسجل"}
+                  {errand.requester?.fullName || (isOwner ? profile?.fullName : "مستخدم مسجل")}
                 </h3>
                 <p className="text-[10.5px] text-text-muted">
                   نشرت الطلب في{" "}
@@ -116,56 +126,70 @@ export default function ErrandDetail() {
             <span
               className={`rounded-full px-3 py-1 text-[11px] font-bold border ${
                 errand.status === "OPEN"
-                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                  : errand.status === "MATCHED"
+                  ? "bg-amber-50 text-amber-700 border-amber-200"
+                  : errand.status === "MATCHED" || errand.status === "IN_TRANSIT"
                     ? "bg-blue-50 text-blue-700 border-blue-200"
                     : errand.status === "COMPLETED"
-                      ? "bg-slate-100 text-text-secondary border-slate-200"
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                       : "bg-red-50 text-red-700 border-red-200"
               }`}
             >
               {errand.status === "OPEN"
-                ? "مفتوح"
-                : errand.status === "MATCHED"
-                  ? "تم التطابق"
+                ? "بانتظار عروض"
+                : errand.status === "MATCHED" || errand.status === "IN_TRANSIT"
+                  ? "جارٍ التنفيذ"
                   : errand.status === "COMPLETED"
                     ? "مكتمل"
                     : "ملغي"}
             </span>
           </div>
 
+          {/* Errand Title */}
+          <div className="space-y-1 pt-1 text-right">
+            <h2 className="text-base font-black text-[#123A68]">
+              {errand.title || "طلب توصيل أغراض"}
+            </h2>
+          </div>
+
           {/* Description Section */}
-          <div className="space-y-1.5 pt-1 text-right">
+          <div className="space-y-1.5 text-right">
             <span className="text-[11px] font-bold text-text-muted block">
               ماذا تحتاج؟
             </span>
-            <p className="text-xs text-primary leading-relaxed">
-              {errand.itemsDescription || errand.title || "لا يوجد وصف إضافي."}
+            <p className="text-xs text-primary leading-relaxed bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              {errand.itemsDescription || "لا يوجد وصف إضافي."}
             </p>
           </div>
 
-          {/* City Box */}
-          <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 text-right">
-            <span className="text-[10.5px] text-text-muted block">
-              المدينة المطلوبة
-            </span>
-            <span className="text-xs font-black text-[#123A68] mt-0.5 block">
-              {errand.destinationKeyword || "غزة"}
-            </span>
+          {/* Route Section */}
+          <div className="grid grid-cols-2 gap-2.5">
+            {/* Pickup */}
+            <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 text-right">
+              <span className="text-[10.5px] text-text-muted flex items-center gap-1">
+                <MapPin className="h-3 w-3 text-[#F36F21]" />
+                حي الاستلام
+              </span>
+              <span className="text-xs font-black text-[#123A68] mt-1 block">
+                {errand.neighborhood?.name || "وسط البلد"}
+              </span>
+            </div>
+
+            {/* Destination */}
+            <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 text-right">
+              <span className="text-[10.5px] text-text-muted flex items-center gap-1">
+                <MapPin className="h-3 w-3 text-[#123A68]" />
+                الوجهة المقصودة
+              </span>
+              <span className="text-xs font-black text-[#123A68] mt-1 block">
+                {errand.destinationKeyword || "غزة"}
+              </span>
+            </div>
           </div>
 
-          {/* Neighborhood Box */}
-          <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 text-right">
-            <span className="text-[10.5px] text-text-muted block">الحي</span>
-            <span className="text-xs font-black text-[#123A68] mt-0.5 block">
-              {errand.neighborhood?.name || "وسط البلد"}
-            </span>
-          </div>
-
-          {/* Voice Note Player Component */}
+          {/* Voice Note Player Component (if available) */}
           <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 space-y-2 text-right">
             <span className="text-[10.5px] text-text-muted block">
-              رسالة صوتية
+              رسالة صوتية مرفقة
             </span>
             <div className="flex items-center justify-between gap-3 bg-white p-2.5 rounded-xl border border-slate-200">
               <button
@@ -194,36 +218,94 @@ export default function ErrandDetail() {
             </div>
           </div>
 
-          {/* Token fee info */}
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-            <span className="text-[11px] text-text-muted">
-              رسوم التوكنز لتقديم العرض
-            </span>
-            <div className="flex items-center gap-1 font-bold text-accent">
-              <Zap className="h-3.5 w-3.5 fill-accent" />
-              <span>1 توكن فقط</span>
+          {/* Token fee info (Traveler perspective) */}
+          {!isOwner && (
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+              <span className="text-[11px] text-text-muted">
+                رسوم التوكنز لتقديم العرض
+              </span>
+              <div className="flex items-center gap-1 font-bold text-accent">
+                <Zap className="h-3.5 w-3.5 fill-accent" />
+                <span>1 توكن فقط</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
+
+        {/* Owner View Actions Card */}
+        {isOwner && (
+          <div className="space-y-2">
+            {isWaiting && (
+              <button
+                type="button"
+                onClick={() => navigate(`/errands/${id}/offers`)}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-[#0D2C50]"
+              >
+                <Eye className="h-4 w-4" />
+                <span>عرض العروض الواردة على هذا الطلب</span>
+              </button>
+            )}
+
+            {isInProgress && (
+              <button
+                type="button"
+                onClick={() => navigate(`/errands/${id}/tracking`)}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-[#E05E12]"
+              >
+                <MapPin className="h-4 w-4" />
+                <span>تتبع حالة توصيل الطلب</span>
+              </button>
+            )}
+
+            {isCompleted && (
+              <button
+                type="button"
+                onClick={() => navigate(`/errands/${id}/rating`)}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-emerald-700"
+              >
+                <Star className="h-4 w-4 fill-current" />
+                <span>تقييم تجربة التوصيل والمسافر</span>
+              </button>
+            )}
+
+            {/* Cancel errand option for owner if still open */}
+            {isWaiting && (
+              <button
+                type="button"
+                onClick={() => {
+                  /* BACKEND PENDING: Errand cancellation endpoint */
+                  navigate("/errands");
+                }}
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl border border-red-200 bg-red-50/50 text-xs font-bold text-red-600 active:scale-98 transition-all cursor-pointer hover:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span>إلغاء هذا الطلب</span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Sticky Bottom Offer Proposal Button */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 mx-auto max-w-107.5 bg-white/95 backdrop-blur-md border-t border-border p-3.5 shadow-lg">
-        <button
-          type="button"
-          onClick={() => {
-            if (!isAuthenticated) {
-              navigate("/login");
-            } else {
-              navigate(`/errands/${id}/offer`);
-            }
-          }}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer"
-        >
-          <Send className="h-4 w-4 -rotate-45" />
-          <span>قدم عرضك لتوصيل الطلب</span>
-        </button>
-      </div>
+      {/* Sticky Bottom Offer Proposal Button for non-owners */}
+      {!isOwner && isWaiting && (
+        <div className="fixed bottom-0 left-0 right-0 z-30 mx-auto max-w-107.5 bg-white/95 backdrop-blur-md border-t border-border p-3.5 shadow-lg">
+          <button
+            type="button"
+            onClick={() => {
+              if (!isAuthenticated) {
+                navigate("/login");
+              } else {
+                navigate(`/errands/${id}/offer`);
+              }
+            }}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-[#E05E12]"
+          >
+            <Send className="h-4 w-4 -rotate-45" />
+            <span>قدم عرضك لتوصيل الطلب (1 توكن)</span>
+          </button>
+        </div>
+      )}
     </MobileContainer>
   );
 }
+

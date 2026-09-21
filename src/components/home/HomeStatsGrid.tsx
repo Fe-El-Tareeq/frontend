@@ -13,9 +13,9 @@ interface HomeStatsGridProps {
 }
 
 export const HomeStatsGrid: FC<HomeStatsGridProps> = ({
-  tokenBalance = 47,
-  activeTripsCount = 3,
-  myErrandsCount = 2,
+  tokenBalance = 0,
+  activeTripsCount = 0,
+  myErrandsCount = 0,
   newMessagesCount = 0,
   onNavigateWallet,
   onNavigateTrips,
