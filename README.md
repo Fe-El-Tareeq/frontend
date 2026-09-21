@@ -218,9 +218,4 @@ CI/CD never merges pull requests. Merge remains a manual administrator action.
 - **Manifest (`public/manifest.json`):** يحدد اسم التطبيق، الأيقونات الرسمية، ألوان الـ Theme (`#00A859`) ولون الخلفية الأبيض (`#FFFFFF`).
 - **تسجيل الصوت أوفلاين (`useVoiceRecorder`):** يدعم تسجيل الملاحظات الصوتية وحفظها بتنسيق Base64 في `localStorage` لضمان استماع ومراجعة المستخدم لتسجيلاته حتى عند انقطاع الاتصال.
 
----
-
-## 📄 التوثيق الإضافي (Additional Documentation)
-
-- للاطلاع على الدليل التفصيلي لمطابقة وتكامل الـ Endpoints وهياكل البيانات ورسائل الخادم، يرجى مراجعة [DEVELOPER_HANDOFF.md](DEVELOPER_HANDOFF.md).
 

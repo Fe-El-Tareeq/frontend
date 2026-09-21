@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   ChevronRight,
-  QrCode,
-  CreditCard,
+  Smartphone,
   Building2,
   Check,
   Zap,
@@ -19,17 +18,19 @@ export default function PaymentMethodPage() {
   const pkg: TokenPackage = location.state?.package || {
     id: "pkg-basic",
     name: "الباقة الأساسية",
-    subtitle: "للاستخدام الخفيف و التجريب",
+    subtitle: "للاستخدام الخفيف والتجريب",
     tokens: 10,
     priceNis: 5,
     ratePerToken: "2 ₪ لكل توكن مع 2 توكن هدية من منصة بطريقك",
     features: [],
   };
 
-  const [selectedMethod, setSelectedMethod] = useState<"QR" | "CARD" | "BANK">("QR");
+  const [selectedMethod, setSelectedMethod] = useState<"JAWWAL_PAY" | "BANK">(
+    "JAWWAL_PAY",
+  );
 
   const handleProceed = () => {
-    if (selectedMethod === "QR" || selectedMethod === "CARD") {
+    if (selectedMethod === "JAWWAL_PAY") {
       navigate("/wallet/topup-qr", {
         state: { package: pkg, method: selectedMethod },
       });
@@ -122,91 +123,53 @@ export default function PaymentMethodPage() {
           </div>
         </div>
 
-        {/* Payment Methods List */}
+        {/* Payment Methods List matching Figma */}
         <div className="space-y-3 pt-1">
-          {/* Method 1: QR Code */}
+          {/* Method 1: Jawwal Pay */}
           <button
             type="button"
-            onClick={() => setSelectedMethod("QR")}
+            onClick={() => setSelectedMethod("JAWWAL_PAY")}
             className={`w-full flex items-center justify-between rounded-3xl p-4.5 border transition-all cursor-pointer text-right ${
-              selectedMethod === "QR"
+              selectedMethod === "JAWWAL_PAY"
                 ? "border-[#123A68] bg-white ring-2 ring-[#123A68]/15 shadow-sm"
                 : "border-slate-200 bg-white hover:border-slate-300"
             }`}
           >
             <div className="flex items-center gap-3.5">
               <div
-                className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-xs ${
-                  selectedMethod === "QR"
-                    ? "bg-[#123A68] text-white"
-                    : "bg-slate-100 text-slate-600"
+                className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-xs font-black text-xs ${
+                  selectedMethod === "JAWWAL_PAY"
+                    ? "bg-[#059669] text-white"
+                    : "bg-emerald-50 text-emerald-700"
                 }`}
               >
-                <QrCode className="h-6 w-6" />
+                <div className="flex flex-col items-center leading-none">
+                  <Smartphone className="h-5 w-5 mb-0.5" />
+                  <span className="text-[9px] font-black">PAY</span>
+                </div>
               </div>
               <div className="text-right">
-                <h4 className="text-sm font-black text-[#123A68]">رمز QR</h4>
+                <h4 className="text-sm font-black text-[#123A68]">جوال باي</h4>
                 <p className="text-[11px] text-text-muted mt-0.5">
-                  ادفع بمسح رمز QR من تطبيقك البنكي
+                  تحويل مباشر لحساب المنصة
                 </p>
               </div>
             </div>
 
             <div
               className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
-                selectedMethod === "QR"
+                selectedMethod === "JAWWAL_PAY"
                   ? "border-[#123A68] bg-[#123A68] text-white"
                   : "border-slate-300 bg-white"
               }`}
             >
-              {selectedMethod === "QR" && (
+              {selectedMethod === "JAWWAL_PAY" && (
                 <Check className="h-3 w-3 stroke-[3]" />
               )}
             </div>
           </button>
 
-          {/* Method 2: Credit Card */}
-          <button
-            type="button"
-            onClick={() => setSelectedMethod("CARD")}
-            className={`w-full flex items-center justify-between rounded-3xl p-4.5 border transition-all cursor-pointer text-right ${
-              selectedMethod === "CARD"
-                ? "border-[#123A68] bg-white ring-2 ring-[#123A68]/15 shadow-sm"
-                : "border-slate-200 bg-white hover:border-slate-300"
-            }`}
-          >
-            <div className="flex items-center gap-3.5">
-              <div
-                className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-xs ${
-                  selectedMethod === "CARD"
-                    ? "bg-[#123A68] text-white"
-                    : "bg-slate-100 text-slate-600"
-                }`}
-              >
-                <CreditCard className="h-6 w-6" />
-              </div>
-              <div className="text-right">
-                <h4 className="text-sm font-black text-[#123A68]">بطاقة بنكية</h4>
-                <p className="text-[11px] text-text-muted mt-0.5">
-                  أو بطاقة محلية / Visa / Mastercard
-                </p>
-              </div>
-            </div>
-
-            <div
-              className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
-                selectedMethod === "CARD"
-                  ? "border-[#123A68] bg-[#123A68] text-white"
-                  : "border-slate-300 bg-white"
-              }`}
-            >
-              {selectedMethod === "CARD" && (
-                <Check className="h-3 w-3 stroke-[3]" />
-              )}
-            </div>
-          </button>
-
-          {/* Method 3: Bank Transfer */}
+          {/* Method 2: Bank Transfer */}
           <button
             type="button"
             onClick={() => setSelectedMethod("BANK")}

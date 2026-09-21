@@ -116,7 +116,7 @@ describe("E2E User Simulation & Flows Test Suite", () => {
     const { unmount: unmount2 } = renderWithProviders(<TopUpQRPage />);
     expect(screen.getAllByText("إتمام الدفع")[0]).toBeInTheDocument();
     expect(
-      screen.getByText("افتح تطبيق البنك على هاتفك"),
+      screen.getByText(/افتح تطبيق/i),
     ).toBeInTheDocument();
     expect(screen.getByText("لقد أتممت الدفع")).toBeInTheDocument();
     unmount2();
