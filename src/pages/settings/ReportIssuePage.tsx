@@ -172,7 +172,6 @@ export default function ReportIssuePage() {
     }
   };
 
-
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
       <Header />
@@ -225,7 +224,7 @@ export default function ReportIssuePage() {
               </h2>
             </div>
 
-            {/* 8 Category Cards Grid */}
+            {/* 8 Category Cards Grid matching Figma */}
             <div className="grid grid-cols-2 gap-3">
               {CATEGORIES.map((cat) => {
                 const isSelected = selectedCategoryId === cat.id;
@@ -235,25 +234,25 @@ export default function ReportIssuePage() {
                     key={cat.id}
                     type="button"
                     onClick={() => setSelectedCategoryId(cat.id)}
-                    className={`flex flex-col items-end justify-between rounded-3xl p-4 border transition-all text-right cursor-pointer min-h-[115px] ${
+                    className={`flex items-center justify-between rounded-3xl p-3.5 border transition-all text-right cursor-pointer ${
                       isSelected
                         ? "bg-white border-[#123A68] ring-2 ring-[#123A68]/20 shadow-md"
                         : "bg-white border-slate-200/90 shadow-2xs hover:border-slate-300"
                     }`}
                   >
-                    <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-2xl ${cat.iconBgClass} shadow-xs mb-2`}
-                    >
-                      <IconComp className="h-5 w-5" />
-                    </div>
-
-                    <div>
+                    <div className="text-right space-y-0.5 flex-1 pr-1">
                       <h3 className="text-xs font-black text-[#123A68] block">
                         {cat.title}
                       </h3>
-                      <p className="text-[10px] text-text-muted mt-0.5 leading-tight">
+                      <p className="text-[10px] text-text-muted leading-tight">
                         {cat.subtitle}
                       </p>
+                    </div>
+
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${cat.iconBgClass} shadow-xs`}
+                    >
+                      <IconComp className="h-5 w-5" />
                     </div>
                   </button>
                 );
@@ -290,15 +289,12 @@ export default function ReportIssuePage() {
 
             {/* Selected Category Banner */}
             <div className="flex items-center justify-between rounded-3xl bg-white p-4 border border-slate-200/90 shadow-2xs">
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="text-xs font-black text-[#123A68] hover:text-[#F36F21] underline cursor-pointer"
-              >
-                تغيير
-              </button>
-
               <div className="flex items-center gap-3 text-right">
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-2xl ${selectedCategory.iconBgClass} shadow-xs`}
+                >
+                  <selectedCategory.icon className="h-5 w-5" />
+                </div>
                 <div>
                   <h3 className="text-xs font-black text-[#123A68]">
                     {selectedCategory.title}
@@ -307,24 +303,27 @@ export default function ReportIssuePage() {
                     {selectedCategory.subtitle}
                   </p>
                 </div>
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-2xl ${selectedCategory.iconBgClass} shadow-xs`}
-                >
-                  <selectedCategory.icon className="h-5 w-5" />
-                </div>
               </div>
+
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="text-xs font-black text-[#123A68] hover:text-[#F36F21] underline cursor-pointer"
+              >
+                تغيير
+              </button>
             </div>
 
             {/* Optional User Selector */}
             <div className="space-y-2 text-right">
               <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                  <Search className="h-3.5 w-3.5 text-slate-400" />
+                  <span>المستخدم المُبلَّغ عنه</span>
+                </div>
                 <span className="text-xs text-slate-400 font-bold">
                   (اختياري)
                 </span>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-                  <span>المستخدم المُبلَّغ عنه</span>
-                  <Search className="h-3.5 w-3.5 text-slate-400" />
-                </div>
               </div>
 
               <div className="space-y-2">
@@ -343,17 +342,12 @@ export default function ReportIssuePage() {
                           : "bg-white border-slate-200/80 hover:bg-slate-50"
                       }`}
                     >
-                      <div
-                        className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
-                          isChecked
-                            ? "border-[#123A68] bg-[#123A68] text-white"
-                            : "border-slate-300"
-                        }`}
-                      >
-                        {isChecked && <Check className="h-3 w-3 stroke-[3]" />}
-                      </div>
-
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-2.5 text-right">
+                        <div
+                          className={`flex h-8 w-8 items-center justify-center rounded-xl text-white font-black text-xs ${u.color}`}
+                        >
+                          {u.avatar}
+                        </div>
                         <div>
                           <span className="text-xs font-black text-[#123A68] block">
                             {u.name}
@@ -362,11 +356,16 @@ export default function ReportIssuePage() {
                             {u.role}
                           </span>
                         </div>
-                        <div
-                          className={`flex h-8 w-8 items-center justify-center rounded-xl text-white font-black text-xs ${u.color}`}
-                        >
-                          {u.avatar}
-                        </div>
+                      </div>
+
+                      <div
+                        className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
+                          isChecked
+                            ? "border-[#123A68] bg-[#123A68] text-white"
+                            : "border-slate-300"
+                        }`}
+                      >
+                        {isChecked && <Check className="h-3 w-3 stroke-[3]" />}
                       </div>
                     </button>
                   );
@@ -377,12 +376,12 @@ export default function ReportIssuePage() {
             {/* Description Textarea */}
             <div className="space-y-1.5 text-right">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-text-muted font-mono">
-                  {description.length}/500
-                </span>
                 <label className="font-bold text-slate-700">
                   وصف المشكلة *
                 </label>
+                <span className="text-text-muted font-mono">
+                  {description.length}/500
+                </span>
               </div>
 
               <textarea
@@ -458,16 +457,6 @@ export default function ReportIssuePage() {
 
             {/* Attach Chat Logs Toggle */}
             <div className="flex items-center justify-between rounded-3xl bg-white p-4 border border-slate-200/90 shadow-2xs">
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={attachChatLogs}
-                  onChange={() => setAttachChatLogs(!attachChatLogs)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#123A68]" />
-              </label>
-
               <div className="text-right space-y-0.5">
                 <span className="text-xs font-black text-[#123A68] block">
                   إرفاق سجل المحادثات
@@ -476,6 +465,16 @@ export default function ReportIssuePage() {
                   يساعدنا في التحقق من البلاغ بشكل أسرع
                 </span>
               </div>
+
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={attachChatLogs}
+                  onChange={() => setAttachChatLogs(!attachChatLogs)}
+                  className="sr-only peer"
+                />
+                <div className="w-12 h-6.5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2.5px] after:right-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5.5 after:w-5.5 after:transition-all peer-checked:bg-[#123A68]" />
+              </label>
             </div>
 
             {/* Submit Button */}
@@ -535,20 +534,21 @@ export default function ReportIssuePage() {
               </h3>
 
               <div className="flex items-center justify-between">
+                <span className="text-text-muted">رقم البلاغ</span>
                 <span className="font-mono font-black text-[#123A68]">
                   {reportReferenceId}
                 </span>
-                <span className="text-text-muted">رقم البلاغ</span>
               </div>
 
               <div className="flex items-center justify-between">
+                <span className="text-text-muted">نوع المشكلة</span>
                 <span className="font-bold text-[#123A68]">
                   {selectedCategory.title}
                 </span>
-                <span className="text-text-muted">نوع المشكلة</span>
               </div>
 
               <div className="flex items-center justify-between">
+                <span className="text-text-muted">مستوى الأولوية</span>
                 <span className="font-bold text-rose-600">
                   {priority === "HIGH"
                     ? "عالية"
@@ -556,26 +556,24 @@ export default function ReportIssuePage() {
                     ? "متوسطة"
                     : "منخفضة"}
                 </span>
-                <span className="text-text-muted">مستوى الأولوية</span>
               </div>
 
               <div className="flex items-center justify-between">
+                <span className="text-text-muted">وقت الإرسال</span>
                 <span className="font-bold text-slate-700">
                   {new Date().toLocaleTimeString("ar-EG", {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
                 </span>
-                <span className="text-text-muted">وقت الإرسال</span>
               </div>
             </div>
 
             {/* Warning Alert Note */}
             <div className="flex items-center justify-center gap-2 rounded-2xl bg-[#FFFBEB] p-3 border border-[#FDE68A] text-[#92400E] text-[11px] font-bold">
-              <span>احتفظ برقم البلاغ {reportReferenceId} للمتابعة مع فريق الدعم.</span>
               <AlertCircle className="h-4 w-4 text-[#D97706] shrink-0" />
+              <span>احتفظ برقم البلاغ {reportReferenceId} للمتابعة مع فريق الدعم.</span>
             </div>
-
 
             {/* Action Buttons */}
             <div className="pt-2 space-y-2.5">
