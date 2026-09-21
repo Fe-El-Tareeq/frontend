@@ -5,16 +5,20 @@ import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { ErrorState } from "../../components/ui/feedback/ErrorState";
+import { TripCard, type TripCardData } from "../../components/trips/TripCard";
 import { useTrips } from "../../hooks/useTrips";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function TripsPage() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
+  const [activeTab, setActiveTab] = useState<"all" | "mine">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [cityFilter, setCityFilter] = useState("ALL");
 
   const { trips: backendTrips, isLoading, isError, refetch } = useTrips();
 
-  const displayTrips = backendTrips.map((t, idx) => {
+  const displayTrips: TripCardData[] = backendTrips.map((t, idx) => {
     const originText = t.neighborhood?.name
       ? `${t.neighborhood.governorate || "غزة"} - ${t.neighborhood.name}`
       : t.customOriginKeyword || "غزة";
@@ -33,13 +37,15 @@ export default function TripsPage() {
       ? new Date(t.departureTime).toLocaleDateString("ar-EG", {
           day: "numeric",
           month: "long",
-        }) +
-        " • " +
-        new Date(t.departureTime).toLocaleTimeString("ar-EG", {
+        })
+      : "اليوم";
+
+    const timeStr = t.departureTime
+      ? new Date(t.departureTime).toLocaleTimeString("ar-EG", {
           hour: "2-digit",
           minute: "2-digit",
         })
-      : "اليوم";
+      : "10:00 ص";
 
     return {
       id: t.id,
@@ -61,12 +67,17 @@ export default function TripsPage() {
         : 5.0,
       origin: originText,
       destination: destText,
-      dateTime: dateStr,
-      note: t.notes || null,
+      date: dateStr,
+      time: timeStr,
+      notes: t.notes || null,
+      travelerId: t.travelerId,
     };
   });
 
-  const filteredTrips = displayTrips.filter((t) => {
+  const filteredTrips = displayTrips.filter((t: TripCardData & { travelerId?: string }) => {
+    if (activeTab === "mine" && profile?.id && t.travelerId !== profile.id) {
+      return false;
+    }
     if (
       searchQuery &&
       !t.travelerName.includes(searchQuery) &&
@@ -106,6 +117,32 @@ export default function TripsPage() {
           >
             <Plus className="h-4 w-4" />
             <span>إضافة رحلة</span>
+          </button>
+        </div>
+
+        {/* Tab Badges: كل الرحلات / رحلاتي */}
+        <div className="flex items-center gap-1 rounded-2xl bg-slate-100 p-1 text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => setActiveTab("all")}
+            className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${
+              activeTab === "all"
+                ? "bg-[#123A68] text-white shadow-2xs font-black"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            كل الرحلات
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("mine")}
+            className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${
+              activeTab === "mine"
+                ? "bg-[#123A68] text-white shadow-2xs font-black"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            رحلاتي
           </button>
         </div>
 
@@ -171,8 +208,12 @@ export default function TripsPage() {
         {!isLoading && !isError && filteredTrips.length === 0 && (
           <EmptyState
             icon={<Car className="h-8 w-8 text-[#123A68]" />}
-            title="لا توجد رحلات متاحة"
-            description="لم نتمكن من العثور على رحلات تطابق بحثك حالياً. يمكنك إضافة رحلتك الأولى ليراها الجميع!"
+            title={activeTab === "mine" ? "ليس لديك رحلات معلنة" : "لا توجد رحلات متاحة"}
+            description={
+              activeTab === "mine"
+                ? "أضف مسار رحلتك الأولى لتبدأ بمساعدة أهالي منطقتك واستقبال طلباتهم!"
+                : "لم نتمكن من العثور على رحلات تطابق بحثك حالياً. يمكنك إضافة رحلتك الأولى ليراها الجميع!"
+            }
             actionText="إضافة رحلة جديدة"
             onAction={() => navigate("/trips/create")}
           />
@@ -182,62 +223,11 @@ export default function TripsPage() {
         {!isLoading && !isError && filteredTrips.length > 0 && (
           <div className="space-y-3.5">
             {filteredTrips.map((trip) => (
-              <div
+              <TripCard
                 key={trip.id}
-                onClick={() => navigate(`/trips/${trip.id}`)}
-                className="rounded-3xl bg-white p-4.5 border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-[#123A68]/30 transition-all cursor-pointer space-y-3"
-              >
-                {/* Header: User Avatar + Name + Capacity + Rating */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`flex h-11 w-11 items-center justify-center rounded-full ${trip.avatarBg} text-xs font-black text-white shadow-xs`}
-                    >
-                      {trip.avatarInitials}
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-black text-primary">
-                        {trip.travelerName}
-                      </h3>
-                      <span className="text-[11px] font-bold text-[#F36F21]">
-                        {trip.capacityText}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 border border-amber-100">
-                    <span>⭐</span>
-                    <span>{trip.rating}</span>
-                  </div>
-                </div>
-
-                {/* Route Visualizer */}
-                <div className="rounded-2xl bg-slate-50 p-3 text-xs space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#123A68]" />
-                    <span className="font-bold text-text-primary">
-                      من: {trip.origin}
-                    </span>
-                  </div>
-                  <div className="mr-1 h-3 border-r-2 border-dashed border-slate-300" />
-                  <div className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#F36F21]" />
-                    <span className="font-bold text-text-primary">
-                      إلى: {trip.destination}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Footer: Date & Optional Note */}
-                <div className="flex items-center justify-between text-[11px] text-text-muted pt-1 border-t border-slate-100">
-                  <span>{trip.dateTime}</span>
-                  {trip.note && (
-                    <span className="truncate max-w-[160px] text-text-secondary font-medium">
-                      💬 {trip.note}
-                    </span>
-                  )}
-                </div>
-              </div>
+                trip={trip}
+                onViewDetails={(id) => navigate(`/trips/${id}`)}
+              />
             ))}
           </div>
         )}
@@ -245,3 +235,4 @@ export default function TripsPage() {
     </MobileContainer>
   );
 }
+

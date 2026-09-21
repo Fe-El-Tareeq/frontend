@@ -5,79 +5,92 @@ import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { ErrorState } from "../../components/ui/feedback/ErrorState";
+import {
+  ErrandFeedCard,
+  type ErrandCardData,
+} from "../../components/errands/ErrandFeedCard";
 import { useErrands } from "../../hooks/useErrands";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function MyErrands() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
+  const [activeTab, setActiveTab] = useState<"all" | "mine">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
 
   const { errands: backendErrands, isLoading, isError, refetch } = useErrands();
 
-  const displayErrands = backendErrands.map((e, idx) => {
-    const requesterName = e.requester?.fullName || "مستخدم مسجل";
-    const initials = requesterName
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .slice(0, 2);
+  const displayErrands: (ErrandCardData & { requesterId?: string })[] =
+    backendErrands.map((e, idx) => {
+      const requesterName = e.requester?.fullName || "مستخدم مسجل";
+      const initials = requesterName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2);
 
-    const isWaiting = e.status === "OPEN";
-    const isMatched = e.status === "MATCHED";
-    const isCompleted = e.status === "COMPLETED";
+      const isWaiting = e.status === "OPEN";
+      const isMatched = e.status === "MATCHED";
+      const isCompleted = e.status === "COMPLETED";
 
-    const statusLabel = isWaiting
-      ? "قيد الانتظار"
-      : isMatched
-        ? "تم التطابق"
-        : isCompleted
-          ? "مكتمل"
-          : e.status === "IN_TRANSIT"
-            ? "جاري التوصيل"
-            : "ملغي";
+      const statusText = isWaiting
+        ? "قيد الانتظار"
+        : isMatched
+          ? "تم التطابق"
+          : isCompleted
+            ? "مكتمل"
+            : e.status === "IN_TRANSIT"
+              ? "جاري التوصيل"
+              : "ملغي";
 
-    const statusBadge = isWaiting
-      ? "bg-amber-50 text-amber-700 border-amber-200"
-      : isMatched
-        ? "bg-blue-50 text-blue-700 border-blue-200"
-        : isCompleted
-          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-          : "bg-red-50 text-red-700 border-red-200";
+      const statusClass = isWaiting
+        ? "bg-amber-50 text-amber-700 border-amber-200"
+        : isMatched
+          ? "bg-blue-50 text-blue-700 border-blue-200"
+          : isCompleted
+            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+            : "bg-red-50 text-red-700 border-red-200";
 
-    const dateStr = e.createdAt
-      ? new Date(e.createdAt).toLocaleDateString("ar-EG", {
-          day: "numeric",
-          month: "short",
-        })
-      : "اليوم";
+      const dateStr = e.createdAt
+        ? new Date(e.createdAt).toLocaleDateString("ar-EG", {
+            day: "numeric",
+            month: "short",
+          })
+        : "اليوم";
 
-    const locationStr = e.neighborhood?.name
-      ? `${e.neighborhood.name} ➔ ${e.destinationKeyword}`
-      : e.destinationKeyword || "غزة";
+      const fromStr = e.neighborhood?.name || "غزة";
+      const toStr = e.destinationKeyword || "الوجهة";
 
-    return {
-      id: e.id,
-      requesterName,
-      avatarInitials: initials,
-      avatarBg:
-        idx % 3 === 0
-          ? "bg-[#123A68]"
-          : idx % 3 === 1
-            ? "bg-purple-600"
-            : "bg-[#F36F21]",
-      status: e.status,
-      statusLabel,
-      statusBadge,
-      date: dateStr,
-      description: e.title || e.itemsDescription,
-      location: locationStr,
-    };
-  });
+      return {
+        id: e.id,
+        requesterName,
+        avatarInitials: initials,
+        avatarBg:
+          idx % 3 === 0
+            ? "bg-[#123A68]"
+            : idx % 3 === 1
+              ? "bg-purple-600"
+              : "bg-[#F36F21]",
+        status: e.status,
+        statusText,
+        statusClass,
+        date: dateStr,
+        title: e.title || e.itemsDescription,
+        from: fromStr,
+        to: toStr,
+        priceNis: 5,
+        requesterId: e.requesterId,
+      };
+    });
 
   const filteredErrands = displayErrands.filter((e) => {
+    if (activeTab === "mine" && profile?.id && e.requesterId !== profile.id) {
+      return false;
+    }
     if (
       searchQuery &&
-      !e.description.includes(searchQuery) &&
+      !e.title.includes(searchQuery) &&
       !e.requesterName.includes(searchQuery)
     ) {
       return false;
@@ -120,6 +133,32 @@ export default function MyErrands() {
               <span>إنشاء طلب جديد</span>
             </button>
           </div>
+        </div>
+
+        {/* Tabs: كل الطلبات / طلباتي */}
+        <div className="flex items-center gap-1 rounded-2xl bg-slate-100 p-1 text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => setActiveTab("all")}
+            className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${
+              activeTab === "all"
+                ? "bg-[#123A68] text-white shadow-2xs font-black"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            كل الطلبات
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("mine")}
+            className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${
+              activeTab === "mine"
+                ? "bg-[#123A68] text-white shadow-2xs font-black"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            طلباتي
+          </button>
         </div>
 
         {/* Search Bar */}
@@ -183,8 +222,12 @@ export default function MyErrands() {
         {!isLoading && !isError && filteredErrands.length === 0 && (
           <EmptyState
             icon={<Package className="h-8 w-8 text-[#123A68]" />}
-            title="لا توجد طلبات مسجلة"
-            description="لم تقم بإنشاء أي طلبات توصيل حتى الآن. أنشئ طلبك الأول واطلب مساعدة مسافر بطريقك!"
+            title={activeTab === "mine" ? "ليس لديك طلبات مسجلة" : "لا توجد طلبات مسجلة"}
+            description={
+              activeTab === "mine"
+                ? "أنشئ طلبك الأول واطلب مساعدة مسافر بطريقك لتوصيل أغراضك بسهولة!"
+                : "لم تقم بإنشاء أي طلبات توصيل حتى الآن. أنشئ طلبك الأول واطلب مساعدة مسافر بطريقك!"
+            }
             actionText="إنشاء طلب جديد الآن"
             onAction={() => navigate("/errands/new")}
           />
@@ -194,51 +237,11 @@ export default function MyErrands() {
         {!isLoading && !isError && filteredErrands.length > 0 && (
           <div className="space-y-3.5">
             {filteredErrands.map((errand) => (
-              <div
+              <ErrandFeedCard
                 key={errand.id}
-                onClick={() => navigate(`/errands/${errand.id}`)}
-                className="rounded-3xl bg-white p-4.5 border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-[#123A68]/30 transition-all cursor-pointer space-y-3"
-              >
-                {/* Header: User Avatar + Name + Status Badge */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`flex h-11 w-11 items-center justify-center rounded-full ${errand.avatarBg} text-xs font-black text-white shadow-xs`}
-                    >
-                      {errand.avatarInitials}
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-black text-primary">
-                        {errand.requesterName}
-                      </h3>
-                      <span className="text-[11px] text-text-muted">
-                        {errand.date}
-                      </span>
-                    </div>
-                  </div>
-
-                  <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-bold border ${errand.statusBadge}`}
-                  >
-                    {errand.statusLabel}
-                  </span>
-                </div>
-
-                {/* Description */}
-                <p className="text-xs text-text-secondary leading-relaxed line-clamp-2">
-                  {errand.description}
-                </p>
-
-                {/* Footer: Location Tag & Action */}
-                <div className="flex items-center justify-between text-[11px] text-text-muted pt-2 border-t border-slate-100">
-                  <span className="truncate max-w-[200px] font-medium text-text-primary">
-                    📍 {errand.location}
-                  </span>
-                  <span className="text-[#F36F21] font-bold">
-                    عرض التفاصيل ➔
-                  </span>
-                </div>
-              </div>
+                errand={errand}
+                onViewDetails={(id) => navigate(`/errands/${id}`)}
+              />
             ))}
           </div>
         )}
@@ -246,3 +249,4 @@ export default function MyErrands() {
     </MobileContainer>
   );
 }
+

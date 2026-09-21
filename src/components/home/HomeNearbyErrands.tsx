@@ -1,82 +1,100 @@
 import type { FC } from "react";
-import { Package } from "lucide-react";
-import { EmptyState } from "../ui/feedback/EmptyState";
+import { Package, ArrowLeft, Plus } from "lucide-react";
 
-interface ErrandItem {
+export interface HomeErrandItem {
   id: string;
   title: string;
-  neighborhood: string;
-  date: string;
-  status: string;
-  statusText: string;
-  statusBg: string;
   avatarInitials: string;
   avatarBg: string;
+  status: string;
+  statusBadge: string;
+  dateLocation: string;
 }
 
 interface HomeNearbyErrandsProps {
-  errands: ErrandItem[];
+  errands: HomeErrandItem[];
+  isLoading?: boolean;
   onViewAll: () => void;
   onSelectErrand: (id: string) => void;
+  onCreateErrand?: () => void;
 }
 
 export const HomeNearbyErrands: FC<HomeNearbyErrandsProps> = ({
   errands,
+  isLoading = false,
   onViewAll,
   onSelectErrand,
+  onCreateErrand,
 }) => {
   return (
-    <div className="space-y-3 pt-1 text-right">
+    <div className="space-y-2.5 pt-2 text-right">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-black text-[#123A68]">الطلبات القريبة</h3>
+        <h2 className="text-sm font-black text-[#123A68]">الطلبات القريبة</h2>
         <button
           type="button"
           onClick={onViewAll}
-          className="text-xs font-bold text-accent hover:underline cursor-pointer"
+          className="flex items-center gap-1 text-xs font-black text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
         >
-          عرض الكل ({errands.length})
+          <span>عرض الكل</span>
+          <ArrowLeft className="h-3.5 w-3.5" />
         </button>
       </div>
 
-      {errands.length === 0 ? (
-        <EmptyState
-          icon={<Package className="h-7 w-7 text-[#123A68]" />}
-          title="لا توجد طلبات قريبة حالياً"
-          description="لم يتم العثور على أي طلبات نشطة بالقرب منك في الوقت الحالي."
-        />
+      {isLoading ? (
+        <div className="space-y-2.5">
+          {[1, 2].map((i) => (
+            <div
+              key={i}
+              className="h-16 rounded-3xl bg-slate-100 animate-pulse"
+            />
+          ))}
+        </div>
+      ) : errands.length === 0 ? (
+        <div className="rounded-3xl bg-white p-5 text-center border border-slate-100 shadow-2xs space-y-2">
+          <Package className="h-7 w-7 text-slate-400 mx-auto" />
+          <p className="text-xs font-bold text-text-secondary">
+            لا توجد طلبات توصيل مسجلة حالياً
+          </p>
+          {onCreateErrand && (
+            <button
+              type="button"
+              onClick={onCreateErrand}
+              className="inline-flex items-center gap-1 text-xs font-black text-[#F36F21] hover:underline cursor-pointer"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              <span>أنشئ طلب توصيل جديد</span>
+            </button>
+          )}
+        </div>
       ) : (
         <div className="space-y-2.5">
-          {errands.map((errand) => (
+          {errands.map((e) => (
             <div
-              key={errand.id}
-              onClick={() => onSelectErrand(errand.id)}
-              className="flex items-center justify-between rounded-3xl bg-white p-3.5 border border-border shadow-xs hover:border-primary/40 transition-all cursor-pointer text-right"
+              key={e.id}
+              onClick={() => onSelectErrand(e.id)}
+              className="flex items-center justify-between rounded-3xl bg-white p-3.5 border border-border shadow-2xs hover:border-slate-300 transition-all cursor-pointer text-right"
             >
-              {/* Errand Title & Details on right */}
-              <div className="flex items-center gap-2.5 text-right">
+              <div className="flex items-center gap-3">
                 <div
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-black text-white ${errand.avatarBg}`}
+                  className={`flex h-10 w-10 items-center justify-center rounded-full ${e.avatarBg} text-xs font-black text-white`}
                 >
-                  {errand.avatarInitials}
+                  {e.avatarInitials}
                 </div>
                 <div className="text-right">
-                  <h4 className="text-xs font-black text-primary line-clamp-1 max-w-[190px]">
-                    {errand.title}
-                  </h4>
-                  <div className="flex items-center justify-start gap-2 text-[10.5px] text-text-muted mt-0.5">
-                    <span>{errand.date}</span>
-                    <span>•</span>
-                    <span>{errand.neighborhood}</span>
-                  </div>
+                  <h3 className="text-xs font-black text-primary line-clamp-1 max-w-50">
+                    {e.title}
+                  </h3>
+                  <p className="text-[11px] text-text-muted">
+                    {e.dateLocation}
+                  </p>
                 </div>
               </div>
 
-              {/* Status Pill on left */}
-              <div>
+              <div className="text-left">
                 <span
-                  className={`inline-block rounded-full px-2.5 py-1 text-[10px] font-bold border ${errand.statusBg}`}
+                  className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold border ${e.statusBadge}`}
                 >
-                  {errand.statusText}
+                  {e.status}
                 </span>
               </div>
             </div>
@@ -86,3 +104,4 @@ export const HomeNearbyErrands: FC<HomeNearbyErrandsProps> = ({
     </div>
   );
 };
+
