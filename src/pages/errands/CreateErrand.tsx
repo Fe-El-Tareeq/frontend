@@ -21,20 +21,35 @@ import { getApiErrorMessage } from "../../utils/apiError";
 import type { ErrandItemPayload } from "../../types/errands";
 import type { VoiceNoteData } from "../../hooks/useVoiceRecorder";
 
-const createClientRequestKey = () =>
-  typeof crypto !== "undefined" && crypto.randomUUID
-    ? crypto.randomUUID()
-    : "req-" + Math.random().toString(36).substring(2, 15);
+const createClientRequestKey = () => {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
 
 export default function CreateErrand() {
   const navigate = useNavigate();
   const { isAuthenticated, profile } = useAuth();
   const { tokenBalance } = useWallet();
-  const { neighborhoods, isLoadingNeighborhoods } = useLocations();
+
+  const [selectedCityKey, setSelectedCityKey] = useState<string>("");
+  const {
+    cities,
+    isLoadingCities,
+    neighborhoods,
+    isLoadingNeighborhoods,
+  } = useLocations(selectedCityKey || undefined);
   const { createErrand, isCreating } = useErrands();
 
   const [items, setItems] = useState<ErrandItemPayload[]>([]);
-  const [selectedCity, setSelectedCity] = useState("غزة");
   const [neighborhoodId, setNeighborhoodId] = useState(
     profile?.neighborhoodId || "",
   );
@@ -43,6 +58,11 @@ export default function CreateErrand() {
   const [recordedVoice, setRecordedVoice] = useState<VoiceNoteData | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const selectedCityName =
+    cities.find((c) => c.key === selectedCityKey)?.nameAr ||
+    cities[0]?.nameAr ||
+    "غزة";
 
   const handleImagePick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,6 +76,11 @@ export default function CreateErrand() {
       setImagePreview(reader.result as string);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleCityChange = (newCityKey: string) => {
+    setSelectedCityKey(newCityKey);
+    setNeighborhoodId("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -101,31 +126,30 @@ export default function CreateErrand() {
         ? `${itemsSummary} — ملاحظة عامة: ${generalNote.trim()}`
         : itemsSummary;
 
-      // Map sizes to weight class
-      const hasLarge = items.some((i) => i.size === "LARGE");
-      const hasMedium = items.some((i) => i.size === "MEDIUM");
-      const derivedWeight = hasLarge
-        ? "HEAVY"
-        : hasMedium
-          ? "MEDIUM"
-          : "LIGHT";
+      // Sanitize items according to backend strict errandItemSchema:
+      // only { categoryId, name, description?, quantity, size, isUrgent?, itemNote? }
+      const sanitizedItems = items.map((it) => ({
+        categoryId: it.categoryId || "60a32850-bd3f-444a-84b4-c750abf6ecb1",
+        name: it.name.trim(),
+        description: it.description?.trim() || null,
+        quantity: Math.max(1, Number(it.quantity) || 1),
+        size: it.size,
+        isUrgent: Boolean(it.isUrgent),
+        itemNote: it.itemNote?.trim() || null,
+      }));
 
-      const isAnyUrgent = items.some((i) => i.isUrgent);
-
+      // Top level payload strictly conforms to backend createErrandSchema
       await createErrand({
         clientRequestKey,
-        categoryId: items[0]?.categoryId || "60a32850-bd3f-444a-84b4-c750abf6ecb6",
         pickupNeighborhoodId: targetNeighborhoodId,
-        title: mainTitle.slice(0, 100),
-        itemsDescription: fullDescription,
-        destinationKeyword: selectedCity,
-        weightClass: derivedWeight,
-        isUrgent: isAnyUrgent,
+        destinationKeyword: selectedCityName,
+        title: mainTitle.slice(0, 80),
+        itemsDescription: fullDescription.slice(0, 1000),
         isInterZone: false,
         voiceNoteUrl: recordedVoice?.base64 || null,
         voiceNoteDurationSec: recordedVoice?.durationSec || null,
         imageUrls: imagePreview ? [imagePreview] : [],
-        items,
+        items: sanitizedItems,
       });
 
       navigate("/errands");
@@ -183,15 +207,18 @@ export default function CreateErrand() {
                 المدينة المطلوبة
               </label>
               <select
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
+                value={selectedCityKey}
+                onChange={(e) => handleCityChange(e.target.value)}
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
               >
-                <option value="غزة">غزة</option>
-                <option value="خانيونس">خانيونس</option>
-                <option value="رفح">رفح</option>
-                <option value="الشمال">الشمال</option>
-                <option value="دير البلح">دير البلح</option>
+                <option value="">
+                  {isLoadingCities ? "جاري تحميل المدن..." : "اختر المدينة"}
+                </option>
+                {cities.map((city) => (
+                  <option key={city.key} value={city.key}>
+                    {city.nameAr}
+                  </option>
+                ))}
               </select>
             </div>
 

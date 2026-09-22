@@ -27,10 +27,16 @@ export default function RequestSpacePage() {
   const navigate = useNavigate();
   const { isAuthenticated, profile } = useAuth();
   const { tokenBalance } = useWallet();
-  const { neighborhoods, isLoadingNeighborhoods } = useLocations();
+
+  const [selectedCityKey, setSelectedCityKey] = useState<string>("");
+  const {
+    cities,
+    isLoadingCities,
+    neighborhoods,
+    isLoadingNeighborhoods,
+  } = useLocations(selectedCityKey || undefined);
 
   const [items, setItems] = useState<ErrandItemPayload[]>([]);
-  const [selectedCity, setSelectedCity] = useState("غزة");
   const [neighborhoodId, setNeighborhoodId] = useState(
     profile?.neighborhoodId || "",
   );
@@ -41,6 +47,11 @@ export default function RequestSpacePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const handleCityChange = (newCityKey: string) => {
+    setSelectedCityKey(newCityKey);
+    setNeighborhoodId("");
+  };
 
   const handleImagePick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -159,15 +170,18 @@ export default function RequestSpacePage() {
                 المدينة المطلوبة
               </label>
               <select
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
+                value={selectedCityKey}
+                onChange={(e) => handleCityChange(e.target.value)}
                 className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
               >
-                <option value="غزة">غزة</option>
-                <option value="خانيونس">خانيونس</option>
-                <option value="رفح">رفح</option>
-                <option value="الشمال">الشمال</option>
-                <option value="دير البلح">دير البلح</option>
+                <option value="">
+                  {isLoadingCities ? "جاري تحميل المدن..." : "اختر المدينة"}
+                </option>
+                {cities.map((city) => (
+                  <option key={city.key} value={city.key}>
+                    {city.nameAr}
+                  </option>
+                ))}
               </select>
             </div>
 

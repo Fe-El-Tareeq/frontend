@@ -25,7 +25,9 @@ export const MultiItemBuilder: FC<MultiItemBuilderProps> = ({
   onChange,
 }) => {
   const [isAdding, setIsAdding] = useState(false);
-  const [selectedCatId, setSelectedCatId] = useState<string>("pharmacy");
+  const [selectedCatId, setSelectedCatId] = useState<string>(
+    PRESET_CATEGORIES[0].id,
+  );
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState<ItemSize>("MEDIUM");
@@ -117,10 +119,10 @@ export const MultiItemBuilder: FC<MultiItemBuilderProps> = ({
                     key={cat.id}
                     type="button"
                     onClick={() => setSelectedCatId(cat.id)}
-                    className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold border transition-all cursor-pointer ${
+                    className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs border transition-all cursor-pointer ${
                       isSelected
-                        ? `${cat.headerBg} ring-2 ring-primary/20 shadow-xs font-black`
-                        : "bg-white border-slate-200 text-text-secondary hover:bg-slate-100"
+                        ? cat.tabSelected
+                        : "bg-white border-slate-200 text-text-secondary hover:bg-slate-100 font-bold"
                     }`}
                   >
                     <span>{cat.icon}</span>
@@ -278,21 +280,27 @@ export const MultiItemBuilder: FC<MultiItemBuilderProps> = ({
       {groupedCategories.map(({ category, items: catItems }) => (
         <div
           key={category.id}
-          className="rounded-2xl border border-red-200/80 bg-red-50/20 overflow-hidden text-right shadow-2xs"
+          className={`rounded-2xl border ${category.cardBorder} ${category.cardBg} overflow-hidden text-right shadow-2xs`}
         >
-          {/* Category Top Banner */}
-          <div className="flex items-center justify-between px-3.5 py-2 bg-red-50/80 border-b border-red-200/60">
-            <span className="text-[11px] font-black text-red-700 bg-white px-2 py-0.5 rounded-full border border-red-200">
+          {/* Category Top Banner matching the tab colour */}
+          <div
+            className={`flex items-center justify-between px-3.5 py-2.5 ${category.headerBg} border-b ${category.headerBorder}`}
+          >
+            <span
+              className={`text-[11px] font-black ${category.textColor} bg-white px-2 py-0.5 rounded-full border ${category.badgeBorder}`}
+            >
               {catItems.length} غرض
             </span>
-            <div className="flex items-center gap-1.5 text-xs font-black text-red-700">
+            <div
+              className={`flex items-center gap-1.5 text-xs font-black ${category.textColor}`}
+            >
               <span>{category.icon}</span>
               <span>{category.name}</span>
             </div>
           </div>
 
-          {/* Items List */}
-          <div className="divide-y divide-red-100 bg-white p-2">
+          {/* Items List - flat rows separated by divider lines, no item-level rounded edges */}
+          <div className={`divide-y ${category.dividerColor} bg-white`}>
             {catItems.map((item) => {
               const sizeLabel =
                 SIZE_OPTIONS.find((s) => s.key === item.size)?.label || "متوسط";
@@ -300,7 +308,7 @@ export const MultiItemBuilder: FC<MultiItemBuilderProps> = ({
               return (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-2 hover:bg-slate-50 rounded-xl transition-colors"
+                  className="flex items-center justify-between px-3.5 py-2.5 hover:bg-slate-50/60 transition-colors"
                 >
                   <button
                     type="button"
@@ -344,3 +352,5 @@ export const MultiItemBuilder: FC<MultiItemBuilderProps> = ({
     </div>
   );
 };
+
+
