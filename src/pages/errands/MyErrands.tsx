@@ -12,7 +12,7 @@ import {
   Eye,
   Send,
   Calendar,
-  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -153,7 +153,7 @@ export default function MyErrands() {
           <div className="flex items-center gap-1.5 cursor-pointer">
             <div className="text-right">
               <div className="flex items-center gap-1">
-                <ChevronLeft className="h-5 w-5 text-[#123A68]" />
+                <ChevronRight className="h-5 w-5 text-[#123A68]" />
                 <h1 className="text-xl font-black text-[#123A68]">طلباتي</h1>
               </div>
               <p className="text-[11px] text-slate-400 font-medium">
