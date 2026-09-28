@@ -18,7 +18,9 @@ import type { VoiceNoteData } from "../../hooks/useVoiceRecorder";
 export default function SubmitOfferPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { neighborhoods } = useLocations();
+  const [selectedCity, setSelectedCity] = useState("");
+  const { cities, isLoadingCities, neighborhoods, isLoadingNeighborhoods } =
+    useLocations(selectedCity || undefined);
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -40,7 +42,11 @@ export default function SubmitOfferPage() {
         await errandsApi.submitOffer(id, {
           priceNis: Number(proposedPrice) || 0,
           departureTime: `${date} ${time}`,
-          notes: message + (recordedVoice ? ` [ملاحظة صوتية: ${recordedVoice.durationSec} ثانية]` : ""),
+          notes:
+            message +
+            (recordedVoice
+              ? ` [ملاحظة صوتية: ${recordedVoice.durationSec} ثانية]`
+              : ""),
         });
       }
       setShowSuccessModal(true);
@@ -88,62 +94,102 @@ export default function SubmitOfferPage() {
         {/* Form Card */}
         <div className="rounded-3xl bg-white p-5 border border-border shadow-xs text-right">
           <form onSubmit={handleSubmit} className="space-y-3.5">
-            {/* Trip Date */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-primary">
-                تاريخ الرحلة <span className="text-[#F36F21]">*</span>
-              </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  required
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] pr-11 pl-4 text-xs text-primary focus:border-accent focus:outline-none"
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-text-muted">
-                  <Calendar className="h-4.5 w-4.5" />
+            {/* Trip Date & Time */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-primary">
+                  تاريخ الرحلة <span className="text-[#F36F21]">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    required
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] pr-10 pl-3 text-xs text-primary focus:border-accent focus:outline-none"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-text-muted">
+                    <Calendar className="h-4 w-4" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-primary">
+                  وقت المغادرة <span className="text-[#F36F21]">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type="time"
+                    required
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] pr-10 pl-3 text-xs text-primary focus:border-accent focus:outline-none"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-text-muted">
+                    <Clock className="h-4 w-4" />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Departure Time */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-primary">
-                وقت المغادرة <span className="text-[#F36F21]">*</span>
-              </label>
-              <div className="relative">
-                <input
-                  type="time"
-                  required
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] pr-11 pl-4 text-xs text-primary focus:border-accent focus:outline-none"
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-text-muted">
-                  <Clock className="h-4.5 w-4.5" />
-                </div>
-              </div>
-            </div>
-
-            {/* Origin */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-primary">
-                منطقة الانطلاق <span className="text-[#F36F21]">*</span>
-              </label>
-              <select
-                required
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-accent focus:outline-none"
-              >
-                <option value="">مثال: الرمال</option>
-                {neighborhoods.map((n) => (
-                  <option key={n.id} value={n.name}>
-                    {n.name}
+            {/* City & Neighborhood Selection */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-primary">
+                  مدينة الانطلاق <span className="text-[#F36F21]">*</span>
+                </label>
+                <select
+                  value={selectedCity}
+                  onChange={(e) => {
+                    setSelectedCity(e.target.value);
+                    setOrigin("");
+                  }}
+                  className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
+                >
+                  <option value="">
+                    {isLoadingCities ? "جاري التحميل..." : "اختر المدينة"}
                   </option>
-                ))}
-              </select>
+                  {cities && cities.length > 0 ? (
+                    cities.map((c) => (
+                      <option key={c.key} value={c.key}>
+                        {c.nameAr}
+                      </option>
+                    ))
+                  ) : (
+                    <>
+                      <option value="gaza">غزة</option>
+                      <option value="north_gaza">شمال غزة</option>
+                      <option value="deir_al_balah">دير البلح</option>
+                      <option value="khan_younis">خان يونس</option>
+                      <option value="rafah">رفح</option>
+                    </>
+                  )}
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-primary">
+                  حي الانطلاق <span className="text-[#F36F21]">*</span>
+                </label>
+                <select
+                  required
+                  value={origin}
+                  onChange={(e) => setOrigin(e.target.value)}
+                  className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs text-primary focus:border-accent focus:outline-none"
+                >
+                  <option value="">
+                    {isLoadingNeighborhoods
+                      ? "جاري تحميل الأحياء..."
+                      : "اختر الحي"}
+                  </option>
+                  {neighborhoods.map((n) => (
+                    <option key={n.id} value={n.name}>
+                      {n.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Proposed Price */}

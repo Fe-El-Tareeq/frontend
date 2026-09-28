@@ -166,17 +166,17 @@ export default function EditProfile() {
               >
                 {cities && cities.length > 0 ? (
                   cities.map((c) => (
-                    <option key={c.key} value={c.nameAr}>
+                    <option key={c.key} value={c.key}>
                       {c.nameAr}
                     </option>
                   ))
                 ) : (
                   <>
-                    <option value="غزة">غزة</option>
-                    <option value="شمال غزة">شمال غزة</option>
-                    <option value="دير البلح">دير البلح</option>
-                    <option value="خان يونس">خان يونس</option>
-                    <option value="رفح">رفح</option>
+                    <option value="gaza">غزة</option>
+                    <option value="north_gaza">شمال غزة</option>
+                    <option value="deir_al_balah">دير البلح</option>
+                    <option value="khan_younis">خان يونس</option>
+                    <option value="rafah">رفح</option>
                   </>
                 )}
               </select>
