@@ -75,6 +75,8 @@ export default function WalletPage() {
       <div className="px-4 pt-4 space-y-4">
         {/* Title Header with "+ شراء توكنز" */}
         <div className="flex items-center justify-between">
+          <h1 className="text-xl font-black text-[#123A68]">المحفظة</h1>
+
           <button
             type="button"
             onClick={() => navigate("/wallet/buy-tokens")}
@@ -83,8 +85,6 @@ export default function WalletPage() {
             <Plus className="h-4 w-4 stroke-[3]" />
             <span>شراء توكنز</span>
           </button>
-
-          <h1 className="text-xl font-black text-[#123A68]">المحفظة</h1>
         </div>
 
         {/* Current Balance Hero Card */}
