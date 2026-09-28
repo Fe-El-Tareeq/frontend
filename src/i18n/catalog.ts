@@ -203,6 +203,63 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Idempotency key is required for refunds": "مفتاح العملية مطلوب للاسترداد.",
   "Take must not exceed 100.": "العدد المطلوب يجب ألا يتجاوز 100.",
 
+  // Identity verification (KYC)
+  "Terms and privacy policy must be accepted.": "يجب الموافقة على الشروط وسياسة الخصوصية.",
+  "Identity verification is required before publishing a trip.": "يجب التحقق من الهوية قبل نشر رحلة.",
+  "Identity is already verified.": "تم التحقق من الهوية مسبقاً.",
+  "An identity verification request is already pending review.": "يوجد طلب تحقق من الهوية قيد المراجعة بالفعل.",
+  "Front ID, back ID, and selfie images are required.": "صور الوجه الأمامي والخلفي للهوية والصورة الشخصية مطلوبة.",
+  "Each identity image must not exceed 5 MB.": "يجب ألا يتجاوز حجم كل صورة هوية 5 ميغابايت.",
+  "Exactly one front ID, back ID, and selfie image are allowed.": "يجب إرسال صورة واحدة فقط لكل من الوجه الأمامي والخلفي للهوية والصورة الشخصية.",
+  "One or more uploaded files are not valid images.": "ملف واحد أو أكثر من الملفات المرفوعة ليس صورة صالحة.",
+  "Identity document storage is not configured.": "لم تتم تهيئة تخزين مستندات الهوية.",
+  "Could not upload identity document.": "تعذر رفع مستند الهوية. حاول مرة أخرى لاحقاً.",
+  "Could not delete identity document.": "تعذر حذف مستند الهوية.",
+  "Could not create identity document access URL.": "تعذر إنشاء رابط آمن لمستند الهوية.",
+  "Storage did not return an identity document access URL.": "تعذر إنشاء رابط آمن لمستند الهوية.",
+  "Identity verification not found.": "طلب التحقق من الهوية غير موجود.",
+  "Identity verification has already been reviewed.": "تمت مراجعة طلب التحقق من الهوية مسبقاً.",
+
+  // Tracking, checklists, and delivery estimates
+  "Only the requester can track this errand.": "يمكن لطالب الطلب فقط تتبع هذا الطلب.",
+  "Only the trip owner can view its checklist.": "مالك الرحلة فقط يمكنه عرض قائمة التحقق الخاصة بها.",
+  "Estimated delivery time must be a valid ISO datetime.": "يجب أن يكون وقت التسليم المتوقع بتنسيق ISO صحيح ومتضمناً المنطقة الزمنية.",
+  "Estimated delivery time must be in the future.": "يجب أن يكون وقت التسليم المتوقع في المستقبل.",
+  "Estimated delivery time can only be updated after pickup and before completion.": "يمكن تحديث وقت التسليم المتوقع بعد الاستلام وقبل إكمال التوصيل فقط.",
+  "Trip cannot be updated after a proposal has been accepted.": "لا يمكن تحديث الرحلة بعد قبول عرض عليها.",
+
+  // Zones and areas
+  "originZoneKey and originCity must identify the same zone.": "يجب أن يشير originZoneKey وoriginCity إلى المنطقة نفسها.",
+  "destinationZoneKey and destinationCity must identify the same zone.": "يجب أن يشير destinationZoneKey وdestinationCity إلى المنطقة نفسها.",
+  "One or more selected categories do not exist or are inactive.": "تصنيف واحد أو أكثر من التصنيفات المحددة غير موجود أو غير نشط.",
+
+  // Support, tickets, and safety reports
+  "Report context not found.": "سياق البلاغ غير موجود.",
+  "Report context fields do not refer to the same assignment.": "حقول سياق البلاغ لا تشير إلى التكليف نفسه.",
+  "chatRoomId is required when attachChatHistory is true.": "chatRoomId مطلوب عند تفعيل إرفاق سجل المحادثة.",
+  "chatRoomId is allowed only when attachChatHistory is true.": "لا يمكن إرسال chatRoomId إلا عند تفعيل إرفاق سجل المحادثة.",
+  "clientRequestKey was already used with different report data.": "تم استخدام clientRequestKey مسبقاً مع بيانات بلاغ مختلفة.",
+  "clientRequestKey was already used with different ticket data.": "تم استخدام clientRequestKey مسبقاً مع بيانات تذكرة دعم مختلفة.",
+  "An idempotency key was already used with different ticket data.": "تم استخدام مفتاح منع التكرار مسبقاً مع بيانات تذكرة دعم مختلفة.",
+  "An idempotency key was already used with different report data.": "تم استخدام مفتاح منع التكرار مسبقاً مع بيانات بلاغ مختلفة.",
+  "errandId does not match the assignment context.": "لا يتطابق errandId مع سياق التكليف.",
+  "tripId does not match the assignment context.": "لا يتطابق tripId مع سياق التكليف.",
+  "errandId and tripId are not related.": "لا يرتبط errandId وtripId أحدهما بالآخر.",
+  "reportedUserId must be the other assignment participant.": "يجب أن يكون reportedUserId هو المشارك الآخر في التكليف.",
+  "reportedUserId is not related to this errand.": "لا يرتبط reportedUserId بهذا الطلب.",
+  "reportedUserId is not related to this trip.": "لا يرتبط reportedUserId بهذه الرحلة.",
+  "Users cannot report themselves.": "لا يمكن للمستخدم الإبلاغ عن نفسه.",
+  "Report not found.": "البلاغ غير موجود.",
+  "Support ticket not found.": "تذكرة الدعم غير موجودة.",
+  "Closed support tickets cannot receive messages.": "لا يمكن إرسال رسائل إلى تذاكر الدعم المغلقة.",
+
+  // Administration and FAQs
+  "FAQ not found.": "السؤال الشائع غير موجود.",
+  "Super administrator access is required.": "يتطلب هذا الإجراء صلاحيات المشرف العام.",
+  "Administrator access is required.": "يتطلب هذا الإجراء صلاحيات administrator.",
+  "At least one field is required.": "يجب توفير حقل واحد على الأقل.",
+  "FAQ IDs must be unique.": "يجب ألا تتكرر معرّفات الأسئلة الشائعة.",
+
   // Standard generic validation rules
   "Required": "هذا الحقل مطلوب.",
   "Invalid input": "القيمة المدخلة غير صالحة.",

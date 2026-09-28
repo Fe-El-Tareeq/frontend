@@ -1,47 +1,49 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ChevronRight,
   Phone,
-  Paperclip,
   Mic,
   Send,
   Package,
-  MessageSquare,
   Square,
   Trash2,
+  RefreshCw,
+  Clock,
+  Wifi,
 } from "lucide-react";
 import { MobileContainer } from "../../components/layout/MobileContainer";
-import { EmptyState } from "../../components/ui/feedback/EmptyState";
-import { ChatMessageBubble, type MessageData } from "../../components/chat/ChatMessageBubble";
+import {
+  ChatMessageBubble,
+  type MessageData,
+} from "../../components/chat/ChatMessageBubble";
 import { useVoiceRecorder } from "../../hooks/useVoiceRecorder";
+import { useChatRoom } from "../../hooks/useChat";
+import { useRealtimeChat } from "../../hooks/useRealtimeChat";
+import { useAuthStore } from "../../store/useAuthStore";
+import { queueOfflineAction } from "../../api/client";
+import { ENDPOINTS } from "../../api/endpoints";
+import type { ChatMessage } from "../../types";
 
 export default function ChatPage() {
-  const { id = "room-1" } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const currentUserId = useAuthStore((s) => s.user?.id);
 
-  /*
-   * ============================================================================
-   * BACKEND INTEGRATION: Room Messages & Real-Time Sync
-   * Endpoints:
-   *   - GET /api/v1/chat-rooms/:roomId/messages?limit=50
-   *   - POST /api/v1/chat-rooms/:roomId/messages (Body: { clientMessageKey, type: "TEXT" | "VOICE", text, mediaUrl })
-   *   - GET /api/v1/chat-rooms/:roomId/sync?since=...
-   * Renders dynamic messages or EmptyState from design system without mock data.
-   * ============================================================================
-   */
+  const {
+    room,
+    messages: backendMessages = [],
+    isLoadingMessages,
+    sendMessage,
+    isSending,
+    markAsRead,
+  } = useChatRoom(id);
+
+  // Real-time synchronization hook (WebSockets & Polling)
+  const { isConnected } = useRealtimeChat(id);
+
   const [messageText, setMessageText] = useState("");
-  const [messages, setMessages] = useState<MessageData[]>(() => {
-    const cached = localStorage.getItem(`btareeqak_chat_msgs_${id}`);
-    if (cached) {
-      try {
-        return JSON.parse(cached);
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const {
     isRecording,
@@ -52,203 +54,298 @@ export default function ChatPage() {
     deleteVoiceNote,
   } = useVoiceRecorder(`chat_${id}`);
 
-  // Save chat messages locally for offline browsing on Web & PWA
+  // Mark room messages as read on mount / when room changes
   useEffect(() => {
-    try {
-      localStorage.setItem(`btareeqak_chat_msgs_${id}`, JSON.stringify(messages));
-    } catch {
-      // quota limit
+    if (id) {
+      markAsRead().catch(() => {});
     }
-  }, [messages, id]);
+  }, [id, markAsRead]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  // Scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView?.({ behavior: "smooth" });
+  }, [backendMessages]);
+
+  // Determine peer user details
+  const requester = room?.participants?.requester || null;
+  const traveler = room?.participants?.traveler || null;
+  const peer =
+    currentUserId === requester?.id
+      ? traveler
+      : requester || room?.peer || null;
+
+  const peerName = peer?.fullName || "طرف المحادثة";
+  const initials =
+    peerName
+      .split(" ")
+      .map((n: string) => n[0])
+      .join("")
+      .slice(0, 2) || "مح";
+
+  const errandTitle =
+    room?.assignment?.errand?.title || "تنسيق استلام وتوصيل الطلب";
+
+  // Convert backend ChatMessage items into ChatMessageBubble format
+  const displayMessages: MessageData[] = (
+    Array.isArray(backendMessages) ? backendMessages : []
+  ).map((m: ChatMessage) => {
+    const isMe = m.senderId === currentUserId;
+    const timeFormatted = m.sentAt
+      ? new Date(m.sentAt).toLocaleTimeString("ar-EG", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "الآن";
+
+    return {
+      id: m.id,
+      sender: isMe ? "ME" : "THEM",
+      text: m.text || undefined,
+      time: timeFormatted,
+      audioUrl: m.voiceNoteUrl || undefined,
+      audioDurationSec: m.voiceNoteDurationSec || undefined,
+    };
+  });
+
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!messageText.trim() && !voiceNote) return;
 
-    const time = new Date().toLocaleTimeString("ar-EG", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const clientMessageKey = `msg_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 
+    // If voice note attached
     if (voiceNote) {
-      const voiceMsg: MessageData = {
-        id: `vn-${Date.now()}`,
-        sender: "ME",
-        time,
-        audioUrl: voiceNote.base64 || voiceNote.audioUrl,
-        audioDurationSec: voiceNote.durationSec,
+      const voicePayload = {
+        clientMessageKey,
+        type: "VOICE" as const,
+        voiceNoteUrl: voiceNote.base64 || voiceNote.audioUrl || "",
+        voiceNoteDurationSec: voiceNote.durationSec || 5,
       };
-      setMessages((prev) => [...prev, voiceMsg]);
+
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        await queueOfflineAction({
+          type: "SEND_CHAT_MESSAGE",
+          endpoint: ENDPOINTS.CHAT.SEND_MESSAGE(id),
+          method: "POST",
+          payload: voicePayload,
+          descriptionAr: "إرسال تسجيل صوتي بالمحادثة",
+        });
+      } else {
+        await sendMessage(voicePayload);
+      }
+
       deleteVoiceNote();
       return;
     }
 
+    // If text message
     if (messageText.trim()) {
-      const newMsg: MessageData = {
-        id: `msg-${Date.now()}`,
-        sender: "ME",
+      const textPayload = {
+        clientMessageKey,
+        type: "TEXT" as const,
         text: messageText.trim(),
-        time,
       };
-      setMessages((prev) => [...prev, newMsg]);
+
+      const textToSend = messageText.trim();
       setMessageText("");
+
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        await queueOfflineAction({
+          type: "SEND_CHAT_MESSAGE",
+          endpoint: ENDPOINTS.CHAT.SEND_MESSAGE(id),
+          method: "POST",
+          payload: textPayload,
+          descriptionAr: `إرسال رسالة: ${textToSend.slice(0, 20)}...`,
+        });
+      } else {
+        await sendMessage(textPayload);
+      }
     }
   };
 
   return (
     <MobileContainer className="bg-[#F8FAFC] flex flex-col h-screen max-h-screen text-right">
       {/* Top Chat Header */}
-      <div className="flex items-center justify-between bg-white px-4 py-3.5 border-b border-border shadow-2xs">
-        <div className="flex items-center gap-2.5">
+      <header className="flex items-center justify-between border-b border-border bg-white px-4 py-3 shadow-2xs z-10 shrink-0">
+        <div className="flex items-center gap-1.5">
           <button
+            type="button"
             onClick={() => navigate(-1)}
+            aria-label="الرجوع"
             className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
-
-          <div className="relative">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white">
-              م
-            </div>
-            <span className="absolute bottom-0 left-0 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white" />
-          </div>
-
-          <div className="text-right">
-            <h3 className="text-xs font-black text-[#123A68]">
-              محادثة التوصيل
-            </h3>
-            <span className="text-[10px] text-emerald-600 font-bold block">
-              متصل الآن
-            </span>
-          </div>
-        </div>
-
-        {/* Action icons */}
-        <div className="flex items-center gap-1.5">
           <a
-            href="tel:0591234567"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-primary hover:bg-slate-200 transition-colors"
+            href={`tel:0590000000`}
+            aria-label="الاتصال بطرف المحادثة"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 border border-slate-200 text-[#123A68] hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <Phone className="h-4 w-4" />
           </a>
         </div>
-      </div>
 
-      {/* Context Errand Summary Banner */}
-      <div className="bg-[#FFF5EE] px-4 py-2 border-b border-orange-100 flex items-center justify-between text-xs text-right">
-        <div className="flex items-center gap-2">
-          <Package className="h-4 w-4 text-[#F36F21]" />
-          <span className="font-bold text-[#123A68] text-[11px] truncate">
-            غرفة محادثة التوصيل ({id})
-          </span>
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <h2 className="text-xs font-black text-primary flex items-center gap-1.5 justify-end">
+              <span>{peerName}</span>
+              {isConnected ? (
+                <span title="متصل بالبث المباشر">
+                  <Wifi className="w-3.5 h-3.5 text-emerald-500" />
+                </span>
+              ) : (
+                <span title="مزامنة تلقائية">
+                  <Clock className="w-3.5 h-3.5 text-slate-400" />
+                </span>
+              )}
+            </h2>
+            <span className="text-[10px] text-emerald-600 block font-bold">
+              متصل الآن
+            </span>
+          </div>
+
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white shadow-xs">
+            {initials}
+          </div>
         </div>
-        <span className="text-[10.5px] text-text-muted font-bold">
-          محادثة آمنة
-        </span>
+      </header>
+
+      {/* Associated Errand Information Banner */}
+      <div className="flex items-center justify-between bg-blue-50/70 border-b border-blue-100/70 px-4 py-2 shrink-0 text-right">
+        <div className="flex items-center gap-2">
+          {room?.assignment?.id && (
+            <button
+              type="button"
+              onClick={() =>
+                navigate(`/errands/${room?.assignment?.errandId || id}/tracking`)
+              }
+              className="text-[10.5px] font-black text-accent hover:underline cursor-pointer"
+            >
+              تتبع الطلب
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-bold text-[#123A68] line-clamp-1 max-w-[220px]">
+            {errandTitle}
+          </span>
+          <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-[#123A68]">
+            <Package className="h-3.5 w-3.5" />
+          </div>
+        </div>
       </div>
 
-      {/* Messages Scroll Area */}
+      {/* Chat Messages Stream */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.length === 0 ? (
-          <div className="pt-8">
-            <EmptyState
-              icon={<MessageSquare className="h-7 w-7 text-[#123A68]" />}
-              title="لا توجد رسائل سابقة"
-              description="ابدأ المحادثة الآن للتنسيق حول موعد ومكان استلام وتسليم الأغراض."
-            />
+        {isLoadingMessages ? (
+          <div className="flex flex-col items-center justify-center h-full text-slate-400 space-y-2">
+            <RefreshCw className="w-6 h-6 animate-spin text-accent" />
+            <span className="text-xs font-bold">جاري تحميل الرسائل...</span>
+          </div>
+        ) : displayMessages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-3">
+            <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-[#123A68]">
+              <Package className="w-8 h-8" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-sm font-black text-[#123A68]">
+                مرحباً بك في المحادثة المباشرة!
+              </h3>
+              <p className="text-xs text-text-muted max-w-[240px] mx-auto leading-relaxed">
+                يمكنك الآن التنسيق مع {peerName} بخصوص تفاصيل الاستلام والتوصيل.
+              </p>
+            </div>
           </div>
         ) : (
-          messages.map((msg) => (
+          displayMessages.map((msg) => (
             <ChatMessageBubble key={msg.id} message={msg} />
           ))
         )}
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Active Recording / Voice Note Draft Bar */}
+      {/* Voice Note Recording Preview Bar */}
       {isRecording && (
-        <div className="bg-red-50 px-4 py-2.5 border-t border-red-200 flex items-center justify-between text-red-600 text-xs font-bold animate-pulse">
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-500 animate-ping" />
-            <span>جاري تسجيل رسالة صوتية... ({recordingDurationFormatted})</span>
+        <div className="flex items-center justify-between bg-red-50 border-t border-red-200 px-4 py-2.5 shrink-0 animate-in fade-in">
+          <div className="flex items-center gap-2 text-xs font-bold text-red-600">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-600 animate-ping" />
+            <span>جاري التسجيل: {recordingDurationFormatted}</span>
           </div>
           <button
             type="button"
             onClick={stopRecording}
-            className="flex items-center gap-1 rounded-lg bg-red-600 px-3 py-1 text-white font-black hover:bg-red-700 active:scale-95 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold cursor-pointer"
           >
-            <Square className="h-3 w-3 fill-white" />
+            <Square className="w-3.5 h-3.5 fill-white" />
             <span>إيقاف</span>
           </button>
         </div>
       )}
 
+      {/* Recorded Voice Note Ready Bar */}
       {voiceNote && !isRecording && (
-        <div className="bg-orange-50 px-4 py-2 border-t border-orange-200 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 text-primary font-bold">
-            <Mic className="h-4 w-4 text-[#F36F21]" />
-            <span>رسالة صوتية جاهزة للإرسال ({voiceNote.durationSec} ثانية)</span>
+        <div className="flex items-center justify-between bg-blue-50 border-t border-blue-200 px-4 py-2.5 shrink-0">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#123A68]">
+            <Mic className="w-4 h-4 text-[#F36F21]" />
+            <span>تم تسجيل مقطع صوتي ({voiceNote.durationSec} ثانية)</span>
           </div>
           <button
             type="button"
             onClick={deleteVoiceNote}
-            className="p-1 text-slate-400 hover:text-red-500 cursor-pointer"
-            title="حذف"
+            className="p-1.5 text-red-500 hover:text-red-700 rounded-lg cursor-pointer"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* Input Bar */}
-      <div className="bg-white p-3 border-t border-border shadow-md">
-        <form
-          onSubmit={handleSendMessage}
-          className="flex items-center gap-2 text-right"
+      {/* Bottom Message Input Form */}
+      <form
+        onSubmit={handleSendMessage}
+        className="flex items-center gap-2 border-t border-border bg-white p-3 shrink-0"
+      >
+        <button
+          type="submit"
+          disabled={(!messageText.trim() && !voiceNote) || isSending}
+          aria-label="إرسال"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent text-white shadow-xs hover:bg-[#E05E12] transition-colors cursor-pointer disabled:opacity-40"
         >
-          <button
-            type="submit"
-            disabled={!messageText.trim() && !voiceNote}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F36F21] text-white shadow-md hover:bg-[#E05E12] active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
-          >
-            <Send className="h-4.5 w-4.5 -rotate-45" />
-          </button>
+          {isSending ? (
+            <RefreshCw className="h-5 w-5 animate-spin" />
+          ) : (
+            <Send className="h-5 w-5 ml-0.5" />
+          )}
+        </button>
 
-          <input
-            type="text"
-            value={messageText}
-            onChange={(e) => setMessageText(e.target.value)}
-            disabled={isRecording}
-            placeholder={
-              voiceNote
-                ? "اضغط إرسال لإرسال الرسالة الصوتية..."
-                : "اكتب رسالتك..."
-            }
-            className="h-11 flex-1 rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none text-right disabled:bg-slate-100"
-          />
+        <input
+          type="text"
+          value={messageText}
+          disabled={Boolean(voiceNote) || isRecording}
+          onChange={(e) => setMessageText(e.target.value)}
+          placeholder={
+            voiceNote
+              ? "اضغط إرسال لنشر التسجيل الصوتي..."
+              : isRecording
+                ? "جاري تسجيل الصوت..."
+                : "اكتب رسالتك هنا..."
+          }
+          className="h-11 flex-1 rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none text-right disabled:bg-slate-100"
+        />
 
-          <button
-            type="button"
-            onClick={isRecording ? stopRecording : startRecording}
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors cursor-pointer ${
-              isRecording
-                ? "bg-red-100 text-red-600 animate-pulse"
-                : "text-text-muted hover:text-primary"
-            }`}
-            title="تسجيل صوتي"
-          >
-            <Mic className="h-5 w-5" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => alert("سيتم إتاحة إرفاق الملفات والصور في التحديث القادم.")}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text-muted hover:text-primary transition-colors cursor-pointer"
-          >
-            <Paperclip className="h-5 w-5" />
-          </button>
-        </form>
-      </div>
+        <button
+          type="button"
+          onClick={isRecording ? stopRecording : startRecording}
+          aria-label="تسجيل صوتي"
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border transition-colors cursor-pointer ${
+            isRecording
+              ? "bg-red-50 border-red-300 text-red-600 animate-pulse"
+              : "border-slate-200 text-slate-500 hover:text-[#123A68] hover:border-slate-300 bg-[#F8FAFC]"
+          }`}
+        >
+          <Mic className="h-5 w-5" />
+        </button>
+      </form>
     </MobileContainer>
   );
 }

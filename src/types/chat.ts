@@ -1,10 +1,11 @@
-export type MessageType = "TEXT" | "VOICE";
+export type MessageType = "TEXT" | "VOICE" | "IMAGE";
 
 export interface ChatUserSummary {
   id: string;
   fullName: string | null;
   trustScore: number;
   profileImageUrl?: string | null;
+  isVerified?: boolean;
 }
 
 export interface ChatMessage {
@@ -16,18 +17,42 @@ export interface ChatMessage {
   text?: string | null;
   voiceNoteUrl?: string | null;
   voiceNoteDurationSec?: number | null;
+  imageUrl?: string | null;
   isRead: boolean;
   readAt?: string | null;
   sentAt: string;
-  sender?: ChatUserSummary;
+  sender?: ChatUserSummary | null;
+}
+
+export interface ChatAssignmentSummary {
+  id: string;
+  status: string;
+  errandId: string;
+  tripId?: string;
+  acceptedAt?: string | null;
+  completedAt?: string | null;
+  cancelledAt?: string | null;
+  errand?: {
+    id: string;
+    title: string;
+    status?: string;
+  } | null;
+}
+
+export interface ChatParticipantsSummary {
+  requester: ChatUserSummary | null;
+  traveler: ChatUserSummary | null;
 }
 
 export interface ChatRoomSummary {
   id: string;
   assignmentId: string;
+  assignment?: ChatAssignmentSummary | null;
+  participants?: ChatParticipantsSummary;
   createdAt: string;
   updatedAt: string;
   lastMessageAt?: string | null;
+  latestMessage?: ChatMessage | null;
   lastMessage?: ChatMessage | null;
   unreadCount?: number;
   peer?: ChatUserSummary | null;
@@ -36,6 +61,8 @@ export interface ChatRoomSummary {
 export interface ChatRoom {
   id: string;
   assignmentId: string;
+  assignment?: ChatAssignmentSummary | null;
+  participants?: ChatParticipantsSummary;
   createdAt: string;
   updatedAt: string;
   lastMessageAt?: string | null;
@@ -55,7 +82,16 @@ export interface ChatSendVoiceRequest {
   voiceNoteDurationSec: number;
 }
 
-export type ChatSendMessageRequest = ChatSendTextRequest | ChatSendVoiceRequest;
+export interface ChatSendImageRequest {
+  clientMessageKey: string;
+  type: "IMAGE";
+  imageUrl: string;
+}
+
+export type ChatSendMessageRequest =
+  | ChatSendTextRequest
+  | ChatSendVoiceRequest
+  | ChatSendImageRequest;
 
 export interface ChatMessagesPagination {
   order: "desc" | "asc";
