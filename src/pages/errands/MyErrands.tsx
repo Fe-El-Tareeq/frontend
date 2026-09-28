@@ -4,7 +4,6 @@ import {
   Plus,
   Package,
   Search,
-  ChevronRight,
   MessageSquare,
   MapPin,
   Star,
@@ -13,6 +12,7 @@ import {
   Eye,
   Send,
   Calendar,
+  ChevronLeft,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -85,9 +85,9 @@ export default function MyErrands() {
 
     const dateStr = e.createdAt
       ? new Date(e.createdAt).toLocaleDateString("ar-EG", {
-          day: "numeric",
-          month: "long",
-        })
+        day: "numeric",
+        month: "long",
+      })
       : "اليوم";
 
     const fromStr =
@@ -153,8 +153,8 @@ export default function MyErrands() {
           <div className="flex items-center gap-1.5 cursor-pointer">
             <div className="text-right">
               <div className="flex items-center gap-1">
+                <ChevronLeft className="h-5 w-5 text-[#123A68]" />
                 <h1 className="text-xl font-black text-[#123A68]">طلباتي</h1>
-                <ChevronRight className="h-5 w-5 text-[#123A68] stroke-[2.5]" />
               </div>
               <p className="text-[11px] text-slate-400 font-medium">
                 الطلبات التي نشرتها
@@ -277,11 +277,10 @@ export default function MyErrands() {
               key={s.key}
               type="button"
               onClick={() => setStatusFilter(s.key)}
-              className={`shrink-0 rounded-2xl px-4 py-2 transition-all cursor-pointer text-xs ${
-                statusFilter === s.key
-                  ? "bg-[#123A68] text-white font-black shadow-xs"
-                  : "bg-white border border-slate-200 text-slate-600 font-bold hover:bg-slate-50"
-              }`}
+              className={`shrink-0 rounded-2xl px-4 py-2 transition-all cursor-pointer text-xs ${statusFilter === s.key
+                ? "bg-[#123A68] text-white font-black shadow-xs"
+                : "bg-white border border-slate-200 text-slate-600 font-bold hover:bg-slate-50"
+                }`}
             >
               {s.label}
             </button>
@@ -411,7 +410,12 @@ export default function MyErrands() {
                         className="w-full flex items-center justify-center gap-1.5 h-10 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all cursor-pointer shadow-xs"
                       >
                         <Eye className="h-4 w-4" />
-                        <span>عرض العروض ({errand.offersCount})</span>
+                        <span>
+                          عرض العروض
+                          {errand.offersCount > 0
+                            ? ` (${errand.offersCount})`
+                            : ""}
+                        </span>
                       </button>
                     )}
 
