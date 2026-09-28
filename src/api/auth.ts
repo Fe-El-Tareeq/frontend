@@ -153,6 +153,26 @@ export const authApi = {
     return res.data;
   },
 
+  submitIdentityVerification: async (payload: {
+    idFrontImage: File;
+    idBackImage: File;
+    selfieImage: File;
+  }) => {
+    const formData = new FormData();
+    formData.append("idFrontImage", payload.idFrontImage);
+    formData.append("idBackImage", payload.idBackImage);
+    formData.append("selfieImage", payload.selfieImage);
+
+    const res = await apiClient.post<
+      ApiSuccessResponse<{ message: string; status: string }>
+    >(ENDPOINTS.USERS.IDENTITY_VERIFICATION, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  },
+
   deactivateAccount: async () => {
     const res = await apiClient.delete<ApiSuccessResponse<null>>(
       ENDPOINTS.USERS.DEACTIVATE,

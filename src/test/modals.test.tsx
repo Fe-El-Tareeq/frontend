@@ -1,11 +1,13 @@
-import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { RequestSpaceSuccessModal } from "../components/modals/RequestSpaceSuccessModal";
 import { SubmitOfferSuccessModal } from "../components/modals/SubmitOfferSuccessModal";
 import { ResetPasswordSuccessModal } from "../components/modals/ResetPasswordSuccessModal";
 import { ChangePasswordSuccessModal } from "../components/modals/ChangePasswordSuccessModal";
 import { LandingMenuModal } from "../components/modals/LandingMenuModal";
+import { IdentityVerificationModal } from "../components/modals/IdentityVerificationModal";
+import { LiveCameraCaptureModal } from "../components/camera/LiveCameraCaptureModal";
 
 describe("Modals & Feedback Components", () => {
   it("should render RequestSpaceSuccessModal when open", () => {
@@ -63,5 +65,40 @@ describe("Modals & Feedback Components", () => {
     expect(screen.getByText("تسجيل الدخول")).toBeInTheDocument();
     expect(screen.getByText("إنشاء حساب جديد")).toBeInTheDocument();
     expect(screen.getByText("الرئيسية")).toBeInTheDocument();
+  });
+
+  it("should render IdentityVerificationModal with live camera trigger options", () => {
+    render(
+      <MemoryRouter>
+        <IdentityVerificationModal isOpen={true} onClose={() => {}} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("التحقق من الهوية")).toBeInTheDocument();
+    expect(screen.getByText("1. بطاقة الهوية")).toBeInTheDocument();
+    expect(screen.getAllByText("فتح الكاميرا").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("اختيار ملف").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("should render LiveCameraCaptureModal and handle permissions / fallback gracefully", () => {
+    const handleCapture = vi.fn();
+    const handleClose = vi.fn();
+
+    render(
+      <LiveCameraCaptureModal
+        isOpen={true}
+        mode="id_front"
+        onClose={handleClose}
+        onCapture={handleCapture}
+      />,
+    );
+
+    expect(
+      screen.getByText("التقاط بطاقة الهوية — الوجه الأمامي"),
+    ).toBeInTheDocument();
+
+    const cancelButton = screen.getByText("إلغاء");
+    fireEvent.click(cancelButton);
+    expect(handleClose).toHaveBeenCalled();
   });
 });
