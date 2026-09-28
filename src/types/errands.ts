@@ -54,6 +54,7 @@ export interface Errand {
   requester?: ErrandRequester;
   items?: ErrandItemPayload[];
   images?: ErrandImage[];
+  imageUrls?: string[];
   createdAt: string;
   updatedAt: string;
 }

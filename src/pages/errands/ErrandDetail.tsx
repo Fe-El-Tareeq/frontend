@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
+  ChevronRight,
   Play,
   Pause,
   Send,
@@ -13,6 +14,7 @@ import {
   Edit2,
   Image as ImageIcon,
   X,
+  CheckCircle2,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -40,11 +42,11 @@ const formatSize = (size?: string) => {
 };
 
 const formatTimeAgo = (dateStr?: string) => {
-  if (!dateStr) return "منذ 40 دقيقة";
+  if (!dateStr) return "منذ لحظات";
   const date = new Date(dateStr);
   const now = new Date();
   const diffSec = Math.floor((now.getTime() - date.getTime()) / 1000);
-  if (isNaN(diffSec) || diffSec < 60) return "الآن";
+  if (isNaN(diffSec) || diffSec < 60) return "منذ لحظات";
   const diffMin = Math.floor(diffSec / 60);
   if (diffMin < 60) return `منذ ${diffMin} دقيقة`;
   const diffHours = Math.floor(diffMin / 60);
@@ -54,12 +56,62 @@ const formatTimeAgo = (dateStr?: string) => {
 };
 
 const getInitials = (name?: string | null) => {
-  if (!name) return "فع";
+  if (!name || name === "مستخدم") return "ط";
   const parts = name.trim().split(/\s+/);
   if (parts.length >= 2) {
-    return parts[0].slice(0, 1) + parts[1].slice(0, 1);
+    return (parts[0][0] || "") + (parts[1][0] || "");
   }
-  return parts[0].slice(0, 2);
+  return name.slice(0, 2);
+};
+
+const formatSeconds = (sec: number) => {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s < 10 ? "0" : ""}${s}`;
+};
+
+const ENGLISH_TO_ARABIC_CATEGORIES: Record<string, string> = {
+  medication: "دواء / صيدلية",
+  medicine: "دواء / صيدلية",
+  pharmacy: "دواء / صيدلية",
+  documents: "وثائق / أوراق",
+  papers: "وثائق / أوراق",
+  parcel: "طرد / بضاعة عامة",
+  "general parcel": "طرد / بضاعة عامة",
+  groceries: "مواد غذائية",
+  food: "مواد غذائية",
+  clothes: "ملابس / أحذية",
+  clothing: "ملابس / أحذية",
+  electronics: "إلكترونيات / شواحن",
+  "baby supplies": "مستلزمات أطفال",
+  "baby care": "مستلزمات أطفال",
+  water: "مياه",
+  "household supplies": "مستلزمات منزلية",
+  home: "مستلزمات منزلية",
+  other: "أخرى",
+};
+
+const resolveCategory = (
+  categoryId?: string | null,
+  categoryName?: string | null,
+) => {
+  if (categoryId) {
+    const byId = PRESET_CATEGORIES.find((c) => c.id === categoryId);
+    if (byId) return byId;
+  }
+  if (categoryName) {
+    const trimmed = categoryName.trim().toLowerCase();
+    const arabicName = ENGLISH_TO_ARABIC_CATEGORIES[trimmed] || categoryName;
+    const byName = PRESET_CATEGORIES.find(
+      (c) =>
+        c.name === arabicName ||
+        c.name.toLowerCase() === trimmed ||
+        c.name.includes(categoryName) ||
+        categoryName.includes(c.name),
+    );
+    if (byName) return byName;
+  }
+  return PRESET_CATEGORIES[0];
 };
 
 export default function ErrandDetail() {
@@ -72,10 +124,11 @@ export default function ErrandDetail() {
   const { errand, isLoading, isError } = useErrandDetail(id);
 
   // Audio player state
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audioProgress, setAudioProgress] = useState(13); // Default sample matching mockup (13s / 18s)
-  const audioIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const audioDuration = errand?.voiceNoteDurationSec || 18;
+  const [currentTime, setCurrentTime] = useState(0);
+  const [simulatedProgress, setSimulatedProgress] = useState(0);
+  const simIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Modals state
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -83,25 +136,82 @@ export default function ErrandDetail() {
 
   const isOwner = Boolean(profile?.id && errand?.requesterId === profile.id);
 
-  // Manage voice note audio playback simulation / live audio
+  // Real or simulated audio duration
+  const totalDuration = errand?.voiceNoteDurationSec || 18;
+
+  // Real audio playback integration
   useEffect(() => {
-    if (isPlaying) {
-      audioIntervalRef.current = setInterval(() => {
-        setAudioProgress((prev) => {
-          if (prev >= audioDuration) {
+    if (errand?.voiceNoteUrl && /^https?:\/\//i.test(errand.voiceNoteUrl)) {
+      const audio = new Audio(errand.voiceNoteUrl);
+      audioRef.current = audio;
+
+      audio.ontimeupdate = () => {
+        setCurrentTime(Math.round(audio.currentTime));
+      };
+      audio.onended = () => {
+        setIsPlaying(false);
+        setCurrentTime(0);
+      };
+      audio.onerror = () => {
+        setIsPlaying(false);
+      };
+
+      return () => {
+        audio.pause();
+        audioRef.current = null;
+      };
+    }
+  }, [errand?.voiceNoteUrl]);
+
+  // Simulated audio playback fallback
+  useEffect(() => {
+    if (!audioRef.current && isPlaying) {
+      simIntervalRef.current = setInterval(() => {
+        setSimulatedProgress((prev) => {
+          if (prev >= totalDuration) {
             setIsPlaying(false);
             return 0;
           }
           return prev + 1;
         });
       }, 1000);
-    } else if (audioIntervalRef.current) {
-      clearInterval(audioIntervalRef.current);
+    } else if (simIntervalRef.current) {
+      clearInterval(simIntervalRef.current);
     }
     return () => {
-      if (audioIntervalRef.current) clearInterval(audioIntervalRef.current);
+      if (simIntervalRef.current) clearInterval(simIntervalRef.current);
     };
-  }, [isPlaying, audioDuration]);
+  }, [isPlaying, totalDuration]);
+
+  const handleTogglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch(() => setIsPlaying(false));
+      }
+    } else {
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+    const targetTime = Math.floor(ratio * totalDuration);
+
+    if (audioRef.current && audioRef.current.duration) {
+      audioRef.current.currentTime = targetTime;
+      setCurrentTime(targetTime);
+    } else {
+      setSimulatedProgress(targetTime);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -151,37 +261,45 @@ export default function ErrandDetail() {
     errand.status === "MATCHED" || errand.status === "IN_TRANSIT";
   const isCompleted = errand.status === "COMPLETED";
 
-  // Parse items from errand
-  const rawItems = (errand as any).items || [];
+  // Dynamic Requester Info
+  const requesterName =
+    errand.requester?.fullName ||
+    (isOwner ? profile?.fullName : null) ||
+    "مستخدم مسجل";
+  const requesterInitials = getInitials(requesterName);
+
+  // Dynamic Items from API with strict Arabic category resolution
+  const rawItems = errand.items || [];
   const displayItems =
     rawItems.length > 0
-      ? rawItems.map((it: any) => {
-        const matchedCategory = PRESET_CATEGORIES.find(
-          (c) => c.id === it.categoryId || c.name === it.category?.name,
+      ? rawItems.map((it: any, idx: number) => {
+        const catConfig = resolveCategory(
+          it.categoryId || it.category?.id || errand.categoryId,
+          it.categoryName || it.category?.name || errand.category?.name,
         );
         return {
-          id: it.id,
+          id: it.id || `item-${idx}`,
           name: it.name,
-          itemNote: it.itemNote || it.description,
+          itemNote: it.itemNote || it.description || null,
           quantity: it.quantity || 1,
           size: it.size || "SMALL",
           isUrgent: Boolean(it.isUrgent),
-          categoryName:
-            it.category?.name ||
-            matchedCategory?.name ||
-            "دواء / صيدلية",
-          categoryIcon: matchedCategory?.icon || "💊",
-          categoryConfig: matchedCategory || PRESET_CATEGORIES[0],
+          categoryName: catConfig.name,
+          categoryIcon: catConfig.icon,
+          categoryConfig: catConfig,
         };
       })
       : [
         {
-          id: "default-single-item",
-          name: errand.title || "دواء اكامول",
+          id: "legacy-single-item",
+          name: errand.title || "طلب توصيل أغراض",
           itemNote:
-            errand.itemsDescription?.split("— ملاحظة عامة:")[0]?.trim() ||
-            "بدي شريطين سعر الشريط 5ش",
-          quantity: 2,
+            errand.itemsDescription &&
+              !errand.itemsDescription.startsWith("— ملاحظة عامة:")
+              ? errand.itemsDescription.split("— ملاحظة عامة:")[0]?.trim() ||
+              null
+              : null,
+          quantity: 1,
           size:
             errand.weightClass === "HEAVY"
               ? "LARGE"
@@ -189,13 +307,22 @@ export default function ErrandDetail() {
                 ? "MEDIUM"
                 : "SMALL",
           isUrgent: errand.isUrgent,
-          categoryName: errand.category?.name || "دواء / صيدلية",
-          categoryIcon: "💊",
-          categoryConfig: PRESET_CATEGORIES[0],
+          categoryName: resolveCategory(
+            errand.categoryId,
+            errand.category?.name,
+          ).name,
+          categoryIcon: resolveCategory(
+            errand.categoryId,
+            errand.category?.name,
+          ).icon,
+          categoryConfig: resolveCategory(
+            errand.categoryId,
+            errand.category?.name,
+          ),
         },
       ];
 
-  // Group items by category name
+  // Group items by Arabic category
   const groupedCategories = displayItems.reduce((acc: any, it: any) => {
     const key = it.categoryName;
     if (!acc[key]) {
@@ -210,45 +337,114 @@ export default function ErrandDetail() {
     return acc;
   }, {});
 
-  // Extract general notes
-  const generalNotes =
-    errand.itemsDescription && errand.itemsDescription.includes("— ملاحظة عامة:")
-      ? errand.itemsDescription.split("— ملاحظة عامة:")[1]?.trim()
-      : errand.itemsDescription || "يرجى توصيله لباب المنزل";
+  // Dynamic General Notes from API
+  const generalNoteText = (() => {
+    if (!errand.itemsDescription) return null;
+    if (errand.itemsDescription.includes("— ملاحظة عامة:")) {
+      const parts = errand.itemsDescription.split("— ملاحظة عامة:");
+      return parts[1]?.trim() || null;
+    }
+    if (rawItems.length > 0) {
+      return errand.itemsDescription.trim();
+    }
+    return null;
+  })();
 
-  // Attached images
-  const attachedImages =
-    (errand as any).images?.map((img: any) => img.imageUrl) ||
-    (errand as any).imageUrls ||
-    [];
+  // Locations from API
+  const cityName =
+    errand.destinationKeyword ||
+    errand.destinationNeighborhood?.governorate ||
+    errand.neighborhood?.governorate ||
+    "غير محدد";
 
-  // Format audio seconds as 0:SS
-  const formatAudioTime = (sec: number) => {
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
-    return `${m}:${s < 10 ? "0" : ""}${s}`;
-  };
+  const neighborhoodName =
+    errand.destinationNeighborhood?.name ||
+    errand.neighborhood?.name ||
+    errand.destinationKeyword ||
+    "غير محدد";
+
+  // Attached Images from API
+  const attachedImages: string[] = [
+    ...(errand.images?.map((img) => img.imageUrl) || []),
+    ...(errand.imageUrls || []),
+  ].filter(Boolean);
+
+  const hasVoiceNote = Boolean(
+    errand.voiceNoteUrl || (errand.voiceNoteDurationSec && errand.voiceNoteDurationSec > 0),
+  );
+  const hasRealAudio = Boolean(
+    errand.voiceNoteUrl && /^https?:\/\//i.test(errand.voiceNoteUrl),
+  );
+
+  const activeAudioSec = hasRealAudio ? currentTime : simulatedProgress;
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-28 text-right">
       <Header />
 
-      <div className="px-4 pt-3 space-y-4">
-        {/* Main Details Card - Exactly Matching Design */}
+      {/* Navigation Top Header */}
+      <div className="flex items-center justify-between px-4 pt-3 pb-1">
+        <button
+          type="button"
+          onClick={() => navigate("/errands")}
+          className="flex items-center gap-1 text-xs font-black text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer py-1.5 px-2 rounded-xl hover:bg-slate-100 -mr-2"
+        >
+          <ChevronRight className="h-5 w-5 stroke-[2.5]" />
+          <span>العودة للطلبات</span>
+        </button>
+
+        <span className="text-xs font-bold text-slate-400">
+          {isOwner ? "إدارة الطلب" : "عرض تفاصيل الطلب"}
+        </span>
+      </div>
+
+      <div className="px-4 pt-1 space-y-4">
+        {/* Main Details Card */}
         <div className="rounded-[28px] bg-white p-5 border border-slate-100 shadow-xs space-y-4 text-right">
           {/* Top User Header Row */}
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
-            {/* Left Actions: Status Badge & Edit Button */}
+            {/* Right: User Identity (RTL First) */}
+            <div className="flex items-center gap-3">
+              {/* User Name & Time */}
+              <div className="text-right">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-base font-black text-[#123A68]">
+                    {requesterName}
+                  </h3>
+                  {errand.requester?.isVerified && (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 fill-emerald-50" />
+                  )}
+                </div>
+                <p className="text-xs text-slate-400 font-medium mt-0.5">
+                  نشرت هذا الطلب {formatTimeAgo(errand.createdAt)}
+                </p>
+              </div>
+
+              {/* Avatar Circle */}
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#123A68] text-sm font-bold text-white shrink-0 overflow-hidden shadow-2xs">
+                {errand.requester?.profileImageUrl ? (
+                  <img
+                    src={errand.requester.profileImageUrl}
+                    alt={requesterName}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span>{requesterInitials}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Left: Status Badge & Edit Button (RTL End) */}
             <div className="flex items-center gap-2">
               <span
                 className={`rounded-full px-3.5 py-1 text-xs font-bold border ${errand.status === "OPEN"
-                    ? "bg-[#E8F8F0] text-[#10B981] border-[#D1F2E2]"
-                    : errand.status === "MATCHED" ||
-                      errand.status === "IN_TRANSIT"
-                      ? "bg-blue-50 text-blue-600 border-blue-100"
-                      : errand.status === "COMPLETED"
-                        ? "bg-slate-100 text-slate-600 border-slate-200"
-                        : "bg-red-50 text-red-600 border-red-100"
+                  ? "bg-[#E8F8F0] text-[#10B981] border-[#D1F2E2]"
+                  : errand.status === "MATCHED" ||
+                    errand.status === "IN_TRANSIT"
+                    ? "bg-blue-50 text-blue-600 border-blue-100"
+                    : errand.status === "COMPLETED"
+                      ? "bg-slate-100 text-slate-600 border-slate-200"
+                      : "bg-red-50 text-red-600 border-red-100"
                   }`}
               >
                 {errand.status === "OPEN"
@@ -273,51 +469,24 @@ export default function ErrandDetail() {
                 </button>
               )}
             </div>
-
-            {/* Right User Identity */}
-            <div className="flex items-center gap-3">
-              <div className="text-right">
-                <h3 className="text-base font-black text-[#123A68]">
-                  {errand.requester?.fullName ||
-                    (isOwner ? profile?.fullName : "هديل محمد")}
-                </h3>
-                <p className="text-xs text-slate-400 font-medium mt-0.5">
-                  نشرت هذا الطلب {formatTimeAgo(errand.createdAt)}
-                </p>
-              </div>
-
-              {/* Avatar Circle */}
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#123A68] text-sm font-bold text-white shrink-0">
-                {errand.requester?.profileImageUrl ? (
-                  <img
-                    src={errand.requester.profileImageUrl}
-                    alt="User"
-                    className="h-full w-full rounded-full object-cover"
-                  />
-                ) : (
-                  getInitials(
-                    errand.requester?.fullName ||
-                    (isOwner ? profile?.fullName : "هديل محمد"),
-                  )
-                )}
-              </div>
-            </div>
           </div>
 
           {/* Categorized Items Cards */}
           <div className="space-y-3">
             {Object.values(groupedCategories).map((group: any) => {
-              const config = group.config;
+              const config = group.config || PRESET_CATEGORIES[0];
               return (
                 <div
                   key={group.name}
-                  className={`rounded-2xl border ${config.cardBorder || "border-red-200"} overflow-hidden bg-white shadow-2xs`}
+                  className={`rounded-2xl border ${config.cardBorder} overflow-hidden bg-white shadow-2xs`}
                 >
-                  {/* Category Header */}
+                  {/* Category Header with tab color and switched layout matching MultiItemBuilder */}
                   <div
-                    className={`flex items-center justify-between px-4 py-2.5 ${config.headerBg || "bg-red-50/80"} border-b ${config.headerBorder || "border-red-200/60"}`}
+                    className={`flex items-center justify-between px-3.5 py-2.5 ${config.headerBg} border-b ${config.headerBorder}`}
                   >
-                    <span className="text-xs font-bold text-red-500">
+                    <span
+                      className={`text-[11px] font-black ${config.textColor} bg-white px-2 py-0.5 rounded-full border ${config.badgeBorder}`}
+                    >
                       {group.items.length}{" "}
                       {group.items.length === 1
                         ? "غرض"
@@ -325,26 +494,38 @@ export default function ErrandDetail() {
                           ? "غرضان"
                           : "أغراض"}
                     </span>
-                    <div className="flex items-center gap-1.5 font-bold text-sm text-red-600">
+
+                    <div
+                      className={`flex items-center gap-1.5 text-xs font-black ${config.textColor}`}
+                    >
+                      <span>{group.icon || "📦"}</span>
                       <span>{group.name}</span>
-                      <span>{group.icon || "💊"}</span>
                     </div>
                   </div>
 
-                  {/* Items list */}
-                  <div className="p-4 space-y-3">
+                  {/* Items List */}
+                  <div className={`divide-y ${config.dividerColor} bg-white`}>
                     {group.items.map((item: any, idx: number) => (
                       <div
                         key={item.id || idx}
-                        className={`flex items-start justify-between gap-4 ${idx > 0
-                            ? "pt-3 border-t border-slate-100"
-                            : ""
-                          }`}
+                        className="flex items-start justify-between gap-4 p-4"
                       >
-                        {/* Left Metadata: Urgent badge, Quantity, Size */}
-                        <div className="flex flex-col items-start gap-1 shrink-0 text-left">
+                        {/* Right: Title & Note */}
+                        <div className="space-y-1 text-right flex-1">
+                          <h4 className="text-sm font-black text-[#123A68]">
+                            {item.name}
+                          </h4>
+                          {item.itemNote && (
+                            <p className="text-xs text-slate-400 font-medium leading-relaxed">
+                              "{item.itemNote}"
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Left in RTL: Urgent badge, Quantity, Size */}
+                        <div className="flex flex-col items-end gap-1 shrink-0 text-left">
                           {item.isUrgent && (
-                            <span className="rounded-full bg-red-100/80 px-2.5 py-0.5 text-[10px] font-black text-red-600 self-start">
+                            <span className="rounded-full bg-red-100/80 px-2.5 py-0.5 text-[10px] font-black text-red-600">
                               عاجل
                             </span>
                           )}
@@ -361,18 +542,6 @@ export default function ErrandDetail() {
                             </span>
                           </div>
                         </div>
-
-                        {/* Right Content: Title & Notes */}
-                        <div className="space-y-1 text-right flex-1">
-                          <h4 className="text-sm font-black text-[#123A68]">
-                            {item.name}
-                          </h4>
-                          {item.itemNote && (
-                            <p className="text-xs text-slate-400 font-medium">
-                              "{item.itemNote}"
-                            </p>
-                          )}
-                        </div>
                       </div>
                     ))}
                   </div>
@@ -387,7 +556,7 @@ export default function ErrandDetail() {
               المدينة المطلوبة
             </span>
             <span className="text-base font-black text-[#123A68] block">
-              {errand.destinationKeyword || "غزة"}
+              {cityName}
             </span>
           </div>
 
@@ -397,102 +566,119 @@ export default function ErrandDetail() {
               الحي
             </span>
             <span className="text-base font-black text-[#123A68] block">
-              {(errand as any).destinationNeighborhood?.name ||
-                errand.neighborhood?.name ||
-                "الرمال"}
+              {neighborhoodName}
             </span>
           </div>
 
-          {/* 3. General Notes from Requester with Image Thumbnail Icon */}
+          {/* 3. General Notes & Image Attachment Card */}
           <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-100/80 text-right flex items-center justify-between gap-3">
-            {/* Image Thumbnail Icon on Left */}
-            <button
-              type="button"
-              onClick={() => setShowImageModal(true)}
-              className="p-1 text-slate-400 hover:text-[#123A68] transition-colors rounded-xl cursor-pointer shrink-0"
-              title="عرض الصورة المرفقة"
-            >
-              <ImageIcon className="h-6 w-6 stroke-[1.6]" />
-            </button>
-
-            {/* Notes text on Right */}
+            {/* Notes Text on Right */}
             <div className="space-y-0.5 text-right flex-1">
               <span className="text-[11px] text-slate-400 font-medium block">
                 ملاحظات عامة من الطالب
               </span>
-              <p className="text-sm font-black text-[#123A68]">
-                {generalNotes}
+              <p className="text-sm font-black text-[#123A68] leading-relaxed">
+                {generalNoteText || "لا توجد ملاحظات إضافية."}
               </p>
             </div>
-          </div>
 
-          {/* Divider */}
-          <hr className="border-t border-slate-100 my-2" />
-
-          {/* Voice Note Player (رسالة صوتية) */}
-          <div className="space-y-1.5 text-right">
-            <span className="text-xs text-slate-500 font-medium block">
-              رسالة صوتية
-            </span>
-            <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#F8FAFC] p-3 border border-slate-100/80">
-              {/* Duration on the left in RTL */}
-              <span className="text-xs font-bold text-slate-500 min-w-10">
-                {formatAudioTime(audioProgress)}
-              </span>
-
-              {/* Interactive Audio Progress Bar */}
-              <div
-                className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden cursor-pointer"
-                onClick={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const clickX = e.clientX - rect.left;
-                  const ratio = Math.max(0, Math.min(1, clickX / rect.width));
-                  setAudioProgress(Math.floor(ratio * audioDuration));
-                }}
-              >
-                <div
-                  className="h-full bg-[#F36F21] rounded-full transition-all duration-150"
-                  style={{
-                    width: `${Math.min(100, (audioProgress / audioDuration) * 100)}%`,
-                  }}
-                />
-              </div>
-
-              {/* Orange Play / Pause Button on the right in RTL */}
+            {/* Attached Image Thumbnail Icon on Left */}
+            {attachedImages.length > 0 ? (
               <button
                 type="button"
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F36F21] text-white shadow-xs hover:bg-[#E05E12] active:scale-95 transition-all cursor-pointer shrink-0"
+                onClick={() => setShowImageModal(true)}
+                className="relative flex items-center justify-center h-11 w-11 rounded-xl border border-slate-200 bg-white hover:border-[#123A68] transition-all cursor-pointer shrink-0 overflow-hidden shadow-2xs group"
+                title="عرض الصور المرفقة"
               >
-                {isPlaying ? (
-                  <Pause className="h-4.5 w-4.5 fill-current" />
-                ) : (
-                  <Play className="h-4.5 w-4.5 fill-current mr-0.5" />
-                )}
+                <img
+                  src={attachedImages[0]}
+                  alt="Thumbnail"
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform"
+                />
               </button>
-            </div>
+            ) : (
+              <div
+                className="p-1.5 text-slate-300 rounded-xl shrink-0 cursor-default"
+                title="لا توجد صور مرفقة"
+              >
+                <ImageIcon className="h-6 w-6 stroke-[1.5]" />
+              </div>
+            )}
           </div>
+
+          {/* Voice Note Player (Rendered when available) */}
+          {hasVoiceNote && (
+            <>
+              <hr className="border-t border-slate-100 my-2" />
+              <div className="space-y-1.5 text-right">
+                <span className="text-xs text-slate-500 font-medium block">
+                  رسالة صوتية
+                </span>
+                <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#F8FAFC] p-3 border border-slate-100/80">
+                  {/* Play / Pause Button on the Right in RTL */}
+                  <button
+                    type="button"
+                    onClick={handleTogglePlay}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F36F21] text-white shadow-xs hover:bg-[#E05E12] active:scale-95 transition-all cursor-pointer shrink-0"
+                  >
+                    {isPlaying ? (
+                      <Pause className="h-4.5 w-4.5 fill-current" />
+                    ) : (
+                      <Play className="h-4.5 w-4.5 fill-current mr-0.5" />
+                    )}
+                  </button>
+
+                  {/* Interactive Audio Progress Bar */}
+                  <div
+                    className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden cursor-pointer"
+                    onClick={handleSeek}
+                  >
+                    <div
+                      className="h-full bg-[#F36F21] rounded-full transition-all duration-150"
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          (activeAudioSec / (totalDuration || 1)) * 100,
+                        )}%`,
+                      }}
+                    />
+                  </div>
+
+                  {/* Duration on the Left in RTL */}
+                  <span className="text-xs font-bold text-slate-500 min-w-10 text-left">
+                    {formatSeconds(activeAudioSec || totalDuration)}
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Divider */}
           <hr className="border-t border-slate-100 my-2" />
 
           {/* Posting Cost Footer */}
           <div className="flex items-center justify-between pt-1">
-            {/* Left: User Balance */}
-            <span className="text-xs text-slate-400 font-medium">
-              رصيدك: {tokenBalance ?? 47} توكن
-            </span>
-
-            {/* Right: Errand Posting Cost */}
+            {/* Right in RTL: Errand Posting Cost */}
             <div className="text-right space-y-0.5">
               <span className="text-[11px] text-slate-400 font-medium block">
                 تكلفة نشر الطلب
               </span>
-              <div className="flex items-center justify-end gap-1 font-black text-sm text-[#123A68]">
-                <span>توكن واحد</span>
+              <div className="flex items-center justify-start gap-1 font-black text-sm text-[#123A68]">
+                <span>
+                  {errand.postTokenCost === 1
+                    ? "توكن واحد"
+                    : `${errand.postTokenCost || 1} توكن`}
+                </span>
                 <Zap className="h-4 w-4 fill-[#F36F21] text-[#F36F21]" />
               </div>
             </div>
+
+            {/* Left in RTL: User Balance */}
+            {tokenBalance !== null && tokenBalance !== undefined && (
+              <span className="text-xs text-slate-400 font-medium">
+                رصيدك: {tokenBalance} توكن
+              </span>
+            )}
           </div>
         </div>
 
@@ -565,26 +751,30 @@ export default function ErrandDetail() {
       {/* Image Preview Modal */}
       {showImageModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="relative max-w-sm w-full bg-white rounded-3xl p-4 space-y-3">
+          <div className="relative max-w-sm w-full bg-white rounded-3xl p-4 space-y-3" dir="rtl">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <h3 className="text-xs font-bold text-primary">
+                الصور المرفقة للطلب
+              </h3>
               <button
                 type="button"
                 onClick={() => setShowImageModal(false)}
-                className="p-1 rounded-full text-slate-400 hover:text-slate-600"
+                className="p-1 rounded-full text-slate-400 hover:text-slate-600 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
-              <h3 className="text-xs font-bold text-primary">
-                الصورة المرفقة للطلب
-              </h3>
             </div>
             {attachedImages.length > 0 ? (
-              <div className="rounded-2xl overflow-hidden border border-slate-200 max-h-72">
-                <img
-                  src={attachedImages[0]}
-                  alt="Errand attachment"
-                  className="w-full h-full object-cover"
-                />
+              <div className="space-y-2 max-h-80 overflow-y-auto">
+                {attachedImages.map((url, i) => (
+                  <div key={i} className="rounded-2xl overflow-hidden border border-slate-200 max-h-64">
+                    <img
+                      src={url}
+                      alt={`Errand attachment ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="py-8 text-center text-xs text-text-muted space-y-2">
@@ -618,5 +808,3 @@ export default function ErrandDetail() {
     </MobileContainer>
   );
 }
-
-
