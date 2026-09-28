@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   ChevronRight,
   Zap,
   Check,
   Download,
-  Copy,
-  CheckCheck,
   QrCode,
   Smartphone,
+  Send,
+  Lock,
+  ShieldCheck,
+  CheckCircle2,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -28,20 +30,63 @@ export default function TopUpQRPage() {
     features: [],
   };
 
+  // Tabs state
   const [activeTab, setActiveTab] = useState<"QR" | "JAWWAL">("QR");
-  const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  const jawwalPayNumber = "0599 123 456";
+  // Jawwal Pay Form States
+  const [jawwalPhone, setJawwalPhone] = useState("0598877026");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [otpDigits, setOtpDigits] = useState<string[]>([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
+  const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const handleCopy = (text: string, field: string) => {
-    navigator.clipboard?.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
+  // Masked phone format for confirmation: e.g. 0598877026 -> 26••••0598
+  const maskedPhone = (() => {
+    const raw = jawwalPhone.trim();
+    if (raw.length < 6) return raw;
+    const start = raw.slice(0, 4);
+    const end = raw.slice(-2);
+    return `${end}••••${start}`;
+  })();
+
+  const handleSendOtp = () => {
+    if (jawwalPhone.trim().length >= 9) {
+      setIsOtpSent(true);
+    }
+  };
+
+  const handleOtpChange = (index: number, val: string) => {
+    if (/^\d?$/.test(val)) {
+      const next = [...otpDigits];
+      next[index] = val;
+      setOtpDigits(next);
+      if (val && index < 5) {
+        otpInputRefs.current[index + 1]?.focus();
+      }
+    }
+  };
+
+  const handleOtpKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    }
   };
 
   const handleCompleted = () => {
     navigate("/wallet/payment-success", {
-      state: { package: pkg, method: activeTab === "QR" ? "QR" : "JAWWAL_PAY" },
+      state: {
+        package: pkg,
+        method: activeTab === "QR" ? "QR" : "JAWWAL_PAY",
+      },
     });
   };
 
@@ -101,29 +146,31 @@ export default function TopUpQRPage() {
 
         {/* Selected Package Banner */}
         <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3.5 border border-slate-200/90 shadow-2xs">
+          {/* Right in RTL: Package Name & Icon */}
+          <div className="flex items-center gap-2">
+            <Zap className="h-4.5 w-4.5 text-[#F36F21] fill-[#F36F21]" />
+            <span className="text-xs font-black text-[#123A68]">
+              {pkg.name} — {pkg.tokens} توكن
+            </span>
+          </div>
+
+          {/* Left in RTL: Price */}
           <div className="flex items-baseline gap-0.5">
             <span className="text-sm font-black text-[#123A68]">
               {pkg.priceNis}
             </span>
             <span className="text-xs font-black text-[#123A68]">₪</span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-black text-[#123A68]">
-              {pkg.name} — {pkg.tokens} توكن
-            </span>
-            <Zap className="h-4.5 w-4.5 text-[#F36F21] fill-[#F36F21]" />
-          </div>
         </div>
 
-        {/* Main Card */}
-        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-xs text-center space-y-4">
-          {/* Inner Tabs matching Figma */}
+        {/* Main Card Container */}
+        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-xs space-y-4">
+          {/* Top Payment Method Tabs matching Figma */}
           <div className="flex items-center rounded-2xl bg-slate-100 p-1 text-xs font-black">
             <button
               type="button"
               onClick={() => setActiveTab("QR")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl transition-all cursor-pointer ${
                 activeTab === "QR"
                   ? "bg-[#123A68] text-white shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -136,7 +183,7 @@ export default function TopUpQRPage() {
             <button
               type="button"
               onClick={() => setActiveTab("JAWWAL")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl transition-all cursor-pointer ${
                 activeTab === "JAWWAL"
                   ? "bg-[#123A68] text-white shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -147,8 +194,9 @@ export default function TopUpQRPage() {
             </button>
           </div>
 
-          {activeTab === "QR" ? (
-            <>
+          {/* ================= TAB 1: QR CODE ================= */}
+          {activeTab === "QR" && (
+            <div className="space-y-4 text-center">
               {/* Stylized QR Code matching Figma */}
               <div className="relative mx-auto flex h-52 w-52 items-center justify-center rounded-3xl bg-[#F8FAFC] p-3 border border-slate-200 shadow-inner">
                 <div className="relative flex h-full w-full items-center justify-center rounded-2xl bg-white p-2">
@@ -222,105 +270,198 @@ export default function TopUpQRPage() {
               <div className="space-y-2.5 text-xs text-slate-700 text-right pt-1 font-bold">
                 <div className="flex items-center gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
-                    1
+                    ١
                   </span>
-                  <span>افتح تطبيق جوال باي أو تطبيقك البنكي</span>
+                  <span>افتح تطبيق جوال باي أو البنك على هاتفك</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
-                    2
+                    ٢
                   </span>
                   <span>اختر «دفع برمز QR» أو «مسح رمز»</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
-                    3
+                    ٣
                   </span>
                   <span>وجّه الكاميرا نحو الباركود أعلاه</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
-                    4
+                    ٤
                   </span>
                   <span>راجع المبلغ وأكّد العملية</span>
                 </div>
               </div>
-            </>
-          ) : (
-            /* Jawwal Pay Direct Details */
-            <div className="space-y-3.5 text-xs text-right py-2">
-              <div className="rounded-2xl bg-emerald-50 p-4 border border-emerald-100 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-emerald-900 font-bold">اسم الحساب:</span>
-                  <span className="font-black text-[#123A68]">منصة بطريقك</span>
-                </div>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-emerald-900 font-bold">
-                    رقم جوال باي:
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleCopy(jawwalPayNumber, "phone")}
-                      className="p-1 text-slate-400 hover:text-emerald-700 transition-colors cursor-pointer"
-                      title="نسخ رقم الجوال"
-                    >
-                      {copiedField === "phone" ? (
-                        <CheckCheck className="h-4 w-4 text-emerald-600" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </button>
-                    <span className="font-mono font-black text-[#123A68] text-sm dir-ltr">
-                      {jawwalPayNumber}
-                    </span>
-                  </div>
-                </div>
+              {/* Bottom Dual Action Buttons */}
+              <div className="pt-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleCompleted}
+                  className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
+                >
+                  <Check className="h-4 w-4 stroke-[3]" />
+                  <span>لقد أتممت الدفع</span>
+                </button>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-emerald-900 font-bold">
-                    المبلغ المطلوب:
-                  </span>
-                  <span className="font-black text-[#123A68] text-sm">
-                    {pkg.priceNis} ₪
-                  </span>
-                </div>
-              </div>
-
-              <div className="text-[11px] text-slate-600 space-y-1.5 leading-relaxed font-bold">
-                <p>1. افتح تطبيق جوال باي واختر "تحويل لمستفيد".</p>
-                <p>2. أدخل الرقم أعلاه والمبلغ المطلوب بدقة.</p>
-                <p>3. بعد إتمام التحويل اضغط على الزر أدناه لتأكيد شحن الرصيد.</p>
+                <button
+                  type="button"
+                  onClick={() => alert("تم حفظ رمز الـ QR في ألبوم الصور.")}
+                  className="flex h-12 px-4 items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white text-xs font-black text-[#123A68] hover:border-slate-300 active:scale-98 transition-all cursor-pointer"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>حفظ 📥</span>
+                </button>
               </div>
             </div>
           )}
 
-          {/* Bottom Dual Action Buttons */}
-          <div className="pt-2 flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleCompleted}
-              className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
-            >
-              <Check className="h-4 w-4 stroke-[3]" />
-              <span>لقد أتممت الدفع</span>
-            </button>
+          {/* ================= TAB 2: JAWWAL PAY DIRECT ================= */}
+          {activeTab === "JAWWAL" && (
+            <div className="space-y-3.5 text-right py-1">
+              {/* Top Info Callout Box matching Figma */}
+              <div className="flex items-center gap-2.5 rounded-2xl bg-[#F0F7FF] p-3 border border-blue-100/70 text-right">
+                <div className="text-base">📱</div>
+                <p className="text-[11.5px] font-bold text-[#123A68] leading-relaxed flex-1">
+                  أدخل رقمك المسجّل في جوال باي وسيُرسل لك رمز تأكيد
+                </p>
+              </div>
 
-            <button
-              type="button"
-              onClick={() => alert("تم حفظ رمز الـ QR في ألبوم الصور.")}
-              className="flex h-12 px-4 items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white text-xs font-black text-[#123A68] hover:border-slate-300 active:scale-98 transition-all cursor-pointer"
-            >
-              <Download className="h-4 w-4" />
-              <span>حفظ 📥</span>
-            </button>
-          </div>
+              {/* Phone Input */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-black text-[#123A68]">
+                  رقم جوال باي
+                </label>
+                <div className="flex items-center gap-2" dir="ltr">
+                  <div className="flex h-11 items-center justify-center px-3 rounded-2xl border border-slate-200 bg-[#F8FAFC] text-xs font-bold text-slate-500 shrink-0">
+                    +970
+                  </div>
+                  <input
+                    type="tel"
+                    value={jawwalPhone}
+                    onChange={(e) => setJawwalPhone(e.target.value)}
+                    placeholder="0500000000"
+                    disabled={isOtpSent}
+                    className={`h-11 flex-1 rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs font-bold text-[#123A68] focus:border-[#123A68] focus:outline-hidden shadow-2xs ${
+                      isOtpSent ? "opacity-80" : ""
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* STATE 1: Before OTP Sent -> Send OTP Button */}
+              {!isOtpSent && (
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={jawwalPhone.trim().length < 9}
+                    className={`flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-xs font-black transition-all cursor-pointer shadow-xs ${
+                      jawwalPhone.trim().length >= 9
+                        ? "bg-[#123A68] text-white hover:bg-[#0D2C50] active:scale-98"
+                        : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                    }`}
+                  >
+                    <Send className="h-4 w-4 -rotate-45" />
+                    <span>إرسال رمز التأكيد</span>
+                  </button>
+                </div>
+              )}
+
+              {/* STATE 2: After OTP Sent -> Verification Form matching Figma */}
+              {isOtpSent && (
+                <div className="space-y-3.5 animate-fadeIn pt-1">
+                  {/* Green Confirmation Pill */}
+                  <div className="flex items-center justify-between rounded-2xl bg-[#E8F8F0] p-3 border border-[#D1F2E2] text-xs font-black text-[#10B981]">
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>أُرسل رمز التأكيد إلى {maskedPhone}</span>
+                    </div>
+                  </div>
+
+                  {/* 6-Digit OTP Code Input */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-black text-[#123A68]">
+                      رمز التأكيد (6 أرقام)
+                    </label>
+                    <div className="flex items-center justify-between gap-1.5" dir="ltr">
+                      {[0, 1, 2, 3, 4, 5].map((i) => (
+                        <input
+                          key={i}
+                          ref={(el) => {
+                            otpInputRefs.current[i] = el;
+                          }}
+                          type="text"
+                          maxLength={1}
+                          value={otpDigits[i]}
+                          onChange={(e) => handleOtpChange(i, e.target.value)}
+                          onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                          placeholder="•"
+                          className="h-11 w-11 rounded-2xl border border-slate-200 bg-[#F8FAFC] text-center text-base font-black text-[#123A68] focus:border-[#123A68] focus:outline-hidden shadow-2xs"
+                        />
+                      ))}
+                    </div>
+
+                    {/* Resend & Validity Timer Row */}
+                    <div className="flex items-center justify-between text-[11px] pt-1">
+                      <span className="text-slate-400 font-medium">
+                        الرمز صالح لمدة 5 دقائق
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOtpDigits(["", "", "", "", "", ""]);
+                          otpInputRefs.current[0]?.focus();
+                        }}
+                        className="font-black text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
+                      >
+                        إعادة الإرسال
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Deduction Summary Box */}
+                  <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-100 flex items-center justify-between text-xs font-black text-[#123A68]">
+                    <span className="text-slate-400 font-bold">
+                      سيُسحب من حسابك
+                    </span>
+                    <span className="text-sm font-black text-[#123A68]">
+                      {pkg.priceNis} ₪
+                    </span>
+                  </div>
+
+                  {/* Direct Payment Confirmation Button (Non-functional as requested until backend endpoint is available) */}
+                  <div className="space-y-1.5 pt-1">
+                    <button
+                      type="button"
+                      disabled
+                      className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-slate-200 text-slate-400 text-xs font-black cursor-not-allowed transition-all"
+                      title="بوابة جوال باي المباشرة قيد التفعيل من الخادم - يرجى استخدام دفع الباركود QR"
+                    >
+                      <ShieldCheck className="h-4.5 w-4.5 text-slate-400" />
+                      <span>تأكيد الدفع وسحب {pkg.priceNis} ₪</span>
+                    </button>
+                    <p className="text-[10px] text-center text-amber-600 font-bold">
+                      (بوابة الربط المباشر قيد التطوير — يرجى استخدام تبويب باركود QR لإتمام الدفع حالياً)
+                    </p>
+                  </div>
+
+                  {/* Security Footer */}
+                  <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium pt-1">
+                    <Lock className="h-3.5 w-3.5" />
+                    <span>عملية مشفّرة وآمنة</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </MobileContainer>
   );
 }
+
