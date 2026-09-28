@@ -146,18 +146,20 @@ export default function TopUpQRPage() {
 
         {/* Selected Package Banner */}
         <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3.5 border border-slate-200/90 shadow-2xs">
+          {/* Right in RTL: Package Name & Icon */}
+          <div className="flex items-center gap-2">
+            <Zap className="h-4.5 w-4.5 text-[#F36F21] fill-[#F36F21]" />
+            <span className="text-xs font-black text-[#123A68]">
+              {pkg.name} — {pkg.tokens} توكن
+            </span>
+          </div>
+
+          {/* Left in RTL: Price */}
           <div className="flex items-baseline gap-0.5">
             <span className="text-sm font-black text-[#123A68]">
               {pkg.priceNis}
             </span>
             <span className="text-xs font-black text-[#123A68]">₪</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-black text-[#123A68]">
-              {pkg.name} — {pkg.tokens} توكن
-            </span>
-            <Zap className="h-4.5 w-4.5 text-[#F36F21] fill-[#F36F21]" />
           </div>
         </div>
 
