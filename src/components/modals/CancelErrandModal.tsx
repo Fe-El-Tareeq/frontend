@@ -8,7 +8,7 @@ interface CancelErrandModalProps {
   isCancelling?: boolean;
 }
 
-export const CANCELLATION_REASONS = [
+const CANCELLATION_REASONS = [
   "وجدت مسافراً بطريقة أخرى",
   "تغيّرت الظروف ولم أعد محتاجاً للطلب",
   "الانتظار طال كثيراً دون عروض مناسبة",

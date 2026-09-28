@@ -8,7 +8,7 @@ interface RejectProposalModalProps {
   isRejecting?: boolean;
 }
 
-export const REJECTION_REASONS = [
+const REJECTION_REASONS = [
   "الوزن أثقل مما أستطيع حمله",
   "المسار لا يتطابق مع رحلتي",
   "الوقت لا يناسبني",

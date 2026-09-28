@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ChevronRight } from "lucide-react";
@@ -52,7 +52,7 @@ export default function RegisterStep2() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors },
   } = useForm<Step2FormData>({
@@ -64,8 +64,10 @@ export default function RegisterStep2() {
     },
   });
 
-  const selectedCity = watch("city") || "غزة";
-  const { cities, neighborhoods, isLoadingNeighborhoods } = useLocations(selectedCity);
+  const selectedCity =
+    useWatch({ control, name: "city", defaultValue: "غزة" }) || "غزة";
+  const { cities, neighborhoods, isLoadingNeighborhoods } =
+    useLocations(selectedCity);
 
   // Reset neighborhood selection when city changes
   useEffect(() => {
