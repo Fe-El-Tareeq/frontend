@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Car, Info } from "lucide-react";
+import { ChevronRight, Car, Info, ShieldAlert, ShieldCheck, Clock } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { IdentityVerificationModal } from "../../components/modals/IdentityVerificationModal";
 import { useTrips } from "../../hooks/useTrips";
 import { useLocations } from "../../hooks/useLocations";
+import { useAuth } from "../../hooks/useAuth";
 import { getApiErrorMessage } from "../../utils/apiError";
 import type { WeightClass } from "../../types/errands";
 
@@ -15,9 +17,14 @@ const createClientRequestKey = () =>
 
 export default function CreateTrip() {
   const navigate = useNavigate();
+  const { profile, isAuthenticated } = useAuth();
   const { createTrip, isCreating } = useTrips();
   const [selectedCity, setSelectedCity] = useState("غزة");
   const { cities, neighborhoods, isLoadingNeighborhoods } = useLocations(selectedCity);
+
+  const [showKycModal, setShowKycModal] = useState(false);
+  const isVerified = profile?.verificationStatus === "VERIFIED" || profile?.isVerified === true;
+  const isPendingKyc = profile?.verificationStatus === "PENDING_REVIEW";
 
   const [destinationKeyword, setDestinationKeyword] = useState("");
   const [destinationNeighborhoodId, setDestinationNeighborhoodId] =
@@ -33,6 +40,21 @@ export default function CreateTrip() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    if (!isVerified) {
+      if (isPendingKyc) {
+        setErrorMessage("طلب التحقق من هويتك قيد المراجعة حالياً من قبل إدارة المنصة. ستتمكن من نشر الرحلات فور اعتماده.");
+      } else {
+        setErrorMessage("يجب التحقق من الهوية أولاً لنشر رحلة كمسافر وفق معايير الأمان.");
+        setShowKycModal(true);
+      }
+      return;
+    }
+
     setErrorMessage(null);
 
     try {
@@ -70,6 +92,9 @@ export default function CreateTrip() {
         "تعذر إنشاء الرحلة، يرجى التأكد من اختيار موعد في المستقبل وتحديد الوجهة.",
       );
       setErrorMessage(msg);
+      if (msg.includes("التحقق من الهوية") || msg.includes("Identity verification")) {
+        setShowKycModal(true);
+      }
     }
   };
 
@@ -95,6 +120,50 @@ export default function CreateTrip() {
             </p>
           </div>
         </div>
+
+        {/* Identity Verification Status Card */}
+        {!isVerified && !isPendingKyc && (
+          <div className="rounded-3xl bg-amber-50 p-4 border border-amber-200 text-right space-y-2.5">
+            <div className="flex items-center gap-2 text-amber-900">
+              <ShieldAlert className="h-5 w-5 text-amber-600 shrink-0" />
+              <h3 className="text-xs font-black">
+                توثيق الهوية مطلوب لنشر الرحلات
+              </h3>
+            </div>
+            <p className="text-[11px] text-amber-800 leading-relaxed">
+              لضمان أمان المسافرين وأصحاب الطرود، يتطلب نشر الرحلات التحقق من الهوية الوطنية (صورة الهوية وسيلفي).
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowKycModal(true)}
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-xs"
+            >
+              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <span>توثيق الهوية الآن</span>
+            </button>
+          </div>
+        )}
+
+        {isPendingKyc && (
+          <div className="flex items-start gap-2.5 rounded-3xl bg-blue-50 p-4 border border-blue-200 text-right text-blue-950">
+            <Clock className="h-5 w-5 text-[#123A68] shrink-0 mt-0.5 animate-pulse" />
+            <div className="space-y-1">
+              <h3 className="text-xs font-black text-[#123A68]">
+                طلب التحقق من الهوية قيد المراجعة
+              </h3>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                مستنداتك قيد التدقيق حالياً من قبل فريق المنصة. ستتمكن من نشر رحلتك فور الاعتماد خلال 24 ساعة.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {isVerified && (
+          <div className="flex items-center gap-2 rounded-2xl bg-emerald-50 px-3.5 py-2.5 border border-emerald-200 text-emerald-800 text-xs font-bold">
+            <ShieldCheck className="h-4 w-4 text-emerald-600" />
+            <span>حسابك موثّق كمسافر معتمد ✓</span>
+          </div>
+        )}
 
         {/* Error Alert */}
         {errorMessage && (
@@ -287,6 +356,12 @@ export default function CreateTrip() {
           </form>
         </div>
       </div>
+
+      {/* KYC Identity Verification Modal */}
+      <IdentityVerificationModal
+        isOpen={showKycModal}
+        onClose={() => setShowKycModal(false)}
+      />
     </MobileContainer>
   );
 }
