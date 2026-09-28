@@ -5,13 +5,15 @@ import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { ErrorState } from "../../components/ui/feedback/ErrorState";
-import { useErrandDetail } from "../../hooks/useErrands";
+import { CancelErrandModal } from "../../components/modals/CancelErrandModal";
+import { useErrandDetail, useErrands } from "../../hooks/useErrands";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function ErrandDetail() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated, profile } = useAuth();
+  const { cancelErrand, isCancelling } = useErrands();
 
   /*
    * ============================================================================
@@ -22,6 +24,7 @@ export default function ErrandDetail() {
    */
   const { errand, isLoading, isError } = useErrandDetail(id);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const isOwner = Boolean(profile?.id && errand?.requesterId === profile.id);
 
@@ -272,10 +275,7 @@ export default function ErrandDetail() {
             {isWaiting && (
               <button
                 type="button"
-                onClick={() => {
-                  /* BACKEND PENDING: Errand cancellation endpoint */
-                  navigate("/errands");
-                }}
+                onClick={() => setShowCancelModal(true)}
                 className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl border border-red-200 bg-red-50/50 text-xs font-bold text-red-600 active:scale-98 transition-all cursor-pointer hover:bg-red-50"
               >
                 <Trash2 className="h-4 w-4" />
@@ -285,6 +285,21 @@ export default function ErrandDetail() {
           </div>
         )}
       </div>
+
+      {/* Cancel Errand Modal */}
+      <CancelErrandModal
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        isCancelling={isCancelling}
+        onConfirm={async () => {
+          try {
+            await cancelErrand(id);
+            navigate("/errands");
+          } catch {
+            // Handled
+          }
+        }}
+      />
 
       {/* Sticky Bottom Offer Proposal Button for non-owners */}
       {!isOwner && isWaiting && (

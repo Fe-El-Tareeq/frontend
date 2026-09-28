@@ -30,7 +30,6 @@ export default function RegisterStep2() {
     password?: string;
   } | null;
 
-  const { neighborhoods, isLoadingNeighborhoods } = useLocations();
   const { register: registerApi, isRegistering } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -53,6 +52,8 @@ export default function RegisterStep2() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<Step2FormData>({
     resolver: zodResolver(step2Schema),
@@ -62,6 +63,14 @@ export default function RegisterStep2() {
       terms: true,
     },
   });
+
+  const selectedCity = watch("city") || "غزة";
+  const { cities, neighborhoods, isLoadingNeighborhoods } = useLocations(selectedCity);
+
+  // Reset neighborhood selection when city changes
+  useEffect(() => {
+    setValue("neighborhoodId", "");
+  }, [selectedCity, setValue]);
 
   const onSubmit = async (data: Step2FormData) => {
     if (!step1Data) return;
@@ -124,11 +133,21 @@ export default function RegisterStep2() {
             className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
             {...register("city")}
           >
-            <option value="غزة">غزة</option>
-            <option value="شمال غزة">شمال غزة</option>
-            <option value="دير البلح">دير البلح</option>
-            <option value="خان يونس">خان يونس</option>
-            <option value="رفح">رفح</option>
+            {cities && cities.length > 0 ? (
+              cities.map((c) => (
+                <option key={c.key} value={c.nameAr}>
+                  {c.nameAr}
+                </option>
+              ))
+            ) : (
+              <>
+                <option value="غزة">غزة</option>
+                <option value="شمال غزة">شمال غزة</option>
+                <option value="دير البلح">دير البلح</option>
+                <option value="خان يونس">خان يونس</option>
+                <option value="رفح">رفح</option>
+              </>
+            )}
           </Form.Select>
         </Form.Field>
 

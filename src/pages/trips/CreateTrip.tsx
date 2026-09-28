@@ -16,7 +16,8 @@ const createClientRequestKey = () =>
 export default function CreateTrip() {
   const navigate = useNavigate();
   const { createTrip, isCreating } = useTrips();
-  const { neighborhoods, isLoadingNeighborhoods } = useLocations();
+  const [selectedCity, setSelectedCity] = useState("غزة");
+  const { cities, neighborhoods, isLoadingNeighborhoods } = useLocations(selectedCity);
 
   const [destinationKeyword, setDestinationKeyword] = useState("");
   const [destinationNeighborhoodId, setDestinationNeighborhoodId] =
@@ -120,27 +121,62 @@ export default function CreateTrip() {
               />
             </div>
 
-            {/* 2. Destination Neighborhood */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-primary">
-                حي الوجهة <span className="text-[#F36F21]">*</span>
-              </label>
-              <select
-                value={destinationNeighborhoodId}
-                onChange={(e) => setDestinationNeighborhoodId(e.target.value)}
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
-              >
-                <option value="">
-                  {isLoadingNeighborhoods
-                    ? "جاري تحميل الأحياء..."
-                    : "اختر حي الوجهة"}
-                </option>
-                {neighborhoods.map((n) => (
-                  <option key={n.id} value={n.id}>
-                    {n.name} - {n.governorate}
+            {/* 2. Destination City & Neighborhood */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-primary">
+                  مدينة الوجهة <span className="text-[#F36F21]">*</span>
+                </label>
+                <select
+                  value={selectedCity}
+                  onChange={(e) => {
+                    setSelectedCity(e.target.value);
+                    setDestinationNeighborhoodId("");
+                  }}
+                  className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
+                >
+                  <option value="">
+                    {isLoadingNeighborhoods ? "جاري التحميل..." : "اختر المدينة"}
                   </option>
-                ))}
-              </select>
+                  {cities && cities.length > 0 ? (
+                    cities.map((c) => (
+                      <option key={c.key} value={c.key}>
+                        {c.nameAr}
+                      </option>
+                    ))
+                  ) : (
+                    <>
+                      <option value="gaza">غزة</option>
+                      <option value="north_gaza">شمال غزة</option>
+                      <option value="deir_al_balah">دير البلح</option>
+                      <option value="khan_younis">خان يونس</option>
+                      <option value="rafah">رفح</option>
+                    </>
+                  )}
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-primary">
+                  حي الوجهة <span className="text-[#F36F21]">*</span>
+                </label>
+                <select
+                  value={destinationNeighborhoodId}
+                  onChange={(e) => setDestinationNeighborhoodId(e.target.value)}
+                  className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
+                >
+                  <option value="">
+                    {isLoadingNeighborhoods
+                      ? "جاري تحميل الأحياء..."
+                      : "اختر الحي"}
+                  </option>
+                  {neighborhoods.map((n) => (
+                    <option key={n.id} value={n.id}>
+                      {n.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* 3. Departure Date & Time */}
