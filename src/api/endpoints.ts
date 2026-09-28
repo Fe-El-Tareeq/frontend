@@ -46,6 +46,7 @@ export const ENDPOINTS = {
     SETTINGS: "/api/v1/users/me/settings",
     NOTIFICATIONS: "/api/v1/users/me/settings/notifications",
     PROFILE_IMAGE: "/api/v1/users/me/profile-image",
+    IDENTITY_VERIFICATION: "/api/v1/users/me/identity-verification",
     DEACTIVATE: "/api/v1/users/me",
   },
   ERRANDS: {
