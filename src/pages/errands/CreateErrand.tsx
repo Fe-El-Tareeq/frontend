@@ -129,7 +129,7 @@ export default function CreateErrand() {
       // Sanitize items according to backend strict errandItemSchema:
       // only { categoryId, name, description?, quantity, size, isUrgent?, itemNote? }
       const sanitizedItems = items.map((it) => ({
-        categoryId: it.categoryId || "60a32850-bd3f-444a-84b4-c750abf6ecb1",
+        categoryId: it.categoryId || "ffcb81e7-6ee6-4be3-9de2-188b1da4f395",
         name: it.name.trim(),
         description: it.description?.trim() || null,
         quantity: Math.max(1, Number(it.quantity) || 1),
@@ -138,7 +138,11 @@ export default function CreateErrand() {
         itemNote: it.itemNote?.trim() || null,
       }));
 
-      // Top level payload strictly conforms to backend createErrandSchema
+      // Top level payload strictly conforms to backend createErrandSchema:
+      // voiceNoteUrl and imageUrls must be valid HTTP/HTTPS URLs (not Base64 data URLs)
+      const isHttpUrl = (val?: string | null): boolean =>
+        Boolean(val && /^https?:\/\//i.test(val));
+
       await createErrand({
         clientRequestKey,
         pickupNeighborhoodId: targetNeighborhoodId,
@@ -146,9 +150,13 @@ export default function CreateErrand() {
         title: mainTitle.slice(0, 80),
         itemsDescription: fullDescription.slice(0, 1000),
         isInterZone: false,
-        voiceNoteUrl: recordedVoice?.base64 || null,
-        voiceNoteDurationSec: recordedVoice?.durationSec || null,
-        imageUrls: imagePreview ? [imagePreview] : [],
+        voiceNoteUrl: isHttpUrl(recordedVoice?.base64)
+          ? recordedVoice!.base64
+          : null,
+        voiceNoteDurationSec: isHttpUrl(recordedVoice?.base64)
+          ? recordedVoice?.durationSec || null
+          : null,
+        imageUrls: isHttpUrl(imagePreview) ? [imagePreview!] : [],
         items: sanitizedItems,
       });
 
