@@ -405,6 +405,19 @@ export default function ErrandDetail() {
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
             {/* Right: User Identity (RTL First) */}
             <div className="flex items-center gap-3">
+              {/* Avatar Circle */}
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#123A68] text-sm font-bold text-white shrink-0 overflow-hidden shadow-2xs">
+                {errand.requester?.profileImageUrl ? (
+                  <img
+                    src={errand.requester.profileImageUrl}
+                    alt={requesterName}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span>{requesterInitials}</span>
+                )}
+              </div>
+
               {/* User Name & Time */}
               <div className="text-right">
                 <div className="flex items-center gap-1.5">
@@ -418,19 +431,6 @@ export default function ErrandDetail() {
                 <p className="text-xs text-slate-400 font-medium mt-0.5">
                   نشرت هذا الطلب {formatTimeAgo(errand.createdAt)}
                 </p>
-              </div>
-
-              {/* Avatar Circle */}
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#123A68] text-sm font-bold text-white shrink-0 overflow-hidden shadow-2xs">
-                {errand.requester?.profileImageUrl ? (
-                  <img
-                    src={errand.requester.profileImageUrl}
-                    alt={requesterName}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span>{requesterInitials}</span>
-                )}
               </div>
             </div>
 
