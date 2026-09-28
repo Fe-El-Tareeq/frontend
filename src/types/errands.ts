@@ -16,6 +16,14 @@ export interface ErrandRequester {
   id: string;
   fullName: string | null;
   trustScore: number;
+  profileImageUrl?: string | null;
+  isVerified?: boolean;
+}
+
+export interface ErrandImage {
+  id?: string;
+  imageUrl: string;
+  position?: number;
 }
 
 export interface Errand {
@@ -23,6 +31,7 @@ export interface Errand {
   requesterId: string;
   categoryId?: string | null;
   neighborhoodId: string;
+  destinationNeighborhoodId?: string | null;
   clientRequestKey: string;
   title: string;
   itemsDescription: string;
@@ -41,7 +50,10 @@ export interface Errand {
   expiresAt: string;
   category?: ErrandCategory | null;
   neighborhood?: Neighborhood | null;
+  destinationNeighborhood?: Neighborhood | null;
   requester?: ErrandRequester;
+  items?: ErrandItemPayload[];
+  images?: ErrandImage[];
   createdAt: string;
   updatedAt: string;
 }
