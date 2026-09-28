@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ChevronRight, Car, Info, ShieldAlert, ShieldCheck, Clock } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
-import { IdentityVerificationModal } from "../../components/modals/IdentityVerificationModal";
 import { useTrips } from "../../hooks/useTrips";
 import { useLocations } from "../../hooks/useLocations";
 import { useAuth } from "../../hooks/useAuth";
@@ -22,7 +21,6 @@ export default function CreateTrip() {
   const [selectedCity, setSelectedCity] = useState("غزة");
   const { cities, neighborhoods, isLoadingNeighborhoods } = useLocations(selectedCity);
 
-  const [showKycModal, setShowKycModal] = useState(false);
   const isVerified = profile?.verificationStatus === "VERIFIED" || profile?.isVerified === true;
   const isPendingKyc = profile?.verificationStatus === "PENDING_REVIEW";
 
@@ -50,7 +48,7 @@ export default function CreateTrip() {
         setErrorMessage("طلب التحقق من هويتك قيد المراجعة حالياً من قبل إدارة المنصة. ستتمكن من نشر الرحلات فور اعتماده.");
       } else {
         setErrorMessage("يجب التحقق من الهوية أولاً لنشر رحلة كمسافر وفق معايير الأمان.");
-        setShowKycModal(true);
+        navigate("/verify-identity");
       }
       return;
     }
@@ -93,7 +91,7 @@ export default function CreateTrip() {
       );
       setErrorMessage(msg);
       if (msg.includes("التحقق من الهوية") || msg.includes("Identity verification")) {
-        setShowKycModal(true);
+        navigate("/verify-identity");
       }
     }
   };
@@ -135,7 +133,7 @@ export default function CreateTrip() {
             </p>
             <button
               type="button"
-              onClick={() => setShowKycModal(true)}
+              onClick={() => navigate("/verify-identity")}
               className="flex h-10 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-xs"
             >
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
@@ -356,12 +354,6 @@ export default function CreateTrip() {
           </form>
         </div>
       </div>
-
-      {/* KYC Identity Verification Modal */}
-      <IdentityVerificationModal
-        isOpen={showKycModal}
-        onClose={() => setShowKycModal(false)}
-      />
     </MobileContainer>
   );
 }

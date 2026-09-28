@@ -17,6 +17,7 @@ import {
 } from "../camera/LiveCameraCaptureModal";
 import { authApi } from "../../api/auth";
 import { getApiErrorMessage } from "../../utils/apiError";
+import { usePWA } from "../../hooks/usePWA";
 
 interface IdentityVerificationModalProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const { isInstalled, isIOS } = usePWA();
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
@@ -40,13 +42,37 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [cameraMode, setCameraMode] = useState<CameraCaptureMode>("id_front");
 
+  // Gallery / File browsing inputs (no capture attribute)
   const frontInputRef = useRef<HTMLInputElement>(null);
   const backInputRef = useRef<HTMLInputElement>(null);
   const holdingIdInputRef = useRef<HTMLInputElement>(null);
 
+  // Direct native camera inputs for PWA standalone / iOS / mobile hardware triggers
+  const frontCameraInputRef = useRef<HTMLInputElement>(null);
+  const backCameraInputRef = useRef<HTMLInputElement>(null);
+  const holdingIdCameraInputRef = useRef<HTMLInputElement>(null);
+
   if (!isOpen) return null;
 
   const handleOpenLiveCamera = (mode: CameraCaptureMode) => {
+    // In standalone PWA or iOS WebKit sandbox, trigger native camera directly to avoid WebRTC sandbox blocks
+    const shouldUseNativeCameraDirectly =
+      isInstalled ||
+      isIOS ||
+      typeof navigator === "undefined" ||
+      !navigator.mediaDevices?.getUserMedia;
+
+    if (shouldUseNativeCameraDirectly) {
+      if (mode === "id_front") {
+        frontCameraInputRef.current?.click();
+      } else if (mode === "id_back") {
+        backCameraInputRef.current?.click();
+      } else if (mode === "selfie") {
+        holdingIdCameraInputRef.current?.click();
+      }
+      return;
+    }
+
     setCameraMode(mode);
     setIsCameraOpen(true);
   };
@@ -241,7 +267,14 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                 <input
                   ref={frontInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/*"
+                  className="hidden"
+                  onChange={handleFrontChange}
+                />
+                <input
+                  ref={frontCameraInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/*"
                   capture="environment"
                   className="hidden"
                   onChange={handleFrontChange}
@@ -314,7 +347,14 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                 <input
                   ref={backInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/*"
+                  className="hidden"
+                  onChange={handleBackChange}
+                />
+                <input
+                  ref={backCameraInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/*"
                   capture="environment"
                   className="hidden"
                   onChange={handleBackChange}
@@ -410,7 +450,14 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                 <input
                   ref={holdingIdInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/*"
+                  className="hidden"
+                  onChange={handleHoldingIdChange}
+                />
+                <input
+                  ref={holdingIdCameraInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/*"
                   capture="user"
                   className="hidden"
                   onChange={handleHoldingIdChange}

@@ -71,6 +71,11 @@ const NotificationsPage = lazy(
   () => import("./pages/notifications/NotificationsPage"),
 );
 const TermsPage = lazy(() => import("./pages/legal/TermsPage"));
+const IdentityVerificationPage = lazy(() =>
+  import("./pages/profile/IdentityVerificationPage").then((m) => ({
+    default: m.IdentityVerificationPage,
+  })),
+);
 
 // Clean Mobile Loading Fallback
 const PageLoadingFallback = () => (
@@ -430,6 +435,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/verify-identity"
+            element={
+              <ProtectedRoute>
+                <IdentityVerificationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/identity-verification"
+            element={
+              <ProtectedRoute>
+                <IdentityVerificationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/verify-identity"
+            element={
+              <ProtectedRoute>
+                <IdentityVerificationPage />
               </ProtectedRoute>
             }
           />

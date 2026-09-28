@@ -1,4 +1,11 @@
-import { useState, useRef, useEffect, useCallback, type FC } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  type FC,
+  type ChangeEvent,
+} from "react";
 import {
   X,
   Camera,
@@ -7,6 +14,7 @@ import {
   RotateCcw,
   AlertTriangle,
   Sparkles,
+  Smartphone,
 } from "lucide-react";
 
 export type CameraCaptureMode = "id_front" | "id_back" | "selfie";
@@ -26,6 +34,7 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const nativeInputRef = useRef<HTMLInputElement>(null);
 
   const [facingMode, setFacingMode] = useState<"environment" | "user">(
     mode === "selfie" ? "user" : "environment",
@@ -35,6 +44,11 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Sync facing mode when capture mode changes
+  useEffect(() => {
+    setFacingMode(mode === "selfie" ? "user" : "environment");
+  }, [mode]);
+
   // Stop camera media stream
   const stopStream = useCallback(() => {
     if (streamRef.current) {
@@ -43,49 +57,77 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
     }
   }, []);
 
-  // Start camera media stream
+  // Start camera media stream with multi-level fallbacks
   const startCamera = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     stopStream();
 
-    if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+    if (
+      typeof navigator === "undefined" ||
+      !navigator.mediaDevices?.getUserMedia
+    ) {
       setError(
-        "الكاميرا غير مدعومة في هذا المتصفح. يمكنك اختيار صورة من جهازك بدلاً من ذلك.",
+        "الكاميرا المباشرة غير مدعومة في هذا المتصفح. يمكنك استخدام كاميرا الهاتف أو اختيار صورة من الملفات.",
       );
       setIsLoading(false);
       return;
     }
 
     try {
-      const constraints: MediaStreamConstraints = {
-        video: {
-          facingMode: { ideal: facingMode },
-          width: { ideal: 1920 },
-          height: { ideal: 1080 },
-        },
-        audio: false,
-      };
+      let stream: MediaStream | null = null;
 
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      try {
+        // 1. Try with ideal constraints and selected facing mode
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: facingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          audio: false,
+        });
+      } catch (firstErr) {
+        console.warn("Targeted camera constraints failed, trying basic video:", firstErr);
+        // 2. Fallback to general video
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false,
+        });
+      }
+
       streamRef.current = stream;
 
-      if (videoRef.current) {
+      if (videoRef.current && stream) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+        videoRef.current.setAttribute("playsinline", "true");
+        videoRef.current.setAttribute("webkit-playsinline", "true");
+        videoRef.current.muted = true;
+
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current
+            ?.play()
+            .catch((playErr) => console.warn("Video playback error:", playErr));
+          setIsLoading(false);
+        };
       }
-      setIsLoading(false);
     } catch (err: any) {
       console.warn("Camera access error:", err);
-      if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+      if (
+        err.name === "NotAllowedError" ||
+        err.name === "PermissionDeniedError"
+      ) {
         setError(
-          "تم رفض إذن الوصول للكاميرا. يرجى تفعيل إذن الكاميرا من إعدادات المتصفح أو اختيار صورة من الملفات.",
+          "تم رفض إذن الوصول للكاميرا. يرجى تفعيل إذن الكاميرا من إعدادات المتصفح أو التقاط الصورة بكاميرا النظام.",
         );
-      } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
+      } else if (
+        err.name === "NotFoundError" ||
+        err.name === "DevicesNotFoundError"
+      ) {
         setError("لم يتم العثور على كاميرا متصلة بالجهاز.");
       } else {
         setError(
-          "تعذر فتح الكاميرا حالياً. يرجى المحاولة مجدداً أو رفع صورة من جهازك.",
+          "تعذر فتح الكاميرا المباشرة حالياً. يمكنك استخدام كاميرا الهاتف كبديل مباشر.",
         );
       }
       setIsLoading(false);
@@ -153,6 +195,18 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
     );
   };
 
+  // Handle photo taken via native device camera input
+  const handleNativeCameraCapture = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const previewUrl = URL.createObjectURL(file);
+      setCapturedFile(file);
+      setCapturedPreview(previewUrl);
+      setError(null);
+      stopStream();
+    }
+  };
+
   // Retake photo
   const handleRetake = () => {
     if (capturedPreview) {
@@ -199,6 +253,16 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-4 backdrop-blur-md text-right animate-in fade-in duration-200"
     >
+      {/* Hidden Native Camera Input Fallback */}
+      <input
+        ref={nativeInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        capture={facingMode === "user" ? "user" : "environment"}
+        className="hidden"
+        onChange={handleNativeCameraCapture}
+      />
+
       <div className="relative w-full max-w-lg rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
         {/* Top Header */}
         <div className="flex items-center justify-between p-4 bg-slate-900/90 border-b border-slate-800 z-10 text-white">
@@ -229,14 +293,26 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 {error}
               </p>
-              <button
-                type="button"
-                onClick={startCamera}
-                className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-2"
-              >
-                <RefreshCw className="w-4 h-4" />
-                <span>إعادة المحاولة</span>
-              </button>
+
+              <div className="flex flex-col sm:flex-row gap-2.5 justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => nativeInputRef.current?.click()}
+                  className="px-4 py-2.5 bg-accent hover:bg-accent/90 text-white text-xs font-bold rounded-xl transition-all shadow-md inline-flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                >
+                  <Smartphone className="w-4 h-4" />
+                  <span>فتح كاميرا الهاتف الآن</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={startCamera}
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  <span>إعادة المحاولة</span>
+                </button>
+              </div>
             </div>
           ) : capturedPreview ? (
             /* Review captured photo */
@@ -352,13 +428,24 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
                 </div>
               </button>
 
-              <button
-                type="button"
-                onClick={handleClose}
-                className="px-3.5 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
-              >
-                إلغاء
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => nativeInputRef.current?.click()}
+                  title="التقاط بكاميرا النظام"
+                  className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all active:scale-95 cursor-pointer border border-slate-700"
+                >
+                  <Smartphone className="w-5 h-5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="px-3.5 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  إلغاء
+                </button>
+              </div>
             </div>
           )}
         </div>

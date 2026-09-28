@@ -13,7 +13,6 @@ import { ProfileHeroCard } from "../../components/profile/ProfileHeroCard";
 import { ProfileStats2x2 } from "../../components/profile/ProfileStats2x2";
 import { ProfileActivitySection } from "../../components/profile/ProfileActivitySection";
 import { ProfileSecurityCard } from "../../components/profile/ProfileSecurityCard";
-import { IdentityVerificationModal } from "../../components/modals/IdentityVerificationModal";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -23,7 +22,6 @@ export default function ProfilePage() {
   const { errands } = useErrands();
 
   const [activeTab, setActiveTab] = useState<"trips" | "errands">("trips");
-  const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<{
     type: "success" | "error";
     message: string;
@@ -100,7 +98,7 @@ export default function ProfilePage() {
         {/* 1. Identity Verification CTA Banner */}
         <ProfileVerificationBanner
           isVerified={isVerified}
-          onStartVerification={() => setIsVerificationModalOpen(true)}
+          onStartVerification={() => navigate("/verify-identity")}
         />
 
         {/* 2. Hero & Personal Details Info Card */}
@@ -144,7 +142,7 @@ export default function ProfilePage() {
         <ProfileSecurityCard
           isVerified={isVerified}
           onChangePassword={() => navigate("/settings/change-password")}
-          onStartVerification={() => setIsVerificationModalOpen(true)}
+          onStartVerification={() => navigate("/verify-identity")}
         />
 
         {/* Logout Option */}
@@ -159,12 +157,6 @@ export default function ProfilePage() {
           </button>
         </div>
       </div>
-
-      {/* Identity Verification Modal */}
-      <IdentityVerificationModal
-        isOpen={isVerificationModalOpen}
-        onClose={() => setIsVerificationModalOpen(false)}
-      />
     </MobileContainer>
   );
 }
