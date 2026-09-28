@@ -12,11 +12,13 @@ import {
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
-import { useErrandDetail } from "../../hooks/useErrands";
+import { CancelErrandModal } from "../../components/modals/CancelErrandModal";
+import { useErrandDetail, useErrands } from "../../hooks/useErrands";
 
 export default function OrderTracking() {
   const { id = "errand-1" } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { cancelErrand, isCancelling } = useErrands();
 
   /*
    * ============================================================================
@@ -33,6 +35,7 @@ export default function OrderTracking() {
   const { errand } = useErrandDetail(id);
 
   const [rating, setRating] = useState<number>(0);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
@@ -289,11 +292,7 @@ export default function OrderTracking() {
 
           <button
             type="button"
-            onClick={() => {
-              if (confirm("هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟")) {
-                navigate("/errands");
-              }
-            }}
+            onClick={() => setShowCancelModal(true)}
             className="flex h-12 px-4 items-center justify-center gap-1.5 rounded-2xl border border-red-200 bg-red-50/60 text-xs font-black text-red-600 hover:bg-red-100 active:scale-98 transition-all cursor-pointer"
           >
             <X className="h-4 w-4" />
@@ -301,6 +300,21 @@ export default function OrderTracking() {
           </button>
         </div>
       </div>
+
+      <CancelErrandModal
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        onConfirm={async () => {
+          try {
+            await cancelErrand(id);
+            setShowCancelModal(false);
+            navigate("/errands");
+          } catch (err) {
+            console.error("Failed to cancel errand:", err);
+          }
+        }}
+        isCancelling={isCancelling}
+      />
     </MobileContainer>
   );
 }

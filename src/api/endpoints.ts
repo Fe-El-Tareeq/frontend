@@ -37,6 +37,7 @@ export const ENDPOINTS = {
     CANCEL_DELETION_CONFIRM: "/api/v1/auth/cancel-deletion/confirm",
   },
   LOCATIONS: {
+    CITIES: "/api/v1/locations/cities",
     NEIGHBORHOODS: "/api/v1/locations/neighborhoods",
     SCAFFOLD: "/api/v1/locations/",
   },

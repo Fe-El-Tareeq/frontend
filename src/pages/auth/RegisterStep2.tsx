@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ChevronRight } from "lucide-react";
@@ -30,7 +30,6 @@ export default function RegisterStep2() {
     password?: string;
   } | null;
 
-  const { neighborhoods, isLoadingNeighborhoods } = useLocations();
   const { register: registerApi, isRegistering } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -53,6 +52,8 @@ export default function RegisterStep2() {
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<Step2FormData>({
     resolver: zodResolver(step2Schema),
@@ -62,6 +63,16 @@ export default function RegisterStep2() {
       terms: true,
     },
   });
+
+  const selectedCity =
+    useWatch({ control, name: "city", defaultValue: "غزة" }) || "غزة";
+  const { cities, neighborhoods, isLoadingNeighborhoods } =
+    useLocations(selectedCity);
+
+  // Reset neighborhood selection when city changes
+  useEffect(() => {
+    setValue("neighborhoodId", "");
+  }, [selectedCity, setValue]);
 
   const onSubmit = async (data: Step2FormData) => {
     if (!step1Data) return;
@@ -124,11 +135,21 @@ export default function RegisterStep2() {
             className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
             {...register("city")}
           >
-            <option value="غزة">غزة</option>
-            <option value="شمال غزة">شمال غزة</option>
-            <option value="دير البلح">دير البلح</option>
-            <option value="خان يونس">خان يونس</option>
-            <option value="رفح">رفح</option>
+            {cities && cities.length > 0 ? (
+              cities.map((c) => (
+                <option key={c.key} value={c.key}>
+                  {c.nameAr}
+                </option>
+              ))
+            ) : (
+              <>
+                <option value="gaza">غزة</option>
+                <option value="north_gaza">شمال غزة</option>
+                <option value="deir_al_balah">دير البلح</option>
+                <option value="khan_younis">خان يونس</option>
+                <option value="rafah">رفح</option>
+              </>
+            )}
           </Form.Select>
         </Form.Field>
 

@@ -24,6 +24,7 @@ export interface UserProfile {
   profileCompleted: boolean;
   phoneVerifiedAt: string | null;
   isVerified?: boolean;
+  verificationStatus?: "UNVERIFIED" | "PENDING_REVIEW" | "VERIFIED" | "REJECTED";
   status: UserStatus;
   createdAt: string;
   updatedAt: string;

@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import "fake-indexeddb/auto";
 import { afterAll, afterEach, beforeAll, vi } from "vitest";
 import { server } from "./msw/server";
 

@@ -12,6 +12,7 @@ import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { ErrorState } from "../../components/ui/feedback/ErrorState";
+import { WithdrawProposalModal } from "../../components/modals/WithdrawProposalModal";
 import { useSentProposals, useProposalsMutations } from "../../hooks/useProposals";
 
 interface SubmittedOfferItem {
@@ -33,6 +34,7 @@ interface SubmittedOfferItem {
 export default function MySubmittedOffersPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"ALL" | "PENDING" | "ACCEPTED" | "REJECTED">("ALL");
+  const [selectedOfferToWithdraw, setSelectedOfferToWithdraw] = useState<string | null>(null);
 
   const { proposals: backendProposals, isLoading, isError, refetch } = useSentProposals();
   const { withdrawProposal, isWithdrawing } = useProposalsMutations();
@@ -83,16 +85,6 @@ export default function MySubmittedOffersPage() {
     if (activeTab === "ALL") return true;
     return o.status === activeTab;
   });
-
-  const handleWithdraw = async (offerId: string) => {
-    if (confirm("هل أنت متأكد من سحب هذا العرض؟")) {
-      try {
-        await withdrawProposal(offerId);
-      } catch {
-        // Fallback handled by query invalidation
-      }
-    }
-  };
 
   return (
     <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
@@ -351,7 +343,7 @@ export default function MySubmittedOffersPage() {
                     <button
                       type="button"
                       disabled={isWithdrawing}
-                      onClick={() => handleWithdraw(offer.id)}
+                      onClick={() => setSelectedOfferToWithdraw(offer.id)}
                       className="w-full flex items-center justify-center gap-1.5 h-10 rounded-2xl border border-slate-200 bg-white text-xs font-bold text-text-secondary hover:bg-red-50 hover:text-red-600 transition-all cursor-pointer disabled:opacity-50"
                     >
                       <X className="h-3.5 w-3.5" />
@@ -402,6 +394,22 @@ export default function MySubmittedOffersPage() {
           </div>
         ) : null}
       </div>
+
+      {/* Withdraw Proposal Modal */}
+      <WithdrawProposalModal
+        isOpen={Boolean(selectedOfferToWithdraw)}
+        onClose={() => setSelectedOfferToWithdraw(null)}
+        isWithdrawing={isWithdrawing}
+        onConfirm={async () => {
+          if (selectedOfferToWithdraw) {
+            try {
+              await withdrawProposal(selectedOfferToWithdraw);
+            } catch {
+              // Handled
+            }
+          }
+        }}
+      />
     </MobileContainer>
   );
 }

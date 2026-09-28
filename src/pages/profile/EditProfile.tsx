@@ -20,7 +20,8 @@ type EditProfileFormData = z.infer<typeof editProfileSchema>;
 export default function EditProfile() {
   const navigate = useNavigate();
   const { profile, updateProfile, isUpdatingProfile } = useAuth();
-  const { neighborhoods, isLoadingNeighborhoods } = useLocations();
+  const [selectedCity, setSelectedCity] = useState("غزة");
+  const { cities, neighborhoods, isLoadingNeighborhoods } = useLocations(selectedCity);
   const [successMessage, setSuccessMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -28,6 +29,7 @@ export default function EditProfile() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<EditProfileFormData>({
     resolver: zodResolver(editProfileSchema),
@@ -44,6 +46,9 @@ export default function EditProfile() {
         fullName: profile.fullName || "",
         neighborhoodId: profile.neighborhoodId || "",
       });
+      if (profile.neighborhood?.governorate) {
+        setSelectedCity(profile.neighborhood.governorate);
+      }
     }
   }, [profile, reset]);
 
@@ -146,6 +151,37 @@ export default function EditProfile() {
               )}
             </div>
 
+            {/* City */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                المدينة *
+              </label>
+              <select
+                value={selectedCity}
+                onChange={(e) => {
+                  setSelectedCity(e.target.value);
+                  setValue("neighborhoodId", "");
+                }}
+                className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs font-bold text-[#123A68] focus:outline-none focus:border-[#123A68] cursor-pointer text-right"
+              >
+                {cities && cities.length > 0 ? (
+                  cities.map((c) => (
+                    <option key={c.key} value={c.key}>
+                      {c.nameAr}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="gaza">غزة</option>
+                    <option value="north_gaza">شمال غزة</option>
+                    <option value="deir_al_balah">دير البلح</option>
+                    <option value="khan_younis">خان يونس</option>
+                    <option value="rafah">رفح</option>
+                  </>
+                )}
+              </select>
+            </div>
+
             {/* Neighborhood */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -163,7 +199,7 @@ export default function EditProfile() {
                 </option>
                 {neighborhoods.map((n) => (
                   <option key={n.id} value={n.id}>
-                    {n.name} - {n.governorate}
+                    {n.name}
                   </option>
                 ))}
               </select>

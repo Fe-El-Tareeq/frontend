@@ -5,6 +5,7 @@ import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { ErrorState } from "../../components/ui/feedback/ErrorState";
+import { RejectProposalModal } from "../../components/modals/RejectProposalModal";
 import { useErrandDetail } from "../../hooks/useErrands";
 import { useErrandProposals, useProposalsMutations } from "../../hooks/useProposals";
 
@@ -32,12 +33,13 @@ export default function IncomingOffersPage() {
   const [activeTab, setActiveTab] = useState<
     "ALL" | "NEW" | "ACCEPTED" | "REJECTED"
   >("ALL");
+  const [selectedOfferToReject, setSelectedOfferToReject] = useState<string | null>(null);
 
-  const formattedOffers: IncomingOffer[] = proposals.map((p, idx) => {
+  const formattedOffers: IncomingOffer[] = proposals.map((p: any, idx: number) => {
     const travelerName = p.proposer?.fullName || "مسافر نشط";
     const initials = travelerName
       .split(" ")
-      .map((n) => n[0])
+      .map((n: string) => n[0])
       .join("")
       .slice(0, 2);
 
@@ -236,7 +238,7 @@ export default function IncomingOffersPage() {
                     <button
                       type="button"
                       disabled={isAccepting || isRejecting}
-                      onClick={() => handleRejectOffer(offer.id)}
+                      onClick={() => setSelectedOfferToReject(offer.id)}
                       className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 active:scale-98 transition-all cursor-pointer disabled:opacity-50"
                     >
                       <ThumbsDown className="h-4 w-4" />
@@ -249,6 +251,18 @@ export default function IncomingOffersPage() {
           </div>
         ) : null}
       </div>
+
+      {/* Rejection Reason Modal */}
+      <RejectProposalModal
+        isOpen={Boolean(selectedOfferToReject)}
+        onClose={() => setSelectedOfferToReject(null)}
+        isRejecting={isRejecting}
+        onConfirm={async () => {
+          if (selectedOfferToReject) {
+            await handleRejectOffer(selectedOfferToReject);
+          }
+        }}
+      />
     </MobileContainer>
   );
 }
