@@ -1,12 +1,14 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RequestSpaceSuccessModal } from "../components/modals/RequestSpaceSuccessModal";
 import { SubmitOfferSuccessModal } from "../components/modals/SubmitOfferSuccessModal";
 import { ResetPasswordSuccessModal } from "../components/modals/ResetPasswordSuccessModal";
 import { ChangePasswordSuccessModal } from "../components/modals/ChangePasswordSuccessModal";
 import { LandingMenuModal } from "../components/modals/LandingMenuModal";
 import { IdentityVerificationModal } from "../components/modals/IdentityVerificationModal";
+import { IdentityVerificationPage } from "../pages/profile/IdentityVerificationPage";
 import { LiveCameraCaptureModal } from "../components/camera/LiveCameraCaptureModal";
 
 describe("Modals & Feedback Components", () => {
@@ -100,5 +102,29 @@ describe("Modals & Feedback Components", () => {
     const cancelButton = screen.getByText("إلغاء");
     fireEvent.click(cancelButton);
     expect(handleClose).toHaveBeenCalled();
+  });
+
+  it("should render IdentityVerificationPage full multi-step workflow conforming to design", () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+      },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <IdentityVerificationPage />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    expect(screen.getByText("التحقق من الهوية")).toBeInTheDocument();
+    expect(screen.getByText("تحميل المستندات")).toBeInTheDocument();
+    expect(screen.getByText("التحقق من الوجه")).toBeInTheDocument();
+    expect(screen.getByText("المراجعة")).toBeInTheDocument();
+    expect(screen.getByText("بطاقة الهوية — الوجه الأمامي")).toBeInTheDocument();
+    expect(screen.getByText("بطاقة الهوية — الوجه الخلفي")).toBeInTheDocument();
+    expect(screen.getAllByText("التقاط بالكاميرا").length).toBe(2);
   });
 });
