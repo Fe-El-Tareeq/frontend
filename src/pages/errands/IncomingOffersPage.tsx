@@ -35,11 +35,11 @@ export default function IncomingOffersPage() {
   >("ALL");
   const [selectedOfferToReject, setSelectedOfferToReject] = useState<string | null>(null);
 
-  const formattedOffers: IncomingOffer[] = proposals.map((p, idx) => {
+  const formattedOffers: IncomingOffer[] = proposals.map((p: any, idx: number) => {
     const travelerName = p.proposer?.fullName || "مسافر نشط";
     const initials = travelerName
       .split(" ")
-      .map((n) => n[0])
+      .map((n: string) => n[0])
       .join("")
       .slice(0, 2);
 

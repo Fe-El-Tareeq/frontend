@@ -1,4 +1,4 @@
-const CACHE_NAME = "bitareeqak-cache-v1";
+const CACHE_NAME = "bitareeqak-cache-v2";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -39,7 +39,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
-  // Ignore non-GET requests or chrome-extension URLs
+  // Ignore non-GET requests or non-http protocols
   if (event.request.method !== "GET" || !url.protocol.startsWith("http")) {
     return;
   }
@@ -77,6 +77,21 @@ self.addEventListener("fetch", (event) => {
       return cachedResponse || fetchPromise;
     }),
   );
+});
+
+// Background Sync Handler for PWA Offline Synchronization
+self.addEventListener("sync", (event) => {
+  if (event.tag === "btareeqak-sync-queue" || event.tag === "sync-offline-queue") {
+    event.waitUntil(
+      self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({
+            type: "BTAREEQAK_SYNC_REQUESTED",
+          });
+        });
+      }),
+    );
+  }
 });
 
 // Notification Click Handler: Focus existing window or open target URL

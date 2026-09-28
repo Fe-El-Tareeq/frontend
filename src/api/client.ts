@@ -1,8 +1,11 @@
 import axios from "axios";
-import type { AxiosError, InternalAxiosRequestConfig } from "axios";
+import type { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from "axios";
 import { API_BASE_URL, ENDPOINTS } from "./endpoints";
 import { useAuthStore } from "../store/useAuthStore";
 import type { ApiSuccessResponse, AuthTokens } from "../types";
+import { getCachedData, setCachedData } from "../offline/cacheManager";
+import { enqueueOfflineMutation } from "../offline/syncEngine";
+import type { OfflineMutationType } from "../types/offline";
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -41,13 +44,56 @@ const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Response Interceptor for automatic 401 retry
+// Response Interceptor for offline cache fallback & automatic 401 retry
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response: AxiosResponse) => {
+    // Automatically cache successful GET API responses into IndexedDB
+    if (
+      response.config.method?.toLowerCase() === "get" &&
+      response.config.url &&
+      response.status === 200 &&
+      response.data
+    ) {
+      const cacheKey = `${response.config.baseURL || ""}${response.config.url}`;
+      setCachedData(cacheKey, response.data).catch(() => {});
+    }
+    return response;
+  },
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
+
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
+
+    // Offline Cache Fallback for GET requests
+    const isNetworkError =
+      !error.response ||
+      error.code === "ERR_NETWORK" ||
+      error.message === "Network Error" ||
+      (typeof navigator !== "undefined" && !navigator.onLine);
+
+    if (
+      isNetworkError &&
+      originalRequest.method?.toLowerCase() === "get" &&
+      originalRequest.url
+    ) {
+      const cacheKey = `${originalRequest.baseURL || ""}${originalRequest.url}`;
+      const cached = await getCachedData(cacheKey);
+
+      if (cached) {
+        return {
+          data: cached,
+          status: 200,
+          statusText: "OK (Offline Cache)",
+          headers: {},
+          config: originalRequest,
+          isOfflineCache: true,
+        } as AxiosResponse;
+      }
+    }
 
     if (
       !error.response ||
@@ -115,3 +161,17 @@ apiClient.interceptors.response.use(
     }
   },
 );
+
+/**
+ * Helper to queue an action offline when disconnected
+ */
+export async function queueOfflineAction<T = unknown>(params: {
+  type: OfflineMutationType;
+  endpoint: string;
+  method: "POST" | "PUT" | "PATCH" | "DELETE";
+  payload: T;
+  descriptionAr: string;
+  entityId?: string;
+}) {
+  return enqueueOfflineMutation(params);
+}

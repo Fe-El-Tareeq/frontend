@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 import "./i18n";
 import App from "./App";
+import { useOfflineStore } from "./store/useOfflineStore";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +27,12 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
       .catch((err) => {
         console.error("Service Worker registration failed:", err);
       });
+
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      if (event.data?.type === "BTAREEQAK_SYNC_REQUESTED") {
+        useOfflineStore.getState().triggerSync();
+      }
+    });
   });
 }
 
