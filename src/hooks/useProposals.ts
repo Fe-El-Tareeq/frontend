@@ -137,3 +137,5 @@ export function useProposalsMutations() {
     isWithdrawing: withdrawProposalMutation.isPending,
   };
 }
+
+export const useProposals = useProposalsMutations;

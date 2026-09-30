@@ -60,5 +60,8 @@ describe("Errands Domain & Schemas", () => {
     expect(ENDPOINTS.ERRANDS.OFFERS(errandId)).toBe(
       `/api/v1/errands/${errandId}/offers`,
     );
+    expect(ENDPOINTS.ERRANDS.TRACKING(errandId)).toBe(
+      `/api/v1/errands/${errandId}/tracking`,
+    );
   });
 });

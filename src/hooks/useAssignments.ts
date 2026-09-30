@@ -21,7 +21,12 @@ export function useAssignments(params?: { skip?: number; take?: number }) {
 
   const assignmentsQuery = useQuery({
     queryKey: ASSIGNMENT_KEYS.list(params),
-    queryFn: () => assignmentsApi.getAssignments(params),
+    queryFn: async () =>
+      (await assignmentsApi.getAssignments(params)) ?? {
+        success: true,
+        message: "",
+        data: { assignments: [], pagination: { total: 0, page: 1, limit: 10, totalPages: 0 } },
+      },
     select: (res) => res.data,
   });
 
@@ -56,13 +61,21 @@ export function useAssignments(params?: { skip?: number; take?: number }) {
   });
 
   const updateEstimatedDeliveryTimeMutation = useMutation({
-    mutationFn: ({
-      id,
-      payload,
-    }: {
+    mutationFn: (vars: {
       id: string;
-      payload: UpdateEstimatedDeliveryTimeRequest;
-    }) => assignmentsApi.updateEstimatedDeliveryTime(id, payload),
+      payload?: UpdateEstimatedDeliveryTimeRequest;
+      estimatedDeliveryAt?: string | null;
+      estimatedDeliveryTime?: string | null;
+    }) => {
+      const payload: UpdateEstimatedDeliveryTimeRequest =
+        vars.payload ?? {
+          estimatedDeliveryAt:
+            vars.estimatedDeliveryAt !== undefined
+              ? vars.estimatedDeliveryAt
+              : vars.estimatedDeliveryTime ?? null,
+        };
+      return assignmentsApi.updateEstimatedDeliveryTime(vars.id, payload);
+    },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ASSIGNMENT_KEYS.detail(variables.id),

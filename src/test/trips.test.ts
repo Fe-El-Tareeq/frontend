@@ -37,6 +37,9 @@ describe("Trips Domain & Schemas", () => {
       `/api/v1/trips/${tripId}/cancel`,
     );
     expect(ENDPOINTS.TRIPS.BOOK(tripId)).toBe(`/api/v1/trips/${tripId}/book`);
+    expect(ENDPOINTS.TRIPS.CHECKLIST(tripId)).toBe(
+      `/api/v1/trips/${tripId}/checklist`,
+    );
     expect(ENDPOINTS.MATCHING.TRIP_ERRANDS(tripId)).toBe(
       `/api/v1/matching/trips/${tripId}`,
     );

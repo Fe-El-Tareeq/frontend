@@ -61,7 +61,8 @@ export interface StartDeliveryRequest {
 }
 
 export interface UpdateEstimatedDeliveryTimeRequest {
-  estimatedDeliveryAt: string | null;
+  estimatedDeliveryAt?: string | null;
+  estimatedDeliveryTime?: string | null;
 }
 
 export interface RatingPrompt {

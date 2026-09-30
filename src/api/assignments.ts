@@ -56,11 +56,16 @@ export const assignmentsApi = {
 
   updateEstimatedDeliveryTime: async (
     id: string,
-    payload: { estimatedDeliveryAt: string | null },
+    payload: { estimatedDeliveryAt?: string | null; estimatedDeliveryTime?: string | null },
   ) => {
     const res = await apiClient.patch<ApiSuccessResponse<{ assignment: Assignment }>>(
       ENDPOINTS.ASSIGNMENTS.ESTIMATED_DELIVERY_TIME(id),
-      payload,
+      {
+        estimatedDeliveryAt:
+          payload.estimatedDeliveryAt !== undefined
+            ? payload.estimatedDeliveryAt
+            : payload.estimatedDeliveryTime ?? null,
+      },
     );
     return res.data;
   },
