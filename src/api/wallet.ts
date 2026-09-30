@@ -3,6 +3,7 @@ import { ENDPOINTS } from "./endpoints";
 import type {
   ApiSuccessResponse,
   Wallet,
+  WalletFilterParams,
   WalletTransactionsData,
 } from "../types";
 
@@ -14,7 +15,7 @@ export const walletApi = {
     return res.data;
   },
 
-  getTransactions: async (params?: { skip?: number; take?: number }) => {
+  getTransactions: async (params?: WalletFilterParams) => {
     const res = await apiClient.get<ApiSuccessResponse<WalletTransactionsData>>(
       ENDPOINTS.WALLET.TRANSACTIONS,
       { params },

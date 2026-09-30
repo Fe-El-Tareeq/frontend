@@ -38,6 +38,39 @@ export function usePayments() {
     },
   });
 
+  const resendOtpMutation = useMutation({
+    mutationFn: (invoiceId: string) => paymentsApi.resendPaymentOtp(invoiceId),
+  });
+
+  const verifyOtpMutation = useMutation({
+    mutationFn: ({ invoiceId, otpCode }: { invoiceId: string; otpCode: string }) =>
+      paymentsApi.verifyPaymentOtp(invoiceId, { otpCode }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: PAYMENT_KEYS.invoice(variables.invoiceId),
+      });
+      queryClient.invalidateQueries({ queryKey: PAYMENT_KEYS.invoices() });
+      queryClient.invalidateQueries({ queryKey: WALLET_KEYS.me });
+      queryClient.invalidateQueries({ queryKey: ["wallet"] });
+    },
+  });
+
+  const uploadReceiptMutation = useMutation({
+    mutationFn: ({
+      invoiceId,
+      receiptImage,
+    }: {
+      invoiceId: string;
+      receiptImage: File;
+    }) => paymentsApi.uploadReceipt(invoiceId, receiptImage),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: PAYMENT_KEYS.invoice(variables.invoiceId),
+      });
+      queryClient.invalidateQueries({ queryKey: PAYMENT_KEYS.invoices() });
+    },
+  });
+
   return {
     packages: packagesQuery.data || [],
     isLoadingPackages: packagesQuery.isLoading,
@@ -45,6 +78,12 @@ export function usePayments() {
     isCreatingInvoice: createInvoiceMutation.isPending,
     mockPay: mockPayMutation.mutateAsync,
     isPaying: mockPayMutation.isPending,
+    resendOtp: resendOtpMutation.mutateAsync,
+    isResendingOtp: resendOtpMutation.isPending,
+    verifyOtp: verifyOtpMutation.mutateAsync,
+    isVerifyingOtp: verifyOtpMutation.isPending,
+    uploadReceipt: uploadReceiptMutation.mutateAsync,
+    isUploadingReceipt: uploadReceiptMutation.isPending,
   };
 }
 

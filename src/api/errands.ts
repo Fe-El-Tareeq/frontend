@@ -8,6 +8,8 @@ import type {
   ErrandFilterParams,
   ErrandListData,
   ErrandUpdateRequest,
+  ErrandCancelRequest,
+  ErrandTrackingResponseData,
 } from "../types";
 
 export const errandsApi = {
@@ -26,6 +28,13 @@ export const errandsApi = {
     return res.data;
   },
 
+  getTracking: async (id: string) => {
+    const res = await apiClient.get<ApiSuccessResponse<ErrandTrackingResponseData>>(
+      ENDPOINTS.ERRANDS.TRACKING(id),
+    );
+    return res.data;
+  },
+
   createErrand: async (payload: ErrandCreateRequest) => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       const mut = await enqueueOfflineMutation({
@@ -33,7 +42,7 @@ export const errandsApi = {
         endpoint: ENDPOINTS.ERRANDS.CREATE,
         method: "POST",
         payload,
-        descriptionAr: `إنشاء طلب: ${payload.title}`,
+        descriptionAr: `إنشاء طلب: ${payload.title || payload.destinationKeyword}`,
       });
       return {
         success: true,
@@ -79,13 +88,20 @@ export const errandsApi = {
     return res.data;
   },
 
-  cancelErrand: async (id: string) => {
+  cancelErrand: async (
+    id: string,
+    payload?: ErrandCancelRequest | string,
+  ) => {
+    const body =
+      typeof payload === "string"
+        ? { cancellationReason: payload }
+        : payload || { cancellationReason: "تم الإلغاء من قبل المستخدم" };
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       await enqueueOfflineMutation({
         type: "CANCEL_ERRAND",
         endpoint: ENDPOINTS.ERRANDS.CANCEL(id),
         method: "POST",
-        payload: {},
+        payload: body,
         descriptionAr: `إلغاء الطلب #${id.slice(0, 6)}`,
       });
       return {
@@ -97,6 +113,7 @@ export const errandsApi = {
 
     const res = await apiClient.post<ApiSuccessResponse<{ errand: Errand }>>(
       ENDPOINTS.ERRANDS.CANCEL(id),
+      body,
     );
     return res.data;
   },
@@ -108,9 +125,14 @@ export const errandsApi = {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       const mut = await enqueueOfflineMutation({
         type: "SUBMIT_PROPOSAL",
-        endpoint: ENDPOINTS.ERRANDS.OFFERS(errandId),
+        endpoint: ENDPOINTS.PROPOSALS.CREATE,
         method: "POST",
-        payload,
+        payload: {
+          errandId,
+          tripId: "",
+          type: "TRAVELER_OFFER",
+          message: payload.notes,
+        },
         descriptionAr: `تقديم عرض توصيل بقيمة ${payload.priceNis} ₪`,
       });
       return {
@@ -121,9 +143,14 @@ export const errandsApi = {
     }
 
     const res = await apiClient.post(
-      ENDPOINTS.ERRANDS.OFFERS(errandId),
-      payload,
+      ENDPOINTS.PROPOSALS.CREATE,
+      {
+        errandId,
+        type: "TRAVELER_OFFER",
+        message: payload.notes,
+      },
     );
     return res.data;
   },
 };
+

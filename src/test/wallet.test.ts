@@ -21,9 +21,20 @@ describe("Wallet Domain & Multi-Step Purchase Flow", () => {
     expect(popularPkg?.priceNis).toBe(10);
   });
 
-
-  it("should verify wallet endpoints", () => {
+  it("should verify wallet and payment endpoints", () => {
+    const invoiceId = "inv-999";
     expect(ENDPOINTS.WALLET.ME).toBe("/api/v1/wallet");
     expect(ENDPOINTS.WALLET.TRANSACTIONS).toBe("/api/v1/wallet/transactions");
+    expect(ENDPOINTS.PAYMENTS.PACKAGES).toBe("/api/v1/payments/packages");
+    expect(ENDPOINTS.PAYMENTS.INVOICES).toBe("/api/v1/payments/invoices");
+    expect(ENDPOINTS.PAYMENTS.OTP_VERIFY(invoiceId)).toBe(
+      `/api/v1/payments/invoices/${invoiceId}/otp/verify`,
+    );
+    expect(ENDPOINTS.PAYMENTS.OTP_RESEND(invoiceId)).toBe(
+      `/api/v1/payments/invoices/${invoiceId}/otp/resend`,
+    );
+    expect(ENDPOINTS.PAYMENTS.RECEIPT(invoiceId)).toBe(
+      `/api/v1/payments/invoices/${invoiceId}/receipt`,
+    );
   });
 });

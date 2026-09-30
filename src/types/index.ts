@@ -14,3 +14,4 @@ export * from "./proposals";
 export * from "./notifications";
 export * from "./legal";
 export * from "./support";
+export * from "./admin";

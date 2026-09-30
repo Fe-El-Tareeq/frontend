@@ -9,6 +9,8 @@ import type {
   ForgotPasswordRequest,
   ResetPasswordRequest,
   UserProfileUpdateRequest,
+  ChangePasswordRequest,
+  DeactivateAccountRequest,
 } from "../types";
 
 export const AUTH_KEYS = {
@@ -96,6 +98,18 @@ export function useAuth() {
     },
   });
 
+  const changePasswordMutation = useMutation({
+    mutationFn: (data: ChangePasswordRequest) => authApi.changePassword(data),
+  });
+
+  const deactivateAccountMutation = useMutation({
+    mutationFn: (data?: DeactivateAccountRequest) => authApi.deactivateAccount(data),
+    onSuccess: () => {
+      logout();
+      queryClient.clear();
+    },
+  });
+
   return {
     user,
     isAuthenticated,
@@ -116,6 +130,11 @@ export function useAuth() {
     isForgotPasswordPending: forgotPasswordMutation.isPending,
     resetPassword: resetPasswordMutation.mutateAsync,
     isResetPasswordPending: resetPasswordMutation.isPending,
+    changePassword: changePasswordMutation.mutateAsync,
+    isChangingPassword: changePasswordMutation.isPending,
+    changePasswordError: changePasswordMutation.error,
+    deactivateAccount: deactivateAccountMutation.mutateAsync,
+    isDeactivatingAccount: deactivateAccountMutation.isPending,
     logout: logoutMutation.mutateAsync,
     updateProfile: updateProfileMutation.mutateAsync,
     isUpdatingProfile: updateProfileMutation.isPending,

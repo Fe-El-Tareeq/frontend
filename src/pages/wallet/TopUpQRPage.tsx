@@ -11,14 +11,26 @@ import {
   Lock,
   ShieldCheck,
   CheckCircle2,
+  Loader2,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { usePayments } from "../../hooks/usePayments";
+import { translateApiError } from "../../i18n";
 import type { TokenPackage } from "./BuyTokensPackages";
+import type { PaymentInvoice } from "../../types";
 
 export default function TopUpQRPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const {
+    createInvoice,
+    verifyOtp,
+    resendOtp,
+    isCreatingInvoice,
+    isVerifyingOtp,
+    isResendingOtp,
+  } = usePayments();
 
   const pkg: TokenPackage = location.state?.package || {
     id: "pkg-pro",
@@ -36,6 +48,8 @@ export default function TopUpQRPage() {
   // Jawwal Pay Form States
   const [jawwalPhone, setJawwalPhone] = useState("0598877026");
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const [invoice, setInvoice] = useState<PaymentInvoice | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [otpDigits, setOtpDigits] = useState<string[]>([
     "",
     "",
@@ -55,9 +69,32 @@ export default function TopUpQRPage() {
     return `${end}••••${start}`;
   })();
 
-  const handleSendOtp = () => {
+  const handleSendOtp = async () => {
     if (jawwalPhone.trim().length >= 9) {
-      setIsOtpSent(true);
+      setErrorMessage(null);
+      try {
+        const res = await createInvoice({
+          packageId: pkg.id,
+          method: "OTP",
+          paymentPhone: jawwalPhone.trim(),
+        });
+        setInvoice(res.data.invoice);
+        setIsOtpSent(true);
+      } catch (err: unknown) {
+        setErrorMessage(translateApiError(err));
+      }
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!invoice?.id) return;
+    setErrorMessage(null);
+    try {
+      await resendOtp(invoice.id);
+      setOtpDigits(["", "", "", "", "", ""]);
+      otpInputRefs.current[0]?.focus();
+    } catch (err: unknown) {
+      setErrorMessage(translateApiError(err));
     }
   };
 
@@ -78,6 +115,28 @@ export default function TopUpQRPage() {
   ) => {
     if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
       otpInputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleVerifyOtpPayment = async () => {
+    const otpCode = otpDigits.join("");
+    if (otpCode.length !== 6 || !invoice?.id) return;
+
+    setErrorMessage(null);
+    try {
+      await verifyOtp({
+        invoiceId: invoice.id,
+        otpCode,
+      });
+      navigate("/wallet/payment-success", {
+        state: {
+          package: pkg,
+          method: "JAWWAL_PAY",
+          invoiceId: invoice.id,
+        },
+      });
+    } catch (err: unknown) {
+      setErrorMessage(translateApiError(err));
     }
   };
 
@@ -355,19 +414,33 @@ export default function TopUpQRPage() {
 
               {/* STATE 1: Before OTP Sent -> Send OTP Button */}
               {!isOtpSent && (
-                <div className="pt-2">
+                <div className="pt-2 space-y-2">
+                  {errorMessage && (
+                    <div className="rounded-2xl bg-red-50 p-3.5 border border-red-200 text-xs font-bold text-red-600 text-right">
+                      {errorMessage}
+                    </div>
+                  )}
+
                   <button
                     type="button"
                     onClick={handleSendOtp}
-                    disabled={jawwalPhone.trim().length < 9}
+                    disabled={jawwalPhone.trim().length < 9 || isCreatingInvoice}
                     className={`flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-xs font-black transition-all cursor-pointer shadow-xs ${
-                      jawwalPhone.trim().length >= 9
+                      jawwalPhone.trim().length >= 9 && !isCreatingInvoice
                         ? "bg-[#123A68] text-white hover:bg-[#0D2C50] active:scale-98"
                         : "bg-slate-200 text-slate-400 cursor-not-allowed"
                     }`}
                   >
-                    <Send className="h-4 w-4 -rotate-45" />
-                    <span>إرسال رمز التأكيد</span>
+                    {isCreatingInvoice ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4 -rotate-45" />
+                    )}
+                    <span>
+                      {isCreatingInvoice
+                        ? "جاري إرسال الرمز..."
+                        : "إرسال رمز التأكيد"}
+                    </span>
                   </button>
                 </div>
               )}
@@ -413,13 +486,11 @@ export default function TopUpQRPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => {
-                          setOtpDigits(["", "", "", "", "", ""]);
-                          otpInputRefs.current[0]?.focus();
-                        }}
-                        className="font-black text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
+                        onClick={handleResendOtp}
+                        disabled={isResendingOtp}
+                        className="font-black text-[#123A68] hover:text-[#F36F21] disabled:opacity-50 transition-colors cursor-pointer"
                       >
-                        إعادة الإرسال
+                        {isResendingOtp ? "جاري الإرسال..." : "إعادة الإرسال"}
                       </button>
                     </div>
                   </div>
@@ -434,20 +505,31 @@ export default function TopUpQRPage() {
                     </span>
                   </div>
 
-                  {/* Direct Payment Confirmation Button (Non-functional as requested until backend endpoint is available) */}
+                  {errorMessage && (
+                    <div className="rounded-2xl bg-red-50 p-3.5 border border-red-200 text-xs font-bold text-red-600 text-right">
+                      {errorMessage}
+                    </div>
+                  )}
+
+                  {/* Direct Payment Confirmation Button */}
                   <div className="space-y-1.5 pt-1">
                     <button
                       type="button"
-                      disabled
-                      className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-slate-200 text-slate-400 text-xs font-black cursor-not-allowed transition-all"
-                      title="بوابة جوال باي المباشرة قيد التفعيل من الخادم - يرجى استخدام دفع الباركود QR"
+                      onClick={handleVerifyOtpPayment}
+                      disabled={otpDigits.join("").length !== 6 || isVerifyingOtp}
+                      className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-white text-xs font-black hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-md"
                     >
-                      <ShieldCheck className="h-4.5 w-4.5 text-slate-400" />
-                      <span>تأكيد الدفع وسحب {pkg.priceNis} ₪</span>
+                      {isVerifyingOtp ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <ShieldCheck className="h-4.5 w-4.5" />
+                      )}
+                      <span>
+                        {isVerifyingOtp
+                          ? "جاري تأكيد الدفع..."
+                          : `تأكيد الدفع وسحب ${pkg.priceNis} ₪`}
+                      </span>
                     </button>
-                    <p className="text-[10px] text-center text-amber-600 font-bold">
-                      (بوابة الربط المباشر قيد التطوير — يرجى استخدام تبويب باركود QR لإتمام الدفع حالياً)
-                    </p>
                   </div>
 
                   {/* Security Footer */}

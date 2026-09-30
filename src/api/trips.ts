@@ -8,6 +8,7 @@ import type {
   TripListData,
   CreateTripRequest,
   UpdateTripRequest,
+  TripChecklistData,
 } from "../types";
 
 export const tripsApi = {
@@ -106,6 +107,14 @@ export const tripsApi = {
     return res.data;
   },
 
+  // GET /api/v1/trips/:id/checklist
+  getChecklist: async (id: string) => {
+    const res = await apiClient.get<ApiSuccessResponse<TripChecklistData>>(
+      ENDPOINTS.TRIPS.CHECKLIST(id),
+    );
+    return res.data;
+  },
+
   // Book space helper / placeholder
   bookSpace: async (
     tripId: string,
@@ -114,9 +123,14 @@ export const tripsApi = {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       const mut = await enqueueOfflineMutation({
         type: "SUBMIT_PROPOSAL",
-        endpoint: `/trips/${tripId}/requests`,
+        endpoint: ENDPOINTS.PROPOSALS.CREATE,
         method: "POST",
-        payload,
+        payload: {
+          tripId,
+          errandId: payload.errandId || "",
+          type: "REQUESTER_REQUEST",
+          message: payload.notes,
+        },
         descriptionAr: `طلب حجز مساحة بالرحلة #${tripId.slice(0, 6)}`,
       });
       return {
@@ -126,7 +140,13 @@ export const tripsApi = {
       };
     }
 
-    const res = await apiClient.post(`/trips/${tripId}/requests`, payload);
+    const res = await apiClient.post(ENDPOINTS.PROPOSALS.CREATE, {
+      tripId,
+      errandId: payload.errandId,
+      type: "REQUESTER_REQUEST",
+      message: payload.notes,
+    });
     return res.data;
   },
 };
+

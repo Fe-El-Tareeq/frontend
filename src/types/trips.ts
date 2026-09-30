@@ -40,7 +40,13 @@ export interface Trip {
 }
 
 export interface TripFilterParams {
+  originZoneKey?: string;
+  originCity?: string;
+  originNeighborhoodId?: string;
   neighborhoodId?: string;
+  destinationZoneKey?: string;
+  destinationCity?: string;
+  destinationNeighborhoodId?: string;
   destinationKeyword?: string;
   status?: TripStatus;
   departureFrom?: string;
@@ -50,9 +56,16 @@ export interface TripFilterParams {
   take?: number;
 }
 
+export interface TripUserSummary {
+  activeTripsCount?: number;
+  completedTripsCount?: number;
+  totalEarningsNis?: number;
+}
+
 export interface TripListData {
   trips: Trip[];
   pagination: PaginationMeta;
+  summary?: TripUserSummary;
 }
 
 export interface CreateTripRequest {
@@ -76,3 +89,35 @@ export interface UpdateTripRequest {
   maxCapacityUnits?: number;
   notes?: string | null;
 }
+
+export interface TripChecklistItem {
+  id: string;
+  assignmentId: string;
+  errandId: string;
+  categoryId?: string;
+  categoryName?: string;
+  categoryIcon?: string;
+  requesterName?: string;
+  title: string;
+  quantity?: number;
+  size?: string;
+  sizeLabel?: string;
+  weightLabel?: string;
+  isUrgent?: boolean;
+  isPickedUp: boolean;
+  isDelivered: boolean;
+  isCompleted: boolean;
+}
+
+export interface TripChecklistProgress {
+  completed: number;
+  total: number;
+  percentage: number;
+}
+
+export interface TripChecklistData {
+  checklist: TripChecklistItem[];
+  items?: TripChecklistItem[];
+  progress: TripChecklistProgress;
+}
+

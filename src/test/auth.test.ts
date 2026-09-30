@@ -65,7 +65,41 @@ describe("Auth Module & Swagger API Schemas", () => {
     expect(registerRequestSchema.safeParse(validPayload).success).toBe(true);
   });
 
-  // 4. API Endpoint Definitions Check
+  // 4. Change Password & Deactivate Account Request Schemas
+  const changePasswordSchema = z.object({
+    currentPassword: z.string().min(1),
+    newPassword: passwordComplexitySchema,
+    refreshToken: z.string().min(1),
+  });
+
+  it("should validate change password request payload", () => {
+    expect(
+      changePasswordSchema.safeParse({
+        currentPassword: "OldPassword123!",
+        newPassword: "NewPassword123!",
+        refreshToken: "valid-refresh-token",
+      }).success,
+    ).toBe(true);
+  });
+
+  const deactivateAccountSchema = z.object({
+    password: z.string().min(1),
+    reason: z.string().optional(),
+    feedback: z.string().optional(),
+    refreshToken: z.string().min(1),
+  });
+
+  it("should validate account deactivation request payload", () => {
+    expect(
+      deactivateAccountSchema.safeParse({
+        password: "MyPassword123!",
+        reason: "No longer needed",
+        refreshToken: "valid-refresh-token",
+      }).success,
+    ).toBe(true);
+  });
+
+  // 5. API Endpoint Definitions Check
   it("should have all expected Swagger Auth endpoints registered", () => {
     expect(ENDPOINTS.AUTH.REGISTER).toBe("/api/v1/auth/register");
     expect(ENDPOINTS.AUTH.LOGIN).toBe("/api/v1/auth/login");
@@ -75,5 +109,9 @@ describe("Auth Module & Swagger API Schemas", () => {
     expect(ENDPOINTS.AUTH.RESET_PASSWORD).toBe("/api/v1/auth/reset-password");
     expect(ENDPOINTS.AUTH.REFRESH).toBe("/api/v1/auth/refresh");
     expect(ENDPOINTS.AUTH.LOGOUT).toBe("/api/v1/auth/logout");
+    expect(ENDPOINTS.AUTH.CHANGE_PASSWORD).toBe("/api/v1/auth/change-password");
+    expect(ENDPOINTS.USERS.DEACTIVATE).toBe("/api/v1/users/me");
+    expect(ENDPOINTS.ADMIN_AUTH.LOGIN).toBe("/api/v1/admin/auth/login");
+    expect(ENDPOINTS.ADMIN_AUTH.ME).toBe("/api/v1/admin/auth/me");
   });
 });

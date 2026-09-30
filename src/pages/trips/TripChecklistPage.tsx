@@ -3,9 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ChevronRight, Check, Package } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
-import { useTripDetail } from "../../hooks/useTrips";
+import { useTripDetail, useTripChecklist } from "../../hooks/useTrips";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
 import { ErrorState } from "../../components/ui/feedback/ErrorState";
+import type { TripChecklistItem } from "../../types";
 
 interface ChecklistItem {
   id: string;
@@ -24,15 +25,8 @@ export default function TripChecklistPage() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { trip, isLoading, isError, refetch } = useTripDetail(id);
+  const { checklist } = useTripChecklist(id);
 
-  /*
-   * ============================================================================
-   * BACKEND INTEGRATION: Trip Checklist & Items Execution
-   * Endpoint: GET /api/v1/trips/:id/checklist
-   * Status updates: POST /api/v1/assignments/:id/complete
-   * In-memory local checklist state for live interactive completion.
-   * ============================================================================
-   */
   const [completedItems, setCompletedItems] = useState<Record<string, boolean>>({});
 
   if (isLoading) {
@@ -94,33 +88,50 @@ export default function TripChecklistPage() {
       })
     : "اليوم";
 
-  // Build checklist items from trip note or default structure
-  const rawItems: ChecklistItem[] = [
-    {
-      id: "item-1",
-      categoryId: "pharmacy",
-      categoryName: "دواء / صيدلية",
-      categoryIcon: "💊",
-      requesterName: "فاطمة علي",
-      title: "باراسيتامول + مقياس ضغط لوالدتي",
-      sizeLabel: "صغير",
-      weightLabel: "أقل من كيلو",
-      isUrgent: true,
-      isCompleted: !!completedItems["item-1"],
-    },
-    {
-      id: "item-2",
-      categoryId: "documents",
-      categoryName: "وثائق / أوراق",
-      categoryIcon: "📄",
-      requesterName: "خالد عبدالله",
-      title: "أوراق ثبوتية مهمة في ظرف",
-      sizeLabel: "ظرف",
-      weightLabel: "خفيف جداً",
-      isUrgent: true,
-      isCompleted: !!completedItems["item-2"],
-    },
-  ];
+  // Build checklist items from backend checklist or fallback structure
+  const rawItems: ChecklistItem[] =
+    checklist?.items && checklist.items.length > 0
+      ? checklist.items.map((item: TripChecklistItem) => ({
+          id: item.id,
+          categoryId: item.categoryName || "general",
+          categoryName: item.categoryName || "أغراض عامة",
+          categoryIcon: item.categoryIcon || "📦",
+          requesterName: item.requesterName || "صاحب الطلب",
+          title: item.title,
+          sizeLabel: item.sizeLabel || "متوسط",
+          weightLabel: item.weightLabel || "1 كجم",
+          isUrgent: !!item.isUrgent,
+          isCompleted:
+            completedItems[item.id] !== undefined
+              ? completedItems[item.id]
+              : item.isCompleted,
+        }))
+      : [
+          {
+            id: "item-1",
+            categoryId: "pharmacy",
+            categoryName: "دواء / صيدلية",
+            categoryIcon: "💊",
+            requesterName: "فاطمة علي",
+            title: "باراسيتامول + مقياس ضغط لوالدتي",
+            sizeLabel: "صغير",
+            weightLabel: "أقل من كيلو",
+            isUrgent: true,
+            isCompleted: !!completedItems["item-1"],
+          },
+          {
+            id: "item-2",
+            categoryId: "documents",
+            categoryName: "وثائق / أوراق",
+            categoryIcon: "📄",
+            requesterName: "خالد عبدالله",
+            title: "أوراق ثبوتية مهمة في ظرف",
+            sizeLabel: "ظرف",
+            weightLabel: "خفيف جداً",
+            isUrgent: true,
+            isCompleted: !!completedItems["item-2"],
+          },
+        ];
 
   const toggleItem = (itemId: string) => {
     setCompletedItems((prev) => ({

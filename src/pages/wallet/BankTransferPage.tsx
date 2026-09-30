@@ -1,4 +1,4 @@
-import { useState, useRef, type ChangeEvent } from "react";
+import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   ChevronRight,
@@ -10,14 +10,20 @@ import {
   Upload,
   FileCheck,
   X,
+  Loader2,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
+import { usePayments } from "../../hooks/usePayments";
+import { translateApiError } from "../../i18n";
 import type { TokenPackage } from "./BuyTokensPackages";
+import type { PaymentInvoice } from "../../types";
 
 export default function BankTransferPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { createInvoice, uploadReceipt, isCreatingInvoice, isUploadingReceipt } =
+    usePayments();
 
   const pkg: TokenPackage = location.state?.package || {
     id: "pkg-pro",
@@ -29,13 +35,44 @@ export default function BankTransferPage() {
     features: [],
   };
 
+  const [invoice, setInvoice] = useState<PaymentInvoice | null>(
+    location.state?.invoice || null,
+  );
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [showWarning, setShowWarning] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const transferRef = "ORD-1-MT06H0QG";
-  const accountNumber = "PS12 PALS 5678 1234 0000 1234";
+  useEffect(() => {
+    if (!invoice && pkg.id) {
+      createInvoice({
+        packageId: pkg.id,
+        method: "BANK_TRANSFER",
+      })
+        .then((res) => {
+          if (res.data?.invoice) {
+            setInvoice(res.data.invoice);
+          }
+        })
+        .catch((err) => {
+          // If already created or offline, silently ignore
+          console.warn("Could not create bank invoice:", err);
+        });
+    }
+  }, [invoice, pkg.id, createInvoice]);
+
+  const transferRef =
+    invoice?.referenceCode ||
+    (invoice?.id ? `REF-${invoice.id.slice(0, 8).toUpperCase()}` : "ORD-1-MT06H0QG");
+  const accountNumber =
+    invoice?.bankDetails?.accountNumber ||
+    invoice?.bankDetails?.iban ||
+    "PS12 PALS 5678 1234 0000 1234";
+  const beneficiaryName =
+    invoice?.bankDetails?.beneficiaryName || "منصة بطريقك";
+  const bankName =
+    invoice?.bankDetails?.bankName || "البنك الإسلامي الفلسطيني";
 
   const handleCopy = (text: string, field: string) => {
     navigator.clipboard?.writeText(text);
@@ -47,17 +84,41 @@ export default function BankTransferPage() {
     if (e.target.files && e.target.files[0]) {
       setReceiptFile(e.target.files[0]);
       setShowWarning(false);
+      setErrorMessage(null);
     }
   };
 
-  const handleCompleted = () => {
+  const handleCompleted = async () => {
     if (!receiptFile) {
       setShowWarning(true);
       return;
     }
-    navigate("/wallet/payment-success", {
-      state: { package: pkg, method: "BANK" },
-    });
+
+    try {
+      setErrorMessage(null);
+      let targetInvoiceId = invoice?.id;
+      if (!targetInvoiceId) {
+        const invRes = await createInvoice({
+          packageId: pkg.id,
+          method: "BANK_TRANSFER",
+        });
+        targetInvoiceId = invRes.data.invoice.id;
+        setInvoice(invRes.data.invoice);
+      }
+
+      if (targetInvoiceId) {
+        await uploadReceipt({
+          invoiceId: targetInvoiceId,
+          receiptImage: receiptFile,
+        });
+      }
+
+      navigate("/wallet/payment-success", {
+        state: { package: pkg, method: "BANK", invoiceId: targetInvoiceId },
+      });
+    } catch (err: unknown) {
+      setErrorMessage(translateApiError(err));
+    }
   };
 
   return (
@@ -146,7 +207,7 @@ export default function BankTransferPage() {
             <div className="flex items-center justify-between pt-1">
               <span className="text-text-muted">اسم المستفيد</span>
               <span className="font-black text-[#123A68]">
-                منصة بطريقك
+                {beneficiaryName}
               </span>
             </div>
 
@@ -174,7 +235,7 @@ export default function BankTransferPage() {
             <div className="flex items-center justify-between pt-3">
               <span className="text-text-muted">اسم البنك</span>
               <span className="font-black text-[#123A68]">
-                البنك الإسلامي الفلسطيني
+                {bankName}
               </span>
             </div>
 
@@ -272,15 +333,32 @@ export default function BankTransferPage() {
             )}
           </div>
 
+          {errorMessage && (
+            <div className="rounded-2xl bg-red-50 p-3.5 border border-red-200 text-xs font-bold text-red-600 text-right">
+              {errorMessage}
+            </div>
+          )}
+
           {/* Submit Action Button */}
           <div className="pt-2">
             <button
               type="button"
               onClick={handleCompleted}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
+              disabled={isCreatingInvoice || isUploadingReceipt}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
             >
-              <Check className="h-4 w-4 stroke-[3]" />
-              <span>إرسال الإيصال وتأكيد التحويل</span>
+              {isCreatingInvoice || isUploadingReceipt ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Check className="h-4 w-4 stroke-[3]" />
+              )}
+              <span>
+                {isUploadingReceipt
+                  ? "جاري رفع الإيصال..."
+                  : isCreatingInvoice
+                    ? "جاري إنشاء الفاتورة..."
+                    : "إرسال الإيصال وتأكيد التحويل"}
+              </span>
             </button>
           </div>
         </div>

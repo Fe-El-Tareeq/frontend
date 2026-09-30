@@ -92,7 +92,7 @@ describe("Chat & Real-Time Messaging System", () => {
   });
 
   it("should render ChatPage, load messages, and allow sending messages", async () => {
-    vi.mocked(chatApi.getRoomById).mockResolvedValueOnce({
+    vi.mocked(chatApi.getRoomById).mockResolvedValue({
       success: true,
       message: "Room retrieved",
       data: {
@@ -111,7 +111,7 @@ describe("Chat & Real-Time Messaging System", () => {
       },
     } as any);
 
-    vi.mocked(chatApi.getMessages).mockResolvedValueOnce({
+    vi.mocked(chatApi.getMessages).mockResolvedValue({
       success: true,
       message: "Messages retrieved",
       data: {

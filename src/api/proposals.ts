@@ -62,13 +62,13 @@ export const proposalsApi = {
     return res.data;
   },
 
-  rejectProposal: async (id: string, reason?: string, details?: string) => {
+  rejectProposal: async (id: string, rejectionNote?: string) => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       await enqueueOfflineMutation({
         type: "REJECT_PROPOSAL",
         endpoint: ENDPOINTS.PROPOSALS.REJECT(id),
         method: "POST",
-        payload: { reason, details },
+        payload: { rejectionNote },
         descriptionAr: `رفض العرض #${id.slice(0, 6)}`,
       });
       return {
@@ -80,7 +80,7 @@ export const proposalsApi = {
 
     const res = await apiClient.post<
       ApiSuccessResponse<RejectProposalResponseData>
-    >(ENDPOINTS.PROPOSALS.REJECT(id), { reason, details });
+    >(ENDPOINTS.PROPOSALS.REJECT(id), { rejectionNote });
     return res.data;
   },
 
@@ -113,7 +113,7 @@ export const proposalsApi = {
   ) => {
     const res = await apiClient.get<
       ApiSuccessResponse<ProposalListResponseData>
-    >(ENDPOINTS.PROPOSALS.INBOX, { params: { errandId, ...params } });
+    >(ENDPOINTS.PROPOSALS.ERRAND_PROPOSALS(errandId), { params });
     return res.data;
   },
 
@@ -123,7 +123,7 @@ export const proposalsApi = {
   ) => {
     const res = await apiClient.get<
       ApiSuccessResponse<ProposalListResponseData>
-    >(ENDPOINTS.PROPOSALS.SENT, { params: { tripId, ...params } });
+    >(ENDPOINTS.PROPOSALS.TRIP_PROPOSALS(tripId), { params });
     return res.data;
   },
 

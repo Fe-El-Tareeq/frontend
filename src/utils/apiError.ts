@@ -89,3 +89,6 @@ export const getApiFieldErrors = (error: unknown): Record<string, string> => {
 
   return result;
 };
+
+export const translateApiError = getApiErrorMessage;
+

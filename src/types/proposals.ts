@@ -1,14 +1,25 @@
-﻿import type { PaginationMeta } from "./api";
+import type { PaginationMeta } from "./api";
 import type { UserSummary } from "./auth";
 
-export type ProposalStatus = "PENDING" | "ACCEPTED" | "REJECTED" | "CANCELLED" | "EXPIRED";
+export type ProposalType = "TRAVELER_OFFER" | "REQUESTER_REQUEST";
+
+export type ProposalStatus =
+  | "PENDING"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "WITHDRAWN"
+  | "CANCELLED"
+  | "EXPIRED";
 
 export interface Proposal {
   id: string;
   errandId?: string | null;
   tripId?: string | null;
-  proposerId: string;
-  priceNis: number;
+  proposerId?: string;
+  type?: ProposalType;
+  clientRequestKey?: string;
+  message?: string | null;
+  priceNis?: number;
   departureTime?: string | null;
   notes?: string | null;
   audioMemoUrl?: string | null;
@@ -21,7 +32,10 @@ export interface Proposal {
 export interface CreateProposalRequest {
   errandId?: string;
   tripId?: string;
-  priceNis: number;
+  clientRequestKey?: string;
+  type?: ProposalType;
+  message?: string | null;
+  priceNis?: number;
   departureTime?: string;
   notes?: string;
   audioMemoUrl?: string;
@@ -38,7 +52,12 @@ export interface AcceptProposalResponseData {
   assignmentId?: string;
 }
 
+export interface RejectProposalRequest {
+  rejectionNote?: string;
+}
+
 export interface RejectProposalResponseData {
   rejected: boolean;
   proposal: Proposal;
 }
+

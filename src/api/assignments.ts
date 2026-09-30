@@ -46,10 +46,26 @@ export const assignmentsApi = {
     return res.data;
   },
 
-  startDelivery: async (id: string) => {
+  startDelivery: async (id: string, payload?: { estimatedDeliveryAt?: string }) => {
     const res = await apiClient.post<ApiSuccessResponse<{ assignment: Assignment }>>(
       ENDPOINTS.ASSIGNMENTS.START_DELIVERY(id),
-      {},
+      payload || {},
+    );
+    return res.data;
+  },
+
+  updateEstimatedDeliveryTime: async (
+    id: string,
+    payload: { estimatedDeliveryAt?: string | null; estimatedDeliveryTime?: string | null },
+  ) => {
+    const res = await apiClient.patch<ApiSuccessResponse<{ assignment: Assignment }>>(
+      ENDPOINTS.ASSIGNMENTS.ESTIMATED_DELIVERY_TIME(id),
+      {
+        estimatedDeliveryAt:
+          payload.estimatedDeliveryAt !== undefined
+            ? payload.estimatedDeliveryAt
+            : payload.estimatedDeliveryTime ?? null,
+      },
     );
     return res.data;
   },
@@ -70,3 +86,4 @@ export const assignmentsApi = {
     return res.data;
   },
 };
+

@@ -282,7 +282,10 @@ export default function SupportPage() {
           </div>
 
           <div className="divide-y divide-slate-100">
-            {FAQ_LIST.map((faq, idx) => {
+            {(supportConfig?.faqs && supportConfig.faqs.length > 0
+              ? supportConfig.faqs
+              : FAQ_LIST
+            ).map((faq, idx) => {
               const isOpen = expandedFaq === idx;
               return (
                 <div key={idx} className="py-2.5">

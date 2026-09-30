@@ -44,6 +44,7 @@ export interface RegisterRequest {
   phone: string;
   password: string;
   neighborhoodId: string;
+  termsAccepted?: boolean;
 }
 
 export interface RegisterResponseData {
@@ -101,6 +102,14 @@ export interface ResetPasswordRequest {
   newPassword: string;
 }
 
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  confirmNewPassword?: string;
+  confirmPassword?: string;
+  refreshToken: string;
+}
+
 export interface UserProfileUpdateRequest {
   fullName?: string;
   neighborhoodId?: string;
@@ -114,9 +123,18 @@ export interface CancelDeletionRequestOtpRequest {
 export interface CancelDeletionConfirmRequest {
   phone: string;
   otp: string;
+  password?: string;
+}
+
+export interface DeactivateAccountRequest {
+  password?: string;
+  confirmation?: "DELETE";
 }
 
 export interface UserNotificationSettings {
+  newTripsEnabled?: boolean;
+  chatMessagesEnabled?: boolean;
+  requestUpdatesEnabled?: boolean;
   emailNotifications?: boolean;
   pushNotifications?: boolean;
   smsNotifications?: boolean;
@@ -133,5 +151,25 @@ export interface UserSettingsResponseData {
 
 export interface UpdateNotificationSettingsRequest {
   notifications: Partial<UserNotificationSettings>;
+}
+
+export interface AdminLoginRequest {
+  phone: string;
+  password: string;
+}
+
+export interface AdminUserSummary {
+  id: string;
+  phone: string;
+  role: "SUPER_ADMIN";
+}
+
+export interface AdminLoginResponseData {
+  user: AdminUserSummary;
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  accessTokenExpiresIn: string;
+  refreshTokenExpiresIn: string;
 }
 

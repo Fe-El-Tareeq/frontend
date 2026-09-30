@@ -71,3 +71,21 @@ export const useTripDetail = (id: string) => {
     refetch: tripQuery.refetch,
   };
 };
+
+export const useTripChecklist = (id: string) => {
+  const checklistQuery = useQuery({
+    queryKey: [...TRIPS_QUERY_KEY, id, "checklist"],
+    queryFn: () => tripsApi.getChecklist(id),
+    enabled: Boolean(id),
+    select: (res) => res.data,
+  });
+
+  return {
+    checklist: checklistQuery.data,
+    isLoading: checklistQuery.isLoading,
+    isError: checklistQuery.isError,
+    error: checklistQuery.error,
+    refetch: checklistQuery.refetch,
+  };
+};
+

@@ -80,18 +80,23 @@ export interface ChatSendVoiceRequest {
   type: "VOICE";
   voiceNoteUrl: string;
   voiceNoteDurationSec: number;
+  voiceNoteSizeBytes?: number;
+  voiceMimeType?: string;
 }
 
 export interface ChatSendImageRequest {
   clientMessageKey: string;
   type: "IMAGE";
   imageUrl: string;
+  imageSizeBytes?: number;
+  imageMimeType?: string;
 }
 
 export type ChatSendMessageRequest =
   | ChatSendTextRequest
   | ChatSendVoiceRequest
   | ChatSendImageRequest;
+
 
 export interface ChatMessagesPagination {
   order: "desc" | "asc";

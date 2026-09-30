@@ -14,11 +14,17 @@ export const locationsApi = {
     return res.data;
   },
 
-  getNeighborhoods: async (cityKey?: string) => {
+  getNeighborhoods: async (
+    filter?: string | { zoneKey?: string; city?: string },
+  ) => {
+    const params =
+      typeof filter === "string"
+        ? { city: filter }
+        : filter;
     const res = await apiClient.get<ApiSuccessResponse<NeighborhoodListData>>(
       ENDPOINTS.LOCATIONS.NEIGHBORHOODS,
       {
-        params: cityKey ? { city: cityKey } : undefined,
+        params,
       },
     );
     return res.data;
