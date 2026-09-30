@@ -1,6 +1,13 @@
 import type { PaginationMeta } from "./api";
 
-export type InvoiceStatus = "PENDING" | "PAID" | "FAILED" | "EXPIRED";
+export type InvoiceStatus =
+  | "PENDING"
+  | "PENDING_VERIFICATION"
+  | "PAID"
+  | "FAILED"
+  | "EXPIRED";
+
+export type PaymentMethod = "QR" | "OTP" | "BANK_TRANSFER";
 
 export interface PaymentTokenPackage {
   id: string;
@@ -13,6 +20,13 @@ export interface PaymentTokenPackage {
   currency: string;
 }
 
+export interface BankAccountDetails {
+  beneficiaryName: string;
+  accountNumber: string;
+  iban: string;
+  bankName: string;
+}
+
 export interface PaymentInvoice {
   id: string;
   clientRequestKey: string;
@@ -23,7 +37,14 @@ export interface PaymentInvoice {
   amountNis: number;
   currency: string;
   paymentProvider: string;
+  paymentMethod?: PaymentMethod;
   providerInvoiceId?: string | null;
+  referenceCode?: string | null;
+  hasTransferReceipt?: boolean;
+  rejectionNotes?: string | null;
+  reviewedAt?: string | null;
+  paymentPhone?: string | null;
+  otpExpiresAt?: string | null;
   qrCodePayload?: string | null;
   paymentUrl?: string | null;
   status: InvoiceStatus;
@@ -32,6 +53,8 @@ export interface PaymentInvoice {
   paidAt?: string | null;
   failedAt?: string | null;
   tokenPackage?: PaymentTokenPackage;
+  bankAccount?: BankAccountDetails;
+  bankDetails?: BankAccountDetails;
   walletTransaction?: {
     id: string;
     tokenAmount: number;
@@ -40,13 +63,19 @@ export interface PaymentInvoice {
 }
 
 export interface CreateInvoiceRequest {
-  tokenPackageId: string;
-  clientRequestKey: string;
+  tokenPackageId?: string;
+  packageId?: string;
+  clientRequestKey?: string;
+  paymentMethod?: PaymentMethod;
+  method?: PaymentMethod;
+  paymentPhone?: string;
 }
 
 export interface CreateInvoiceResponseData {
   created: boolean;
   invoice: PaymentInvoice;
+  bankAccount?: BankAccountDetails;
+  mockOtp?: string;
 }
 
 export interface InvoicesListData {
@@ -59,3 +88,13 @@ export interface MockPayResponseData {
   reason: string;
   invoice: PaymentInvoice;
 }
+
+export interface VerifyPaymentOtpRequest {
+  otp?: string;
+  otpCode?: string;
+}
+
+export interface RejectBankTransferRequest {
+  notes: string;
+}
+

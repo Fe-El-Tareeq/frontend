@@ -1,6 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { assignmentsApi } from "../api/assignments";
-import type { AssignmentCreateRequest, AssignmentCancelRequest } from "../types";
+import type {
+  AssignmentCreateRequest,
+  AssignmentCancelRequest,
+  StartDeliveryRequest,
+  UpdateEstimatedDeliveryTimeRequest,
+} from "../types";
 
 export const ASSIGNMENT_KEYS = {
   all: ["assignments"] as const,
@@ -37,9 +42,31 @@ export function useAssignments(params?: { skip?: number; take?: number }) {
   });
 
   const startDeliveryMutation = useMutation({
-    mutationFn: (id: string) => assignmentsApi.startDelivery(id),
-    onSuccess: (_, id) => {
+    mutationFn: (vars: { id: string; payload?: StartDeliveryRequest } | string) => {
+      if (typeof vars === "string") {
+        return assignmentsApi.startDelivery(vars);
+      }
+      return assignmentsApi.startDelivery(vars.id, vars.payload);
+    },
+    onSuccess: (_, variables) => {
+      const id = typeof variables === "string" ? variables : variables.id;
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.detail(id) });
+      queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.lists() });
+    },
+  });
+
+  const updateEstimatedDeliveryTimeMutation = useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: UpdateEstimatedDeliveryTimeRequest;
+    }) => assignmentsApi.updateEstimatedDeliveryTime(id, payload),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ASSIGNMENT_KEYS.detail(variables.id),
+      });
       queryClient.invalidateQueries({ queryKey: ASSIGNMENT_KEYS.lists() });
     },
   });
@@ -79,6 +106,10 @@ export function useAssignments(params?: { skip?: number; take?: number }) {
     isPickingUp: pickupMutation.isPending,
     startDelivery: startDeliveryMutation.mutateAsync,
     isStartingDelivery: startDeliveryMutation.isPending,
+    updateEstimatedDeliveryTime:
+      updateEstimatedDeliveryTimeMutation.mutateAsync,
+    isUpdatingEstimatedDeliveryTime:
+      updateEstimatedDeliveryTimeMutation.isPending,
     completeAssignment: completeMutation.mutateAsync,
     isCompleting: completeMutation.isPending,
     cancelAssignment: cancelMutation.mutateAsync,

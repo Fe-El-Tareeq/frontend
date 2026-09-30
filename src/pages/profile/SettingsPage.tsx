@@ -33,9 +33,12 @@ export default function SettingsPage() {
         const res = await authApi.getSettings();
         if (isMounted && res.data?.notifications) {
           const n = res.data.notifications;
-          if (typeof n.tripAlerts === "boolean") setTripNotifications(n.tripAlerts);
-          if (typeof n.chatAlerts === "boolean") setMessageNotifications(n.chatAlerts);
-          if (typeof n.errandAlerts === "boolean") setOrderNotifications(n.errandAlerts);
+          const tripVal = n.newTripsEnabled ?? n.tripAlerts;
+          const chatVal = n.chatMessagesEnabled ?? n.chatAlerts;
+          const reqVal = n.requestUpdatesEnabled ?? n.errandAlerts;
+          if (typeof tripVal === "boolean") setTripNotifications(tripVal);
+          if (typeof chatVal === "boolean") setMessageNotifications(chatVal);
+          if (typeof reqVal === "boolean") setOrderNotifications(reqVal);
         }
       } catch {
         // Fallback to default state if offline or settings endpoint not configured yet
@@ -51,18 +54,23 @@ export default function SettingsPage() {
   }, []);
 
   const handleToggleNotification = async (
-    key: "tripAlerts" | "chatAlerts" | "errandAlerts",
+    key: "trip" | "chat" | "order",
     value: boolean,
   ) => {
-    if (key === "tripAlerts") setTripNotifications(value);
-    if (key === "chatAlerts") setMessageNotifications(value);
-    if (key === "errandAlerts") setOrderNotifications(value);
+    if (key === "trip") setTripNotifications(value);
+    if (key === "chat") setMessageNotifications(value);
+    if (key === "order") setOrderNotifications(value);
 
     try {
+      const payload =
+        key === "trip"
+          ? { newTripsEnabled: value, tripAlerts: value }
+          : key === "chat"
+            ? { chatMessagesEnabled: value, chatAlerts: value }
+            : { requestUpdatesEnabled: value, errandAlerts: value };
+
       await authApi.updateNotificationSettings({
-        notifications: {
-          [key]: value,
-        },
+        notifications: payload,
       });
     } catch {
       // Revert silently on network failure
@@ -125,7 +133,7 @@ export default function SettingsPage() {
                 type="checkbox"
                 checked={tripNotifications}
                 onChange={(e) =>
-                  handleToggleNotification("tripAlerts", e.target.checked)
+                  handleToggleNotification("trip", e.target.checked)
                 }
                 className="sr-only peer"
               />
@@ -149,7 +157,7 @@ export default function SettingsPage() {
                 type="checkbox"
                 checked={messageNotifications}
                 onChange={(e) =>
-                  handleToggleNotification("chatAlerts", e.target.checked)
+                  handleToggleNotification("chat", e.target.checked)
                 }
                 className="sr-only peer"
               />
@@ -173,7 +181,7 @@ export default function SettingsPage() {
                 type="checkbox"
                 checked={orderNotifications}
                 onChange={(e) =>
-                  handleToggleNotification("errandAlerts", e.target.checked)
+                  handleToggleNotification("order", e.target.checked)
                 }
                 className="sr-only peer"
               />

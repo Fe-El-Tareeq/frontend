@@ -108,7 +108,12 @@ export function useProposalsMutations() {
   });
 
   const rejectProposalMutation = useMutation({
-    mutationFn: (id: string) => proposalsApi.rejectProposal(id),
+    mutationFn: (vars: { id: string; rejectionNote?: string } | string) => {
+      if (typeof vars === "string") {
+        return proposalsApi.rejectProposal(vars);
+      }
+      return proposalsApi.rejectProposal(vars.id, vars.rejectionNote);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["proposals"] });
     },

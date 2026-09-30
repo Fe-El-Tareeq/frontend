@@ -21,6 +21,11 @@ import type {
   CancelDeletionConfirmRequest,
   UserSettingsResponseData,
   UpdateNotificationSettingsRequest,
+  ChangePasswordRequest,
+  DeactivateAccountRequest,
+  AdminLoginRequest,
+  AdminLoginResponseData,
+  AdminUserSummary,
 } from "../types";
 
 export const authApi = {
@@ -75,6 +80,14 @@ export const authApi = {
     const res = await apiClient.post<
       ApiSuccessResponse<ForgotPasswordResponseData>
     >(ENDPOINTS.AUTH.FORGOT_PASSWORD, payload);
+    return res.data;
+  },
+
+  changePassword: async (payload: ChangePasswordRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<null>>(
+      ENDPOINTS.AUTH.CHANGE_PASSWORD,
+      payload,
+    );
     return res.data;
   },
 
@@ -173,11 +186,46 @@ export const authApi = {
     return res.data;
   },
 
-  deactivateAccount: async () => {
+  deactivateAccount: async (payload?: DeactivateAccountRequest) => {
     const res = await apiClient.delete<ApiSuccessResponse<null>>(
       ENDPOINTS.USERS.DEACTIVATE,
+      {
+        data: payload || { password: "", confirmation: "DELETE" },
+      },
+    );
+    return res.data;
+  },
+
+  adminLogin: async (payload: AdminLoginRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<AdminLoginResponseData>>(
+      ENDPOINTS.ADMIN_AUTH.LOGIN,
+      payload,
+    );
+    return res.data;
+  },
+
+  adminRefresh: async (payload: RefreshTokenRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<AuthTokens>>(
+      ENDPOINTS.ADMIN_AUTH.REFRESH,
+      payload,
+    );
+    return res.data;
+  },
+
+  adminLogout: async (payload: RefreshTokenRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<null>>(
+      ENDPOINTS.ADMIN_AUTH.LOGOUT,
+      payload,
+    );
+    return res.data;
+  },
+
+  getAdminMe: async () => {
+    const res = await apiClient.get<ApiSuccessResponse<{ user: AdminUserSummary }>>(
+      ENDPOINTS.ADMIN_AUTH.ME,
     );
     return res.data;
   },
 };
+
 

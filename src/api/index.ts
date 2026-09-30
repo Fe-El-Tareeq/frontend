@@ -1,4 +1,4 @@
-﻿export * from "./client";
+export * from "./client";
 export * from "./endpoints";
 export * from "./auth";
 export * from "./locations";
@@ -16,3 +16,4 @@ export * from "./proposals";
 export * from "./notifications";
 export * from "./legal";
 export * from "./support";
+export * from "./admin";

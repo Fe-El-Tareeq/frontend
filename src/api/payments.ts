@@ -9,6 +9,7 @@ import type {
   InvoicesListData,
   MockPayResponseData,
   InvoiceStatus,
+  VerifyPaymentOtpRequest,
 } from "../types";
 
 export const paymentsApi = {
@@ -20,9 +21,19 @@ export const paymentsApi = {
   },
 
   createInvoice: async (payload: CreateInvoiceRequest) => {
+    const body = {
+      tokenPackageId: payload.tokenPackageId || payload.packageId || "",
+      clientRequestKey:
+        payload.clientRequestKey ||
+        (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `req_${Date.now()}`),
+      paymentMethod: payload.paymentMethod || payload.method,
+      paymentPhone: payload.paymentPhone,
+    };
     const res = await apiClient.post<
       ApiSuccessResponse<CreateInvoiceResponseData>
-    >(ENDPOINTS.PAYMENTS.INVOICES, payload);
+    >(ENDPOINTS.PAYMENTS.INVOICES, body);
     return res.data;
   },
 
@@ -51,4 +62,36 @@ export const paymentsApi = {
     >(ENDPOINTS.PAYMENTS.MOCK_PAY(id), {});
     return res.data;
   },
+
+  resendPaymentOtp: async (id: string) => {
+    const res = await apiClient.post<
+      ApiSuccessResponse<{ message: string }>
+    >(ENDPOINTS.PAYMENTS.OTP_RESEND(id), {});
+    return res.data;
+  },
+
+  verifyPaymentOtp: async (
+    id: string,
+    payload: VerifyPaymentOtpRequest | { otp: string; otpCode?: string },
+  ) => {
+    const otp = payload.otp || payload.otpCode || "";
+    const res = await apiClient.post<
+      ApiSuccessResponse<{ success: boolean; invoice: PaymentInvoice }>
+    >(ENDPOINTS.PAYMENTS.OTP_VERIFY(id), { otp });
+    return res.data;
+  },
+
+  uploadReceipt: async (id: string, file: File) => {
+    const formData = new FormData();
+    formData.append("receipt", file);
+    const res = await apiClient.post<
+      ApiSuccessResponse<{ success: boolean; invoice: PaymentInvoice }>
+    >(ENDPOINTS.PAYMENTS.RECEIPT(id), formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  },
 };
+

@@ -149,13 +149,24 @@ export default function ReportIssuePage() {
 
     try {
       setIsSubmitting(true);
+      const reportTypeMap: Record<string, "SAFETY" | "FRAUD" | "INAPPROPRIATE_BEHAVIOR" | "ITEM_MISMATCH" | "OTHER"> = {
+        fraud: "FRAUD",
+        prohibited_item: "SAFETY",
+        abuse: "INAPPROPRIATE_BEHAVIOR",
+        fake_account: "FRAUD",
+        punctuality: "OTHER",
+        damaged_item: "ITEM_MISMATCH",
+        tech_issue: "OTHER",
+        other: "OTHER",
+      };
+
+      const type = reportTypeMap[selectedCategoryId] || "OTHER";
+
       const res = await supportApi.createReport({
-        targetType: selectedUser ? "USER" : "OTHER",
-        targetId: selectedUser || "GENERAL",
+        type,
         reason: selectedCategory.title,
-        description: attachChatLogs
-          ? `${description}\n[مرفق سجل المحادثات ذو الصلة]`
-          : description,
+        details: description,
+        attachChatHistory: attachChatLogs,
       });
 
       if (res.data?.report?.id) {

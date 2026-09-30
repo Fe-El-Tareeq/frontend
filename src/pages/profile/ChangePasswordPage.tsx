@@ -3,9 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { ChangePasswordSuccessModal } from "../../components/modals/ChangePasswordSuccessModal";
+import { useAuth } from "../../hooks/useAuth";
+import { useAuthStore } from "../../store/useAuthStore";
+import { translateApiError } from "../../i18n";
 
 export default function ChangePasswordPage() {
   const navigate = useNavigate();
+  const { changePassword, isChangingPassword } = useAuth();
+  const refreshToken = useAuthStore((state) => state.refreshToken);
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -16,10 +21,9 @@ export default function ChangePasswordPage() {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -33,11 +37,17 @@ export default function ChangePasswordPage() {
       return;
     }
 
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await changePassword({
+        currentPassword,
+        newPassword,
+        confirmPassword,
+        refreshToken: refreshToken || "",
+      });
       setShowSuccessModal(true);
-    }, 600);
+    } catch (err: unknown) {
+      setError(translateApiError(err));
+    }
   };
 
   return (
@@ -155,10 +165,10 @@ export default function ChangePasswordPage() {
             {/* Submit Button (Deep Navy matching Figma) */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isChangingPassword}
               className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
             >
-              {isSubmitting ? "جاري الحفظ..." : "حفظ"}
+              {isChangingPassword ? "جاري الحفظ..." : "حفظ"}
             </button>
           </form>
         </div>

@@ -56,6 +56,14 @@ export interface AssignmentCancelRequest {
   cancellationReason?: string;
 }
 
+export interface StartDeliveryRequest {
+  estimatedDeliveryAt?: string;
+}
+
+export interface UpdateEstimatedDeliveryTimeRequest {
+  estimatedDeliveryAt: string | null;
+}
+
 export interface RatingPrompt {
   required: boolean;
   assignmentId: string;
@@ -67,3 +75,4 @@ export interface CompleteAssignmentResponseData {
   assignment: Assignment;
   ratingPrompt?: RatingPrompt;
 }
+

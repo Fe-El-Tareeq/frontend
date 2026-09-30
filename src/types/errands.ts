@@ -279,10 +279,61 @@ export interface ErrandListData {
 }
 
 export interface ErrandFilterParams {
+  originZoneKey?: string;
+  destinationZoneKey?: string;
+  originCity?: string;
+  destinationCity?: string;
+  originNeighborhoodId?: string;
+  destinationNeighborhoodId?: string;
   neighborhoodId?: string;
-  status?: ErrandStatus;
   categoryId?: string;
+  status?: ErrandStatus;
   urgent?: boolean;
+  mine?: boolean;
   skip?: number;
   take?: number;
 }
+
+export interface ErrandCancelRequest {
+  cancellationReason: string;
+}
+
+export type ErrandTrackingStageType =
+  | "PUBLISHED"
+  | "ACCEPTED"
+  | "IN_TRANSIT"
+  | "DELIVERED";
+
+export interface ErrandTrackingStage {
+  stage: ErrandTrackingStageType;
+  completed: boolean;
+  reachedAt?: string | null;
+}
+
+export interface ErrandTrackingTraveler {
+  id: string;
+  fullName: string | null;
+  trustScore?: number;
+  profileImageUrl?: string | null;
+  isVerified?: boolean;
+  acceptanceMessage?: string | null;
+}
+
+export interface ErrandTrackingData {
+  currentStage: ErrandTrackingStageType;
+  stageNumber?: number;
+  progressPercentage: number;
+  stages: ErrandTrackingStage[];
+  cancellation?: {
+    cancelledAt: string;
+    cancellationReason?: string | null;
+    cancelledByUserId?: string | null;
+  } | null;
+  estimatedDeliveryAt?: string | null;
+  traveler?: ErrandTrackingTraveler | null;
+}
+
+export interface ErrandTrackingResponseData {
+  tracking: ErrandTrackingData;
+}
+

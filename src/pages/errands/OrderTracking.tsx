@@ -13,26 +13,14 @@ import {
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { CancelErrandModal } from "../../components/modals/CancelErrandModal";
-import { useErrandDetail, useErrands } from "../../hooks/useErrands";
+import { useErrandDetail, useErrands, useErrandTracking } from "../../hooks/useErrands";
 
 export default function OrderTracking() {
   const { id = "errand-1" } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { cancelErrand, isCancelling } = useErrands();
-
-  /*
-   * ============================================================================
-   * BACKEND INTEGRATION: Order Lifecycle & Assignment Tracking
-   * Endpoints:
-   *   - GET /api/v1/assignments/:id (or GET /api/v1/errands/:id)
-   *   - POST /api/v1/assignments/:id/pickup
-   *   - POST /api/v1/assignments/:id/start-delivery
-   *   - POST /api/v1/assignments/:id/complete (triggers rating prompt)
-   *   - POST /api/v1/assignments/:id/cancel
-   * Displays live lifecycle progress and traveler assignment data dynamically.
-   * ============================================================================
-   */
   const { errand } = useErrandDetail(id);
+  const { tracking } = useErrandTracking(id);
 
   const [rating, setRating] = useState<number>(0);
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -76,14 +64,27 @@ export default function OrderTracking() {
             </div>
           </div>
 
-          {/* Progress Bar (67% - Step 3 of 4) */}
+          {/* Progress Bar */}
           <div className="space-y-1.5 pt-2 border-t border-white/10 text-xs">
             <div className="flex items-center justify-between text-[11px] text-white/90">
-              <span className="font-bold">المرحلة 3 من 4</span>
-              <span>تقدم الطلب 67%</span>
+              <span className="font-bold">
+                {tracking?.stageNumber
+                  ? `المرحلة ${tracking.stageNumber} من 4`
+                  : "المرحلة 3 من 4"}
+              </span>
+              <span>
+                {tracking?.stageNumber
+                  ? `تقدم الطلب ${Math.round((tracking.stageNumber / 4) * 100)}%`
+                  : "تقدم الطلب 67%"}
+              </span>
             </div>
             <div className="h-2 w-full bg-white/20 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-amber-400 to-[#F36F21] rounded-full w-2/3 transition-all duration-500" />
+              <div
+                className="h-full bg-gradient-to-r from-amber-400 to-[#F36F21] rounded-full transition-all duration-500"
+                style={{
+                  width: `${tracking?.stageNumber ? (tracking.stageNumber / 4) * 100 : 67}%`,
+                }}
+              />
             </div>
           </div>
         </div>
