@@ -137,7 +137,7 @@ export default function RatingPage() {
       }}
       showBottomNav={false}
     >
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto space-y-5 pb-12 text-right">
+      <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto space-y-5 pb-12 text-right">
         {/* Traveler Profile Header */}
         <Card variant="elevated">
           <div className="text-center">
@@ -146,10 +146,10 @@ export default function RatingPage() {
                 ? errand.requester.fullName.slice(0, 1)
                 : "م"}
             </div>
-            <h3 className="text-[17px] font-bold text-primary">
+            <h3 className="text-[17px] font-bold text-primary dark:text-white">
               {errand?.requester?.fullName || "المسافر المسجل"}
             </h3>
-            <p className="text-[12px] text-text-secondary">
+            <p className="text-[12px] text-text-secondary dark:text-slate-400">
               قام بتوصيل أغراضك بنجاح
             </p>
 

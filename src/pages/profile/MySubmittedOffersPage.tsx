@@ -90,20 +90,20 @@ export default function MySubmittedOffersPage() {
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Top Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+              className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
             <div className="text-right">
-              <h1 className="text-xl font-black text-[#123A68]">عروضي المقدّمة</h1>
-              <p className="text-xs text-text-secondary mt-0.5">
+              <h1 className="text-xl font-black text-[#123A68] dark:text-white">عروضي المقدّمة</h1>
+              <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
                 العروض التي قدّمتها على طلبات المستخدمين
               </p>
             </div>
@@ -112,7 +112,7 @@ export default function MySubmittedOffersPage() {
           <button
             type="button"
             onClick={() => navigate("/errands")}
-            className="flex items-center gap-1 text-xs font-bold text-[#123A68] hover:text-accent transition-colors"
+            className="flex items-center gap-1 text-xs font-bold text-[#123A68] dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors"
           >
             <Search className="h-4 w-4" />
             <span>تصفح الطلبات</span>
@@ -206,7 +206,7 @@ export default function MySubmittedOffersPage() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-28 rounded-3xl bg-slate-100 animate-pulse"
+                className="h-28 rounded-3xl bg-slate-100 dark:bg-[#102A4C] animate-pulse"
               />
             ))}
           </div>

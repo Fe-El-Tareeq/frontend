@@ -57,7 +57,7 @@ export const Header: FC<HeaderProps> = ({
       >
         {/* If simple back mode is enabled */}
         {showBack ? (
-          <div className="flex w-full items-center justify-between">
+          <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -81,7 +81,7 @@ export const Header: FC<HeaderProps> = ({
             </div>
 
             {title && (
-              <h1 className="text-base md:text-lg font-extrabold text-primary dark:text-white truncate max-w-[200px] sm:max-w-md">
+              <h1 className="text-base md:text-lg font-extrabold text-primary dark:text-white truncate max-w-50 sm:max-w-md">
                 {title}
               </h1>
             )}
@@ -103,7 +103,7 @@ export const Header: FC<HeaderProps> = ({
           </div>
         ) : (
           /* Standard Authenticated App Header Matching Figma */
-          <div className="flex w-full items-center justify-between">
+          <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
             {/* Right Group: Menu, Home Link & Location Button */}
             <div className="flex items-center gap-2">
               <button

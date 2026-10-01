@@ -82,14 +82,14 @@ export default function EditProfile() {
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="w-full max-w-2xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+      <div className="w-full max-w-3xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
         <div className="flex items-center justify-between">
           <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68]">
+            <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">
               تعديل الملف الشخصي
             </h1>
-            <p className="text-xs text-text-secondary mt-0.5">
+            <p className="text-xs md:text-sm text-text-secondary dark:text-slate-400 mt-0.5">
               تحديث الاسم والحي السكني النشط
             </p>
           </div>
@@ -97,7 +97,7 @@ export default function EditProfile() {
             type="button"
             onClick={() => navigate(-1)}
             aria-label="الرجوع للخلف"
-            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -105,13 +105,13 @@ export default function EditProfile() {
 
         {/* Feedback alerts */}
         {successMessage && (
-          <div className="rounded-2xl bg-emerald-50 p-3.5 border border-emerald-200 text-xs font-bold text-emerald-800 text-right">
+          <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 p-3.5 border border-emerald-200 dark:border-emerald-800/40 text-xs md:text-sm font-bold text-emerald-800 dark:text-emerald-300 text-right">
             تم حفظ التعديلات بنجاح!
           </div>
         )}
 
         {errorMessage && (
-          <div className="rounded-2xl bg-rose-50 p-3.5 border border-rose-200 text-xs font-bold text-rose-800 text-right">
+          <div className="rounded-2xl bg-rose-50 dark:bg-rose-950/40 p-3.5 border border-rose-200 dark:border-rose-800/40 text-xs md:text-sm font-bold text-rose-800 dark:text-rose-300 text-right">
             {errorMessage}
           </div>
         )}

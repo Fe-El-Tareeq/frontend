@@ -129,7 +129,7 @@ export default function RequestSpacePage() {
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="w-full max-w-2xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+      <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Top Header */}
         <div className="flex items-center gap-2">
           <button

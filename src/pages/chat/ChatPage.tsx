@@ -166,7 +166,7 @@ export default function ChatPage() {
 
   return (
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] flex flex-col h-screen max-h-screen text-right">
-      <div className="w-full max-w-4xl mx-auto flex flex-col flex-1 h-full overflow-hidden bg-white dark:bg-[#0B1E36] shadow-xs md:border-x md:border-border/60 dark:md:border-white/10">
+      <div className="w-full max-w-5xl mx-auto flex flex-col flex-1 h-full overflow-hidden bg-white dark:bg-[#0B1E36] shadow-xs md:border-x md:border-border/60 dark:md:border-white/10">
         {/* Top Chat Header */}
         <header className="flex items-center justify-between border-b border-border dark:border-white/10 bg-white dark:bg-[#102A4C] px-4 md:px-6 py-3 shadow-2xs z-10 shrink-0">
           {/* Peer Info & Back Button on RIGHT */}

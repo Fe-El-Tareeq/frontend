@@ -378,7 +378,7 @@ export default function ErrandDetail() {
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-28 lg:pb-12 text-right">
       <Header />
 
-      <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+      <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         <ErrandDetailNavHeader
           onBack={() => navigate("/errands")}
           isOwner={isOwner}

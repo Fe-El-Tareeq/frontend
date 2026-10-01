@@ -30,7 +30,7 @@ export default function PaymentSuccessPage() {
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="w-full max-w-2xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+      <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
         <div className="text-center">
           <h1 className="text-xl font-black text-[#123A68] dark:text-white">إتمام الدفع</h1>

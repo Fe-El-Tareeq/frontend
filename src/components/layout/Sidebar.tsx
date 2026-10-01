@@ -246,7 +246,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
               <button
                 type="button"
                 onClick={handleInstallApp}
-                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-[#F36F21] to-[#E05E12] text-white shadow-md hover:opacity-95 active:scale-98 transition-all mt-3 cursor-pointer text-right"
+                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-linear-to-r from-[#F36F21] to-[#E05E12] text-white shadow-md hover:opacity-95 active:scale-98 transition-all mt-3 cursor-pointer text-right"
               >
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 text-white">
