@@ -29,7 +29,7 @@ export function IdCardModal({
     >
       <div
         className={cn(
-          "relative w-full max-w-sm rounded-[28px] bg-white p-7 text-center shadow-xl space-y-4",
+          "relative w-full max-w-sm rounded-[28px] bg-white dark:bg-[#102A4C] border border-transparent dark:border-white/10 p-7 text-center shadow-xl space-y-4",
           className
         )}
         dir="rtl"
@@ -39,22 +39,22 @@ export function IdCardModal({
           type="button"
           onClick={onClose}
           aria-label="إغلاق"
-          className="absolute left-4 top-4 rounded-full p-1.5 text-text-muted hover:bg-slate-100 hover:text-text-primary transition-colors cursor-pointer"
+          className="absolute left-4 top-4 rounded-full p-1.5 text-text-muted dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-text-primary dark:hover:text-white transition-colors cursor-pointer"
         >
           <X className="h-5 w-5" />
         </button>
 
         {/* Icon / Illustration */}
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#EBF3FC]">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#123A68] text-white shadow-xs">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#EBF3FC] dark:bg-white/5">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-white shadow-xs">
             <UserCheck className="h-6 w-6 stroke-[2.5]" />
           </div>
         </div>
 
         {/* Text */}
         <div className="space-y-1.5 text-center">
-          <h3 className="text-xl font-black text-[#123A68]">{title}</h3>
-          <p className="text-xs text-text-secondary leading-relaxed max-w-[270px] mx-auto">
+          <h3 className="text-xl font-black text-[#123A68] dark:text-white">{title}</h3>
+          <p className="text-xs text-text-secondary dark:text-slate-300 leading-relaxed max-w-67.5 mx-auto">
             {subtitle}
           </p>
         </div>
@@ -67,7 +67,7 @@ export function IdCardModal({
               onClose();
               navigate("/login");
             }}
-            className="flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white shadow-md active:scale-98 transition-all hover:bg-[#0D2C50] cursor-pointer"
+            className="flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white shadow-md active:scale-98 transition-all hover:bg-[#0D2C50] dark:hover:bg-[#123A68] cursor-pointer"
           >
             تسجيل الدخول
           </button>
@@ -89,7 +89,7 @@ export function IdCardModal({
               onClose();
               navigate("/home");
             }}
-            className="w-full py-1.5 text-xs font-bold text-text-secondary hover:text-primary transition-colors cursor-pointer"
+            className="w-full py-1.5 text-xs font-bold text-text-secondary dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors cursor-pointer"
           >
             الرئيسية
           </button>

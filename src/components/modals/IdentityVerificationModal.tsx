@@ -152,7 +152,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
       />
 
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs text-right">
-        <div className="w-full max-w-sm rounded-3xl bg-[#F8FAFC] shadow-2xl p-5 border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="w-full max-w-sm rounded-3xl bg-[#F8FAFC] dark:bg-[#102A4C] shadow-2xl p-5 border border-slate-200 dark:border-white/10 space-y-4 max-h-[90vh] overflow-y-auto">
           {/* Header (steps 1, 2, 3) */}
           {step !== 4 && (
             <div className="flex items-center justify-between">
@@ -160,24 +160,24 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                 type="button"
                 onClick={onClose}
                 aria-label="إغلاق"
-                className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
 
               <div className="flex items-center gap-3">
                 <div className="text-right">
-                  <h3 className="text-sm font-black text-[#123A68]">
+                  <h3 className="text-sm font-black text-[#123A68] dark:text-white">
                     التحقق من الهوية
                   </h3>
-                  <span className="text-[10px] text-text-muted block">
+                  <span className="text-[10px] text-text-muted dark:text-slate-400 block">
                     {step === 1 && "الخطوة 1 من 3 — بطاقة الهوية"}
                     {step === 2 && "الخطوة 2 من 3 — صورة شخصية مع الهوية"}
                     {step === 3 && "الخطوة 3 من 3 — مراجعة وتأكيد المستندات"}
                   </span>
                 </div>
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[#123A68] border border-blue-100 shadow-xs">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-[#123A68] dark:text-blue-300 border border-blue-100 dark:border-blue-900/40 shadow-xs">
                   <Shield className="h-5 w-5" />
                 </div>
               </div>
@@ -212,19 +212,16 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <div
-                  className={`h-1.5 rounded-full ${
-                    step >= 1 ? "bg-[#F36F21]" : "bg-slate-200"
-                  }`}
+                  className={`h-1.5 rounded-full ${step >= 1 ? "bg-[#F36F21]" : "bg-slate-200"
+                    }`}
                 />
                 <div
-                  className={`h-1.5 rounded-full ${
-                    step >= 2 ? "bg-[#F36F21]" : "bg-slate-200"
-                  }`}
+                  className={`h-1.5 rounded-full ${step >= 2 ? "bg-[#F36F21]" : "bg-slate-200"
+                    }`}
                 />
                 <div
-                  className={`h-1.5 rounded-full ${
-                    step >= 3 ? "bg-[#F36F21]" : "bg-slate-200"
-                  }`}
+                  className={`h-1.5 rounded-full ${step >= 3 ? "bg-[#F36F21]" : "bg-slate-200"
+                    }`}
                 />
               </div>
             </div>
@@ -254,12 +251,12 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
               </div>
 
               {/* 1. Front Side */}
-              <div className="rounded-2xl bg-white p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
+              <div className="rounded-2xl bg-white dark:bg-[#0B1E36] p-4 border border-slate-200/90 dark:border-white/10 shadow-2xs space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-600">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 dark:bg-[#132F54] text-[10px] font-bold text-slate-600 dark:text-slate-300">
                     1
                   </span>
-                  <span className="text-xs font-black text-[#123A68]">
+                  <span className="text-xs font-black text-[#123A68] dark:text-white">
                     بطاقة الهوية — الوجه الأمامي *
                   </span>
                 </div>
@@ -301,21 +298,21 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                     <button
                       type="button"
                       onClick={() => frontInputRef.current?.click()}
-                      className="flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-dashed border-slate-300 hover:border-slate-400 bg-[#F8FAFC] text-center transition-all cursor-pointer space-y-1.5"
+                      className="flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-white/20 hover:border-slate-400 dark:hover:border-white/30 bg-[#F8FAFC] dark:bg-[#0B1E36] text-center transition-all cursor-pointer space-y-1.5"
                     >
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-[#132F54] text-slate-500 dark:text-slate-300">
                         <User className="h-4 w-4" />
                       </div>
-                      <span className="text-xs font-bold text-slate-700">
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
                         اختيار ملف
                       </span>
-                      <span className="text-[9.5px] text-text-muted">
+                      <span className="text-[9.5px] text-text-muted dark:text-slate-400">
                         PNG أو JPG
                       </span>
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40">
                     <button
                       type="button"
                       onClick={() => setFrontImage(null)}
@@ -324,7 +321,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                       حذف
                     </button>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-emerald-800 truncate max-w-[150px]">
+                      <span className="text-xs font-bold text-emerald-800 truncate max-w-37.5">
                         {frontImage.name}
                       </span>
                       <FileCheck className="h-4 w-4 text-emerald-600" />
@@ -334,12 +331,12 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
               </div>
 
               {/* 2. Back Side */}
-              <div className="rounded-2xl bg-white p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
+              <div className="rounded-2xl bg-white dark:bg-[#0B1E36] p-4 border border-slate-200/90 dark:border-white/10 shadow-2xs space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-600">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 dark:bg-[#132F54] text-[10px] font-bold text-slate-600 dark:text-slate-300">
                     2
                   </span>
-                  <span className="text-xs font-black text-[#123A68]">
+                  <span className="text-xs font-black text-[#123A68] dark:text-white">
                     بطاقة الهوية — الوجه الخلفي *
                   </span>
                 </div>
@@ -381,21 +378,21 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                     <button
                       type="button"
                       onClick={() => backInputRef.current?.click()}
-                      className="flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-dashed border-slate-300 hover:border-slate-400 bg-[#F8FAFC] text-center transition-all cursor-pointer space-y-1.5"
+                      className="flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-white/20 hover:border-slate-400 dark:hover:border-white/30 bg-[#F8FAFC] dark:bg-[#0B1E36] text-center transition-all cursor-pointer space-y-1.5"
                     >
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-[#132F54] text-slate-500 dark:text-slate-300">
                         <FileText className="h-4 w-4" />
                       </div>
-                      <span className="text-xs font-bold text-slate-700">
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
                         اختيار ملف
                       </span>
-                      <span className="text-[9.5px] text-text-muted">
+                      <span className="text-[9.5px] text-text-muted dark:text-slate-400">
                         PNG أو JPG
                       </span>
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40">
                     <button
                       type="button"
                       onClick={() => setBackImage(null)}
@@ -404,7 +401,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                       حذف
                     </button>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-emerald-800 truncate max-w-[150px]">
+                      <span className="text-xs font-bold text-emerald-800 truncate max-w-37.5">
                         {backImage.name}
                       </span>
                       <FileCheck className="h-4 w-4 text-emerald-600" />
@@ -446,7 +443,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
               </div>
 
               {/* Upload Box for Selfie with ID */}
-              <div className="rounded-2xl bg-white p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
+              <div className="rounded-2xl bg-white dark:bg-[#0B1E36] p-4 border border-slate-200/90 dark:border-white/10 shadow-2xs space-y-2.5">
                 <input
                   ref={holdingIdInputRef}
                   type="file"
@@ -473,10 +470,10 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#123A68] text-white shadow-md">
                         <Camera className="h-6 w-6" />
                       </div>
-                      <span className="text-xs font-black text-[#123A68]">
+                      <span className="text-xs font-black text-[#123A68] dark:text-white">
                         التقاط سيلفي بالكاميرا الآن
                       </span>
-                      <span className="text-[10px] text-text-muted">
+                      <span className="text-[10px] text-text-muted dark:text-slate-400">
                         مع توجيه وإطار مخصص للوجه والهوية
                       </span>
                     </button>
@@ -484,13 +481,13 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                     <button
                       type="button"
                       onClick={() => holdingIdInputRef.current?.click()}
-                      className="w-full py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors text-center cursor-pointer"
+                      className="w-full py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 transition-colors text-center cursor-pointer"
                     >
                       أو اختيار صورة من الجهاز
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
                     <button
                       type="button"
                       onClick={() => setHoldingIdImage(null)}
@@ -499,10 +496,10 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                       حذف
                     </button>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-emerald-800 truncate max-w-[170px]">
+                      <span className="text-xs font-bold text-emerald-800 dark:text-emerald-200 truncate max-w-42.5">
                         {holdingIdImage.name}
                       </span>
-                      <FileCheck className="h-5 w-5 text-emerald-600" />
+                      <FileCheck className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                     </div>
                   </div>
                 )}
@@ -514,7 +511,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                   type="button"
                   disabled={!holdingIdImage}
                   onClick={() => setStep(3)}
-                  className="flex-1 flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 disabled:opacity-50 transition-all cursor-pointer shadow-md"
+                  className="flex-1 flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white hover:bg-[#0D2C50] dark:hover:bg-[#123A68] active:scale-98 disabled:opacity-50 transition-all cursor-pointer shadow-md"
                 >
                   <span>مراجعة المستندات</span>
                   <ArrowLeft className="h-4 w-4" />
@@ -523,7 +520,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="px-4 h-12 flex items-center justify-center rounded-2xl border border-slate-200 bg-white text-xs font-black text-slate-600 hover:bg-slate-50 transition-all cursor-pointer"
+                  className="px-4 h-12 flex items-center justify-center rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#132F54] text-xs font-black text-slate-600 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/10 transition-all cursor-pointer"
                 >
                   رجوع
                 </button>
@@ -537,10 +534,10 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
           {step === 3 && (
             <div className="space-y-3.5 text-right">
               <div className="text-right space-y-0.5">
-                <h4 className="text-sm font-black text-[#123A68]">
+                <h4 className="text-sm font-black text-[#123A68] dark:text-white">
                   مراجعة المستندات الثلاثة قبل الإرسال
                 </h4>
-                <p className="text-[11px] text-text-muted">
+                <p className="text-[11px] text-text-muted dark:text-slate-400">
                   تأكد من إرفاق جميع الصور المطلوبة بشكل واضح وصحيح
                 </p>
               </div>
@@ -548,63 +545,63 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
               {/* Summary List of 3 Documents */}
               <div className="space-y-2">
                 {/* Doc 1 */}
-                <div className="flex items-center justify-between p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
-                  <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-black">
-                    <Check className="h-4 w-4 stroke-[3]" />
+                <div className="flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-[#0B1E36] border border-slate-200/90 dark:border-white/10 shadow-2xs">
+                  <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-black">
+                    <Check className="h-4 w-4 stroke-3" />
                     <span>تم الإرفاق</span>
                   </div>
                   <div className="flex items-center gap-2.5">
                     <div className="text-right">
-                      <span className="text-xs font-bold text-[#123A68] block">
+                      <span className="text-xs font-bold text-[#123A68] dark:text-white block">
                         1. بطاقة الهوية — الوجه الأمامي
                       </span>
-                      <span className="text-[10px] text-text-muted block truncate max-w-[160px]">
+                      <span className="text-[10px] text-text-muted dark:text-slate-400 block truncate max-w-40">
                         {frontImage?.name || "front_id.jpg"}
                       </span>
                     </div>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-[#123A68]">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-[#123A68] dark:text-blue-300">
                       <FileCheck className="h-4 w-4" />
                     </div>
                   </div>
                 </div>
 
                 {/* Doc 2 */}
-                <div className="flex items-center justify-between p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
-                  <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-black">
-                    <Check className="h-4 w-4 stroke-[3]" />
+                <div className="flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-[#0B1E36] border border-slate-200/90 dark:border-white/10 shadow-2xs">
+                  <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-black">
+                    <Check className="h-4 w-4 stroke-3" />
                     <span>تم الإرفاق</span>
                   </div>
                   <div className="flex items-center gap-2.5">
                     <div className="text-right">
-                      <span className="text-xs font-bold text-[#123A68] block">
+                      <span className="text-xs font-bold text-[#123A68] dark:text-white block">
                         2. بطاقة الهوية — الوجه الخلفي
                       </span>
-                      <span className="text-[10px] text-text-muted block truncate max-w-[160px]">
+                      <span className="text-[10px] text-text-muted dark:text-slate-400 block truncate max-w-40">
                         {backImage?.name || "back_id.jpg"}
                       </span>
                     </div>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-[#123A68]">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-[#123A68] dark:text-blue-300">
                       <FileCheck className="h-4 w-4" />
                     </div>
                   </div>
                 </div>
 
                 {/* Doc 3 */}
-                <div className="flex items-center justify-between p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
-                  <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-black">
-                    <Check className="h-4 w-4 stroke-[3]" />
+                <div className="flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-[#0B1E36] border border-slate-200/90 dark:border-white/10 shadow-2xs">
+                  <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-black">
+                    <Check className="h-4 w-4 stroke-3" />
                     <span>تم الإرفاق</span>
                   </div>
                   <div className="flex items-center gap-2.5">
                     <div className="text-right">
-                      <span className="text-xs font-bold text-[#123A68] block">
+                      <span className="text-xs font-bold text-[#123A68] dark:text-white block">
                         3. صورة سيلفي ممسكاً بالهوية
                       </span>
-                      <span className="text-[10px] text-text-muted block truncate max-w-[160px]">
+                      <span className="text-[10px] text-text-muted dark:text-slate-400 block truncate max-w-40">
                         {holdingIdImage?.name || "selfie_with_id.jpg"}
                       </span>
                     </div>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-[#123A68]">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-[#123A68] dark:text-blue-300">
                       <FileCheck className="h-4 w-4" />
                     </div>
                   </div>
@@ -612,7 +609,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
               </div>
 
               {/* Notice Alert */}
-              <div className="rounded-2xl bg-blue-50/70 p-3 text-[11px] text-[#123A68] border border-blue-200/70 font-bold leading-relaxed">
+              <div className="rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 p-3 text-[11px] text-[#123A68] dark:text-blue-200 border border-blue-200/70 dark:border-blue-800/40 font-bold leading-relaxed">
                 ℹ️ سيقوم فريق إدارة منصة بطريقك بمراجعة المستندات بدقة والتحقق من
                 الهوية خلال 24 ساعة.
               </div>
@@ -625,7 +622,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                   onClick={handleSubmitAll}
                   className="flex-1 flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#059669] text-xs font-black text-white hover:bg-emerald-700 active:scale-98 disabled:opacity-50 transition-all cursor-pointer shadow-md"
                 >
-                  <Check className="h-4 w-4 stroke-[3]" />
+                  <Check className="h-4 w-4 stroke-3" />
                   <span>
                     {isSubmitting ? "جاري الإرسال..." : "إرسال المستندات للتحقق"}
                   </span>
@@ -634,7 +631,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="px-4 h-12 flex items-center justify-center rounded-2xl border border-slate-200 bg-white text-xs font-black text-slate-600 hover:bg-slate-50 transition-all cursor-pointer"
+                  className="px-4 h-12 flex items-center justify-center rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#132F54] text-xs font-black text-slate-600 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/10 transition-all cursor-pointer"
                 >
                   رجوع
                 </button>
@@ -648,28 +645,28 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
           {step === 4 && (
             <div className="space-y-4 py-2 text-center">
               {/* Big Green Success Badge */}
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100 shadow-md">
+              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/50 shadow-md">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#10B981] text-white shadow-lg">
-                  <Check className="h-8 w-8 stroke-[3]" />
+                  <Check className="h-8 w-8 stroke-3" />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <h3 className="text-xl font-black text-[#123A68] flex items-center justify-center gap-1.5">
+                <h3 className="text-xl font-black text-[#123A68] dark:text-white flex items-center justify-center gap-1.5">
                   <span>تم استلام مستندات التحقق!</span>
                   <Sparkles className="h-5 w-5 text-[#F36F21]" />
                 </h3>
-                <p className="text-xs text-text-secondary leading-relaxed px-2">
+                <p className="text-xs text-text-secondary dark:text-slate-300 leading-relaxed px-2">
                   يقوم فريق منصة بطريقك بمراجعة المستندات وتدقيقها. سيتم إشعارك فور
                   اعتماد توثيق الحساب خلال 24–48 ساعة.
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-emerald-50 p-3.5 border border-emerald-200 text-xs font-bold text-emerald-900 text-right space-y-1">
-                <span className="block font-black text-emerald-800">
+              <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 p-3.5 border border-emerald-200 dark:border-emerald-800 text-xs font-bold text-emerald-900 dark:text-emerald-200 text-right space-y-1">
+                <span className="block font-black text-emerald-800 dark:text-emerald-200">
                   ✓ يمكنك متابعة استخدام المنصة
                 </span>
-                <p className="text-[10.5px] text-emerald-700 leading-relaxed font-normal">
+                <p className="text-[10.5px] text-emerald-700 dark:text-emerald-300 leading-relaxed font-normal">
                   يمكنك تصفح الرحلات ونشر طلبات التوصيل، بينما ستتاح ميزة نشر
                   الرحلات كمسافر فور اكتمال التوثيق.
                 </p>
@@ -679,7 +676,7 @@ export const IdentityVerificationModal: FC<IdentityVerificationModalProps> = ({
               <button
                 type="button"
                 onClick={handleFinish}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white hover:bg-[#0D2C50] dark:hover:bg-[#123A68] active:scale-98 transition-all cursor-pointer shadow-md"
               >
                 <span>متابعة استخدام المنصة</span>
                 <ArrowLeft className="h-4 w-4" />

@@ -18,7 +18,7 @@ export const ProfileVerificationBanner: FC<ProfileVerificationBannerProps> = ({
         <button
           type="button"
           onClick={onStartVerification}
-          className="rounded-full bg-white px-3.5 py-1.5 text-xs font-black text-[#EA580C] shadow-xs hover:bg-slate-50 active:scale-95 transition-all cursor-pointer"
+          className="rounded-full bg-white dark:bg-white px-3.5 py-1.5 text-xs font-black text-[#EA580C] dark:text-[#EA580C] shadow-xs hover:bg-slate-50 dark:hover:bg-slate-100 active:scale-95 transition-all cursor-pointer"
         >
           بدء التحقق
         </button>

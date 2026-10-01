@@ -53,20 +53,20 @@ export function PwaInstallModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-100 rounded-3xl bg-white p-5 text-right text-text-primary shadow-2xl space-y-4"
+        className="w-full max-w-100 rounded-3xl bg-white dark:bg-[#102A4C] border border-transparent dark:border-white/10 p-5 text-right text-text-primary dark:text-white shadow-2xl space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-50 text-[#F36F21]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-50 dark:bg-orange-950/40 text-[#F36F21]">
               <Download className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-black text-[#123A68]">
+              <h3 className="text-sm font-black text-[#123A68] dark:text-white">
                 تنزيل وتثبيت تطبيق بطريقك
               </h3>
-              <p className="text-[10.5px] text-text-muted">
+              <p className="text-[10.5px] text-text-muted dark:text-slate-400">
                 يعمل على جميع أجهزة Android و iOS
               </p>
             </div>
@@ -74,21 +74,21 @@ export function PwaInstallModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+            className="rounded-xl p-1 text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Device Switcher Tabs (iOS / Android) */}
-        <div className="grid grid-cols-2 gap-1.5 rounded-2xl bg-slate-100 p-1">
+        <div className="grid grid-cols-2 gap-1.5 rounded-2xl bg-slate-100 dark:bg-[#0B1E36] p-1">
           <button
             type="button"
             onClick={() => setActiveTab("android")}
             className={`flex items-center justify-center gap-2 rounded-xl py-2 text-xs font-bold transition-all cursor-pointer ${
               activeTab === "android"
-                ? "bg-white text-[#123A68] shadow-xs"
-                : "text-text-muted hover:text-text-primary"
+                ? "bg-white dark:bg-[#132F54] text-[#123A68] dark:text-white shadow-xs"
+                : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
             }`}
           >
             <Smartphone className="h-4 w-4 text-[#F36F21]" />
@@ -100,18 +100,18 @@ export function PwaInstallModal({
             onClick={() => setActiveTab("ios")}
             className={`flex items-center justify-center gap-2 rounded-xl py-2 text-xs font-bold transition-all cursor-pointer ${
               activeTab === "ios"
-                ? "bg-white text-[#123A68] shadow-xs"
-                : "text-text-muted hover:text-text-primary"
+                ? "bg-white dark:bg-[#132F54] text-[#123A68] dark:text-white shadow-xs"
+                : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
             }`}
           >
-            <Apple className="h-4 w-4 text-[#123A68]" />
+            <Apple className="h-4 w-4 text-[#123A68] dark:text-white" />
             <span>آيفون (Apple iOS)</span>
           </button>
         </div>
 
         {/* Tab 1: Android Guide & 1-Click Action */}
         {activeTab === "android" && (
-          <div className="space-y-3 animate-fade-in text-xs text-text-secondary leading-relaxed">
+          <div className="space-y-3 animate-fade-in text-xs text-text-secondary dark:text-slate-300 leading-relaxed">
             {hasDeferredPrompt && (
               <button
                 type="button"
@@ -123,33 +123,33 @@ export function PwaInstallModal({
               </button>
             )}
 
-            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 p-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border border-slate-100 dark:border-white/10 p-3">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] text-white font-black text-[11px]">
                 1
               </div>
               <p>
                 افتح الموقع عبر متصفح{" "}
-                <span className="font-bold text-[#123A68]">Chrome</span> أو{" "}
-                <span className="font-bold text-[#123A68]">
+                <span className="font-bold text-[#123A68] dark:text-[#38BDF8]">Chrome</span> أو{" "}
+                <span className="font-bold text-[#123A68] dark:text-[#38BDF8]">
                   Samsung Internet
                 </span>
                 .
               </p>
             </div>
 
-            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 p-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border border-slate-100 dark:border-white/10 p-3">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] text-white font-black text-[11px]">
                 2
               </div>
               <p>
                 اضغط على زر القائمة{" "}
-                <MoreVertical className="inline h-4 w-4 mx-1 text-slate-700" />{" "}
+                <MoreVertical className="inline h-4 w-4 mx-1 text-slate-700 dark:text-slate-300" />{" "}
                 في زاوية المتصفح العلوية.
               </p>
             </div>
 
-            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 p-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border border-slate-100 dark:border-white/10 p-3">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] text-white font-black text-[11px]">
                 3
               </div>
               <p>
@@ -158,7 +158,7 @@ export function PwaInstallModal({
                   "تثبيت التطبيق" (Install App)
                 </span>{" "}
                 أو{" "}
-                <span className="font-bold text-[#123A68]">
+                <span className="font-bold text-[#123A68] dark:text-[#38BDF8]">
                   "إضافة إلى الشاشة الرئيسية"
                 </span>
                 .
@@ -169,39 +169,39 @@ export function PwaInstallModal({
 
         {/* Tab 2: Apple iOS Guide */}
         {activeTab === "ios" && (
-          <div className="space-y-3 animate-fade-in text-xs text-text-secondary leading-relaxed">
-            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 p-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+          <div className="space-y-3 animate-fade-in text-xs text-text-secondary dark:text-slate-300 leading-relaxed">
+            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border border-slate-100 dark:border-white/10 p-3">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] text-white font-black text-[11px]">
                 1
               </div>
               <p>
                 افتح الرابط في متصفح{" "}
-                <span className="font-bold text-[#123A68]">Safari</span> على
+                <span className="font-bold text-[#123A68] dark:text-[#38BDF8]">Safari</span> على
                 الآيفون.
               </p>
             </div>
 
-            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 p-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border border-slate-100 dark:border-white/10 p-3">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] text-white font-black text-[11px]">
                 2
               </div>
               <p>
                 اضغط على زر المشاركة{" "}
-                <Share className="inline h-4 w-4 mx-1 text-blue-600" /> في أسفل
+                <Share className="inline h-4 w-4 mx-1 text-blue-500 dark:text-blue-400" /> في أسفل
                 شاشة Safari.
               </p>
             </div>
 
-            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 p-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] text-white font-black text-[11px]">
+            <div className="flex items-start gap-2.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border border-slate-100 dark:border-white/10 p-3">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] text-white font-black text-[11px]">
                 3
               </div>
               <p>
                 مرر للأسفل واختر{" "}
-                <span className="font-bold text-[#123A68]">
+                <span className="font-bold text-[#123A68] dark:text-[#38BDF8]">
                   "إضافة إلى الصفحة الرئيسية"
                 </span>{" "}
-                <PlusSquare className="inline h-4 w-4 mx-1 text-slate-700" /> ثم
+                <PlusSquare className="inline h-4 w-4 mx-1 text-slate-700 dark:text-slate-300" /> ثم
                 اضغط{" "}
                 <span className="font-bold text-[#F36F21]">"إضافة" (Add)</span>.
               </p>
@@ -210,8 +210,8 @@ export function PwaInstallModal({
         )}
 
         {/* Copy Link Helper */}
-        <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-[#F8FAFC] p-2.5 text-xs">
-          <span className="text-[11px] text-text-secondary font-medium truncate max-w-50">
+        <div className="flex items-center justify-between rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] p-2.5 text-xs">
+          <span className="text-[11px] text-text-secondary dark:text-slate-300 font-medium truncate max-w-50">
             {window.location.origin}
           </span>
           <button
@@ -237,7 +237,7 @@ export function PwaInstallModal({
         <button
           type="button"
           onClick={onClose}
-          className="flex h-11 w-full items-center justify-center gap-1.5 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer shadow-md"
+          className="flex h-11 w-full items-center justify-center gap-1.5 rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white hover:bg-[#0D2C50] dark:hover:bg-[#123A68] active:scale-98 transition-all cursor-pointer shadow-md"
         >
           <CheckCircle className="h-4 w-4" />
           <span>تم، إغلاق الدليل</span>

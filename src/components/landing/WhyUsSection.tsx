@@ -41,10 +41,10 @@ export const WhyUsSection: FC = () => {
         <span className="text-xs font-black text-[#F36F21] block">
           عن المنصة
         </span>
-        <h2 className="text-2xl font-black text-[#123A68] leading-tight">
+        <h2 className="text-2xl font-black text-[#123A68] dark:text-white leading-tight">
           منصة مجتمعية تبني الثقة بين الجيران
         </h2>
-        <p className="text-xs text-text-secondary leading-relaxed pt-1">
+        <p className="text-xs text-text-secondary dark:text-slate-300 leading-relaxed pt-1">
           بطريقك ليست مجرد منصة توصيل، بل هي مجتمع قائم على التعاون والتكافل بين
           أبناء القطاع في ظل الظروف الصعبة، حيث نسهل وصول الاحتياجات اليومية.
         </p>
@@ -54,14 +54,14 @@ export const WhyUsSection: FC = () => {
       <div className="space-y-4 pt-1">
         {features.map((item, index) => (
           <div key={index} className="flex items-start gap-3.5">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#123A68] text-white shadow-xs">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-white shadow-xs">
               {item.icon}
             </div>
             <div className="space-y-0.5 flex-1">
-              <h3 className="text-sm font-black text-[#123A68]">
+              <h3 className="text-sm font-black text-[#123A68] dark:text-white">
                 {item.title}
               </h3>
-              <p className="text-xs text-text-secondary leading-relaxed">
+              <p className="text-xs text-text-secondary dark:text-slate-300 leading-relaxed">
                 {item.desc}
               </p>
             </div>
@@ -72,19 +72,19 @@ export const WhyUsSection: FC = () => {
       {/* 4 Stat Metric Cards (2x2 Grid) matching Figma screenshot */}
       <div className="grid grid-cols-2 gap-3 pt-2">
         {/* Card 1: 5 Cities / 16+ Neighborhoods (White Card) */}
-        <div className="rounded-3xl bg-white p-4 border border-slate-200/80 shadow-xs text-right space-y-1">
-          <div className="flex items-center gap-1 text-[10.5px] font-bold text-text-muted">
-            <MapPin className="h-3.5 w-3.5 text-[#123A68]" />
+        <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-4 border border-slate-200/80 dark:border-white/10 shadow-xs text-right space-y-1">
+          <div className="flex items-center gap-1 text-[10.5px] font-bold text-text-muted dark:text-slate-400">
+            <MapPin className="h-3.5 w-3.5 text-[#123A68] dark:text-[#38BDF8]" />
             <span>5 مدن</span>
           </div>
-          <div className="text-2xl font-black text-[#123A68]">16+ حي</div>
-          <p className="text-[10.5px] text-text-secondary font-medium">
+          <div className="text-2xl font-black text-[#123A68] dark:text-white">16+ حي</div>
+          <p className="text-[10.5px] text-text-secondary dark:text-slate-300 font-medium">
             تغطية كاملة للقطاع
           </p>
         </div>
 
         {/* Card 2: +380 Weekly Trips (Navy Card) */}
-        <div className="rounded-3xl bg-[#123A68] p-4 text-white shadow-md text-right space-y-1">
+        <div className="rounded-3xl bg-[#123A68] dark:bg-[#1E4E8C] p-4 text-white shadow-md text-right space-y-1">
           <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/15">
             <Package className="h-4 w-4 text-white" />
           </div>
@@ -106,12 +106,12 @@ export const WhyUsSection: FC = () => {
         </div>
 
         {/* Card 4: 98% Delivery Success (White Card) */}
-        <div className="rounded-3xl bg-white p-4 border border-slate-200/80 shadow-xs text-right space-y-1">
-          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-50 border border-emerald-100">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+        <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-4 border border-slate-200/80 dark:border-white/10 shadow-xs text-right space-y-1">
+          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-800/40">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <div className="text-2xl font-black text-[#123A68]">98%</div>
-          <p className="text-[10.5px] text-text-secondary font-medium">
+          <div className="text-2xl font-black text-[#123A68] dark:text-white">98%</div>
+          <p className="text-[10.5px] text-text-secondary dark:text-slate-300 font-medium">
             نسبة التوصيل الناجح
           </p>
         </div>

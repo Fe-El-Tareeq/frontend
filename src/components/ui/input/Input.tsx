@@ -25,8 +25,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           type={type}
           className={cn(
-            "h-12.5 w-full rounded-2xl border-2 border-border bg-[#FAFBFC] px-4 text-right text-sm text-primary transition-colors duration-200 outline-none placeholder:text-text-muted focus:border-accent focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed",
-            error && "border-error focus:border-error bg-error-light/10",
+            "h-12.5 w-full rounded-2xl border-2 border-border dark:border-white/10 bg-[#FAFBFC] dark:bg-[#0B1E36] px-4 text-right text-sm text-primary dark:text-white transition-colors duration-200 outline-none placeholder:text-text-muted dark:placeholder:text-slate-500 focus:border-accent dark:focus:border-accent focus:bg-white dark:focus:bg-[#102A4C] disabled:opacity-50 disabled:cursor-not-allowed",
+            error && "border-error focus:border-error bg-error-light/10 dark:bg-red-950/20",
             rightElement && "pr-11",
             leftElement && "pl-11",
             className,

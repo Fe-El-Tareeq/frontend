@@ -31,13 +31,13 @@ export function LandingMenuModal({ isOpen, onClose }: LandingMenuModalProps) {
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-sm rounded-3xl bg-[#F8FAFC] p-4 text-center shadow-2xl space-y-3"
+          className="w-full max-w-sm rounded-3xl bg-[#F8FAFC] dark:bg-[#0B1E36] border border-transparent dark:border-white/10 p-4 text-center shadow-2xl space-y-3"
           dir="rtl"
         >
           {/* Top Brand Card */}
-          <div className="flex items-center justify-center rounded-2xl bg-white p-4 border border-slate-200 shadow-2xs">
+          <div className="flex items-center justify-center rounded-2xl bg-white dark:bg-[#102A4C] p-4 border border-slate-200 dark:border-white/10 shadow-2xs">
             <div className="flex items-center gap-2">
-              <span className="text-xl font-black text-[#123A68]">بطريقك</span>
+              <span className="text-xl font-black text-[#123A68] dark:text-white">بطريقك</span>
               <img
                 src="/logo.png"
                 alt="بطريقك"
@@ -51,7 +51,7 @@ export function LandingMenuModal({ isOpen, onClose }: LandingMenuModalProps) {
             <button
               type="button"
               onClick={handleInstallClick}
-              className="flex w-full items-center justify-between rounded-2xl bg-gradient-to-r from-[#123A68] to-[#1E4E8C] p-4 text-white shadow-md hover:opacity-95 active:scale-98 transition-all text-right cursor-pointer"
+              className="flex w-full items-center justify-between rounded-2xl bg-linear-to-r from-[#123A68] to-[#1E4E8C] p-4 text-white shadow-md hover:opacity-95 active:scale-98 transition-all text-right cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-[#F36F21]">
@@ -80,10 +80,10 @@ export function LandingMenuModal({ isOpen, onClose }: LandingMenuModalProps) {
               onClose();
               navigate("/login");
             }}
-            className="flex h-14 w-full items-center justify-between rounded-2xl bg-white px-5 border border-slate-200 text-sm font-black text-[#123A68] hover:border-[#F36F21] shadow-2xs active:scale-98 transition-all cursor-pointer"
+            className="flex h-14 w-full items-center justify-between rounded-2xl bg-white dark:bg-[#102A4C] px-5 border border-slate-200 dark:border-white/10 text-sm font-black text-[#123A68] dark:text-white hover:border-[#F36F21] shadow-2xs active:scale-98 transition-all cursor-pointer"
           >
             <span>تسجيل الدخول</span>
-            <ChevronLeft className="h-5 w-5 text-[#123A68]" />
+            <ChevronLeft className="h-5 w-5 text-[#123A68] dark:text-white" />
           </button>
 
           {/* 2. Register Option Card */}
@@ -93,10 +93,10 @@ export function LandingMenuModal({ isOpen, onClose }: LandingMenuModalProps) {
               onClose();
               navigate("/register-step1");
             }}
-            className="flex h-14 w-full items-center justify-between rounded-2xl bg-white px-5 border border-slate-200 text-sm font-black text-[#123A68] hover:border-[#F36F21] shadow-2xs active:scale-98 transition-all cursor-pointer"
+            className="flex h-14 w-full items-center justify-between rounded-2xl bg-white dark:bg-[#102A4C] px-5 border border-slate-200 dark:border-white/10 text-sm font-black text-[#123A68] dark:text-white hover:border-[#F36F21] shadow-2xs active:scale-98 transition-all cursor-pointer"
           >
             <span>إنشاء حساب جديد</span>
-            <ChevronLeft className="h-5 w-5 text-[#123A68]" />
+            <ChevronLeft className="h-5 w-5 text-[#123A68] dark:text-white" />
           </button>
 
           {/* 3. Home Solid Button */}

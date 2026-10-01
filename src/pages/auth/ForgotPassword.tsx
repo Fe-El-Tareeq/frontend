@@ -94,7 +94,7 @@ export default function ForgotPassword() {
             type="tel"
             placeholder="05XX-XXX-XXX"
             dir="ltr"
-            className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            className="text-right h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
             {...register("phone")}
           />
           <Form.ErrorMessage />

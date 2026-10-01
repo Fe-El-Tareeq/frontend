@@ -37,13 +37,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       accent:
         "bg-accent text-white hover:bg-accent-hover focus-visible:ring-accent shadow-sm",
       outline:
-        "border-2 border-border bg-white text-primary hover:bg-background focus-visible:ring-primary",
+        "border-2 border-border dark:border-white/10 bg-white dark:bg-[#102A4C] text-primary dark:text-white hover:bg-background dark:hover:bg-white/5 focus-visible:ring-primary",
       ghost:
-        "bg-transparent text-primary hover:bg-background focus-visible:ring-primary",
+        "bg-transparent text-primary dark:text-white hover:bg-background dark:hover:bg-white/5 focus-visible:ring-primary",
       danger:
         "bg-error text-white hover:bg-red-700 focus-visible:ring-error shadow-sm",
       secondary:
-        "bg-background text-primary hover:bg-slate-200 focus-visible:ring-primary",
+        "bg-background dark:bg-[#0B1E36] text-primary dark:text-white hover:bg-slate-200 dark:hover:bg-white/10 focus-visible:ring-primary",
     };
 
     const sizes = {

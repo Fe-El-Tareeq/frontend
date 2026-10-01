@@ -1,11 +1,11 @@
 import { useState } from "react";
 import type { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, MapPin, Bell, Zap, ChevronRight } from "lucide-react";
+import { Menu, MapPin, Zap, ChevronRight, Home } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useWallet } from "../../hooks/useWallet";
-import { useNotifications } from "../../hooks/useNotifications";
 import { Sidebar } from "./Sidebar";
+import { NotificationDropdown } from "./NotificationDropdown";
 import { cn } from "../../utils/cn";
 
 export interface HeaderProps {
@@ -27,67 +27,89 @@ export const Header: FC<HeaderProps> = ({
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { tokenBalance } = useWallet();
-  const { unreadCount } = useNotifications();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleBack = () => {
     if (onBack) {
       onBack();
-    } else {
+    } else if (typeof window !== "undefined" && window.history.length > 1) {
       navigate(-1);
+    } else {
+      navigate("/home");
     }
   };
 
   const userInitials = profile?.fullName
     ? profile.fullName
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .slice(0, 2)
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
     : "";
 
   return (
     <>
       <header
         className={cn(
-          "sticky top-0 z-30 flex h-16 items-center justify-between bg-white px-4 border-b border-border/50 transition-all shadow-2xs",
+          "sticky top-0 z-30 flex h-16 items-center justify-between bg-white dark:bg-[#102A4C] px-4 md:px-6 lg:px-8 border-b border-border/50 dark:border-white/10 transition-all shadow-2xs",
           className,
         )}
       >
         {/* If simple back mode is enabled */}
         {showBack ? (
           <div className="flex w-full items-center justify-between">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="flex items-center gap-1 text-sm font-bold text-primary hover:text-accent transition-colors"
-            >
-              <ChevronRight className="h-5 w-5" />
-              <span>رجوع</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="flex items-center gap-1 text-sm font-bold text-primary dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors cursor-pointer"
+              >
+                <ChevronRight className="h-5 w-5" />
+                <span>رجوع</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate("/home")}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-[#0B1E36] border border-border dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-accent dark:hover:text-accent hover:bg-slate-100 dark:hover:bg-[#132F54] transition-colors cursor-pointer"
+                title="العودة للصفحة الرئيسية"
+                aria-label="الرئيسية"
+              >
+                <Home className="h-4 w-4" />
+                <span className="hidden sm:inline">الرئيسية</span>
+              </button>
+            </div>
 
             {title && (
-              <h1 className="text-base font-extrabold text-primary">{title}</h1>
+              <h1 className="text-base md:text-lg font-extrabold text-primary dark:text-white truncate max-w-[200px] sm:max-w-md">
+                {title}
+              </h1>
             )}
 
-            <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => navigate("/home")}
+              className="flex items-center gap-1.5 hover:opacity-85 transition-opacity cursor-pointer"
+              title="الصفحة الرئيسية"
+              aria-label="الصفحة الرئيسية"
+            >
               <img
                 src="/logo.png"
                 alt="بطريقك"
                 className="h-8 w-8 object-contain"
               />
-              <span className="text-sm font-black text-primary">بطريقك</span>
-            </div>
+              <span className="text-sm font-black text-primary dark:text-white">بطريقك</span>
+            </button>
           </div>
         ) : (
           /* Standard Authenticated App Header Matching Figma */
           <div className="flex w-full items-center justify-between">
-            {/* Right Group: Menu & Location Button */}
+            {/* Right Group: Menu, Home Link & Location Button */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setIsSidebarOpen(true)}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 border border-border text-primary hover:bg-slate-100 transition-colors active:scale-95"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-[#0B1E36] border border-border dark:border-white/10 text-primary dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#132F54] transition-colors active:scale-95 lg:hidden cursor-pointer"
                 aria-label="القائمة الجانبية"
               >
                 <Menu className="h-5 w-5" />
@@ -96,7 +118,7 @@ export const Header: FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => navigate("/profile/edit")}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 border border-border text-primary hover:bg-slate-100 transition-colors active:scale-95"
+                className="flex h-10 items-center gap-1.5 px-3 rounded-xl bg-slate-50 dark:bg-[#0B1E36] border border-border dark:border-white/10 text-primary dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#132F54] transition-colors active:scale-95 cursor-pointer"
                 aria-label="تحديد الحي"
                 title={
                   profile?.neighborhood?.name
@@ -104,31 +126,22 @@ export const Header: FC<HeaderProps> = ({
                     : "تحديد الموقع"
                 }
               >
-                <MapPin className="h-5 w-5 text-accent" />
+                <MapPin className="h-5 w-5 text-accent shrink-0" />
+                <span className="hidden sm:inline text-xs font-bold text-text-secondary dark:text-slate-300">
+                  {profile?.neighborhood?.name || "تحديد الحي"}
+                </span>
               </button>
             </div>
 
-            {/* Left Group: Notification Bell, Token Pill & Avatar */}
+            {/* Left Group: Notification Bell Dropdown, Token Pill & Avatar */}
             <div className="flex items-center gap-2.5">
-              <button
-                type="button"
-                onClick={() => navigate("/notifications")}
-                className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 border border-border text-primary hover:bg-slate-100 transition-colors cursor-pointer"
-                aria-label="الإشعارات"
-              >
-                <Bell className="h-5 w-5 text-text-secondary" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-[#F36F21] px-1 text-[10px] font-black text-white shadow-xs animate-scale-in">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </button>
+              <NotificationDropdown />
 
               {/* Token Balance Pill */}
               <button
                 type="button"
                 onClick={() => navigate("/wallet")}
-                className="flex items-center gap-1.5 rounded-full bg-[#FFF5EE] px-3.5 py-1.5 border border-[#FDE0CE] text-xs font-black text-accent hover:bg-[#FEECE0] transition-colors"
+                className="flex items-center gap-1.5 rounded-full bg-[#FFF5EE] dark:bg-[#F36F21]/15 px-3.5 py-1.5 border border-[#FDE0CE] dark:border-[#F36F21]/30 text-xs font-black text-accent hover:bg-[#FEECE0] dark:hover:bg-[#F36F21]/25 transition-colors cursor-pointer"
               >
                 <Zap className="h-4 w-4 fill-accent text-accent" />
                 <span>{tokenBalance ?? 0}</span>
@@ -138,7 +151,7 @@ export const Header: FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => navigate("/profile")}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white shadow-xs hover:opacity-90 transition-opacity overflow-hidden"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white shadow-xs hover:opacity-90 transition-opacity overflow-hidden cursor-pointer"
               >
                 {profile?.profileImageUrl ? (
                   <img

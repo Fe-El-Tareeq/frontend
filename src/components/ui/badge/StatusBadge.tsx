@@ -35,9 +35,9 @@ export const StatusBadge = ({
     },
     COMPLETED: {
       label: "مكتمل",
-      bg: "bg-slate-100",
-      text: "text-slate-600",
-      dotBg: "bg-slate-400",
+      bg: "bg-slate-100 dark:bg-slate-800/80",
+      text: "text-slate-600 dark:text-slate-300",
+      dotBg: "bg-slate-400 dark:bg-slate-400",
     },
     CANCELLED: {
       label: "ملغي",
@@ -47,22 +47,22 @@ export const StatusBadge = ({
     },
     EXPIRED: {
       label: "منتهي",
-      bg: "bg-slate-100",
-      text: "text-slate-400",
-      dotBg: "bg-slate-400",
+      bg: "bg-slate-100 dark:bg-slate-800/80",
+      text: "text-slate-400 dark:text-slate-400",
+      dotBg: "bg-slate-400 dark:bg-slate-400",
     },
     URGENT: {
       label: "عاجل",
-      bg: "bg-red-100",
-      text: "text-red-600",
+      bg: "bg-red-100 dark:bg-red-950/40",
+      text: "text-red-600 dark:text-red-400",
       dotBg: "bg-red-500",
     },
   };
 
   const item = config[status] || {
     label: status,
-    bg: "bg-slate-100",
-    text: "text-slate-700",
+    bg: "bg-slate-100 dark:bg-slate-800/80",
+    text: "text-slate-700 dark:text-slate-200",
     dotBg: "bg-slate-500",
   };
 

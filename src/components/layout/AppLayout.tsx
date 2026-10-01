@@ -26,8 +26,8 @@ export const AppLayout: FC<AppLayoutProps> = ({
 
       <main
         className={cn(
-          "flex-1 px-4 py-4 overflow-y-auto",
-          showBottomNav && "pb-24",
+          "w-full max-w-4xl mx-auto flex-1 px-4 md:px-6 lg:px-8 py-4 md:py-6 overflow-y-auto",
+          showBottomNav && "pb-24 lg:pb-12",
           className,
         )}
       >

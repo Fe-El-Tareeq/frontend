@@ -284,7 +284,7 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
         </div>
 
         {/* Viewfinder / Preview Section */}
-        <div className="relative flex-1 min-h-[360px] sm:min-h-[420px] bg-black flex items-center justify-center overflow-hidden">
+        <div className="relative flex-1 min-h-90 sm:min-h-105 bg-black flex items-center justify-center overflow-hidden">
           {error ? (
             <div className="p-6 text-center text-white space-y-4 max-w-sm">
               <div className="w-14 h-14 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center mx-auto">
@@ -335,9 +335,8 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
                 autoPlay
                 playsInline
                 muted
-                className={`w-full h-full object-cover max-h-[65vh] ${
-                  facingMode === "user" ? "-scale-x-100" : ""
-                }`}
+                className={`w-full h-full object-cover max-h-[65vh] ${facingMode === "user" ? "-scale-x-100" : ""
+                  }`}
               />
 
               {isLoading && (
@@ -350,7 +349,7 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
               {/* ID Card Rectangle Framing Overlay */}
               {(mode === "id_front" || mode === "id_back") && (
                 <div className="absolute inset-0 pointer-events-none flex items-center justify-center p-6">
-                  <div className="w-full max-w-[340px] aspect-[1.58/1] rounded-2xl border-2 border-dashed border-accent/80 shadow-[0_0_0_9999px_rgba(0,0,0,0.45)] relative flex items-center justify-center">
+                  <div className="w-full max-w-85 aspect-[1.58/1] rounded-2xl border-2 border-dashed border-accent/80 shadow-[0_0_0_9999px_rgba(0,0,0,0.45)] relative flex items-center justify-center">
                     {/* Corner Accent Brackets */}
                     <div className="absolute -top-1 -left-1 w-5 h-5 border-t-4 border-l-4 border-accent rounded-tl-lg" />
                     <div className="absolute -top-1 -right-1 w-5 h-5 border-t-4 border-r-4 border-accent rounded-tr-lg" />
@@ -390,7 +389,7 @@ export const LiveCameraCaptureModal: FC<LiveCameraCaptureModalProps> = ({
                 onClick={handleConfirm}
                 className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-black text-xs sm:text-sm rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Check className="w-4 h-4 stroke-[3]" />
+                <Check className="w-4 h-4 stroke-3" />
                 <span>استخدام هذه الصورة</span>
               </button>
 

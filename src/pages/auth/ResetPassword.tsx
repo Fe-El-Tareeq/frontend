@@ -100,7 +100,7 @@ export default function ResetPassword() {
               type="tel"
               placeholder="05XX-XXX-XXX"
               dir="ltr"
-              className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+              className="text-right h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
               {...register("phone")}
             />
             <Form.ErrorMessage />
@@ -115,7 +115,7 @@ export default function ResetPassword() {
             maxLength={6}
             placeholder="123456"
             dir="ltr"
-            className="text-center font-mono tracking-widest text-lg font-bold h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            className="text-center font-mono tracking-widest text-lg font-bold h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
             {...register("otp")}
           />
           <Form.ErrorMessage />
@@ -126,7 +126,7 @@ export default function ResetPassword() {
           <Form.Label>كلمة المرور الجديدة</Form.Label>
           <Form.PasswordInput
             placeholder="••••••••"
-            className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            className="h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
             {...register("password")}
           />
           <Form.ErrorMessage />
@@ -141,14 +141,14 @@ export default function ResetPassword() {
           <Form.Label>تأكيد كلمة المرور</Form.Label>
           <Form.PasswordInput
             placeholder="••••••••"
-            className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            className="h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
             {...register("confirmPassword")}
           />
           <Form.ErrorMessage />
         </Form.Field>
 
         {/* Password Hint */}
-        <p className="text-[11px] text-text-secondary text-right -mt-2 mb-1 leading-relaxed">
+        <p className="text-[11px] text-text-secondary dark:text-slate-400 text-right -mt-2 mb-1 leading-relaxed">
           يجب أن تتكون من 8 خانات، وتحتوي على حرف كبير ورقم ورمز خاص.
         </p>
 

@@ -42,28 +42,28 @@ export const VoiceNoteRecorder: FC<VoiceNoteRecorderProps> = ({
   };
 
   return (
-    <div className={`rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 space-y-2.5 text-right ${className}`}>
+    <div className={`rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 border border-slate-200 dark:border-white/10 space-y-2.5 text-right ${className}`}>
       {/* Title Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-50 text-[#F36F21]">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-950/40 text-[#F36F21]">
             <Volume2 className="h-4 w-4" />
           </div>
           <div className="text-right">
-            <h4 className="text-xs font-black text-primary">{title}</h4>
-            <p className="text-[10.5px] text-text-muted">{subtitle}</p>
+            <h4 className="text-xs font-black text-primary dark:text-white">{title}</h4>
+            <p className="text-[10.5px] text-text-muted dark:text-slate-400">{subtitle}</p>
           </div>
         </div>
 
         {voiceNote && (
-          <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-black text-emerald-700 border border-emerald-200">
+          <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 text-[10px] font-black text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
             تم التسجيل ✓
           </span>
         )}
       </div>
 
       {error && (
-        <div className="flex items-center gap-1.5 rounded-xl bg-red-50 p-2 text-[11px] font-bold text-red-600 border border-red-100">
+        <div className="flex items-center gap-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 p-2 text-[11px] font-bold text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/30">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" />
           <span>{error}</span>
         </div>
@@ -71,8 +71,8 @@ export const VoiceNoteRecorder: FC<VoiceNoteRecorderProps> = ({
 
       {/* Case 1: Currently Recording */}
       {isRecording ? (
-        <div className="flex items-center justify-between rounded-xl bg-red-50 p-3 border border-red-200 animate-pulse">
-          <div className="flex items-center gap-2 text-red-600 text-xs font-bold">
+        <div className="flex items-center justify-between rounded-xl bg-red-50 dark:bg-red-950/40 p-3 border border-red-200 dark:border-red-800 animate-pulse">
+          <div className="flex items-center gap-2 text-red-600 dark:text-red-400 text-xs font-bold">
             <span className="h-2.5 w-2.5 rounded-full bg-red-500 animate-ping" />
             <span>جاري التسجيل... ({recordingDurationFormatted})</span>
           </div>
@@ -88,13 +88,13 @@ export const VoiceNoteRecorder: FC<VoiceNoteRecorderProps> = ({
         </div>
       ) : voiceNote ? (
         /* Case 2: Voice Note Recorded & Available to Play / Delete */
-        <div className="rounded-xl bg-white p-3 border border-slate-200 shadow-2xs space-y-2">
+        <div className="rounded-xl bg-white dark:bg-[#102A4C] p-3 border border-slate-200 dark:border-white/10 shadow-2xs space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={togglePlayback}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#123A68] text-white hover:bg-[#0D2C50] active:scale-95 transition-all cursor-pointer shadow-xs"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#123A68] dark:bg-[#1E4E8C] text-white hover:bg-[#0D2C50] dark:hover:bg-[#123A68] active:scale-95 transition-all cursor-pointer shadow-xs"
               >
                 {isPlaying ? (
                   <Pause className="h-4 w-4 fill-white" />
@@ -104,10 +104,10 @@ export const VoiceNoteRecorder: FC<VoiceNoteRecorderProps> = ({
               </button>
 
               <div className="text-right">
-                <span className="text-xs font-black text-[#123A68] block">
+                <span className="text-xs font-black text-[#123A68] dark:text-white block">
                   ملاحظة صوتية مسجلة
                 </span>
-                <span className="text-[10px] text-text-muted">
+                <span className="text-[10px] text-text-muted dark:text-slate-400">
                   المدة: {formatTime(voiceNote.durationSec)}
                 </span>
               </div>
@@ -116,7 +116,7 @@ export const VoiceNoteRecorder: FC<VoiceNoteRecorderProps> = ({
             <button
               type="button"
               onClick={handleDelete}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
               title="حذف التسجيل"
             >
               <Trash2 className="h-4 w-4" />
@@ -124,7 +124,7 @@ export const VoiceNoteRecorder: FC<VoiceNoteRecorderProps> = ({
           </div>
 
           {/* Progress Bar */}
-          <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-[#F36F21] rounded-full transition-all duration-200"
               style={{ width: `${playbackProgress}%` }}
@@ -136,7 +136,7 @@ export const VoiceNoteRecorder: FC<VoiceNoteRecorderProps> = ({
         <button
           type="button"
           onClick={startRecording}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-white text-xs font-bold text-primary hover:border-[#F36F21] hover:text-[#F36F21] active:scale-98 transition-all cursor-pointer shadow-2xs"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-white/20 bg-white dark:bg-[#102A4C] text-xs font-bold text-primary dark:text-white hover:border-[#F36F21] hover:text-[#F36F21] dark:hover:text-[#F36F21] active:scale-98 transition-all cursor-pointer shadow-2xs"
         >
           <Mic className="h-4 w-4 text-[#F36F21]" />
           <span>اضغط لتسجيل رسالة صوتية</span>

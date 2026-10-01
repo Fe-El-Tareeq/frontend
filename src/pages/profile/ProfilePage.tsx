@@ -34,7 +34,7 @@ export default function ProfilePage() {
   const tripsCount = userTrips.length;
   const errandsCount = userErrands.length;
   const trustScore = profile?.trustScore ? (profile.trustScore / 20).toFixed(1) : "5.0";
-  const isVerified = Boolean(profile?.isVerified);
+  const isVerified = profile?.verificationStatus === "VERIFIED" || profile?.isVerified === true;
 
   const handleImageSelected = async (file: File) => {
     setUploadStatus(null);
@@ -60,15 +60,15 @@ export default function ProfilePage() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Page Title & Back Button */}
         <div className="flex items-center justify-between">
           <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68]">الملف الشخصي</h1>
-            <p className="text-xs text-text-secondary mt-0.5">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">الملف الشخصي</h1>
+            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
               بيانات حسابك ونشاطك على المنصة
             </p>
           </div>
@@ -76,7 +76,7 @@ export default function ProfilePage() {
             type="button"
             onClick={() => navigate(-1)}
             aria-label="الرجوع للخلف"
-            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -134,7 +134,7 @@ export default function ProfilePage() {
           }
           onTripClick={(id) => navigate(`/trips/${id}`)}
           onErrandClick={(id) => navigate(`/errands/${id}`)}
-          onAddTrip={() => navigate("/trips/new")}
+          onAddTrip={() => navigate(isVerified ? "/trips/new" : "/verify-identity")}
           onAddErrand={() => navigate("/errands/new")}
         />
 

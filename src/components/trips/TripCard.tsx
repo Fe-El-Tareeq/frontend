@@ -22,7 +22,7 @@ interface TripCardProps {
 
 export const TripCard: FC<TripCardProps> = ({ trip, onViewDetails }) => {
   return (
-    <div className="rounded-3xl bg-white p-4.5 border border-border shadow-xs space-y-3.5 text-right">
+    <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-4.5 border border-border dark:border-white/10 shadow-xs space-y-3.5 text-right">
       {/* Top Row: Traveler on RIGHT (1st child in RTL), Rating on LEFT (2nd child in RTL) */}
       <div className="flex items-center justify-between">
         {/* Right side in RTL: Avatar + Name */}
@@ -34,27 +34,27 @@ export const TripCard: FC<TripCardProps> = ({ trip, onViewDetails }) => {
           </div>
 
           <div className="text-right">
-            <h3 className="text-sm font-black text-[#123A68]">
+            <h3 className="text-sm font-black text-[#123A68] dark:text-white">
               {trip.travelerName}
             </h3>
-            <span className="text-[11px] text-text-muted">
+            <span className="text-[11px] text-text-muted dark:text-slate-400">
               {trip.capacityText}
             </span>
           </div>
         </div>
 
         {/* Left side in RTL: Rating */}
-        <div className="flex items-center gap-1 text-xs font-black text-primary">
+        <div className="flex items-center gap-1 text-xs font-black text-primary dark:text-white">
           <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
           <span>{trip.rating}</span>
         </div>
       </div>
 
       {/* Route Timeline Container */}
-      <div className="rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200 text-right">
+      <div className="rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 border border-slate-200 dark:border-white/10 text-right">
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-primary">
-            <div className="h-2.5 w-2.5 rounded-full bg-[#123A68]" />
+          <div className="flex items-center gap-2 text-xs font-bold text-primary dark:text-white">
+            <div className="h-2.5 w-2.5 rounded-full bg-[#123A68] dark:bg-blue-400" />
             <span>{trip.origin}</span>
           </div>
           <div className="flex items-center gap-2 text-xs font-bold text-[#F36F21]">
@@ -65,20 +65,20 @@ export const TripCard: FC<TripCardProps> = ({ trip, onViewDetails }) => {
       </div>
 
       {/* Date & Time */}
-      <div className="flex items-center gap-4 text-[11px] text-text-secondary">
+      <div className="flex items-center gap-4 text-[11px] text-text-secondary dark:text-slate-400">
         <div className="flex items-center gap-1.5">
-          <Calendar className="h-3.5 w-3.5 text-text-muted" />
+          <Calendar className="h-3.5 w-3.5 text-text-muted dark:text-slate-400" />
           <span>{trip.date}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <Clock className="h-3.5 w-3.5 text-text-muted" />
+          <Clock className="h-3.5 w-3.5 text-text-muted dark:text-slate-400" />
           <span>{trip.time}</span>
         </div>
       </div>
 
       {/* Note Tag */}
       {trip.notes && (
-        <div className="rounded-xl bg-[#FFFBEB] p-2.5 text-[11px] font-bold text-[#92400E] border border-[#FDE68A] text-right">
+        <div className="rounded-xl bg-[#FFFBEB] dark:bg-amber-950/30 p-2.5 text-[11px] font-bold text-[#92400E] dark:text-amber-300 border border-[#FDE68A] dark:border-amber-900/40 text-right">
           {trip.notes}
         </div>
       )}
@@ -87,7 +87,7 @@ export const TripCard: FC<TripCardProps> = ({ trip, onViewDetails }) => {
       <button
         type="button"
         onClick={() => onViewDetails(trip.id)}
-        className="flex h-11 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all cursor-pointer"
+        className="flex h-11 w-full items-center justify-center rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white hover:bg-[#0D2C50] dark:hover:bg-[#123A68] active:scale-98 transition-all cursor-pointer"
       >
         عرض التفاصيل
       </button>

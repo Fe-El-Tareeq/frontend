@@ -1,17 +1,22 @@
-﻿export interface LegalVersionMetadata {
-  version: string;
-  effectiveDate: string;
+export interface LegalVersionMetadata {
+  version?: string;
+  termsVersion?: string;
+  privacyVersion?: string;
+  effectiveDate?: string;
   termsUrl?: string;
   privacyUrl?: string;
   summaryAr?: string;
 }
 
 export interface LegalAcceptanceRequest {
-  version: string;
+  termsVersion: string;
+  privacyVersion: string;
 }
 
 export interface LegalAcceptanceResponseData {
   accepted: boolean;
-  version: string;
-  acceptedAt: string;
+  termsVersion?: string;
+  privacyVersion?: string;
+  version?: string;
+  acceptedAt?: string;
 }

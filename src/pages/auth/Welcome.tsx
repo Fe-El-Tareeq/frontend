@@ -8,7 +8,7 @@ export default function Welcome() {
 
   return (
     <MobileContainer className="justify-center items-center px-4 py-8 bg-background">
-      <div className="w-full max-w-90 rounded-xl border border-[#E1E4E8] bg-white px-7 py-8 shadow-sm text-center">
+      <div className="w-full max-w-90 rounded-xl border border-[#E1E4E8] dark:border-white/10 bg-white dark:bg-[#102A4C] px-7 py-8 shadow-sm text-center">
         {/* App Logo */}
         <div className="flex justify-center mb-4">
           <img

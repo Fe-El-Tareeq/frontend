@@ -18,20 +18,20 @@ export const ErrandFilterBar: FC<ErrandFilterBarProps> = ({
   onZoneChange,
 }) => {
   return (
-    <div className="rounded-3xl bg-white p-4 border border-border shadow-xs space-y-2.5">
+    <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-4 border border-border dark:border-white/10 shadow-xs space-y-2.5">
       <input
         type="text"
         value={searchQuery}
         onChange={(e) => onSearchChange(e.target.value)}
         placeholder="ابحث في الطلبات..."
-        className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+        className="h-11 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-4 text-xs text-primary dark:text-white placeholder:text-text-muted dark:placeholder:text-slate-500 focus:border-accent focus:outline-none"
       />
 
       <div className="grid grid-cols-2 gap-2">
         <select
           value={statusFilter}
           onChange={(e) => onStatusChange(e.target.value)}
-          className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs text-primary focus:border-accent focus:outline-none"
+          className="h-11 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-3 text-xs text-primary dark:text-white focus:border-accent focus:outline-none cursor-pointer"
         >
           <option value="ALL">كل الحالات</option>
           <option value="PENDING">قيد الانتظار</option>
@@ -43,7 +43,7 @@ export const ErrandFilterBar: FC<ErrandFilterBarProps> = ({
         <select
           value={zoneFilter}
           onChange={(e) => onZoneChange(e.target.value)}
-          className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs text-primary focus:border-accent focus:outline-none"
+          className="h-11 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-3 text-xs text-primary dark:text-white focus:border-accent focus:outline-none cursor-pointer"
         >
           <option value="ALL">كل المناطق</option>
           <option value="غزة">غزة</option>

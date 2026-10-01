@@ -17,6 +17,22 @@
     <meta name="theme-color" content="#ffffff" />
     <meta name="mobile-web-app-capable" content="yes" />
 
+    <!-- Prevent Dark Mode FOUC -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('btareeqak_theme_mode');
+          var isDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) || (saved === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', '#0B1E36');
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Apple iOS Web App Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta

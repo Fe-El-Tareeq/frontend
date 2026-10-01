@@ -23,7 +23,7 @@ export const ConversationCard: FC<ConversationCardProps> = ({
   return (
     <div
       onClick={() => onSelect(conversation.id)}
-      className="flex items-center justify-between p-3.5 hover:bg-slate-50 transition-colors cursor-pointer text-right"
+      className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-[#132F54] transition-colors cursor-pointer text-right"
     >
       {/* Right Side in RTL: Avatar + Name & Message */}
       <div className="flex items-center gap-3">
@@ -34,15 +34,15 @@ export const ConversationCard: FC<ConversationCardProps> = ({
             {conversation.avatarInitials}
           </div>
           {conversation.isOnline && (
-            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white" />
+            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white dark:border-[#102A4C]" />
           )}
         </div>
 
         <div className="text-right">
-          <h3 className="text-xs font-black text-primary">
+          <h3 className="text-xs font-black text-primary dark:text-white">
             {conversation.name}
           </h3>
-          <p className="text-[11px] text-text-secondary mt-0.5 line-clamp-1 max-w-[200px]">
+          <p className="text-[11px] text-text-secondary dark:text-slate-300 mt-0.5 line-clamp-1 max-w-[200px]">
             {conversation.lastMessage}
           </p>
         </div>
@@ -50,7 +50,7 @@ export const ConversationCard: FC<ConversationCardProps> = ({
 
       {/* Left Side in RTL: Time and Unread Badge */}
       <div className="flex flex-col items-start gap-1">
-        <span className="text-[10.5px] text-text-muted">
+        <span className="text-[10.5px] text-text-muted dark:text-slate-400">
           {conversation.time}
         </span>
         {conversation.unreadCount > 0 && (

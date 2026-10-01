@@ -76,7 +76,7 @@ export default function MatchFeed() {
             onAction={() => navigate("/trips")}
           />
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {matches.map((item) => (
               <Card key={item.id} className="p-4 space-y-3">
                 <div className="flex items-start justify-between">

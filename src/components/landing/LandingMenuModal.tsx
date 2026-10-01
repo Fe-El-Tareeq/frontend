@@ -38,12 +38,12 @@ export const LandingMenuModal: FC<LandingMenuModalProps> = ({
         onClick={onClose}
       >
         <div
-          className="w-full max-w-[390px] rounded-3xl bg-[#F1F5F9]/95 p-4 shadow-2xl space-y-3 border border-white/60 animate-in zoom-in-95 duration-150 text-right"
+          className="w-full max-w-97.5 rounded-3xl bg-[#F1F5F9]/95 dark:bg-[#102A4C]/95 p-4 shadow-2xl space-y-3 border border-white/60 dark:border-white/10 animate-in zoom-in-95 duration-150 text-right"
           onClick={(e) => e.stopPropagation()}
         >
           {/* 1. Logo Card */}
-          <div className="flex items-center justify-center gap-2 rounded-2xl bg-white py-4 px-6 border border-slate-200/80 shadow-xs">
-            <span className="text-base font-black text-[#123A68]">بطريقك</span>
+          <div className="flex items-center justify-center gap-2 rounded-2xl bg-white dark:bg-[#0B1E36] py-4 px-6 border border-slate-200/80 dark:border-white/10 shadow-xs">
+            <span className="text-base font-black text-[#123A68] dark:text-white">بطريقك</span>
             <img
               src="/logo.png"
               alt="بطريقك"
@@ -56,7 +56,7 @@ export const LandingMenuModal: FC<LandingMenuModalProps> = ({
             <button
               type="button"
               onClick={handleInstallClick}
-              className="flex w-full items-center justify-between rounded-2xl bg-gradient-to-r from-[#123A68] to-[#1E4E8C] p-4 text-white shadow-md hover:opacity-95 active:scale-98 transition-all text-right cursor-pointer"
+              className="flex w-full items-center justify-between rounded-2xl bg-linear-to-r from-[#123A68] to-[#1E4E8C] dark:from-[#1E4E8C] dark:to-[#123A68] p-4 text-white shadow-md hover:opacity-95 active:scale-98 transition-all text-right cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-[#F36F21]">
@@ -82,24 +82,24 @@ export const LandingMenuModal: FC<LandingMenuModalProps> = ({
           <button
             type="button"
             onClick={onNavigateLogin}
-            className="flex w-full items-center justify-between rounded-2xl bg-white p-4 border border-slate-200/80 shadow-xs hover:bg-slate-50 active:scale-98 transition-all text-right cursor-pointer"
+            className="flex w-full items-center justify-between rounded-2xl bg-white dark:bg-[#0B1E36] p-4 border border-slate-200/80 dark:border-white/10 shadow-xs hover:bg-slate-50 dark:hover:bg-white/5 active:scale-98 transition-all text-right cursor-pointer"
           >
-            <span className="text-sm font-black text-[#123A68]">
+            <span className="text-sm font-black text-[#123A68] dark:text-white">
               تسجيل الدخول
             </span>
-            <ChevronLeft className="h-5 w-5 text-[#123A68]" />
+            <ChevronLeft className="h-5 w-5 text-[#123A68] dark:text-white" />
           </button>
 
           {/* 4. Register Button */}
           <button
             type="button"
             onClick={onNavigateRegister}
-            className="flex w-full items-center justify-between rounded-2xl bg-white p-4 border border-slate-200/80 shadow-xs hover:bg-slate-50 active:scale-98 transition-all text-right cursor-pointer"
+            className="flex w-full items-center justify-between rounded-2xl bg-white dark:bg-[#0B1E36] p-4 border border-slate-200/80 dark:border-white/10 shadow-xs hover:bg-slate-50 dark:hover:bg-white/5 active:scale-98 transition-all text-right cursor-pointer"
           >
-            <span className="text-sm font-black text-[#123A68]">
+            <span className="text-sm font-black text-[#123A68] dark:text-white">
               إنشاء حساب جديد
             </span>
-            <ChevronLeft className="h-5 w-5 text-[#123A68]" />
+            <ChevronLeft className="h-5 w-5 text-[#123A68] dark:text-white" />
           </button>
 
           {/* 5. Home Active Button (Orange) */}

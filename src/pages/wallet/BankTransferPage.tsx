@@ -1,23 +1,17 @@
 import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  ChevronRight,
-  Zap,
-  Check,
-  AlertCircle,
-  Copy,
-  CheckCheck,
-  Upload,
-  FileCheck,
-  X,
-  Loader2,
-} from "lucide-react";
+import { ChevronRight, Check, Loader2 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { usePayments } from "../../hooks/usePayments";
 import { translateApiError } from "../../i18n";
 import type { TokenPackage } from "./BuyTokensPackages";
 import type { PaymentInvoice } from "../../types";
+
+// Modular sub-components
+import { PaymentStepper } from "../../components/wallet/PaymentStepper";
+import { BankTransferDetailsCard } from "../../components/wallet/BankTransferDetailsCard";
+import { ReceiptUploaderCard } from "../../components/wallet/ReceiptUploaderCard";
 
 export default function BankTransferPage() {
   const navigate = useNavigate();
@@ -56,7 +50,6 @@ export default function BankTransferPage() {
           }
         })
         .catch((err) => {
-          // If already created or offline, silently ignore
           console.warn("Could not create bank invoice:", err);
         });
     }
@@ -64,7 +57,9 @@ export default function BankTransferPage() {
 
   const transferRef =
     invoice?.referenceCode ||
-    (invoice?.id ? `REF-${invoice.id.slice(0, 8).toUpperCase()}` : "ORD-1-MT06H0QG");
+    (invoice?.id
+      ? `REF-${invoice.id.slice(0, 8).toUpperCase()}`
+      : "ORD-1-MT06H0QG");
   const accountNumber =
     invoice?.bankDetails?.accountNumber ||
     invoice?.bankDetails?.iban ||
@@ -122,15 +117,15 @@ export default function BankTransferPage() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-2xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
         <div className="flex items-center justify-between">
           <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68]">إتمام الدفع</h1>
-            <p className="text-xs text-text-secondary mt-0.5">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">إتمام الدفع</h1>
+            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
               بيانات التحويل البنكي المباشر
             </p>
           </div>
@@ -138,230 +133,60 @@ export default function BankTransferPage() {
             type="button"
             onClick={() => navigate(-1)}
             aria-label="الرجوع للخلف"
-            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
         </div>
 
-        {/* 4-Step Progress Bar (Step 3 Active) */}
-        <div className="flex items-center justify-between rounded-2xl bg-white p-3 border border-slate-200/80 shadow-2xs text-[11px] font-bold text-center">
-          <div className="flex items-center gap-1.5 text-emerald-600 font-bold">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white text-[10px]">
-              <Check className="h-3 w-3 stroke-[3]" />
-            </span>
-            <span>اختر الباقة</span>
+        {/* 4-Step Stepper */}
+        <PaymentStepper currentStep={3} />
+
+        {errorMessage && (
+          <div className="p-3 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-2xl border border-red-200 dark:border-red-900/40">
+            {errorMessage}
           </div>
-          <span className="text-emerald-500">──</span>
-          <div className="flex items-center gap-1.5 text-emerald-600 font-bold">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white text-[10px]">
-              <Check className="h-3 w-3 stroke-[3]" />
-            </span>
-            <span>طريقة الدفع</span>
-          </div>
-          <span className="text-emerald-500">──</span>
-          <div className="flex items-center gap-1.5 text-[#123A68] font-black">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123A68] text-white text-[10px]">
-              3
-            </span>
-            <span>إتمام الدفع</span>
-          </div>
-          <span className="text-slate-300">──</span>
-          <div className="flex items-center gap-1 text-text-muted">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[10px]">
-              4
-            </span>
-            <span>تم الشراء</span>
-          </div>
-        </div>
+        )}
 
-        {/* Selected Package Banner */}
-        <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3.5 border border-slate-200/90 shadow-2xs">
-          <div className="flex items-baseline gap-0.5">
-            <span className="text-sm font-black text-[#123A68]">
-              {pkg.priceNis}
-            </span>
-            <span className="text-xs font-black text-[#123A68]">₪</span>
-          </div>
+        {/* Bank Transfer Details Card */}
+        <BankTransferDetailsCard
+          bankName={bankName}
+          beneficiaryName={beneficiaryName}
+          accountNumber={accountNumber}
+          transferRef={transferRef}
+          priceNis={pkg.priceNis}
+          copiedField={copiedField}
+          onCopy={handleCopy}
+        />
 
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-black text-[#123A68]">
-              {pkg.name} — {pkg.tokens} توكن
-            </span>
-            <Zap className="h-4.5 w-4.5 text-[#F36F21] fill-[#F36F21]" />
-          </div>
-        </div>
+        {/* Upload Receipt Card */}
+        <ReceiptUploaderCard
+          receiptFile={receiptFile}
+          fileInputRef={fileInputRef}
+          onFileChange={handleFileChange}
+          onRemoveFile={() => setReceiptFile(null)}
+          showWarning={showWarning}
+        />
 
-        {/* Main Bank Details Card */}
-        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-xs space-y-4 text-xs text-right">
-          {/* Yellow Warning Alert */}
-          <div className="flex items-start gap-2.5 rounded-2xl bg-[#FFFBEB] p-3.5 border border-[#FDE68A] text-[#92400E]">
-            <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-[#D97706]" />
-            <p className="text-xs font-bold leading-relaxed">
-              يُفعّل رصيدك تلقائياً بعد التحقق من التحويل خلال 1–2 يوم عمل
-            </p>
-          </div>
-
-          {/* Bank Info Fields */}
-          <div className="space-y-3 pt-1 divide-y divide-slate-100">
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-text-muted">اسم المستفيد</span>
-              <span className="font-black text-[#123A68]">
-                {beneficiaryName}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-text-muted">رقم الحساب</span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleCopy(accountNumber, "account")}
-                  className="p-1 text-slate-400 hover:text-primary transition-colors cursor-pointer"
-                  title="نسخ رقم الحساب"
-                >
-                  {copiedField === "account" ? (
-                    <CheckCheck className="h-4 w-4 text-emerald-600" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </button>
-                <span className="font-mono font-bold text-[#123A68] text-[11px] dir-ltr">
-                  PS12 PALS 5678 1234 .... ....
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-text-muted">اسم البنك</span>
-              <span className="font-black text-[#123A68]">
-                {bankName}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-text-muted">المبلغ المطلوب</span>
-              <span className="font-black text-[#123A68]">
-                {pkg.priceNis} شيكل اسرائيلي
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-text-muted">مرجع التحويل</span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleCopy(transferRef, "ref")}
-                  className="p-1 text-slate-400 hover:text-primary transition-colors cursor-pointer"
-                  title="نسخ مرجع التحويل"
-                >
-                  {copiedField === "ref" ? (
-                    <CheckCheck className="h-4 w-4 text-emerald-600" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </button>
-                <span className="font-mono font-black text-[#123A68] bg-slate-50 px-2 py-0.5 rounded-lg border border-slate-200">
-                  {transferRef}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Receipt Upload Box matching Figma */}
-          <div className="pt-2 space-y-2">
-            <div className="space-y-0.5">
-              <label className="text-xs font-black text-[#123A68] block">
-                📎 إيصال الدفع البنكي *
-              </label>
-              <p className="text-[10.5px] text-text-muted">
-                ارفع صورة إشعار التحويل الصادرة من البنك للمنصة فقط
-              </p>
-            </div>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png,image/jpeg,application/pdf"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-
-            {!receiptFile ? (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full flex flex-col items-center justify-center p-5 rounded-2xl border-2 border-dashed border-slate-300 hover:border-[#123A68] bg-[#F8FAFC] text-center transition-colors cursor-pointer space-y-1.5"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-[#123A68]">
-                  <Upload className="h-5 w-5" />
-                </div>
-                <span className="text-xs font-black text-[#123A68]">
-                  اضغط لرفع صورة الإيصال
-                </span>
-                <span className="text-[10px] text-text-muted">
-                  حجم أقصى 5 ميغابايت — PNG, JPG, PDF
-                </span>
-              </button>
-            ) : (
-              <div className="flex items-center justify-between rounded-2xl p-3.5 border border-emerald-200 bg-emerald-50/60">
-                <div className="flex items-center gap-2.5">
-                  <FileCheck className="h-5 w-5 text-emerald-600 shrink-0" />
-                  <div className="text-right">
-                    <p className="text-xs font-bold text-emerald-900 truncate max-w-[180px]">
-                      {receiptFile.name}
-                    </p>
-                    <p className="text-[10px] text-emerald-700">
-                      {(receiptFile.size / 1024).toFixed(1)} كيلوبايت
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setReceiptFile(null)}
-                  className="p-1 text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-            )}
-
-            {showWarning && !receiptFile && (
-              <p className="text-[11px] font-bold text-red-500 pt-1">
-                ⚠️ يجب رفع صورة الإيصال قبل التأكيد
-              </p>
-            )}
-          </div>
-
-          {errorMessage && (
-            <div className="rounded-2xl bg-red-50 p-3.5 border border-red-200 text-xs font-bold text-red-600 text-right">
-              {errorMessage}
-            </div>
+        {/* Action Submit Button */}
+        <button
+          type="button"
+          disabled={isUploadingReceipt || isCreatingInvoice}
+          onClick={handleCompleted}
+          className="w-full h-12 flex items-center justify-center gap-2 rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white hover:bg-[#0D2C50] dark:hover:bg-[#123A68] active:scale-98 disabled:opacity-50 transition-all cursor-pointer shadow-md"
+        >
+          {isUploadingReceipt ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>جاري إرسال الإشعار...</span>
+            </>
+          ) : (
+            <>
+              <Check className="h-4 w-4 stroke-3" />
+              <span>إرسال إشعار التحويل وتأكيد الطلب</span>
+            </>
           )}
-
-          {/* Submit Action Button */}
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={handleCompleted}
-              disabled={isCreatingInvoice || isUploadingReceipt}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#123A68] text-xs font-black text-white hover:bg-[#0D2C50] active:scale-98 transition-all disabled:opacity-60 cursor-pointer shadow-md"
-            >
-              {isCreatingInvoice || isUploadingReceipt ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Check className="h-4 w-4 stroke-[3]" />
-              )}
-              <span>
-                {isUploadingReceipt
-                  ? "جاري رفع الإيصال..."
-                  : isCreatingInvoice
-                    ? "جاري إنشاء الفاتورة..."
-                    : "إرسال الإيصال وتأكيد التحويل"}
-              </span>
-            </button>
-          </div>
-        </div>
+        </button>
       </div>
     </MobileContainer>
   );

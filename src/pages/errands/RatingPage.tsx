@@ -78,7 +78,7 @@ export default function RatingPage() {
         showBottomNav={false}
       >
         <div className="space-y-4 pb-8">
-          <div className="h-48 w-full animate-pulse rounded-[20px] bg-white border border-border" />
+          <div className="h-48 w-full animate-pulse rounded-xl bg-white dark:bg-[#102A4C] border border-border dark:border-white/10" />
         </div>
       </AppLayout>
     );
@@ -113,14 +113,14 @@ export default function RatingPage() {
         }}
         showBottomNav={false}
       >
-        <div className="rounded-[20px] bg-white p-8 text-center border border-border shadow-md mt-12">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 mb-4 animate-bounce border border-emerald-200">
+        <div className="w-full max-w-xl mx-auto rounded-3xl bg-white dark:bg-[#102A4C] p-8 text-center border border-border dark:border-white/10 shadow-md mt-8">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 mb-4 animate-bounce border border-emerald-200 dark:border-emerald-900/40">
             <CheckCircle className="h-8 w-8" />
           </div>
-          <h2 className="text-[20px] font-extrabold text-primary">
+          <h2 className="text-[20px] font-extrabold text-primary dark:text-white">
             تم تسجيل تقييمك بنجاح!
           </h2>
-          <p className="text-[13px] text-text-secondary mt-2 leading-relaxed">
+          <p className="text-[13px] text-text-secondary dark:text-slate-400 mt-2 leading-relaxed">
             مساهمتك في التقييم تعزز من موثوقية وأمان مجتمع "بطريقك".
           </p>
         </div>
@@ -137,7 +137,7 @@ export default function RatingPage() {
       }}
       showBottomNav={false}
     >
-      <form onSubmit={handleSubmit} className="space-y-4 pb-8 text-right">
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto space-y-5 pb-12 text-right">
         {/* Traveler Profile Header */}
         <Card variant="elevated">
           <div className="text-center">
@@ -189,7 +189,7 @@ export default function RatingPage() {
           </Card.Header>
 
           <Card.Body>
-            <label className="block text-[13px] text-text-secondary mb-2 text-right">
+            <label className="block text-[13px] text-text-secondary dark:text-slate-300 mb-2 text-right">
               كيف تمت محاسبة المسافر على المشوار؟
             </label>
 
@@ -199,8 +199,8 @@ export default function RatingPage() {
                 onClick={() => setPaymentModality("CASH")}
                 className={`p-3 rounded-[14px] border-2 font-bold text-[13px] transition-all cursor-pointer ${
                   paymentModality === "CASH"
-                    ? "border-[#F36F21] bg-amber-50 text-[#F36F21] shadow-sm"
-                    : "border-slate-200 bg-[#F8FAFC] text-primary"
+                    ? "border-[#F36F21] bg-amber-50 dark:bg-amber-950/40 text-[#F36F21] dark:text-amber-400 shadow-sm"
+                    : "border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] text-primary dark:text-white"
                 }`}
               >
                 💵 نقداً (كاش)
@@ -211,8 +211,8 @@ export default function RatingPage() {
                 onClick={() => setPaymentModality("BARTER")}
                 className={`p-3 rounded-[14px] border-2 font-bold text-[13px] transition-all cursor-pointer ${
                   paymentModality === "BARTER"
-                    ? "border-[#F36F21] bg-amber-50 text-[#F36F21] shadow-sm"
-                    : "border-slate-200 bg-[#F8FAFC] text-primary"
+                    ? "border-[#F36F21] bg-amber-50 dark:bg-amber-950/40 text-[#F36F21] dark:text-amber-400 shadow-sm"
+                    : "border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] text-primary dark:text-white"
                 }`}
               >
                 🤝 خدمة متبادلة (مقايضة)
@@ -240,7 +240,7 @@ export default function RatingPage() {
                     className={`px-3 py-1.5 rounded-full text-[12px] font-bold border transition-all cursor-pointer ${
                       isSelected
                         ? "border-[#F36F21] bg-[#F36F21] text-white shadow-sm"
-                        : "border-slate-200 bg-white text-text-secondary hover:border-slate-300"
+                        : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#0B1E36] text-text-secondary dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/20"
                     }`}
                   >
                     {isSelected ? `✓ ${tag}` : `+ ${tag}`}
@@ -264,9 +264,9 @@ export default function RatingPage() {
               onChange={(e) => setComments(e.target.value)}
               placeholder="اكتب كلمة شكر أو أي تفاصيل ترغب بمشاركتها..."
               maxLength={150}
-              className="w-full rounded-[14px] border border-slate-200 bg-[#FAFBFC] p-3 text-right text-[13px] text-primary outline-none focus:border-accent focus:bg-white resize-none"
+              className="w-full rounded-[14px] border border-slate-200 dark:border-white/10 bg-[#FAFBFC] dark:bg-[#0B1E36] p-3 text-right text-[13px] text-primary dark:text-white outline-none focus:border-accent focus:bg-white dark:focus:bg-[#102A4C] resize-none"
             />
-            <span className="text-[11px] text-text-muted block text-left">
+            <span className="text-[11px] text-text-muted dark:text-slate-400 block text-left">
               {comments.length}/150 حرف
             </span>
           </Card.Body>

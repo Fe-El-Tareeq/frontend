@@ -69,37 +69,40 @@ export default function WalletPage() {
   );
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title Header with "+ شراء توكنز" */}
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-black text-[#123A68]">المحفظة</h1>
+          <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">المحفظة</h1>
 
           <button
             type="button"
             onClick={() => navigate("/wallet/buy-tokens")}
             className="flex h-10 items-center justify-center gap-1.5 rounded-2xl bg-[#F36F21] px-4 text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-[#E05E12]"
           >
-            <Plus className="h-4 w-4 stroke-[3]" />
+            <Plus className="h-4 w-4 stroke-3" />
             <span>شراء توكنز</span>
           </button>
         </div>
 
-        {/* Current Balance Hero Card */}
-        <WalletBalanceHero
-          tokenBalance={currentBalance}
-          userName={profile?.fullName || "المستخدم"}
-          isLoading={isLoadingWallet}
-        />
+        {/* Balance Hero & Stats Summary Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+          {/* Current Balance Hero Card */}
+          <WalletBalanceHero
+            tokenBalance={currentBalance}
+            userName={profile?.fullName || "المستخدم"}
+            isLoading={isLoadingWallet}
+          />
 
-        {/* 2 Total Stats Cards (إجمالي الشراء / إجمالي الإنفاق) */}
-        <WalletStatsSummary
-          totalPurchased={totalBought}
-          totalSpent={totalSpent}
-          isLoading={isLoadingTransactions}
-        />
+          {/* 2 Total Stats Cards (إجمالي الشراء / إجمالي الإنفاق) */}
+          <WalletStatsSummary
+            totalPurchased={totalBought}
+            totalSpent={totalSpent}
+            isLoading={isLoadingTransactions}
+          />
+        </div>
 
         {/* Transactions Table Section */}
         <div className="space-y-2 pt-1">

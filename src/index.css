@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #123a68;
   --color-primary-dark: #0d2c50;
@@ -12,6 +14,11 @@
 
   --color-background: #f8fafc;
   --color-surface: #ffffff;
+
+  --color-dark-bg: #0b1e36;
+  --color-dark-surface: #102a4c;
+  --color-dark-card: #132f54;
+  --color-dark-border: #1e3a5f;
 
   --color-text-primary: #0f172a;
   --color-text-secondary: #475569;
@@ -57,10 +64,92 @@ html,
 body {
   direction: rtl;
   font-family: var(--font-sans);
-  background-color: #eef2f6;
+  background-color: #f8fafc;
   color: var(--color-text-primary);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Global smooth transition for seamless light/dark mode switching */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Exclude active animations and transforms from global transitions to prevent glitches */
+.animate-spin,
+.animate-pulse,
+.animate-bounce,
+.animate-in {
+  transition-property: background-color, border-color, color;
+}
+
+html.dark,
+html.dark body {
+  background-color: #0b1e36;
+  color: #f8fafc;
+}
+
+html.dark {
+  --color-background: #0b1e36;
+  --color-surface: #102a4c;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-border: #1e3a5f;
+  --color-border-subtle: #162f50;
+  --color-accent-light: rgba(243, 111, 33, 0.15);
+}
+
+/* Dark mode automatic text contrast enhancement for readable headings & labels */
+html.dark .text-primary:not([class*="dark:text-"]) {
+  color: #f8fafc;
+}
+
+html.dark .text-\[\#123A68\]:not([class*="dark:text-"]),
+html.dark .text-\[\#123a68\]:not([class*="dark:text-"]) {
+  color: #f8fafc;
+}
+
+html.dark .text-slate-900:not([class*="dark:text-"]),
+html.dark .text-slate-800:not([class*="dark:text-"]) {
+  color: #f1f5f9;
+}
+
+html.dark .text-slate-700:not([class*="dark:text-"]) {
+  color: #e2e8f0;
+}
+
+html.dark .text-slate-600:not([class*="dark:text-"]) {
+  color: #cbd5e1;
+}
+
+html.dark .text-text-secondary:not([class*="dark:text-"]) {
+  color: #cbd5e1;
+}
+
+/* Dark mode form controls readability */
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([class*="dark:bg-"]),
+html.dark textarea:not([class*="dark:bg-"]),
+html.dark select:not([class*="dark:bg-"]) {
+  background-color: #0b1e36;
+  border-color: #1e3a5f;
+  color: #f8fafc;
+}
+
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+html.dark textarea:focus,
+html.dark select:focus {
+  border-color: #f36f21;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b;
 }
 
 input,
@@ -86,6 +175,14 @@ select {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #1e3a5f;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334e68;
 }
 
 /* Safe Area Inset Support */

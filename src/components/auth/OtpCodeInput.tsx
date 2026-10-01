@@ -101,13 +101,13 @@ export function OtpCodeInput({
             aria-label={`Digit ${index + 1}`}
             className={cn(
               "h-12 w-11 sm:h-14 sm:w-12 text-center font-bold text-lg sm:text-xl rounded-2xl border transition-all duration-200 outline-none select-none",
-              "bg-[#F8FAFC] text-[#123A68]",
+              "bg-[#F8FAFC] dark:bg-[#0B1E36] text-[#123A68] dark:text-white",
               error
-                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100 dark:focus:ring-red-900/30"
                 : isFilled
-                  ? "border-[#123A68] bg-white ring-1 ring-[#123A68]/20"
-                  : "border-slate-200 hover:border-slate-300 focus:border-[#F36F21] focus:bg-white focus:ring-2 focus:ring-[#F36F21]/20",
-              disabled && "opacity-50 cursor-not-allowed bg-slate-100"
+                  ? "border-[#123A68] dark:border-[#38BDF8] bg-white dark:bg-[#102A4C] ring-1 ring-[#123A68]/20 dark:ring-[#38BDF8]/20"
+                  : "border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 focus:border-[#F36F21] focus:bg-white dark:focus:bg-[#102A4C] focus:ring-2 focus:ring-[#F36F21]/20",
+              disabled && "opacity-50 cursor-not-allowed bg-slate-100 dark:bg-slate-800"
             )}
           />
         );
