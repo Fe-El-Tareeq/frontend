@@ -10,6 +10,12 @@ describe("i18n Translation Catalog & API Error Integration", () => {
     expect(translateApiMessage("Invalid phone or password.")).toBe(
       "رقم الهاتف أو كلمة المرور غير صحيحة.",
     );
+    expect(translateApiMessage("Account email is not verified.")).toBe(
+      "لم يتم التحقق من البريد الإلكتروني للحساب.",
+    );
+    expect(translateApiMessage("A user with this email already exists.")).toBe(
+      "يوجد مستخدم بهذا البريد الإلكتروني مسبقاً.",
+    );
     expect(translateApiMessage("OTP has expired.")).toBe(
       "انتهت صلاحية رمز التحقق.",
     );

@@ -135,6 +135,26 @@ export const ProfileHeroCard: FC<ProfileHeroCardProps> = ({
           </div>
         </div>
 
+        {profile?.email && (
+          <div>
+            <label className="text-[11px] font-bold text-slate-700 block mb-1">
+              البريد الإلكتروني
+            </label>
+            <div className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 flex items-center justify-between text-xs font-bold text-slate-700 dir-ltr">
+              <span className="truncate">{profile.email}</span>
+              {profile.emailVerifiedAt ? (
+                <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold shrink-0 ml-2">
+                  مؤكد
+                </span>
+              ) : (
+                <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold shrink-0 ml-2">
+                  غير مؤكد
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
         <div>
           <label className="text-[11px] font-bold text-slate-700 block mb-1">
             المدينة

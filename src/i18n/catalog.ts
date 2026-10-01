@@ -41,8 +41,12 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   // Authentication
   "Selected neighborhood does not exist or is inactive.": "الحي المختار غير موجود أو غير نشط.",
   "A user with this phone already exists.": "يوجد حساب مسجل برقم الهاتف هذا مسبقاً.",
+  "A user with this email already exists.": "يوجد مستخدم بهذا البريد الإلكتروني مسبقاً.",
+  "Registration email has changed. Request a new code.": "تم تغيير البريد الإلكتروني للتسجيل. يرجى طلب رمز جديد.",
+  "Legal acceptance is missing. Please restart registration.": "الموافقة القانونية مفقودة. يرجى إعادة بدء التسجيل.",
   "Invalid phone or password.": "رقم الهاتف أو كلمة المرور غير صحيحة.",
   "Phone number is not verified.": "رقم الهاتف غير مؤكد بعد.",
+  "Account email is not verified.": "لم يتم التحقق من البريد الإلكتروني للحساب.",
   "User not found.": "المستخدم غير موجود.",
   "OTP not found.": "رمز التحقق غير موجود.",
   "Invalid OTP.": "رمز التحقق غير صحيح.",
@@ -50,9 +54,16 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "OTP has expired.": "انتهت صلاحية رمز التحقق.",
   "Too many OTP attempts.": "تم تجاوز الحد الأقصى لمحاولات رمز التحقق.",
   "OTP is no longer available.": "رمز التحقق لم يعد متاحاً.",
+  "Pending registration not found or expired.": "طلب التسجيل غير موجود أو انتهت صلاحيته.",
+  "Pending registration has expired.": "انتهت صلاحية طلب التسجيل.",
+  "Unable to deliver the verification code. Please try again later.": "تعذر إرسال رمز التحقق. يرجى المحاولة لاحقاً.",
   "Invalid or expired password reset code.": "رمز إعادة تعيين كلمة المرور غير صالح أو منتهي.",
   "Invalid password reset code.": "رمز إعادة تعيين كلمة المرور غير صحيح.",
   "Password reset code is no longer available.": "رمز إعادة تعيين كلمة المرور لم يعد متاحاً.",
+  "Account recovery request is invalid or expired.": "طلب استعادة الحساب غير صحيح أو منتهي الصلاحية.",
+  "Invalid verification code.": "رمز التحقق غير صحيح.",
+  "Invalid verification code or password.": "رمز التحقق أو كلمة المرور غير صحيحة.",
+  "Verification code is no longer available.": "لم يعد رمز التحقق متاحاً.",
   "Invalid refresh token.": "رمز التحديث غير صالح.",
   "Refresh token not found.": "رمز التحديث غير موجود.",
   "Refresh token has been revoked.": "تم إلغاء رمز التحديث.",
@@ -65,11 +76,14 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Full name must not exceed 100 characters.": "يجب ألا يتجاوز الاسم الكامل 100 حرف.",
   "Phone number is too short": "رقم الهاتف قصير جداً.",
   "Phone number is too long": "رقم الهاتف طويل جداً.",
+  "Email address must be valid": "يجب أن يكون البريد الإلكتروني صالحاً.",
+  "Email address is too long": "البريد الإلكتروني طويل جداً.",
   "Neighborhood ID must be a valid UUID.": "معرف الحي غير صالح.",
   "Password is required": "كلمة المرور مطلوبة.",
   "OTP must be exactly 6 digits": "يجب أن يتكون رمز التحقق من 6 أرقام تماماً.",
   "OTP must contain digits only": "يجب أن يحتوي رمز التحقق على أرقام فقط.",
   "Current password is required": "كلمة المرور الحالية مطلوبة.",
+  "Current password is incorrect.": "كلمة المرور الحالية غير صحيحة.",
   "Password confirmation is required": "تأكيد كلمة المرور مطلوب.",
   "Password confirmation does not match": "تأكيد كلمة المرور غير مطابق.",
   "Current refresh token is required": "رمز التحديث الحالي مطلوب.",
@@ -112,6 +126,13 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Voice note duration must not be negative.": "مدة التسجيل الصوتي لا يمكن أن تكون سالبة.",
   "Voice note duration must not exceed 30 seconds.": "يجب ألا تتجاوز مدة التسجيل الصوتي 30 ثانية.",
   "Since must be a valid ISO datetime with timezone.": "تاريخ المزامنة غير صالح.",
+  "Voice note size must be an integer.": "حجم الملاحظة الصوتية يجب أن يكون رقماً صحيحاً.",
+  "Voice note size is required.": "حجم الملاحظة الصوتية مطلوب.",
+  "Image URL is required.": "رابط الصورة مطلوب.",
+  "Image size must be an integer.": "حجم الصورة يجب أن يكون رقماً صحيحاً.",
+  "Image size is required.": "حجم الصورة مطلوب.",
+  "Voice MIME type is not supported.": "نوع ملف الصوت غير مدعوم.",
+  "Image MIME type is not supported.": "نوع ملف الصورة غير مدعوم.",
 
   // Delivery pricing
   "An origin neighborhood is required for pricing.": "حي الانطلاق مطلوب لحساب السعر.",
@@ -126,6 +147,7 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Complete your profile and select a neighborhood before posting errands.": "يرجى إكمال ملفك الشخصي واختيار الحي قبل نشر الطلبات.",
   "Errand cannot be updated in its current status.": "لا يمكن تعديل الطلب في حالته الحالية.",
   "Errand cannot be cancelled in its current status.": "لا يمكن إلغاء الطلب في حالته الحالية.",
+  "Errand cannot be updated after a proposal has been accepted.": "لا يمكن تحديث الطلب بعد قبول عرض عليه.",
   "You are not allowed to modify this errand.": "غير مصرح لك بتعديل هذا الطلب.",
   "Selected category does not exist or is inactive.": "التصنيف المختار غير موجود أو غير نشط.",
   "Selected pickup neighborhood does not exist or is inactive.": "حي الاستلام المختار غير موجود أو غير نشط.",
@@ -155,7 +177,7 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Only active, unexpired trips with an expected return time can be matched.": "فقط الرحلات النشطة وغير المنتهية ذات وقت العودة المحدد يمكن مطابقتها.",
   "ID must be a valid UUID.": "المعرف غير صالح.",
 
-  // Payments
+  // Payments & Bank transfers
   "Mock payment flow is not available.": "خدمة الدفع التجريبية غير متاحة حالياً.",
   "Client request key was already used for a different token package.": "تم استخدام مفتاح الطلب مسبقاً لحزمة توكنز مختلفة.",
   "Active token package was not found.": "حزمة التوكنز المطلوبة غير موجودة أو غير نشطة.",
@@ -166,6 +188,42 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Mock payment provider is not configured.": "مزود الدفع التجريبي غير مهيأ.",
   "Token package ID must be a valid UUID.": "معرف باقة التوكنز غير صالح.",
   "Invoice ID must be a valid UUID.": "معرف الفاتورة غير صالح.",
+  "Bank transfer invoice was not found.": "فاتورة الحوالة البنكية غير موجودة.",
+  "Bank transfer invoice has already been reviewed.": "تمت مراجعة فاتورة الحوالة البنكية مسبقاً.",
+  "A transfer receipt must be uploaded before review.": "يجب رفع إيصال الحوالة قبل المراجعة.",
+  "Bank transfer account details are not configured.": "لم يتم إعداد بيانات الحساب البنكي.",
+  "This invoice is not a bank transfer.": "هذه الفاتورة ليست حوالة بنكية.",
+  "This bank transfer invoice is no longer awaiting verification.": "فاتورة الحوالة البنكية هذه لم تعد بانتظار التحقق.",
+  "This bank transfer invoice expired; create a new invoice.": "انتهت صلاحية فاتورة الحوالة البنكية، يرجى إنشاء فاتورة جديدة.",
+  "Payment receipt is required.": "إيصال الدفع مطلوب.",
+  "Receipt must be a PNG, JPG, or PDF file.": "يجب أن يكون الإيصال ملف PNG أو JPG أو PDF.",
+  "Receipt must not exceed 5 MB.": "يجب ألا يتجاوز حجم الإيصال 5 ميغابايت.",
+  "Upload exactly one receipt file.": "يرجى رفع ملف إيصال واحد فقط.",
+  "Receipt file content does not match its file type.": "محتوى ملف الإيصال لا يطابق نوعه المحدد.",
+  "A phone number is required for OTP payment.": "رقم الهاتف مطلوب للدفع عبر رمز OTP.",
+  "A phone number is only accepted for OTP payment.": "رقم الهاتف مسموح به فقط مع الدفع عبر OTP.",
+  "Unsupported payment method.": "طريقة الدفع المحددة غير مدعومة.",
+  "Please wait before requesting another OTP.": "يرجى الانتظار قبل طلب رمز OTP آخر.",
+  "Payment OTP has expired. Request a new code.": "انتهت صلاحية رمز التحقق للدفع. اطلب رمزاً جديداً.",
+  "Too many OTP attempts. Request a new code.": "تم تجاوز عدد محاولات رمز التحقق. اطلب رمزاً جديداً.",
+  "Invalid payment OTP.": "رمز التحقق للدفع غير صحيح.",
+  "Use OTP verification for this invoice.": "استخدم التحقق عبر رمز OTP لهذه الفاتورة.",
+  "This invoice does not use OTP payment.": "هذه الفاتورة لا تدعم الدفع عبر OTP.",
+  "No active OTP challenge exists for this invoice.": "لا يوجد طلب تحقق OTP نشط لهذه الفاتورة.",
+
+  // Proposals
+  "A user cannot create a proposal for their own errand and trip.": "لا يمكن للمستخدم إنشاء عرض لطلبه ورحلته الخاصين.",
+  "Only the trip owner can send a traveler offer.": "مالك الرحلة فقط يمكنه إرسال عرض مسافر.",
+  "Only the errand owner can send a requester request.": "مالك الطلب فقط يمكنه إرسال طلب من طالب.",
+  "Client request key was already used with different proposal data.": "تم استخدام مفتاح طلب العميل مع بيانات عرض مختلفة.",
+  "A proposal for this errand and trip already exists.": "يوجد عرض لهذا الطلب والرحلة مسبقاً.",
+  "Only the resource owner can view incoming proposals.": "مالك المورد فقط يمكنه عرض العروض الواردة.",
+  "Proposal not found.": "العرض غير موجود.",
+  "Only the proposal receiver can accept it.": "مستلم العرض فقط يمكنه قبوله.",
+  "Only pending proposals can be accepted.": "يمكن قبول العروض المعلقة فقط.",
+  "Proposal has expired.": "انتهت صلاحية العرض.",
+  "Only the proposal receiver can reject it.": "مستلم العرض فقط يمكنه رفضه.",
+  "Only pending proposals can be rejected.": "يمكن رفض العروض المعلقة فقط.",
 
   // Ratings
   "Only assignment participants can submit a rating.": "فقط أطراف التعيين يمكنهم تقديم التقييم.",
@@ -176,6 +234,7 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   // Trips
   "Traveler not found.": "المسافر غير موجود.",
   "Phone number must be verified before creating a trip.": "يجب تأكيد رقم الهاتف قبل إضافة رحلة.",
+  "Account email must be verified before creating a trip.": "يجب التحقق من البريد الإلكتروني للحساب قبل إنشاء رحلة.",
   "Profile must be completed before creating a trip.": "يجب إكمال الملف الشخصي قبل إضافة رحلة.",
   "A neighborhood must be selected before creating a trip.": "يجب اختيار الحي السكني قبل إضافة رحلة.",
   "The selected neighborhood is not active.": "الحي المختار غير نشط.",
@@ -216,6 +275,7 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Uploaded file content is not a valid image.": "الملف المرفوع ليس صورة صالحة.",
   "Profile image must not exceed 5 MB.": "يجب ألا يتجاوز حجم الصورة الشخصية 5 ميجابايت.",
   "Profile image storage is not configured.": "خدمة تخزين الصور غير مهيأة.",
+  "Account cannot be deactivated while active operations exist.": "لا يمكن تعطيل الحساب أثناء وجود عمليات نشطة.",
 
   // Wallet
   "Wallet not found": "المحفظة غير موجودة.",
@@ -241,6 +301,7 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "Storage did not return an identity document access URL.": "تعذر إنشاء رابط آمن لمستند الهوية.",
   "Identity verification not found.": "طلب التحقق من الهوية غير موجود.",
   "Identity verification has already been reviewed.": "تمت مراجعة طلب التحقق من الهوية مسبقاً.",
+  "A rejection reason of 3 to 500 characters is required.": "يجب تقديم سبب رفض يتراوح بين 3 و500 حرف.",
 
   // Tracking, checklists, and delivery estimates
   "Only the requester can track this errand.": "يمكن لطالب الطلب فقط تتبع هذا الطلب.",
@@ -279,6 +340,7 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
   "FAQ not found.": "السؤال الشائع غير موجود.",
   "Super administrator access is required.": "يتطلب هذا الإجراء صلاحيات المشرف العام.",
   "Administrator access is required.": "يتطلب هذا الإجراء صلاحيات administrator.",
+  "Dashboard administrator access is required.": "يتطلب هذا الإجراء صلاحيات مشرف لوحة التحكم.",
   "At least one field is required.": "يجب توفير حقل واحد على الأقل.",
   "FAQ IDs must be unique.": "يجب ألا تتكرر معرّفات الأسئلة الشائعة.",
 
@@ -295,9 +357,19 @@ export const EXACT_ERROR_TRANSLATIONS: Record<string, string> = {
 
 export const SUCCESS_TRANSLATIONS: Record<string, string> = {
   "Registration OTP sent successfully": "تم إرسال رمز التحقق بنجاح.",
+  "Verification code sent successfully": "تم إرسال رمز التحقق بنجاح.",
+  "Registration verification code sent successfully": "تم إرسال رمز التحقق للتسجيل بنجاح.",
+  "OTP sent successfully": "تم إرسال رمز التحقق بنجاح.",
+  "OTP verified successfully": "تم التحقق من الرمز بنجاح.",
+  "Logged in successfully": "تم تسجيل الدخول بنجاح.",
   "Logged out successfully": "تم تسجيل الخروج بنجاح.",
+  "Token refreshed successfully": "تم تحديث الرموز بنجاح.",
   "If an account exists, a reset code has been sent.": "إذا كان الحساب مسجلاً، تم إرسال رمز استعادة كلمة المرور.",
+  "If the account is eligible, a reset code will be delivered.": "إذا كان الحساب مؤهلاً، سيتم إرسال رمز إعادة التعيين.",
+  "If account recovery is available, a verification code will be delivered.": "إذا كانت استعادة الحساب متاحة، سيتم إرسال رمز التحقق.",
+  "Password reset successfully. Please log in again.": "تمت إعادة تعيين كلمة المرور بنجاح. يرجى تسجيل الدخول مجدداً.",
   "Password has been reset successfully.": "تمت إعادة تعيين كلمة المرور بنجاح.",
+  "Account deletion cancelled and account reactivated successfully.": "تم إلغاء حذف الحساب وإعادة تفعيله بنجاح.",
   "Active neighborhoods retrieved successfully.": "تم جلب الأحياء النشطة بنجاح.",
   "Profile image updated": "تم تحديث الصورة الشخصية بنجاح.",
   "Profile image deleted": "تم حذف الصورة الشخصية بنجاح.",
@@ -323,6 +395,23 @@ export const SUCCESS_TRANSLATIONS: Record<string, string> = {
   "Support ticket created successfully": "تم إرسال تذكرة الدعم الفني بنجاح.",
   "Report submitted successfully": "تم إرسال البلاغ بنجاح.",
   "Account deactivated successfully": "تم تعطيل الحساب بنجاح.",
+  "Administrator logged in successfully": "تم تسجيل دخول المشرف بنجاح.",
+  "Administrator retrieved successfully": "تم جلب بيانات المشرف بنجاح.",
+  "Bank transfer invoices retrieved successfully.": "تم جلب فواتير الحوالات البنكية بنجاح.",
+  "Bank transfer approved and wallet credited.": "تمت الموافقة على الحوالة البنكية وشحن المحفظة بنجاح.",
+  "Bank transfer rejected.": "تم رفض الحوالة البنكية.",
+  "Trip checklist retrieved successfully.": "تم جلب قائمة التحقق للرحلة بنجاح.",
+  "Errand tracking retrieved successfully": "تم جلب تتبع الطلب بنجاح.",
+  "تم إرسال طلبك للمراجعة": "تم إرسال طلب التحقق من الهوية للمراجعة بنجاح.",
+  "Identity verification submitted successfully.": "تم إرسال طلب التحقق من الهوية للمراجعة بنجاح.",
+  "Identity verification approved successfully.": "تمت الموافقة على التحقق من الهوية بنجاح.",
+  "Identity verification rejected successfully.": "تم رفض التحقق من الهوية.",
+  "Estimated delivery time updated.": "تم تحديث وقت التسليم المتوقع.",
+  "FAQs retrieved successfully.": "تم جلب الأسئلة الشائعة بنجاح.",
+  "FAQ created successfully.": "تمت إضافة السؤال الشائع بنجاح.",
+  "FAQ updated successfully.": "تم تحديث السؤال الشائع بنجاح.",
+  "FAQs reordered successfully.": "تم إعادة ترتيب الأسئلة الشائعة بنجاح.",
+  "FAQ deactivated successfully.": "تم إلغاء تفعيل السؤال الشائع.",
 };
 
 const ACTION_MAP: Record<string, string> = {
@@ -344,6 +433,12 @@ const LABEL_MAP: Record<string, string> = {
   errand: "الطلب",
   trip: "الرحلة",
   assignment: "التعيين",
+  Origin: "الانطلاق",
+  origin: "الانطلاق",
+  Destination: "الوجهة",
+  destination: "الوجهة",
+  Pickup: "الاستلام",
+  pickup: "الاستلام",
 };
 
 export const DYNAMIC_PATTERN_TRANSLATIONS: Array<{
@@ -353,6 +448,24 @@ export const DYNAMIC_PATTERN_TRANSLATIONS: Array<{
   {
     pattern: /^Route not found: (.*)$/i,
     replace: (_, route) => `المسار المطلوب غير موجود: ${route}`,
+  },
+  {
+    pattern: /^Please wait (\d+) seconds before requesting another code\.$/i,
+    replace: (_, secs) => `يرجى الانتظار ${secs} ثانية قبل طلب رمز جديد.`,
+  },
+  {
+    pattern: /^(.*) neighborhood is missing, inactive, or invalid\.$/i,
+    replace: (_, label) => {
+      const translatedLabel = LABEL_MAP[label.trim()] || label;
+      return `حي ${translatedLabel} مفقود أو غير نشط أو غير صالح.`;
+    },
+  },
+  {
+    pattern: /^(.*) neighborhood does not belong to the requested zone\.$/i,
+    replace: (_, label) => {
+      const translatedLabel = LABEL_MAP[label.trim()] || label;
+      return `حي ${translatedLabel} لا يتبع المنطقة المحددة.`;
+    },
   },
   {
     pattern: /^(.*) must have active origin and destination neighborhoods\.$/i,

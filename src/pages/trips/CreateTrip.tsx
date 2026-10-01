@@ -53,6 +53,11 @@ export default function CreateTrip() {
       return;
     }
 
+    if (profile && profile.email && !profile.emailVerifiedAt && !profile.phoneVerifiedAt) {
+      setErrorMessage("يجب التحقق من البريد الإلكتروني للحساب قبل إنشاء رحلة.");
+      return;
+    }
+
     setErrorMessage(null);
 
     try {

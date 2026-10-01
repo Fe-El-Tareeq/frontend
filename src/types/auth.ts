@@ -6,6 +6,8 @@ export type UserStatus = "ACTIVE" | "SUSPENDED" | "BANNED";
 export interface UserSummary {
   id: string;
   phone: string;
+  email?: string | null;
+  emailVerifiedAt?: string | null;
   fullName?: string | null;
   trustScore?: number;
   profileImageUrl?: string | null;
@@ -16,6 +18,7 @@ export interface UserSummary {
 export interface UserProfile {
   id: string;
   phone: string;
+  email?: string | null;
   fullName: string | null;
   profileImageUrl?: string | null;
   role: UserRole;
@@ -23,6 +26,7 @@ export interface UserProfile {
   neighborhoodId: string | null;
   profileCompleted: boolean;
   phoneVerifiedAt: string | null;
+  emailVerifiedAt?: string | null;
   isVerified?: boolean;
   verificationStatus?: "UNVERIFIED" | "PENDING_REVIEW" | "VERIFIED" | "REJECTED";
   status: UserStatus;
@@ -42,6 +46,7 @@ export interface AuthTokens {
 export interface RegisterRequest {
   fullName: string;
   phone: string;
+  email: string;
   password: string;
   neighborhoodId: string;
   termsAccepted?: boolean;
