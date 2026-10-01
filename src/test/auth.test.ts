@@ -51,6 +51,7 @@ describe("Auth Module & Swagger API Schemas", () => {
   const registerRequestSchema = z.object({
     fullName: z.string().min(2),
     phone: z.string().min(8).max(20),
+    email: z.string().email(),
     password: z.string().min(8),
     neighborhoodId: z.string().min(1),
   });
@@ -59,6 +60,7 @@ describe("Auth Module & Swagger API Schemas", () => {
     const validPayload = {
       fullName: "هديل محمد",
       phone: "0591234567",
+      email: "hadeel@example.com",
       password: "Password123!",
       neighborhoodId: "60a32850-bd3f-444a-84b4-c750abf6ecb6",
     };

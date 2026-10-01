@@ -27,6 +27,7 @@ export default function RegisterStep2() {
   const step1Data = location.state as {
     fullName?: string;
     phone?: string;
+    email?: string;
     password?: string;
   } | null;
 
@@ -44,6 +45,7 @@ export default function RegisterStep2() {
       state: {
         fullName: step1Data?.fullName,
         phone: step1Data?.phone,
+        email: step1Data?.email,
         password: step1Data?.password,
       },
     });
@@ -88,13 +90,16 @@ export default function RegisterStep2() {
       await registerApi({
         fullName: step1Data.fullName!,
         phone: step1Data.phone!,
+        email: step1Data.email || "",
         password: step1Data.password!,
         neighborhoodId: targetNeighborhoodId,
+        termsAccepted: true,
       });
 
       navigate("/verify-otp", {
         state: {
           phone: step1Data.phone,
+          email: step1Data.email,
           fullName: step1Data.fullName,
         },
       });

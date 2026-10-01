@@ -133,6 +133,22 @@ export default function EditProfile() {
               />
             </div>
 
+            {/* Email (Read-only) */}
+            {profile?.email && (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  البريد الإلكتروني (غير قابل للتعديل)
+                </label>
+                <input
+                  type="text"
+                  value={profile.email}
+                  disabled
+                  dir="ltr"
+                  className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 text-right text-xs font-bold text-slate-500 cursor-not-allowed"
+                />
+              </div>
+            )}
+
             {/* Full Name */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">

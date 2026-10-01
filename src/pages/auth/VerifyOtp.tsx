@@ -24,11 +24,13 @@ export default function VerifyOtp() {
   const navigate = useNavigate();
   const stateData = location.state as {
     phone?: string;
+    email?: string;
     fullName?: string;
     isResetPassword?: boolean;
   } | null;
 
   const phone = stateData?.phone;
+  const email = stateData?.email;
   const isResetPassword = stateData?.isResetPassword;
 
   const { verifyOtp, isVerifyingOtp, requestOtp, isRequestingOtp } = useAuth();
@@ -107,6 +109,7 @@ export default function VerifyOtp() {
       navigate("/register-step2", {
         state: {
           phone: stateData?.phone,
+          email: stateData?.email,
           fullName: stateData?.fullName,
         },
       });
@@ -116,7 +119,13 @@ export default function VerifyOtp() {
   return (
     <AuthLayout
       title="لا داعي للقلق !"
-      subtitle={`سيتم إرسال كود لرقم الهاتف ${phone || ""} لتأكيد امتلاك للحساب ...`}
+      subtitle={
+        email
+          ? `تم إرسال رمز التحقق إلى بريدك الإلكتروني ${email} لتأكيد امتلاك الحساب ...`
+          : phone
+            ? `تم إرسال رمز التحقق لتأكيد امتلاك الحساب المرتبط برقم ${phone} ...`
+            : "تم إرسال رمز التحقق لتأكيد امتلاك الحساب ..."
+      }
       showBack={true}
       onBack={handleBack}
     >

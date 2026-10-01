@@ -8,12 +8,17 @@ import { Form } from "../../components/ui/form/Form";
 const step1Schema = z.object({
   fullName: z
     .string()
-    .min(3, "الاسم الكامل يجب أن يتكون من 3 أحرف على الأقل")
-    .max(50, "الاسم طويل جداً"),
+    .min(2, "الاسم الكامل يجب ألا يقل عن حرفين")
+    .max(100, "الاسم طويل جداً"),
   phone: z
     .string()
     .min(8, "رقم الهاتف يجب أن يتكون من 8 أرقام على الأقل")
-    .max(20, "رقم الهاتف غير صالح"),
+    .max(20, "رقم الهاتف طويل جداً"),
+  email: z
+    .string()
+    .min(1, "البريد الإلكتروني مطلوب")
+    .email("يجب إدخال بريد إلكتروني صالح")
+    .max(254, "البريد الإلكتروني طويل جداً"),
   password: z
     .string()
     .min(8, "كلمة المرور يجب ألا تقل عن 8 أحرف")
@@ -32,6 +37,7 @@ export default function RegisterStep1() {
   const existingData = location.state as {
     fullName?: string;
     phone?: string;
+    email?: string;
     password?: string;
   } | null;
 
@@ -44,6 +50,7 @@ export default function RegisterStep1() {
     defaultValues: {
       fullName: existingData?.fullName || "",
       phone: existingData?.phone || "",
+      email: existingData?.email || "",
       password: existingData?.password || "",
     },
   });
@@ -53,6 +60,7 @@ export default function RegisterStep1() {
       state: {
         fullName: data.fullName,
         phone: data.phone,
+        email: data.email,
         password: data.password,
       },
     });
@@ -91,6 +99,19 @@ export default function RegisterStep1() {
             dir="ltr"
             className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
             {...register("phone")}
+          />
+          <Form.ErrorMessage />
+        </Form.Field>
+
+        {/* Email */}
+        <Form.Field name="email" error={errors.email?.message} required>
+          <Form.Label>البريد الإلكتروني</Form.Label>
+          <Form.Input
+            type="email"
+            placeholder="user@example.com"
+            dir="ltr"
+            className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            {...register("email")}
           />
           <Form.ErrorMessage />
         </Form.Field>

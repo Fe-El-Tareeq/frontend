@@ -180,7 +180,7 @@ describe("auth forms", () => {
     fireEvent.click(screen.getByText("التالي"));
 
     expect(
-      await screen.findByText("الاسم الكامل يجب أن يتكون من 3 أحرف على الأقل"),
+      await screen.findByText("الاسم الكامل يجب ألا يقل عن حرفين"),
     ).toBeInTheDocument();
   });
 
@@ -189,6 +189,7 @@ describe("auth forms", () => {
 
     fillInput(container, "fullName", "هديل محمد");
     fillInput(container, "phone", "0599123456");
+    fillInput(container, "email", "hadeel@example.com");
     fillInput(container, "password", "Pass1234!");
     fireEvent.click(screen.getByText("التالي"));
 
@@ -204,6 +205,7 @@ describe("auth forms", () => {
       state: {
         fullName: "هديل محمد",
         phone: "0599123456",
+        email: "hadeel@example.com",
         password: "Password123!",
       },
     });
@@ -215,8 +217,10 @@ describe("auth forms", () => {
       expect(authMock.register).toHaveBeenCalledWith({
         fullName: "هديل محمد",
         phone: "0599123456",
+        email: "hadeel@example.com",
         password: "Password123!",
         neighborhoodId: "n1",
+        termsAccepted: true,
       }),
     );
     await waitFor(() =>
@@ -239,6 +243,7 @@ describe("auth forms", () => {
       state: {
         fullName: "هديل محمد",
         phone: "0599123456",
+        email: "hadeel@example.com",
         password: "Password123!",
       },
     });
