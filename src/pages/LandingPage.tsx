@@ -24,7 +24,7 @@ export default function LandingPage() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-6 text-right">
+    <MobileContainer hasSidebar={false} className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-12 text-right max-w-none">
       {/* 1. Header with Menu Button & Logo */}
       <LandingHeader
         onOpenMenu={() => setIsMenuOpen(true)}
@@ -53,7 +53,7 @@ export default function LandingPage() {
       <LandingSubNav onScrollTo={scrollToSection} />
 
       {/* 4. Page Content Sections */}
-      <div className="px-4 pt-4 space-y-6">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-8 lg:px-12 pt-6 space-y-10">
         {/* Hero Section */}
         <HeroSection
           onNeedItem={() => navigate("/login")}

@@ -9,11 +9,11 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 const CardRoot = forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = "default", children, ...props }, ref) => {
     const variants = {
-      default: "bg-white border border-border shadow-sm",
-      elevated: "bg-white shadow-md border border-border/60",
-      outlined: "bg-white border-2 border-border",
+      default: "bg-white dark:bg-[#102A4C] border border-border dark:border-white/10 shadow-sm",
+      elevated: "bg-white dark:bg-[#102A4C] shadow-md border border-border/60 dark:border-white/10",
+      outlined: "bg-white dark:bg-[#102A4C] border-2 border-border dark:border-white/10",
       interactive:
-        "bg-white border border-border shadow-sm hover:shadow-md hover:border-accent/40 transition-all duration-200 cursor-pointer active:scale-[0.99]",
+        "bg-white dark:bg-[#102A4C] border border-border dark:border-white/10 shadow-sm hover:shadow-md hover:border-accent/40 dark:hover:border-accent/50 transition-all duration-200 cursor-pointer active:scale-[0.99]",
     };
 
     return (
@@ -40,7 +40,7 @@ const CardHeader = ({
 }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex items-start justify-between gap-3 pb-3 border-b border-border/50",
+      "flex items-start justify-between gap-3 pb-3 border-b border-border/50 dark:border-white/10",
       className,
     )}
     {...props}
@@ -56,7 +56,7 @@ const CardTitle = ({
   ...props
 }: HTMLAttributes<HTMLHeadingElement>) => (
   <h3
-    className={cn("text-base font-bold text-primary leading-snug", className)}
+    className={cn("text-base font-bold text-primary dark:text-white leading-snug", className)}
     {...props}
   >
     {children}
@@ -69,7 +69,7 @@ const CardDescription = ({
   children,
   ...props
 }: HTMLAttributes<HTMLParagraphElement>) => (
-  <p className={cn("text-xs text-text-secondary mt-0.5", className)} {...props}>
+  <p className={cn("text-xs text-text-secondary dark:text-slate-400 mt-0.5", className)} {...props}>
     {children}
   </p>
 );
@@ -80,7 +80,7 @@ const CardBody = ({
   children,
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("py-3 text-sm text-primary", className)} {...props}>
+  <div className={cn("py-3 text-sm text-primary dark:text-slate-200", className)} {...props}>
     {children}
   </div>
 );
@@ -93,7 +93,7 @@ const CardFooter = ({
 }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "pt-3 border-t border-border/50 flex items-center justify-between gap-3",
+      "pt-3 border-t border-border/50 dark:border-white/10 flex items-center justify-between gap-3",
       className,
     )}
     {...props}

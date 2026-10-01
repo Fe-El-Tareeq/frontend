@@ -17,24 +17,24 @@ export function RequestSpaceSuccessModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
       <div
-        className="w-full max-w-sm rounded-[28px] bg-white p-7 text-center shadow-xl space-y-4 text-right"
+        className="w-full max-w-sm rounded-[28px] bg-white dark:bg-[#102A4C] border border-transparent dark:border-white/10 p-7 text-center shadow-xl space-y-4"
         dir="rtl"
       >
         {/* Peach circle with orange check */}
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#FFF0E6]">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#FFF0E6] dark:bg-[#F36F21]/20">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F36F21] text-white shadow-xs">
-            <Check className="h-6 w-6 stroke-[3]" />
+            <Check className="h-6 w-6 stroke-3" />
           </div>
         </div>
 
         {/* Text */}
         <div className="space-y-1 text-center">
-          <h3 className="text-xl font-black text-[#123A68]">
+          <h3 className="text-xl font-black text-[#123A68] dark:text-white">
             تم إرسال طلبك بنجاح
           </h3>
-          <p className="text-xs text-text-secondary leading-relaxed max-w-[240px] mx-auto">
+          <p className="text-xs text-text-secondary dark:text-slate-300 leading-relaxed max-w-60 mx-auto">
             سيتم إشعارك فور موافقة السائق على مشاركتك بالرحلة
           </p>
         </div>
@@ -58,7 +58,7 @@ export function RequestSpaceSuccessModal({
               onClose();
               navigate("/trips");
             }}
-            className="w-full py-2.5 text-xs font-bold text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
+            className="w-full py-2.5 text-xs font-bold text-[#123A68] dark:text-slate-300 hover:text-[#F36F21] dark:hover:text-accent transition-colors cursor-pointer"
           >
             العودة للرحلات
           </button>

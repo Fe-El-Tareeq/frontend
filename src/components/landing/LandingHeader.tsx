@@ -27,7 +27,7 @@ export const LandingHeader: FC<LandingHeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-40 flex h-15 items-center justify-between bg-white px-4 border-b border-border/60 shadow-2xs">
+      <header className="sticky top-0 z-40 flex h-15 items-center justify-between bg-white dark:bg-[#102A4C] px-4 border-b border-border/60 dark:border-white/10 shadow-2xs">
         {/* Right side in RTL: Brand Logo & Title */}
         <div
           onClick={onNavigateHome}
@@ -38,7 +38,7 @@ export const LandingHeader: FC<LandingHeaderProps> = ({
             alt="بطريقك"
             className="h-8 w-8 object-contain"
           />
-          <span className="text-base font-black text-[#123A68]">بطريقك</span>
+          <span className="text-base font-black text-[#123A68] dark:text-white">بطريقك</span>
         </div>
 
         {/* Left side in RTL: Install App Button, Login Button & Hamburger Menu Icon */}
@@ -47,7 +47,7 @@ export const LandingHeader: FC<LandingHeaderProps> = ({
             <button
               type="button"
               onClick={handleInstallClick}
-              className="hidden sm:flex items-center gap-1.5 rounded-full bg-[#FFF5EE] px-3 py-1.5 border border-[#FDE0CE] text-xs font-black text-[#F36F21] hover:bg-[#FEECE0] active:scale-95 transition-all cursor-pointer"
+              className="hidden sm:flex items-center gap-1.5 rounded-full bg-[#FFF5EE] dark:bg-[#F36F21]/15 px-3 py-1.5 border border-[#FDE0CE] dark:border-[#F36F21]/30 text-xs font-black text-[#F36F21] hover:bg-[#FEECE0] active:scale-95 transition-all cursor-pointer"
             >
               <Download className="h-3.5 w-3.5" />
               <span>تثبيت</span>
@@ -57,7 +57,7 @@ export const LandingHeader: FC<LandingHeaderProps> = ({
           <button
             type="button"
             onClick={() => navigate("/login")}
-            className="flex items-center gap-1.5 rounded-xl bg-[#123A68] px-3 py-1.5 text-xs font-black text-white hover:bg-[#0D2C50] active:scale-95 transition-all cursor-pointer shadow-xs"
+            className="flex items-center gap-1.5 rounded-xl bg-[#123A68] dark:bg-[#1E4E8C] px-3 py-1.5 text-xs font-black text-white hover:bg-[#0D2C50] dark:hover:bg-[#123A68] active:scale-95 transition-all cursor-pointer shadow-xs"
           >
             <LogIn className="h-3.5 w-3.5" />
             <span>دخول</span>
@@ -66,7 +66,7 @@ export const LandingHeader: FC<LandingHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenMenu}
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 border border-slate-200 text-[#123A68] hover:bg-slate-100 transition-colors cursor-pointer"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 dark:bg-[#0B1E36] border border-slate-200 dark:border-white/10 text-[#123A68] dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
             aria-label="القائمة الرئيسية"
           >
             <Menu className="h-5 w-5" />

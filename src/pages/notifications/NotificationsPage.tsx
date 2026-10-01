@@ -77,10 +77,10 @@ export default function NotificationsPage() {
 
     const iconClasses = isUnread
       ? "h-5 w-5 text-white"
-      : "h-5 w-5 text-[#64748B]";
+      : "h-5 w-5 text-[#64748B] dark:text-slate-400";
     const containerClasses = isUnread
-      ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#123A68] shadow-xs"
-      : "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F1F5F9]";
+      ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] shadow-xs"
+      : "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F1F5F9] dark:bg-[#0B1E36]";
 
     switch (type) {
       case "TRIP":
@@ -117,25 +117,25 @@ export default function NotificationsPage() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Page Header (Title + Mark All As Read) */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+              className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
             <div>
-              <h1 className="text-xl font-black text-[#123A68]">
+              <h1 className="text-xl font-black text-[#123A68] dark:text-white">
                 بطاقات الإشعارات
               </h1>
               {unreadCount > 0 && (
-                <span className="text-[11px] font-bold text-text-muted">
+                <span className="text-[11px] font-bold text-text-muted dark:text-slate-400">
                   لديك {unreadCount} إشعار غير مقروء
                 </span>
               )}
@@ -156,7 +156,7 @@ export default function NotificationsPage() {
 
         {/* PWA Phone Notifications Permission Banner */}
         {permission !== "granted" && (
-          <div className="rounded-3xl bg-gradient-to-r from-[#123A68] to-[#0A1F38] p-4 text-white shadow-md space-y-2.5 animate-fade-in">
+          <div className="rounded-3xl bg-linear-to-r from-[#123A68] to-[#0A1F38] p-4 text-white shadow-md space-y-2.5 animate-fade-in">
             <div className="flex items-start justify-between gap-3">
               <button
                 type="button"
@@ -183,14 +183,14 @@ export default function NotificationsPage() {
         {/* Filter Tabs & Test Notification CTA */}
         <div className="flex items-center justify-between gap-2">
           {/* Tabs */}
-          <div className="flex items-center gap-1 rounded-2xl bg-slate-100 p-1 text-xs font-bold">
+          <div className="flex items-center gap-1 rounded-2xl bg-slate-100 dark:bg-[#102A4C] p-1 text-xs font-bold border border-transparent dark:border-white/5">
             <button
               type="button"
               onClick={() => setActiveTab("all")}
               className={`rounded-xl px-3 py-1.5 transition-all cursor-pointer ${
                 activeTab === "all"
-                  ? "bg-white text-[#123A68] shadow-2xs font-black"
-                  : "text-text-muted hover:text-text-primary"
+                  ? "bg-white dark:bg-[#0B1E36] text-[#123A68] dark:text-white shadow-2xs font-black"
+                  : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
               }`}
             >
               الكل ({notifications.length})
@@ -200,8 +200,8 @@ export default function NotificationsPage() {
               onClick={() => setActiveTab("unread")}
               className={`rounded-xl px-3 py-1.5 transition-all cursor-pointer ${
                 activeTab === "unread"
-                  ? "bg-white text-[#123A68] shadow-2xs font-black"
-                  : "text-text-muted hover:text-text-primary"
+                  ? "bg-white dark:bg-[#0B1E36] text-[#123A68] dark:text-white shadow-2xs font-black"
+                  : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
               }`}
             >
               غير مقروءة ({unreadCount})
@@ -211,8 +211,8 @@ export default function NotificationsPage() {
               onClick={() => setActiveTab("read")}
               className={`rounded-xl px-3 py-1.5 transition-all cursor-pointer ${
                 activeTab === "read"
-                  ? "bg-white text-[#123A68] shadow-2xs font-black"
-                  : "text-text-muted hover:text-text-primary"
+                  ? "bg-white dark:bg-[#0B1E36] text-[#123A68] dark:text-white shadow-2xs font-black"
+                  : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
               }`}
             >
               مقروءة ({notifications.length - unreadCount})
@@ -225,7 +225,7 @@ export default function NotificationsPage() {
             onClick={handleSendTestNotification}
             disabled={testSent}
             title="تجربة إرسال إشعار فوري على الهاتف أو المتصفح"
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-text-secondary hover:bg-slate-50 hover:text-primary active:scale-95 transition-all cursor-pointer shadow-2xs"
+            className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#102A4C] px-2.5 py-1.5 text-[11px] font-bold text-text-secondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-white active:scale-95 transition-all cursor-pointer shadow-2xs"
           >
             <Send className="h-3 w-3 text-[#F36F21]" />
             <span>{testSent ? "تم الإرسال!" : "إشعار تجريبي"}</span>
@@ -235,7 +235,7 @@ export default function NotificationsPage() {
         {/* Notifications List (Matching Exact Figma Cards) */}
         {filteredNotifications.length === 0 ? (
           <EmptyState
-            icon={<Bell className="h-7 w-7 text-[#123A68]" />}
+            icon={<Bell className="h-7 w-7 text-[#123A68] dark:text-slate-300" />}
             title="لا توجد إشعارات"
             description={
               activeTab === "unread"
@@ -249,10 +249,10 @@ export default function NotificationsPage() {
               <div
                 key={item.id}
                 onClick={() => handleNotificationClick(item)}
-                className={`flex items-center justify-between gap-3.5 rounded-3xl bg-white p-4.5 border transition-all cursor-pointer hover:border-slate-300 hover:shadow-xs active:scale-[0.99] ${
+                className={`flex items-center justify-between gap-3.5 rounded-3xl bg-white dark:bg-[#102A4C] p-4.5 border transition-all cursor-pointer hover:border-slate-300 dark:hover:border-white/20 hover:shadow-xs active:scale-[0.99] ${
                   !item.isRead
-                    ? "border-slate-200/90 shadow-2xs"
-                    : "border-slate-100 opacity-90"
+                    ? "border-slate-200/90 dark:border-white/15 shadow-2xs"
+                    : "border-slate-100 dark:border-white/5 opacity-90"
                 }`}
               >
                 {/* Right Group: Icon Pill + Texts */}
@@ -260,13 +260,13 @@ export default function NotificationsPage() {
                   {renderIconPill(item.type, item.isRead)}
 
                   <div className="text-right space-y-0.5 min-w-0">
-                    <h3 className="text-sm font-black text-[#123A68] truncate">
+                    <h3 className="text-sm font-black text-[#123A68] dark:text-white truncate">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-text-secondary line-clamp-1 leading-snug">
+                    <p className="text-xs text-text-secondary dark:text-slate-300 line-clamp-1 leading-snug">
                       {item.body}
                     </p>
-                    <span className="text-[10.5px] text-text-muted font-medium block">
+                    <span className="text-[10.5px] text-text-muted dark:text-slate-400 font-medium block">
                       {item.timeAgo}
                     </span>
                   </div>
@@ -275,7 +275,7 @@ export default function NotificationsPage() {
                 {/* Left Group: Orange Unread Indicator Dot */}
                 {!item.isRead && (
                   <div className="flex items-center pr-1 shrink-0">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#F36F21] ring-4 ring-orange-50" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#F36F21] ring-4 ring-orange-50 dark:ring-orange-950/40" />
                   </div>
                 )}
               </div>

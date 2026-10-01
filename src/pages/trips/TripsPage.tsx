@@ -96,23 +96,34 @@ export default function TripsPage() {
     return true;
   });
 
+  const isVerified =
+    profile?.verificationStatus === "VERIFIED" || profile?.isVerified === true;
+
+  const handleAddTrip = () => {
+    if (!isVerified) {
+      navigate("/verify-identity");
+    } else {
+      navigate("/trips/create");
+    }
+  };
+
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title Header with "+ إضافة رحلة" */}
         <div className="flex items-center justify-between">
           <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68]">الرحلات</h1>
-            <span className="text-xs text-text-muted">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">الرحلات</h1>
+            <span className="text-xs text-text-muted dark:text-slate-400">
               {filteredTrips.length} رحلة متاحة
             </span>
           </div>
 
           <button
             type="button"
-            onClick={() => navigate("/trips/create")}
+            onClick={handleAddTrip}
             className="flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-[#F36F21] px-4 text-xs font-black text-white shadow-md active:scale-98 transition-all cursor-pointer hover:bg-[#E05E12]"
           >
             <Plus className="h-4 w-4" />
@@ -121,14 +132,14 @@ export default function TripsPage() {
         </div>
 
         {/* Tab Badges: كل الرحلات / رحلاتي */}
-        <div className="flex items-center gap-1 rounded-2xl bg-slate-100 p-1 text-xs font-bold">
+        <div className="flex items-center gap-1 rounded-2xl bg-slate-100 dark:bg-[#102A4C] p-1 text-xs font-bold border border-transparent dark:border-white/5">
           <button
             type="button"
             onClick={() => setActiveTab("all")}
             className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${
               activeTab === "all"
-                ? "bg-[#123A68] text-white shadow-2xs font-black"
-                : "text-text-muted hover:text-text-primary"
+                ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white shadow-2xs font-black"
+                : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
             }`}
           >
             كل الرحلات
@@ -138,8 +149,8 @@ export default function TripsPage() {
             onClick={() => setActiveTab("mine")}
             className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${
               activeTab === "mine"
-                ? "bg-[#123A68] text-white shadow-2xs font-black"
-                : "text-text-muted hover:text-text-primary"
+                ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white shadow-2xs font-black"
+                : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
             }`}
           >
             رحلاتي
@@ -153,9 +164,9 @@ export default function TripsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="ابحث عن وجهة أو مسافر..."
-            className="h-12 w-full rounded-2xl border border-slate-200 bg-white pr-11 pl-4 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-[#123A68] focus:outline-hidden shadow-2xs text-right"
+            className="h-12 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#102A4C] pr-11 pl-4 text-xs font-medium text-text-primary dark:text-white placeholder:text-text-muted dark:placeholder:text-slate-500 focus:border-[#123A68] dark:focus:border-accent focus:outline-hidden shadow-2xs text-right"
           />
-          <Search className="absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-text-muted" />
+          <Search className="absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-text-muted dark:text-slate-400" />
         </div>
 
         {/* Quick Filter Badges */}
@@ -174,8 +185,8 @@ export default function TripsPage() {
               onClick={() => setCityFilter(c.key)}
               className={`shrink-0 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
                 cityFilter === c.key
-                  ? "bg-[#123A68] text-white shadow-xs"
-                  : "bg-white border border-slate-200 text-text-secondary hover:bg-slate-50"
+                  ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white shadow-xs"
+                  : "bg-white dark:bg-[#102A4C] border border-slate-200 dark:border-white/10 text-text-secondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5"
               }`}
             >
               {c.label}
@@ -185,11 +196,11 @@ export default function TripsPage() {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="space-y-3 pt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-32 rounded-3xl bg-slate-100 animate-pulse"
+                className="h-36 rounded-3xl bg-slate-100 dark:bg-[#102A4C]/60 animate-pulse border border-transparent dark:border-white/5"
               />
             ))}
           </div>
@@ -215,13 +226,13 @@ export default function TripsPage() {
                 : "لم نتمكن من العثور على رحلات تطابق بحثك حالياً. يمكنك إضافة رحلتك الأولى ليراها الجميع!"
             }
             actionText="إضافة رحلة جديدة"
-            onAction={() => navigate("/trips/create")}
+            onAction={handleAddTrip}
           />
         )}
 
         {/* Trips List */}
         {!isLoading && !isError && filteredTrips.length > 0 && (
-          <div className="space-y-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredTrips.map((trip) => (
               <TripCard
                 key={trip.id}

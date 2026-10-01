@@ -44,16 +44,16 @@ export function OfflineStatusBar() {
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
         >
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-red-100 text-center space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto shadow-xs">
+          <div className="bg-white dark:bg-[#102A4C] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-red-100 dark:border-red-900/30 text-center space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto shadow-xs">
               <AlertTriangle className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-lg font-black text-gray-900">
+              <h3 className="text-lg font-black text-gray-900 dark:text-white">
                 انتهاء صلاحية التخزين المؤقت (48 ساعة)
               </h3>
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-300 leading-relaxed">
                 مرّت أكثر من 48 ساعة دون اتصال بالإنترنت. حفاظاً على أمان ومطابقة
                 بيانات الطلبات والرحلات مع النظام، تم حذف{" "}
                 <span className="font-bold text-red-600">

@@ -84,7 +84,7 @@ export default function Login() {
             type="tel"
             placeholder="05XX-XXX-XXX"
             dir="ltr"
-            className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            className="text-right h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
             {...register("phone")}
           />
           <Form.ErrorMessage />
@@ -95,7 +95,7 @@ export default function Login() {
           <Form.Label>كلمة المرور</Form.Label>
           <Form.PasswordInput
             placeholder="••••••••"
-            className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            className="h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
             {...register("password")}
           />
           <Form.ErrorMessage />
@@ -106,7 +106,7 @@ export default function Login() {
           <button
             type="button"
             onClick={() => navigate("/forgot-password")}
-            className="text-xs font-bold text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
+            className="text-xs font-bold text-[#123A68] dark:text-[#38BDF8] hover:text-[#F36F21] dark:hover:text-[#F36F21] transition-colors cursor-pointer"
           >
             نسيت كلمة المرور؟
           </button>

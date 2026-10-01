@@ -21,20 +21,20 @@ export const ProfileStats2x2: FC<ProfileStats2x2Props> = ({
   onErrandsClick,
 }) => {
   return (
-    <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-2xs space-y-3.5 text-right">
-      <h2 className="text-sm font-black text-[#123A68]">الإحصائيات</h2>
+    <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-slate-200/90 dark:border-white/10 shadow-2xs space-y-3.5 text-right">
+      <h2 className="text-sm font-black text-[#123A68] dark:text-white">الإحصائيات</h2>
 
       <div className="grid grid-cols-2 gap-2.5">
         {/* Top Right: Tokens */}
         <div
           onClick={onTokensClick}
-          className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200/80 hover:border-orange-300 transition-all cursor-pointer text-center space-y-1"
+          className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 border border-slate-200/80 dark:border-white/10 hover:border-orange-300 transition-all cursor-pointer text-center space-y-1"
         >
           <Zap className="h-5 w-5 text-[#F36F21] fill-[#F36F21]" />
           <span className="text-xl font-black text-[#F36F21]">
             {tokenBalance}
           </span>
-          <span className="text-[10.5px] text-text-muted font-bold">
+          <span className="text-[10.5px] text-text-muted dark:text-slate-400 font-bold">
             رصيد التوكنز
           </span>
         </div>
@@ -42,13 +42,13 @@ export const ProfileStats2x2: FC<ProfileStats2x2Props> = ({
         {/* Top Left: Trips */}
         <div
           onClick={onTripsClick}
-          className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200/80 hover:border-blue-300 transition-all cursor-pointer text-center space-y-1"
+          className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 border border-slate-200/80 dark:border-white/10 hover:border-blue-300 transition-all cursor-pointer text-center space-y-1"
         >
-          <Car className="h-5 w-5 text-[#123A68]" />
-          <span className="text-xl font-black text-[#123A68]">
+          <Car className="h-5 w-5 text-[#123A68] dark:text-[#38BDF8]" />
+          <span className="text-xl font-black text-[#123A68] dark:text-white">
             {tripsCount}
           </span>
-          <span className="text-[10.5px] text-text-muted font-bold">
+          <span className="text-[10.5px] text-text-muted dark:text-slate-400 font-bold">
             الرحلات
           </span>
         </div>
@@ -56,22 +56,22 @@ export const ProfileStats2x2: FC<ProfileStats2x2Props> = ({
         {/* Bottom Right: Errands */}
         <div
           onClick={onErrandsClick}
-          className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200/80 hover:border-emerald-300 transition-all cursor-pointer text-center space-y-1"
+          className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 border border-slate-200/80 dark:border-white/10 hover:border-emerald-300 transition-all cursor-pointer text-center space-y-1"
         >
-          <Package className="h-5 w-5 text-[#059669]" />
-          <span className="text-xl font-black text-[#059669]">
+          <Package className="h-5 w-5 text-[#059669] dark:text-emerald-400" />
+          <span className="text-xl font-black text-[#059669] dark:text-emerald-400">
             {errandsCount}
           </span>
-          <span className="text-[10.5px] text-text-muted font-bold">
+          <span className="text-[10.5px] text-text-muted dark:text-slate-400 font-bold">
             الطلبات
           </span>
         </div>
 
         {/* Bottom Left: Rating */}
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200/80 text-center space-y-1">
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 border border-slate-200/80 dark:border-white/10 text-center space-y-1">
           <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
           <span className="text-xl font-black text-amber-500">{trustScore}</span>
-          <span className="text-[10.5px] text-text-muted font-bold">
+          <span className="text-[10.5px] text-text-muted dark:text-slate-400 font-bold">
             التقييم
           </span>
         </div>

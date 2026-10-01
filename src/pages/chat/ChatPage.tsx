@@ -11,6 +11,7 @@ import {
   RefreshCw,
   Clock,
   Wifi,
+  Home,
 } from "lucide-react";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import {
@@ -164,77 +165,91 @@ export default function ChatPage() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] flex flex-col h-screen max-h-screen text-right">
-      {/* Top Chat Header */}
-      <header className="flex items-center justify-between border-b border-border bg-white px-4 py-3 shadow-2xs z-10 shrink-0">
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            aria-label="الرجوع"
-            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-          <a
-            href={`tel:0590000000`}
-            aria-label="الاتصال بطرف المحادثة"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 border border-slate-200 text-[#123A68] hover:bg-slate-100 transition-colors cursor-pointer"
-          >
-            <Phone className="h-4 w-4" />
-          </a>
-        </div>
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] flex flex-col h-screen max-h-screen text-right">
+      <div className="w-full max-w-5xl mx-auto flex flex-col flex-1 h-full overflow-hidden bg-white dark:bg-[#0B1E36] shadow-xs md:border-x md:border-border/60 dark:md:border-white/10">
+        {/* Top Chat Header */}
+        <header className="flex items-center justify-between border-b border-border dark:border-white/10 bg-white dark:bg-[#102A4C] px-4 md:px-6 py-3 shadow-2xs z-10 shrink-0">
+          {/* Peer Info & Back Button on RIGHT */}
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
+              aria-label="الرجوع"
+              className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
 
-        <div className="flex items-center gap-3">
-          <div className="text-right">
-            <h2 className="text-xs font-black text-primary flex items-center gap-1.5 justify-end">
-              <span>{peerName}</span>
-              {isConnected ? (
-                <span title="متصل بالبث المباشر">
-                  <Wifi className="w-3.5 h-3.5 text-emerald-500" />
-                </span>
-              ) : (
-                <span title="مزامنة تلقائية">
-                  <Clock className="w-3.5 h-3.5 text-slate-400" />
-                </span>
-              )}
-            </h2>
-            <span className="text-[10px] text-emerald-600 block font-bold">
-              متصل الآن
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white shadow-xs shrink-0">
+              {initials}
+            </div>
+
+            <div className="text-right">
+              <h2 className="text-xs font-black text-primary dark:text-white flex items-center gap-1.5">
+                <span>{peerName}</span>
+                {isConnected ? (
+                  <span title="متصل بالبث المباشر">
+                    <Wifi className="w-3.5 h-3.5 text-emerald-500" />
+                  </span>
+                ) : (
+                  <span title="مزامنة تلقائية">
+                    <Clock className="w-3.5 h-3.5 text-slate-400" />
+                  </span>
+                )}
+              </h2>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block font-bold">
+                متصل الآن
+              </span>
+            </div>
+          </div>
+
+          {/* Action on LEFT: Phone & Home */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => navigate("/home")}
+              aria-label="الصفحة الرئيسية"
+              title="الصفحة الرئيسية"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 dark:bg-[#0B1E36] border border-slate-200 dark:border-white/10 text-[#123A68] dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-accent transition-colors cursor-pointer"
+            >
+              <Home className="h-4 w-4" />
+            </button>
+
+            <a
+              href={`tel:0590000000`}
+              aria-label="الاتصال بطرف المحادثة"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 dark:bg-[#0B1E36] border border-slate-200 dark:border-white/10 text-[#123A68] dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <Phone className="h-4 w-4" />
+            </a>
+          </div>
+        </header>
+
+        {/* Associated Errand Information Banner */}
+        <div className="flex items-center justify-between bg-blue-50/70 dark:bg-blue-950/30 border-b border-blue-100/70 dark:border-blue-900/30 px-4 py-2 shrink-0 text-right">
+          <div className="flex items-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/50 text-[#123A68] dark:text-blue-300 shrink-0">
+              <Package className="h-3.5 w-3.5" />
+            </div>
+            <span className="text-[11px] font-bold text-[#123A68] dark:text-blue-200 line-clamp-1 max-w-55">
+              {errandTitle}
             </span>
           </div>
 
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A68] text-xs font-black text-white shadow-xs">
-            {initials}
+          <div className="flex items-center gap-2">
+            {room?.assignment?.id && (
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(`/errands/${room?.assignment?.errandId || id}/tracking`)
+                }
+                className="text-[10.5px] font-black text-accent hover:underline cursor-pointer"
+              >
+                تتبع الطلب
+              </button>
+            )}
           </div>
         </div>
-      </header>
-
-      {/* Associated Errand Information Banner */}
-      <div className="flex items-center justify-between bg-blue-50/70 border-b border-blue-100/70 px-4 py-2 shrink-0 text-right">
-        <div className="flex items-center gap-2">
-          {room?.assignment?.id && (
-            <button
-              type="button"
-              onClick={() =>
-                navigate(`/errands/${room?.assignment?.errandId || id}/tracking`)
-              }
-              className="text-[10.5px] font-black text-accent hover:underline cursor-pointer"
-            >
-              تتبع الطلب
-            </button>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold text-[#123A68] line-clamp-1 max-w-[220px]">
-            {errandTitle}
-          </span>
-          <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-[#123A68]">
-            <Package className="h-3.5 w-3.5" />
-          </div>
-        </div>
-      </div>
 
       {/* Chat Messages Stream */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -245,14 +260,14 @@ export default function ChatPage() {
           </div>
         ) : displayMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-3">
-            <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-[#123A68]">
+            <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-[#102A4C] flex items-center justify-center text-[#123A68] dark:text-accent shadow-2xs">
               <Package className="w-8 h-8" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-sm font-black text-[#123A68]">
+              <h3 className="text-sm font-black text-[#123A68] dark:text-white">
                 مرحباً بك في المحادثة المباشرة!
               </h3>
-              <p className="text-xs text-text-muted max-w-[240px] mx-auto leading-relaxed">
+              <p className="text-xs text-text-muted dark:text-slate-400 max-w-60 mx-auto leading-relaxed">
                 يمكنك الآن التنسيق مع {peerName} بخصوص تفاصيل الاستلام والتوصيل.
               </p>
             </div>
@@ -267,8 +282,8 @@ export default function ChatPage() {
 
       {/* Voice Note Recording Preview Bar */}
       {isRecording && (
-        <div className="flex items-center justify-between bg-red-50 border-t border-red-200 px-4 py-2.5 shrink-0 animate-in fade-in">
-          <div className="flex items-center gap-2 text-xs font-bold text-red-600">
+        <div className="flex items-center justify-between bg-red-50 dark:bg-red-950/40 border-t border-red-200 dark:border-red-900/40 px-4 py-2.5 shrink-0 animate-in fade-in">
+          <div className="flex items-center gap-2 text-xs font-bold text-red-600 dark:text-red-400">
             <span className="h-2.5 w-2.5 rounded-full bg-red-600 animate-ping" />
             <span>جاري التسجيل: {recordingDurationFormatted}</span>
           </div>
@@ -285,8 +300,8 @@ export default function ChatPage() {
 
       {/* Recorded Voice Note Ready Bar */}
       {voiceNote && !isRecording && (
-        <div className="flex items-center justify-between bg-blue-50 border-t border-blue-200 px-4 py-2.5 shrink-0">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#123A68]">
+        <div className="flex items-center justify-between bg-blue-50 dark:bg-blue-950/40 border-t border-blue-200 dark:border-blue-900/40 px-4 py-2.5 shrink-0">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#123A68] dark:text-blue-300">
             <Mic className="w-4 h-4 text-[#F36F21]" />
             <span>تم تسجيل مقطع صوتي ({voiceNote.durationSec} ثانية)</span>
           </div>
@@ -303,7 +318,7 @@ export default function ChatPage() {
       {/* Bottom Message Input Form */}
       <form
         onSubmit={handleSendMessage}
-        className="flex items-center gap-2 border-t border-border bg-white p-3 shrink-0"
+        className="flex items-center gap-2 border-t border-border dark:border-white/10 bg-white dark:bg-[#102A4C] p-3 shrink-0"
       >
         <button
           type="submit"
@@ -330,7 +345,7 @@ export default function ChatPage() {
                 ? "جاري تسجيل الصوت..."
                 : "اكتب رسالتك هنا..."
           }
-          className="h-11 flex-1 rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 text-xs text-primary placeholder:text-text-muted focus:border-accent focus:outline-none text-right disabled:bg-slate-100"
+          className="h-11 flex-1 rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-4 text-xs text-primary dark:text-white placeholder:text-text-muted dark:placeholder:text-slate-500 focus:border-accent focus:outline-none text-right disabled:bg-slate-100 dark:disabled:bg-[#132F54]"
         />
 
         <button
@@ -339,13 +354,14 @@ export default function ChatPage() {
           aria-label="تسجيل صوتي"
           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border transition-colors cursor-pointer ${
             isRecording
-              ? "bg-red-50 border-red-300 text-red-600 animate-pulse"
-              : "border-slate-200 text-slate-500 hover:text-[#123A68] hover:border-slate-300 bg-[#F8FAFC]"
+              ? "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 animate-pulse"
+              : "border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-300 hover:text-[#123A68] dark:hover:text-white hover:border-slate-300 bg-[#F8FAFC] dark:bg-[#0B1E36]"
           }`}
         >
           <Mic className="h-5 w-5" />
         </button>
       </form>
+      </div>
     </MobileContainer>
   );
 }

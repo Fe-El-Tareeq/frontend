@@ -79,17 +79,17 @@ export default function EditProfile() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-3xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
         <div className="flex items-center justify-between">
           <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68]">
+            <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">
               تعديل الملف الشخصي
             </h1>
-            <p className="text-xs text-text-secondary mt-0.5">
+            <p className="text-xs md:text-sm text-text-secondary dark:text-slate-400 mt-0.5">
               تحديث الاسم والحي السكني النشط
             </p>
           </div>
@@ -97,7 +97,7 @@ export default function EditProfile() {
             type="button"
             onClick={() => navigate(-1)}
             aria-label="الرجوع للخلف"
-            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -105,23 +105,23 @@ export default function EditProfile() {
 
         {/* Feedback alerts */}
         {successMessage && (
-          <div className="rounded-2xl bg-emerald-50 p-3.5 border border-emerald-200 text-xs font-bold text-emerald-800 text-right">
+          <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 p-3.5 border border-emerald-200 dark:border-emerald-800/40 text-xs md:text-sm font-bold text-emerald-800 dark:text-emerald-300 text-right">
             تم حفظ التعديلات بنجاح!
           </div>
         )}
 
         {errorMessage && (
-          <div className="rounded-2xl bg-rose-50 p-3.5 border border-rose-200 text-xs font-bold text-rose-800 text-right">
+          <div className="rounded-2xl bg-rose-50 dark:bg-rose-950/40 p-3.5 border border-rose-200 dark:border-rose-800/40 text-xs md:text-sm font-bold text-rose-800 dark:text-rose-300 text-right">
             {errorMessage}
           </div>
         )}
 
         {/* Form Card */}
-        <div className="rounded-3xl bg-white p-5 border border-slate-200/90 shadow-2xs">
+        <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-slate-200/90 dark:border-white/10 shadow-2xs">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-right">
             {/* Phone Number (Read-only) */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
                 رقم الهاتف (غير قابل للتعديل)
               </label>
               <input
@@ -129,14 +129,14 @@ export default function EditProfile() {
                 value={profile?.phone || ""}
                 disabled
                 dir="ltr"
-                className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 text-right text-xs font-mono font-bold text-slate-500 cursor-not-allowed"
+                className="h-11 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-[#0B1E36]/60 px-4 text-right text-xs font-mono font-bold text-slate-500 dark:text-slate-400 cursor-not-allowed"
               />
             </div>
 
             {/* Email (Read-only) */}
             {profile?.email && (
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
                   البريد الإلكتروني (غير قابل للتعديل)
                 </label>
                 <input
@@ -144,24 +144,24 @@ export default function EditProfile() {
                   value={profile.email}
                   disabled
                   dir="ltr"
-                  className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 text-right text-xs font-bold text-slate-500 cursor-not-allowed"
+                  className="h-11 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-[#0B1E36]/60 px-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 cursor-not-allowed"
                 />
               </div>
             )}
 
             {/* Full Name */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
                 الاسم الكامل *
               </label>
               <input
                 type="text"
                 placeholder="أدخل اسمك الكامل"
                 {...register("fullName")}
-                className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-4 text-xs font-bold text-[#123A68] focus:outline-none focus:border-[#123A68]"
+                className="h-11 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-4 text-xs font-bold text-[#123A68] dark:text-white focus:outline-none focus:border-[#123A68] dark:focus:border-accent"
               />
               {errors.fullName && (
-                <p className="text-[11px] font-bold text-rose-600 mt-1">
+                <p className="text-[11px] font-bold text-rose-600 dark:text-rose-400 mt-1">
                   {errors.fullName.message}
                 </p>
               )}
@@ -169,7 +169,7 @@ export default function EditProfile() {
 
             {/* City */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
                 المدينة *
               </label>
               <select
@@ -178,7 +178,7 @@ export default function EditProfile() {
                   setSelectedCity(e.target.value);
                   setValue("neighborhoodId", "");
                 }}
-                className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs font-bold text-[#123A68] focus:outline-none focus:border-[#123A68] cursor-pointer text-right"
+                className="h-11 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-3 text-xs font-bold text-[#123A68] dark:text-white focus:outline-none focus:border-[#123A68] dark:focus:border-accent cursor-pointer text-right"
               >
                 {cities && cities.length > 0 ? (
                   cities.map((c) => (
@@ -200,13 +200,13 @@ export default function EditProfile() {
 
             {/* Neighborhood */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
                 الحي السكني *
               </label>
               <select
                 disabled={isLoadingNeighborhoods}
                 {...register("neighborhoodId")}
-                className="h-11 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3 text-xs font-bold text-[#123A68] focus:outline-none focus:border-[#123A68] cursor-pointer text-right"
+                className="h-11 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-3 text-xs font-bold text-[#123A68] dark:text-white focus:outline-none focus:border-[#123A68] dark:focus:border-accent cursor-pointer text-right"
               >
                 <option value="">
                   {isLoadingNeighborhoods

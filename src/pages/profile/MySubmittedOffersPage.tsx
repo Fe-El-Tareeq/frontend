@@ -49,9 +49,9 @@ export default function MySubmittedOffersPage() {
 
     const dateStr = p.createdAt
       ? new Date(p.createdAt).toLocaleDateString("ar-EG", {
-          day: "numeric",
-          month: "short",
-        })
+        day: "numeric",
+        month: "short",
+      })
       : "اليوم";
 
     return {
@@ -87,91 +87,91 @@ export default function MySubmittedOffersPage() {
   });
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Top Header */}
         <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+            <div className="text-right">
+              <h1 className="text-xl font-black text-[#123A68] dark:text-white">عروضي المقدّمة</h1>
+              <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
+                العروض التي قدّمتها على طلبات المستخدمين
+              </p>
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={() => navigate("/errands")}
-            className="flex items-center gap-1 text-xs font-bold text-[#123A68] hover:text-accent transition-colors"
+            className="flex items-center gap-1 text-xs font-bold text-[#123A68] dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors"
           >
             <Search className="h-4 w-4" />
             <span>تصفح الطلبات</span>
           </button>
-
-          <div className="flex items-center gap-2">
-            <div className="text-right">
-              <h1 className="text-xl font-black text-[#123A68]">عروضي المقدّمة</h1>
-              <p className="text-xs text-text-secondary mt-0.5">
-                العروض التي قدّمتها على طلبات المستخدمين
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
-          </div>
         </div>
 
         {/* 4 Stats Counters matching عروضي المقدمة-1.png */}
         <div className="grid grid-cols-4 gap-2">
           {/* Total */}
-          <div className="rounded-2xl bg-white p-2.5 text-center border border-slate-200/90 shadow-2xs space-y-0.5">
-            <div className="text-lg font-black text-[#123A68]">{totalCount}</div>
-            <span className="text-[10px] font-bold text-text-muted block">
+          <div className="rounded-2xl bg-white dark:bg-[#102A4C] p-2.5 text-center border border-slate-200/90 dark:border-white/10 shadow-2xs space-y-0.5">
+            <div className="text-lg font-black text-[#123A68] dark:text-white">{totalCount}</div>
+            <span className="text-[10px] font-bold text-text-muted dark:text-slate-400 block">
               إجمالي
             </span>
           </div>
 
           {/* Pending */}
-          <div className="rounded-2xl bg-amber-50/80 p-2.5 text-center border border-amber-200/80 shadow-2xs space-y-0.5">
-            <div className="text-lg font-black text-amber-700">{pendingCount}</div>
-            <span className="text-[10px] font-bold text-amber-800 block">
+          <div className="rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 p-2.5 text-center border border-amber-200/80 dark:border-amber-500/20 shadow-2xs space-y-0.5">
+            <div className="text-lg font-black text-amber-700 dark:text-amber-400">{pendingCount}</div>
+            <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 block">
               بانتظار
             </span>
           </div>
 
           {/* Accepted */}
-          <div className="rounded-2xl bg-emerald-50/80 p-2.5 text-center border border-emerald-200/80 shadow-2xs space-y-0.5">
-            <div className="text-lg font-black text-emerald-700">{acceptedCount}</div>
-            <span className="text-[10px] font-bold text-emerald-800 block">
+          <div className="rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 p-2.5 text-center border border-emerald-200/80 dark:border-emerald-500/20 shadow-2xs space-y-0.5">
+            <div className="text-lg font-black text-emerald-700 dark:text-emerald-400">{acceptedCount}</div>
+            <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 block">
               مقبول
             </span>
           </div>
 
           {/* Rejected */}
-          <div className="rounded-2xl bg-red-50/80 p-2.5 text-center border border-red-200/80 shadow-2xs space-y-0.5">
-            <div className="text-lg font-black text-red-600">{rejectedCount}</div>
-            <span className="text-[10px] font-bold text-red-800 block">
+          <div className="rounded-2xl bg-red-50/80 dark:bg-red-950/30 p-2.5 text-center border border-red-200/80 dark:border-red-500/20 shadow-2xs space-y-0.5">
+            <div className="text-lg font-black text-red-600 dark:text-red-400">{rejectedCount}</div>
+            <span className="text-[10px] font-bold text-red-800 dark:text-red-300 block">
               مرفوض
             </span>
           </div>
         </div>
 
         {/* Acceptance Rate Card matching عروضي المقدمة-1.png */}
-        <div className="rounded-3xl bg-white p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between text-right">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[#123A68]">
+        <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-4 border border-slate-200/90 dark:border-white/10 shadow-2xs flex items-center justify-between text-right">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 dark:bg-[#132F54] text-[#123A68] dark:text-blue-300">
             <Sparkles className="h-5 w-5" />
           </div>
 
           <div className="flex-1 pr-3 space-y-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[11px] text-text-muted">
+              <span className="text-[11px] text-text-muted dark:text-slate-400">
                 {acceptedCount} من {totalCount} عرض تم قبوله
               </span>
-              <span className="font-black text-[#123A68]">
+              <span className="font-black text-[#123A68] dark:text-white">
                 معدل القبول {acceptanceRate}%
               </span>
             </div>
-            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-slate-100 dark:bg-[#0B1E36] rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-amber-400 to-[#F36F21] rounded-full transition-all duration-500"
+                className="h-full bg-linear-to-r from-amber-400 to-[#F36F21] rounded-full transition-all duration-500"
                 style={{ width: `${acceptanceRate}%` }}
               />
             </div>
@@ -190,11 +190,10 @@ export default function MySubmittedOffersPage() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key as typeof activeTab)}
-              className={`rounded-2xl px-3.5 py-1.5 transition-all cursor-pointer ${
-                activeTab === tab.key
-                  ? "bg-[#123A68] text-white shadow-xs font-black"
-                  : "bg-white border border-slate-200 text-text-secondary hover:bg-slate-50"
-              }`}
+              className={`rounded-2xl px-3.5 py-1.5 transition-all cursor-pointer ${activeTab === tab.key
+                  ? "bg-[#123A68] dark:bg-accent text-white shadow-xs font-black"
+                  : "bg-white dark:bg-[#102A4C] border border-slate-200 dark:border-white/10 text-text-secondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#132F54]"
+                }`}
             >
               {tab.label}
             </button>
@@ -207,7 +206,7 @@ export default function MySubmittedOffersPage() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-28 rounded-3xl bg-slate-100 animate-pulse"
+                className="h-28 rounded-3xl bg-slate-100 dark:bg-[#102A4C] animate-pulse"
               />
             ))}
           </div>
@@ -232,7 +231,7 @@ export default function MySubmittedOffersPage() {
             onAction={() => navigate("/errands")}
           />
         ) : !isLoading && !isError ? (
-          <div className="space-y-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredOffers.map((offer) => {
               const isPending = offer.status === "PENDING";
               const isAccepted = offer.status === "ACCEPTED";
@@ -241,35 +240,34 @@ export default function MySubmittedOffersPage() {
               return (
                 <div
                   key={offer.id}
-                  className={`rounded-3xl border shadow-xs space-y-3 p-4.5 text-right transition-all ${
-                    isAccepted
-                      ? "bg-white border-emerald-300 ring-2 ring-emerald-100"
+                  className={`rounded-3xl border shadow-xs space-y-3 p-4.5 text-right transition-all ${isAccepted
+                      ? "bg-white dark:bg-[#102A4C] border-emerald-300 dark:border-emerald-500/30 ring-2 ring-emerald-100 dark:ring-emerald-500/10"
                       : isRejected
-                        ? "bg-white border-red-200"
-                        : "bg-white border-amber-200"
-                  }`}
+                        ? "bg-white dark:bg-[#102A4C] border-red-200 dark:border-red-500/30"
+                        : "bg-white dark:bg-[#102A4C] border-amber-200 dark:border-amber-500/30"
+                    }`}
                 >
                   {/* Status Banner Top */}
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-[10px] text-text-muted">
+                    <span className="text-[10px] text-text-muted dark:text-slate-400">
                       {offer.timeAgo}
                     </span>
 
                     <div className="flex items-center gap-1.5">
                       {isPending && (
-                        <span className="flex items-center gap-1 font-bold text-amber-700">
+                        <span className="flex items-center gap-1 font-bold text-amber-700 dark:text-amber-400">
                           <span>بانتظار الرد</span>
                           <span className="h-2 w-2 rounded-full bg-amber-500" />
                         </span>
                       )}
                       {isAccepted && (
-                        <span className="flex items-center gap-1 font-black text-emerald-700">
+                        <span className="flex items-center gap-1 font-black text-emerald-700 dark:text-emerald-400">
                           <span>تم قبولك! 🎉</span>
                           <span className="h-2 w-2 rounded-full bg-emerald-500" />
                         </span>
                       )}
                       {isRejected && (
-                        <span className="flex items-center gap-1 font-bold text-red-600">
+                        <span className="flex items-center gap-1 font-bold text-red-600 dark:text-red-400">
                           <span>تم الرفض</span>
                           <span className="h-2 w-2 rounded-full bg-red-500" />
                         </span>
@@ -279,14 +277,37 @@ export default function MySubmittedOffersPage() {
 
                   {/* Requester Row */}
                   <div className="flex items-center justify-between">
+                    {/* User Info on RIGHT */}
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`flex h-10 w-10 items-center justify-center rounded-full text-xs font-black text-white shrink-0 ${offer.avatarBg}`}
+                      >
+                        {offer.avatarInitials}
+                      </div>
+
+                      <div className="text-right">
+                        <div className="flex items-center gap-1.5">
+                          <h4 className="text-xs font-black text-primary dark:text-white">
+                            {offer.recipientName}
+                          </h4>
+                          <span className="text-xs font-bold text-amber-500">
+                            ⭐ {offer.rating}
+                          </span>
+                        </div>
+                        <p className="text-[10.5px] text-text-muted dark:text-slate-400">
+                          {offer.errandTitle}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Status Badge on LEFT */}
                     <span
-                      className={`rounded-xl px-2.5 py-0.5 text-[10.5px] font-black ${
-                        isAccepted
-                          ? "bg-emerald-100 text-emerald-800"
+                      className={`rounded-xl px-2.5 py-0.5 text-[10.5px] font-black shrink-0 ${isAccepted
+                          ? "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300"
                           : isRejected
-                            ? "bg-red-100 text-red-800"
-                            : "bg-amber-100 text-amber-800"
-                      }`}
+                            ? "bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300"
+                            : "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300"
+                        }`}
                     >
                       {isAccepted
                         ? "تم القبول!"
@@ -294,46 +315,24 @@ export default function MySubmittedOffersPage() {
                           ? "تم الرفض"
                           : "بانتظار الرد"}
                     </span>
-
-                    <div className="flex items-center gap-2.5">
-                      <div className="text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <span className="text-xs font-bold text-amber-500">
-                            ⭐ {offer.rating}
-                          </span>
-                          <h4 className="text-xs font-black text-primary">
-                            {offer.recipientName}
-                          </h4>
-                        </div>
-                        <p className="text-[10.5px] text-text-muted">
-                          {offer.errandTitle}
-                        </p>
-                      </div>
-
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full text-xs font-black text-white ${offer.avatarBg}`}
-                      >
-                        {offer.avatarInitials}
-                      </div>
-                    </div>
                   </div>
 
                   {/* Route Bar */}
-                  <div className="rounded-xl bg-slate-50 p-2.5 text-xs text-text-muted flex items-center justify-between">
-                    <span>📅 {offer.date}</span>
-                    <div className="flex items-center gap-1.5 text-primary font-bold">
+                  <div className="rounded-xl bg-slate-50 dark:bg-[#0B1E36] p-2.5 text-xs text-text-muted dark:text-slate-400 flex items-center justify-between border border-transparent dark:border-white/5">
+                    <div className="flex items-center gap-1.5 text-primary dark:text-slate-200 font-bold">
                       <span>{offer.origin}</span>
                       <span>➔</span>
                       <span className="text-[#F36F21]">{offer.destination}</span>
                     </div>
+                    <span>📅 {offer.date}</span>
                   </div>
 
                   {/* Quote / Reason */}
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-bold text-text-muted block">
+                  <div className="space-y-1 text-right">
+                    <span className="text-[10px] font-bold text-text-muted dark:text-slate-400 block">
                       رسالتي للطالب
                     </span>
-                    <p className="text-xs text-text-secondary bg-[#F8FAFC] p-3 rounded-2xl border border-slate-100 italic">
+                    <p className="text-xs text-text-secondary dark:text-slate-300 bg-[#F8FAFC] dark:bg-[#0B1E36] p-3 rounded-2xl border border-slate-100 dark:border-white/5 italic">
                       "{offer.quoteMessage}"
                     </p>
                   </div>
@@ -344,7 +343,7 @@ export default function MySubmittedOffersPage() {
                       type="button"
                       disabled={isWithdrawing}
                       onClick={() => setSelectedOfferToWithdraw(offer.id)}
-                      className="w-full flex items-center justify-center gap-1.5 h-10 rounded-2xl border border-slate-200 bg-white text-xs font-bold text-text-secondary hover:bg-red-50 hover:text-red-600 transition-all cursor-pointer disabled:opacity-50"
+                      className="w-full flex items-center justify-center gap-1.5 h-10 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#132F54] text-xs font-bold text-text-secondary dark:text-slate-200 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-all cursor-pointer disabled:opacity-50"
                     >
                       <X className="h-3.5 w-3.5" />
                       <span>{isWithdrawing ? "جاري سحب العرض..." : "سحب العرض"}</span>
@@ -352,36 +351,36 @@ export default function MySubmittedOffersPage() {
                   )}
 
                   {isAccepted && (
-                    <div className="rounded-2xl bg-emerald-50/80 p-3 border border-emerald-200 text-right flex items-center justify-between">
+                    <div className="rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 p-3 border border-emerald-200 dark:border-emerald-500/20 text-right flex items-center justify-between">
+                      <div className="text-right">
+                        <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 block">
+                          يمكنك التواصل مع الطالب
+                        </span>
+                        <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-mono" dir="ltr">
+                          {offer.phone || "059-xxx-xxxx"}
+                        </span>
+                      </div>
+
                       <button
                         type="button"
                         onClick={() => navigate(`/chat/${offer.id}`)}
-                        className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-black text-white hover:bg-emerald-700 active:scale-98 transition-all cursor-pointer"
+                        className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-black text-white hover:bg-emerald-700 active:scale-98 transition-all cursor-pointer shadow-xs"
                       >
                         <MessageSquare className="h-3.5 w-3.5" />
                         <span>راسله</span>
                       </button>
-
-                      <div className="text-right">
-                        <span className="text-xs font-black text-emerald-800 block">
-                          يمكنك التواصل مع الطالب
-                        </span>
-                        <span className="text-[11px] text-emerald-700 font-mono">
-                          {offer.phone || "059-xxx-xxxx"}
-                        </span>
-                      </div>
                     </div>
                   )}
 
                   {isRejected && (
                     <div className="space-y-2">
-                      <div className="rounded-xl bg-slate-50 p-2.5 text-[11px] text-text-muted border border-slate-200/60">
+                      <div className="rounded-xl bg-slate-50 dark:bg-[#0B1E36] p-2.5 text-[11px] text-text-muted dark:text-slate-400 border border-slate-200/60 dark:border-white/10">
                         اختار الطالب مسافراً آخر، يمكنك تصفح الطلبات المفتوحة وتقديم عروض جديدة.
                       </div>
                       <button
                         type="button"
                         onClick={() => navigate("/errands")}
-                        className="w-full flex items-center justify-center gap-1.5 h-10 rounded-2xl border border-[#123A68] bg-white text-xs font-black text-[#123A68] hover:bg-slate-50 active:scale-98 transition-all cursor-pointer"
+                        className="w-full flex items-center justify-center gap-1.5 h-10 rounded-2xl border border-[#123A68] dark:border-white/20 bg-white dark:bg-[#132F54] text-xs font-black text-[#123A68] dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 active:scale-98 transition-all cursor-pointer"
                       >
                         <Search className="h-3.5 w-3.5" />
                         <span>تصفح الطلبات</span>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronRight, Check, Package } from "lucide-react";
+import { ChevronRight, Check, Package, Home } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { useTripDetail, useTripChecklist } from "../../hooks/useTrips";
@@ -31,11 +31,11 @@ export default function TripChecklistPage() {
 
   if (isLoading) {
     return (
-      <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+      <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 text-right">
         <Header />
         <div className="p-4 space-y-4">
-          <div className="h-24 w-full animate-pulse rounded-3xl bg-white border border-border" />
-          <div className="h-40 w-full animate-pulse rounded-3xl bg-white border border-border" />
+          <div className="h-24 w-full animate-pulse rounded-3xl bg-white dark:bg-[#102A4C] border border-border dark:border-white/10" />
+          <div className="h-40 w-full animate-pulse rounded-3xl bg-white dark:bg-[#102A4C] border border-border dark:border-white/10" />
         </div>
       </MobileContainer>
     );
@@ -43,7 +43,7 @@ export default function TripChecklistPage() {
 
   if (isError) {
     return (
-      <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+      <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 text-right">
         <Header />
         <div className="p-4">
           <ErrorState
@@ -58,7 +58,7 @@ export default function TripChecklistPage() {
 
   if (!trip) {
     return (
-      <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+      <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 text-right">
         <Header />
         <div className="p-4">
           <EmptyState
@@ -82,56 +82,56 @@ export default function TripChecklistPage() {
 
   const dateText = trip.departureTime
     ? new Date(trip.departureTime).toLocaleDateString("ar-EG", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })
     : "اليوم";
 
   // Build checklist items from backend checklist or fallback structure
   const rawItems: ChecklistItem[] =
     checklist?.items && checklist.items.length > 0
       ? checklist.items.map((item: TripChecklistItem) => ({
-          id: item.id,
-          categoryId: item.categoryName || "general",
-          categoryName: item.categoryName || "أغراض عامة",
-          categoryIcon: item.categoryIcon || "📦",
-          requesterName: item.requesterName || "صاحب الطلب",
-          title: item.title,
-          sizeLabel: item.sizeLabel || "متوسط",
-          weightLabel: item.weightLabel || "1 كجم",
-          isUrgent: !!item.isUrgent,
-          isCompleted:
-            completedItems[item.id] !== undefined
-              ? completedItems[item.id]
-              : item.isCompleted,
-        }))
+        id: item.id,
+        categoryId: item.categoryName || "general",
+        categoryName: item.categoryName || "أغراض عامة",
+        categoryIcon: item.categoryIcon || "📦",
+        requesterName: item.requesterName || "صاحب الطلب",
+        title: item.title,
+        sizeLabel: item.sizeLabel || "متوسط",
+        weightLabel: item.weightLabel || "1 كجم",
+        isUrgent: !!item.isUrgent,
+        isCompleted:
+          completedItems[item.id] !== undefined
+            ? completedItems[item.id]
+            : item.isCompleted,
+      }))
       : [
-          {
-            id: "item-1",
-            categoryId: "pharmacy",
-            categoryName: "دواء / صيدلية",
-            categoryIcon: "💊",
-            requesterName: "فاطمة علي",
-            title: "باراسيتامول + مقياس ضغط لوالدتي",
-            sizeLabel: "صغير",
-            weightLabel: "أقل من كيلو",
-            isUrgent: true,
-            isCompleted: !!completedItems["item-1"],
-          },
-          {
-            id: "item-2",
-            categoryId: "documents",
-            categoryName: "وثائق / أوراق",
-            categoryIcon: "📄",
-            requesterName: "خالد عبدالله",
-            title: "أوراق ثبوتية مهمة في ظرف",
-            sizeLabel: "ظرف",
-            weightLabel: "خفيف جداً",
-            isUrgent: true,
-            isCompleted: !!completedItems["item-2"],
-          },
-        ];
+        {
+          id: "item-1",
+          categoryId: "pharmacy",
+          categoryName: "دواء / صيدلية",
+          categoryIcon: "💊",
+          requesterName: "فاطمة علي",
+          title: "باراسيتامول + مقياس ضغط لوالدتي",
+          sizeLabel: "صغير",
+          weightLabel: "أقل من كيلو",
+          isUrgent: true,
+          isCompleted: !!completedItems["item-1"],
+        },
+        {
+          id: "item-2",
+          categoryId: "documents",
+          categoryName: "وثائق / أوراق",
+          categoryIcon: "📄",
+          requesterName: "خالد عبدالله",
+          title: "أوراق ثبوتية مهمة في ظرف",
+          sizeLabel: "ظرف",
+          weightLabel: "خفيف جداً",
+          isUrgent: true,
+          isCompleted: !!completedItems["item-2"],
+        },
+      ];
 
   const toggleItem = (itemId: string) => {
     setCompletedItems((prev) => ({
@@ -162,32 +162,42 @@ export default function TripChecklistPage() {
   );
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Header with Title & Progress */}
         <div className="flex items-center justify-between">
           <div className="text-left space-y-0.5">
-            <span className="text-[11px] font-bold text-text-muted block">
+            <span className="text-[11px] font-bold text-text-muted dark:text-slate-400 block">
               الإنجاز
             </span>
-            <span className="text-base font-black text-[#123A68]">
+            <span className="text-base font-black text-[#123A68] dark:text-white">
               {doneCount}/{totalCount}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <div>
-              <h1 className="text-xl font-black text-[#123A68]">ملخص الرحلة</h1>
-              <p className="text-xs text-text-secondary mt-0.5">
+              <h1 className="text-xl font-black text-[#123A68] dark:text-white">ملخص الرحلة</h1>
+              <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
                 {originText} ➔ {destText} • {dateText}
               </p>
             </div>
             <button
               type="button"
-              onClick={() => navigate(-1)}
-              className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+              onClick={() => navigate("/home")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors cursor-pointer"
+              title="الصفحة الرئيسية"
+            >
+              <Home className="h-4 w-4" />
+              <span>الرئيسية</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
+              className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+              aria-label="رجوع"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
@@ -195,7 +205,7 @@ export default function TripChecklistPage() {
         </div>
 
         {/* Progress Bar */}
-        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+        <div className="h-2 w-full bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
           <div
             className="h-full bg-emerald-500 rounded-full transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
@@ -207,11 +217,11 @@ export default function TripChecklistPage() {
           {categories.map((cat) => (
             <div key={cat.id} className="space-y-2">
               {/* Category Pill Bar */}
-              <div className="flex items-center justify-between rounded-full bg-red-50/80 px-4 py-2 border border-red-200/70 text-xs">
-                <span className="text-[11px] font-bold text-red-600">
+              <div className="flex items-center justify-between rounded-full bg-red-50/80 dark:bg-red-950/40 px-4 py-2 border border-red-200/70 dark:border-red-900/40 text-xs">
+                <span className="text-[11px] font-bold text-red-600 dark:text-red-400">
                   {cat.doneCount}/{cat.totalCount} منجز
                 </span>
-                <div className="flex items-center gap-1.5 font-black text-red-700">
+                <div className="flex items-center gap-1.5 font-black text-red-700 dark:text-red-300">
                   <span>{cat.name}</span>
                   <span>{cat.icon}</span>
                 </div>
@@ -223,64 +233,61 @@ export default function TripChecklistPage() {
                   <div
                     key={item.id}
                     onClick={() => toggleItem(item.id)}
-                    className={`flex items-center justify-between rounded-2xl p-4 border transition-all cursor-pointer ${
-                      item.isCompleted
-                        ? "bg-emerald-50/50 border-emerald-300 shadow-2xs"
-                        : "bg-white border-slate-200 shadow-2xs hover:border-slate-300"
-                    }`}
-                  >
-                    {/* Checkbox circle on Left */}
-                    <div
-                      className={`flex h-6 w-6 items-center justify-center rounded-full border transition-all ${
-                        item.isCompleted
-                          ? "bg-emerald-500 border-emerald-500 text-white"
-                          : "border-slate-300 bg-white"
+                    className={`flex items-center justify-between rounded-2xl p-4 border transition-all cursor-pointer text-right ${item.isCompleted
+                        ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/50 shadow-2xs"
+                        : "bg-white dark:bg-[#102A4C] border-slate-200 dark:border-white/10 shadow-2xs hover:border-slate-300 dark:hover:border-white/20"
                       }`}
-                    >
-                      {item.isCompleted && <Check className="h-3.5 w-3.5 stroke-[3]" />}
-                    </div>
-
-                    {/* Content on Right */}
-                    <div className="text-right flex-1 pr-3 space-y-1">
-                      <div className="flex items-center justify-end gap-2">
-                        {item.isCompleted && (
-                          <span className="rounded-full bg-emerald-100 px-2 py-0.2 text-[10px] font-black text-emerald-700">
-                            ✓ تم
-                          </span>
-                        )}
-                        {item.isUrgent && !item.isCompleted && (
-                          <span className="rounded-full bg-red-50 px-2 py-0.2 text-[10px] font-black text-red-600 border border-red-200">
-                            ⚡ عاجل
-                          </span>
-                        )}
-                        <h4
-                          className={`text-xs font-black transition-all ${
-                            item.isCompleted
-                              ? "text-slate-400 line-through"
-                              : "text-primary"
+                  >
+                    {/* Item Info on RIGHT */}
+                    <div className="flex items-center gap-3 flex-1">
+                      <div
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all ${item.isCompleted
+                            ? "bg-emerald-500 border-emerald-500 text-white"
+                            : "border-slate-300 dark:border-slate-600 bg-white dark:bg-[#0B1E36]"
                           }`}
-                        >
-                          {item.requesterName}
-                        </h4>
+                      >
+                        {item.isCompleted && <Check className="h-3.5 w-3.5 stroke-3" />}
                       </div>
 
-                      <p
-                        className={`text-xs transition-all ${
-                          item.isCompleted
-                            ? "text-slate-400 line-through"
-                            : "text-text-secondary"
-                        }`}
-                      >
-                        {item.title}
-                      </p>
+                      <div className="text-right flex-1 space-y-1">
+                        <div className="flex items-center gap-2">
+                          <h4
+                            className={`text-xs font-black transition-all ${item.isCompleted
+                                ? "text-slate-400 dark:text-slate-500 line-through"
+                                : "text-primary dark:text-white"
+                              }`}
+                          >
+                            {item.requesterName}
+                          </h4>
+                          {item.isUrgent && !item.isCompleted && (
+                            <span className="rounded-full bg-red-50 dark:bg-red-950/40 px-2 py-0.2 text-[10px] font-black text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/40">
+                              ⚡ عاجل
+                            </span>
+                          )}
+                          {item.isCompleted && (
+                            <span className="rounded-full bg-emerald-100 dark:bg-emerald-950/50 px-2 py-0.2 text-[10px] font-black text-emerald-700 dark:text-emerald-300">
+                              ✓ تم
+                            </span>
+                          )}
+                        </div>
 
-                      <div className="flex items-center justify-end gap-1.5 pt-0.5">
-                        <span className="rounded-lg bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-text-muted">
-                          {item.weightLabel}
-                        </span>
-                        <span className="rounded-lg bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-text-muted">
-                          {item.sizeLabel}
-                        </span>
+                        <p
+                          className={`text-xs transition-all ${item.isCompleted
+                              ? "text-slate-400 dark:text-slate-500 line-through"
+                              : "text-text-secondary dark:text-slate-300"
+                            }`}
+                        >
+                          {item.title}
+                        </p>
+
+                        <div className="flex items-center gap-1.5 pt-0.5">
+                          <span className="rounded-lg bg-slate-100 dark:bg-[#0B1E36] px-2 py-0.5 text-[10px] font-bold text-text-muted dark:text-slate-400 border border-transparent dark:border-white/5">
+                            {item.weightLabel}
+                          </span>
+                          <span className="rounded-lg bg-slate-100 dark:bg-[#0B1E36] px-2 py-0.5 text-[10px] font-bold text-text-muted dark:text-slate-400 border border-transparent dark:border-white/5">
+                            {item.sizeLabel}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NotificationsPage from "../pages/notifications/NotificationsPage";
+import { NotificationDropdown } from "../components/layout/NotificationDropdown";
 import { useNotificationStore } from "../store/useNotificationStore";
 
 const queryClient = new QueryClient({
@@ -51,4 +52,34 @@ describe("Notifications Domain & Card Design System", () => {
 
     expect(unreadNotifications.length).toBe(0);
   });
+
+  it("should open desktop dropdown, display only 3 notifications, and include view more button", () => {
+    // Set desktop window width
+    window.innerWidth = 1024;
+
+    renderWithProviders(<NotificationDropdown />);
+
+    // Click the bell trigger button
+    const bellBtn = screen.getByRole("button", { name: "الإشعارات" });
+    fireEvent.click(bellBtn);
+
+    // Dropdown popover is visible
+    expect(
+      screen.getByRole("region", { name: "قائمة الإشعارات المختصرة" }),
+    ).toBeInTheDocument();
+
+    // Top 3 notifications are shown
+    expect(screen.getByText("رحلة جديدة قريبة منك")).toBeInTheDocument();
+    expect(screen.getByText("رسالة جديدة")).toBeInTheDocument();
+    expect(screen.getByText("تم قبول طلبك")).toBeInTheDocument();
+
+    // 4th notification is NOT shown (strictly limited to 3)
+    expect(screen.queryByText("تم شراء التوكنز")).not.toBeInTheDocument();
+
+    // View more button is present
+    expect(
+      screen.getByRole("button", { name: /عرض المزيد من الإشعارات/i }),
+    ).toBeInTheDocument();
+  });
 });
+

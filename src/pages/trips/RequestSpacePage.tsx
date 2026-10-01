@@ -126,24 +126,24 @@ export default function RequestSpacePage() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Top Header */}
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#123A68]">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">
               طلب مكان بالرحلة
             </h1>
-            <p className="text-xs text-text-secondary">
+            <p className="text-xs text-text-secondary dark:text-slate-400">
               احجز مكانك لتوصيل أغراضك مع هذه الرحلة
             </p>
           </div>
@@ -151,7 +151,7 @@ export default function RequestSpacePage() {
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="rounded-2xl bg-red-50 p-3.5 border border-red-200 text-xs font-bold text-red-700 text-right animate-shake">
+          <div className="rounded-2xl bg-red-50 dark:bg-red-950/40 p-3.5 border border-red-200 dark:border-red-900/40 text-xs font-bold text-red-700 dark:text-red-300 text-right animate-shake">
             {errorMessage}
           </div>
         )}
@@ -161,18 +161,18 @@ export default function RequestSpacePage() {
           <MultiItemBuilder items={items} onChange={setItems} />
 
           {/* 2. Location Section matching Figma */}
-          <div className="rounded-3xl bg-white p-5 border border-border shadow-xs space-y-3.5 text-right">
-            <h3 className="text-sm font-black text-[#123A68]">الموقع</h3>
+          <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-border dark:border-white/10 shadow-xs space-y-3.5 text-right">
+            <h3 className="text-sm font-black text-[#123A68] dark:text-white">الموقع</h3>
 
             {/* City */}
             <div className="space-y-1">
-              <label className="block text-xs font-bold text-primary">
+              <label className="block text-xs font-bold text-primary dark:text-slate-200">
                 المدينة المطلوبة
               </label>
               <select
                 value={selectedCityKey}
                 onChange={(e) => handleCityChange(e.target.value)}
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
+                className="h-12 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-3.5 text-xs text-primary dark:text-white focus:border-[#123A68] dark:focus:border-accent focus:outline-hidden text-right shadow-2xs cursor-pointer"
               >
                 <option value="">
                   {isLoadingCities ? "جاري تحميل المدن..." : "اختر المدينة"}
@@ -187,13 +187,13 @@ export default function RequestSpacePage() {
 
             {/* Neighborhood */}
             <div className="space-y-1">
-              <label className="block text-xs font-bold text-primary">
+              <label className="block text-xs font-bold text-primary dark:text-slate-200">
                 الحي
               </label>
               <select
                 value={neighborhoodId}
                 onChange={(e) => setNeighborhoodId(e.target.value)}
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-3.5 text-xs text-primary focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs cursor-pointer"
+                className="h-12 w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] px-3.5 text-xs text-primary dark:text-white focus:border-[#123A68] dark:focus:border-accent focus:outline-hidden text-right shadow-2xs cursor-pointer"
               >
                 <option value="">
                   {isLoadingNeighborhoods
@@ -210,18 +210,18 @@ export default function RequestSpacePage() {
           </div>
 
           {/* 3. Media Cards */}
-          <div className="rounded-3xl bg-white p-5 border border-border shadow-xs space-y-4 text-right">
+          <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-border dark:border-white/10 shadow-xs space-y-4 text-right">
             {/* Voice Note */}
-            <div className="rounded-2xl bg-[#F8FAFC] p-4 border border-slate-200/80 space-y-2.5">
+            <div className="rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-4 border border-slate-200/80 dark:border-white/10 space-y-2.5">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-[#123A68]">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 dark:bg-white/10 text-[#123A68] dark:text-accent">
                   <Mic className="h-4.5 w-4.5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-black text-primary">
+                  <h4 className="text-xs font-black text-primary dark:text-white">
                     تسجيل رسالة صوتية (اختياري)
                   </h4>
-                  <p className="text-[10.5px] text-text-muted">
+                  <p className="text-[10.5px] text-text-muted dark:text-slate-400">
                     اشرح طلبك بصوتك لمزيد من الوضوح
                   </p>
                 </div>
@@ -231,7 +231,7 @@ export default function RequestSpacePage() {
                 <button
                   type="button"
                   onClick={() => setShowVoiceRecorder(true)}
-                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-white text-xs font-bold text-primary hover:border-accent hover:text-accent transition-all cursor-pointer"
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-white/20 bg-white dark:bg-[#132F54] text-xs font-bold text-primary dark:text-slate-200 hover:border-accent hover:text-accent transition-all cursor-pointer"
                 >
                   <Mic className="h-4 w-4" />
                   <span>اضغط للتسجيل</span>
@@ -239,7 +239,7 @@ export default function RequestSpacePage() {
               )}
 
               {showVoiceRecorder && (
-                <div className="bg-white p-3 rounded-xl border border-slate-200">
+                <div className="bg-white dark:bg-[#132F54] p-3 rounded-xl border border-slate-200 dark:border-white/10">
                   <VoiceNoteRecorder
                     storageKey="request_space_voice"
                     onVoiceNoteReady={(data) => {
@@ -253,7 +253,7 @@ export default function RequestSpacePage() {
               )}
 
               {recordedVoice && (
-                <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-emerald-200 text-xs">
+                <div className="flex items-center justify-between bg-white dark:bg-[#132F54] p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/40 text-xs">
                   <button
                     type="button"
                     onClick={() => setRecordedVoice(null)}
@@ -261,7 +261,7 @@ export default function RequestSpacePage() {
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
-                  <span className="font-bold text-emerald-700">
+                  <span className="font-bold text-emerald-700 dark:text-emerald-300">
                     تم تسجيل الرسالة الصوتية ({recordedVoice.durationSec} ثانية) ✓
                   </span>
                 </div>
@@ -269,23 +269,23 @@ export default function RequestSpacePage() {
             </div>
 
             {/* Image Upload */}
-            <div className="rounded-2xl bg-[#F8FAFC] p-4 border border-slate-200/80 space-y-2.5">
+            <div className="rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-4 border border-slate-200/80 dark:border-white/10 space-y-2.5">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-50 dark:bg-white/10 text-purple-600 dark:text-purple-300">
                   <ImageIcon className="h-4.5 w-4.5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-black text-primary">
+                  <h4 className="text-xs font-black text-primary dark:text-white">
                     إرسال صورة للمنتج (اختياري)
                   </h4>
-                  <p className="text-[10.5px] text-text-muted">
+                  <p className="text-[10.5px] text-text-muted dark:text-slate-400">
                     قم بإرسال صورة معينة لمزيد من الوضوح
                   </p>
                 </div>
               </div>
 
               {imagePreview ? (
-                <div className="relative rounded-2xl overflow-hidden border border-slate-200 max-h-40">
+                <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 max-h-40">
                   <img
                     src={imagePreview}
                     alt="Preview"
@@ -300,7 +300,7 @@ export default function RequestSpacePage() {
                   </button>
                 </div>
               ) : (
-                <label className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-white text-xs font-bold text-primary hover:border-accent hover:text-accent transition-all cursor-pointer">
+                <label className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-white/20 bg-white dark:bg-[#132F54] text-xs font-bold text-primary dark:text-slate-200 hover:border-accent hover:text-accent transition-all cursor-pointer">
                   <Camera className="h-4 w-4" />
                   <span>اضغط للتصوير أو رفع صورة</span>
                   <input
@@ -315,8 +315,8 @@ export default function RequestSpacePage() {
           </div>
 
           {/* 4. General Note */}
-          <div className="rounded-3xl bg-white p-5 border border-border shadow-xs space-y-2 text-right">
-            <h3 className="text-xs font-bold text-primary">
+          <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-border dark:border-white/10 shadow-xs space-y-2 text-right">
+            <h3 className="text-xs font-bold text-primary dark:text-slate-200">
               ملاحظة عامة للمسافر (اختياري)
             </h3>
             <textarea
@@ -324,28 +324,28 @@ export default function RequestSpacePage() {
               value={generalNote}
               onChange={(e) => setGeneralNote(e.target.value)}
               placeholder="وقت التسليم المفضّل، طريقة التواصل، أي تعليمات عامة..."
-              className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] p-3.5 text-xs text-primary placeholder:text-text-muted focus:border-[#123A68] focus:outline-hidden text-right shadow-2xs resize-none"
+              className="w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 text-xs text-primary dark:text-white placeholder:text-text-muted dark:placeholder:text-slate-400 focus:border-[#123A68] dark:focus:border-accent focus:outline-hidden text-right shadow-2xs resize-none"
             />
           </div>
 
           {/* 5. Token Cost Card */}
-          <div className="flex items-center justify-between rounded-3xl bg-[#FFF5EE] p-4.5 border border-[#FDE0CE] text-right">
+          <div className="flex items-center justify-between rounded-3xl bg-[#FFF5EE] dark:bg-orange-950/25 p-4.5 border border-[#FDE0CE] dark:border-orange-900/30 text-right">
             <div className="text-left space-y-0.5">
               <div className="flex items-center gap-1 text-sm font-black text-accent">
                 <span>1 توكن</span>
                 <span className="h-3.5 w-1 rounded-full bg-accent inline-block" />
               </div>
-              <span className="text-[10.5px] text-text-muted block">
+              <span className="text-[10.5px] text-text-muted dark:text-slate-400 block">
                 رصيدك: {tokenBalance ?? 0} توكن
               </span>
             </div>
 
             <div className="text-right">
-              <div className="flex items-center gap-1.5 text-xs font-black text-[#123A68]">
+              <div className="flex items-center gap-1.5 text-xs font-black text-[#123A68] dark:text-white">
                 <Zap className="h-4 w-4 fill-accent text-accent" />
                 <span>تكلفة نشر الطلب</span>
               </div>
-              <p className="text-[10.5px] text-text-muted mt-0.5">
+              <p className="text-[10.5px] text-text-muted dark:text-slate-400 mt-0.5">
                 سيُخصم توكن واحد من رصيدك
               </p>
             </div>

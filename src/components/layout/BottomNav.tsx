@@ -41,8 +41,8 @@ export const BottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 mx-auto w-full max-w-107.5 border-t border-border/70 bg-white/95 backdrop-blur-md pb-safe">
-      <div className="flex h-16.5 items-center justify-around px-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 mx-auto w-full max-w-[430px] md:max-w-3xl lg:hidden border-t border-border/70 bg-white/95 backdrop-blur-md pb-safe">
+      <div className="flex h-16.5 items-center justify-around px-2 md:px-8">
         {navItems.map((item) => {
           const isActive =
             item.path === "/home"

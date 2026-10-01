@@ -27,10 +27,10 @@ export function PwaInstallBanner() {
         className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-100 animate-fade-in"
         dir="rtl"
       >
-        <div className="flex items-center justify-between gap-3 rounded-3xl bg-[#123A68] p-3.5 text-white shadow-2xl ring-1 ring-white/10">
+        <div className="flex items-center justify-between gap-3 rounded-3xl bg-[#123A68] dark:bg-[#102A4C] p-3.5 text-white shadow-2xl ring-1 ring-white/10">
           <div className="flex items-center gap-3">
             {/* App Icon */}
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white p-1 shadow-sm">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-[#0B1E36] p-1 shadow-sm">
               <img
                 src="/logo.png"
                 alt="بطريقك"

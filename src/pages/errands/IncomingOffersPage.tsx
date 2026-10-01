@@ -93,30 +93,30 @@ export default function IncomingOffersPage() {
   };
 
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-24 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
-            className="p-1 text-primary hover:text-accent transition-colors cursor-pointer"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#123A68]">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">
               العروض الواردة
             </h1>
-            <p className="text-xs text-text-secondary">
+            <p className="text-xs text-text-secondary dark:text-slate-400">
               عروض التوصيل المقدمة لطلبك من المسافرين
             </p>
           </div>
         </div>
 
         {/* Top Summary Banner */}
-        <div className="rounded-3xl bg-[#123A68] p-4 text-white shadow-md text-right space-y-1">
+        <div className="rounded-3xl bg-[#123A68] dark:bg-[#102A4C] border border-transparent dark:border-white/10 p-4 text-white shadow-md text-right space-y-1">
           <div className="flex items-center justify-between text-xs">
             <span className="text-[11px] text-white/80">
               {errand?.title || "طلب توصيل"}
@@ -145,8 +145,8 @@ export default function IncomingOffersPage() {
               onClick={() => setActiveTab(tab.key as typeof activeTab)}
               className={`rounded-xl px-3.5 py-1.5 transition-all cursor-pointer ${
                 activeTab === tab.key
-                  ? "bg-[#123A68] text-white shadow-xs font-black"
-                  : "bg-white border border-slate-200 text-text-secondary hover:bg-slate-50"
+                  ? "bg-[#123A68] dark:bg-accent text-white shadow-xs font-black"
+                  : "bg-white dark:bg-[#102A4C] border border-slate-200 dark:border-white/10 text-text-secondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
               }`}
             >
               {tab.label}
@@ -160,7 +160,7 @@ export default function IncomingOffersPage() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-28 rounded-3xl bg-slate-100 animate-pulse"
+                className="h-28 rounded-3xl bg-slate-100 dark:bg-white/5 animate-pulse"
               />
             ))}
           </div>
@@ -178,18 +178,18 @@ export default function IncomingOffersPage() {
         {/* Offers List or Empty State */}
         {!isLoading && !isError && filteredOffers.length === 0 ? (
           <EmptyState
-            icon={<Package className="h-8 w-8 text-[#123A68]" />}
+            icon={<Package className="h-8 w-8 text-[#123A68] dark:text-white" />}
             title="لا توجد عروض واردة حالياً"
             description="سيقوم المسافرون المتجهون لنفس مسار طلبك بتقديم عروض توصيل قريباً فور مراجعة الطلب."
             actionText="العودة للطلبات"
             onAction={() => navigate("/errands")}
           />
         ) : !isLoading && !isError ? (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredOffers.map((offer) => (
               <div
                 key={offer.id}
-                className="rounded-3xl bg-white p-4.5 border border-border shadow-xs space-y-3 text-right"
+                className="rounded-3xl bg-white dark:bg-[#102A4C] p-4.5 border border-border dark:border-white/10 shadow-xs space-y-3 text-right"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
@@ -199,27 +199,27 @@ export default function IncomingOffersPage() {
                       {offer.avatarInitials}
                     </div>
                     <div>
-                      <h3 className="text-sm font-black text-primary">
+                      <h3 className="text-sm font-black text-primary dark:text-white">
                         {offer.travelerName}
                       </h3>
-                      <p className="text-[10.5px] text-text-muted">
+                      <p className="text-[10.5px] text-text-muted dark:text-slate-400">
                         ⭐ {offer.rating} • {offer.tripsCount} رحلة سابقة
                       </p>
                     </div>
                   </div>
 
-                  <span className="text-[10px] text-text-muted">
+                  <span className="text-[10px] text-text-muted dark:text-slate-400">
                     {offer.timeAgo}
                   </span>
                 </div>
 
-                <p className="text-xs text-text-secondary leading-relaxed bg-slate-50 p-3 rounded-2xl">
+                <p className="text-xs text-text-secondary dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-[#0B1E36] border border-transparent dark:border-white/10 p-3 rounded-2xl">
                   "{offer.quote}"
                 </p>
 
-                <div className="flex items-center justify-between text-[11px] text-text-muted pt-1 border-t border-slate-100">
+                <div className="flex items-center justify-between text-[11px] text-text-muted dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-white/10">
                   <span>{offer.route}</span>
-                  <span className="font-bold text-[#123A68]">
+                  <span className="font-bold text-[#123A68] dark:text-accent">
                     {offer.dateTime}
                   </span>
                 </div>
@@ -239,7 +239,7 @@ export default function IncomingOffersPage() {
                       type="button"
                       disabled={isAccepting || isRejecting}
                       onClick={() => setSelectedOfferToReject(offer.id)}
-                      className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 active:scale-98 transition-all cursor-pointer disabled:opacity-50"
+                      className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#132F54] text-xs font-bold text-slate-600 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/10 active:scale-98 transition-all cursor-pointer disabled:opacity-50"
                     >
                       <ThumbsDown className="h-4 w-4" />
                       <span>{isRejecting ? "جاري الرفض..." : "رفض"}</span>

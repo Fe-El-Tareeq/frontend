@@ -88,22 +88,22 @@ export function AuthSuccessModal({
     >
       <div
         className={cn(
-          "w-full max-w-sm rounded-[28px] bg-white p-7 text-center shadow-xl space-y-4",
+          "w-full max-w-sm rounded-[28px] bg-white dark:bg-[#102A4C] border border-transparent dark:border-white/10 p-7 text-center shadow-xl space-y-4",
           className
         )}
         dir="rtl"
       >
         {/* Success Icon */}
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#E6F9EE]">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#E6F9EE] dark:bg-emerald-950/40">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#10B981] text-white shadow-xs">
-            <Check className="h-6 w-6 stroke-[3]" />
+            <Check className="h-6 w-6 stroke-3" />
           </div>
         </div>
 
         {/* Text */}
         <div className="space-y-1.5 text-center">
-          <h3 className="text-xl font-black text-[#123A68]">{modalTitle}</h3>
-          <p className="text-xs text-text-secondary leading-relaxed max-w-[260px] mx-auto">
+          <h3 className="text-xl font-black text-[#123A68] dark:text-white">{modalTitle}</h3>
+          <p className="text-xs text-text-secondary dark:text-slate-300 leading-relaxed max-w-65 mx-auto">
             {modalSubtitle}
           </p>
         </div>
@@ -113,7 +113,7 @@ export function AuthSuccessModal({
           <button
             type="button"
             onClick={handlePrimary}
-            className="flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] text-xs font-black text-white shadow-md active:scale-98 transition-all hover:bg-[#0D2C50] cursor-pointer"
+            className="flex h-12 w-full items-center justify-center rounded-2xl bg-[#123A68] dark:bg-[#1E4E8C] text-xs font-black text-white shadow-md active:scale-98 transition-all hover:bg-[#0D2C50] dark:hover:bg-[#123A68] cursor-pointer"
           >
             {primaryText}
           </button>
@@ -122,7 +122,7 @@ export function AuthSuccessModal({
             <button
               type="button"
               onClick={handleSecondary}
-              className="w-full py-2.5 text-xs font-bold text-[#123A68] hover:text-[#F36F21] transition-colors cursor-pointer"
+              className="w-full py-2.5 text-xs font-bold text-[#123A68] dark:text-[#38BDF8] hover:text-[#F36F21] transition-colors cursor-pointer"
             >
               {secondaryText}
             </button>

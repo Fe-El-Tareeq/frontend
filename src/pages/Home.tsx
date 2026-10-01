@@ -115,19 +115,30 @@ export default function Home() {
             ? "مكتمل"
             : "جاري التوصيل",
       statusBadge: isWaiting
-        ? "bg-amber-50 text-amber-700 border-amber-200"
+        ? "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/40"
         : isMatched
-          ? "bg-blue-50 text-blue-700 border-blue-200"
-          : "bg-emerald-50 text-emerald-700 border-emerald-200",
+          ? "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/40"
+          : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40",
       dateLocation: locationText,
     };
   });
 
+  const isVerified =
+    profile?.verificationStatus === "VERIFIED" || profile?.isVerified === true;
+
+  const handleCreateTrip = () => {
+    if (!isVerified) {
+      navigate("/verify-identity");
+    } else {
+      navigate("/trips/new");
+    }
+  };
+
   return (
-    <MobileContainer className="bg-[#F8FAFC] pb-28 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-28 lg:pb-24 text-right">
       <Header />
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Welcome Greeting Banner */}
         <HomeGreeting
           userName={profile?.fullName || "بك في بطريقك"}
@@ -138,7 +149,7 @@ export default function Home() {
         {!isInstalled && (
           <div
             onClick={handleInstallClick}
-            className="flex items-center justify-between gap-3 rounded-3xl bg-linear-to-r from-[#123A68] to-[#1D4A7F] p-4 text-white shadow-md hover:shadow-lg active:scale-[0.99] transition-all cursor-pointer text-right"
+            className="flex items-center justify-between gap-3 rounded-3xl bg-linear-to-r from-[#123A68] to-[#1D4A7F] dark:from-[#0E2442] dark:to-[#12325A] border border-transparent dark:border-white/10 p-4 text-white shadow-md hover:shadow-lg active:scale-[0.99] transition-all cursor-pointer text-right"
           >
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F36F21] text-white shadow-xs">
@@ -199,7 +210,7 @@ export default function Home() {
       {/* Sticky Dual Action Buttons at Bottom */}
       <HomeFloatingActions
         onCreateErrand={() => navigate("/errands/new")}
-        onCreateTrip={() => navigate("/trips/new")}
+        onCreateTrip={handleCreateTrip}
       />
 
       {/* PWA Install Guide Modal */}

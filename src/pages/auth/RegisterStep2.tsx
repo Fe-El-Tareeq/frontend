@@ -137,7 +137,7 @@ export default function RegisterStep2() {
         <Form.Field name="city">
           <Form.Label>المدينة</Form.Label>
           <Form.Select
-            className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            className="h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white"
             {...register("city")}
           >
             {cities && cities.length > 0 ? (
@@ -167,7 +167,7 @@ export default function RegisterStep2() {
           <Form.Label>الحي</Form.Label>
           <Form.Select
             disabled={isLoadingNeighborhoods}
-            className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            className="h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white"
             {...register("neighborhoodId")}
           >
             <option value="">
@@ -185,20 +185,20 @@ export default function RegisterStep2() {
         </Form.Field>
 
         {/* Terms Box (Figma rounded box style) */}
-        <div className="my-3 rounded-2xl bg-[#F8FAFC] p-3.5 border border-slate-200">
+        <div className="my-3 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 border border-slate-200 dark:border-white/10">
           <label className="flex items-start gap-2.5 cursor-pointer text-right">
             <input
               type="checkbox"
               className="h-4 w-4 mt-0.5 rounded accent-[#F36F21] cursor-pointer"
               {...register("terms")}
             />
-            <span className="text-[11px] text-text-secondary leading-relaxed">
+            <span className="text-[11px] text-text-secondary dark:text-slate-300 leading-relaxed">
               بإنشاء الحساب، أوافق على{" "}
-              <span className="font-bold text-[#123A68] hover:underline">
+              <span className="font-bold text-[#123A68] dark:text-[#38BDF8] hover:underline">
                 شروط الاستخدام
               </span>{" "}
               و{" "}
-              <span className="font-bold text-[#123A68] hover:underline">
+              <span className="font-bold text-[#123A68] dark:text-[#38BDF8] hover:underline">
                 سياسة الخصوصية
               </span>
             </span>
@@ -223,7 +223,7 @@ export default function RegisterStep2() {
           <button
             type="button"
             onClick={handleGoBackToStep1}
-            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-white text-xs font-bold text-text-secondary hover:bg-slate-50 transition-colors cursor-pointer"
+            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#132F54] text-xs font-bold text-text-secondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 transition-colors cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
             <span>الرجوع للخطوة السابقة (تعديل البيانات)</span>

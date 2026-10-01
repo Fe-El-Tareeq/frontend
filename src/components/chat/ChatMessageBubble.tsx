@@ -41,8 +41,8 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message }) => {
       <div
         className={`max-w-[80%] rounded-3xl p-3.5 text-xs leading-relaxed shadow-2xs ${
           isUser
-            ? "bg-[#123A68] text-white rounded-br-xs"
-            : "bg-white text-primary border border-border/80 rounded-bl-xs"
+            ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white rounded-br-xs"
+            : "bg-white dark:bg-[#102A4C] text-primary dark:text-slate-100 border border-border/80 dark:border-white/10 rounded-bl-xs"
         }`}
       >
         {message.text && <p className="text-right">{message.text}</p>}
@@ -82,7 +82,7 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message }) => {
 
         <div
           className={`mt-1.5 flex items-center gap-1 text-[10px] ${
-            isUser ? "text-white/70 justify-start" : "text-text-muted justify-end"
+            isUser ? "text-white/70 justify-start" : "text-text-muted dark:text-slate-400 justify-end"
           }`}
         >
           <span>{message.time}</span>

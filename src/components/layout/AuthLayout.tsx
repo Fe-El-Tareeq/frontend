@@ -1,6 +1,5 @@
 import type { FC, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { MobileContainer } from "./MobileContainer";
 import { cn } from "../../utils/cn";
 
 export interface AuthLayoutProps {
@@ -39,14 +38,17 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
   };
 
   return (
-    <MobileContainer className="min-h-screen bg-[#F8FAFC] pb-8">
+    <div
+      dir="rtl"
+      className="min-h-screen w-full bg-[#F8FAFC] dark:bg-[#0B1E36] flex flex-col justify-between antialiased text-right transition-colors duration-200"
+    >
       {/* Top Header */}
-      <header className="flex h-14 items-center justify-between px-5 bg-white border-b border-border/40 shadow-2xs">
+      <header className="flex h-16 items-center justify-between px-6 md:px-12 bg-white dark:bg-[#102A4C] border-b border-border/40 dark:border-white/10 shadow-2xs w-full">
         {showBack ? (
           <button
             type="button"
             onClick={handleBack}
-            className="text-xs font-bold text-text-secondary hover:text-primary transition-colors"
+            className="text-xs md:text-sm font-bold text-text-secondary dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors cursor-pointer"
           >
             رجوع
           </button>
@@ -56,20 +58,20 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
 
         <div
           onClick={() => navigate("/")}
-          className="flex items-center gap-1.5 cursor-pointer"
+          className="flex items-center gap-2 cursor-pointer"
         >
-          <span className="text-sm font-black text-primary">بطريقك</span>
+          <span className="text-base font-black text-primary dark:text-white">بطريقك</span>
           <img
             src="/logo.png"
             alt="بطريقك"
-            className="h-7 w-7 object-contain"
+            className="h-8 w-8 object-contain"
           />
         </div>
       </header>
 
       {/* Main Container */}
-      <div className="flex flex-1 items-center justify-center px-4 py-6">
-        <div className="w-full max-w-[360px] rounded-3xl border border-border bg-white p-6 shadow-xs">
+      <div className="flex flex-1 items-center justify-center px-4 py-8 md:py-16">
+        <div className="w-full max-w-[420px] rounded-3xl border border-border dark:border-white/10 bg-white dark:bg-[#102A4C] p-6 md:p-8 shadow-md">
           {/* Logo Illustration */}
           <div className="flex justify-center mb-4">
             <img
@@ -81,9 +83,9 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
 
           {/* Title & Subtitle */}
           <div className="text-center space-y-1">
-            <h1 className="text-xl font-black text-primary">{title}</h1>
+            <h1 className="text-xl font-black text-primary dark:text-white">{title}</h1>
             {subtitle && (
-              <p className="text-xs text-text-secondary">{subtitle}</p>
+              <p className="text-xs text-text-secondary dark:text-slate-300">{subtitle}</p>
             )}
           </div>
 
@@ -103,7 +105,7 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
                       "h-1 rounded-full transition-all duration-300",
                       isPassedOrCurrent
                         ? "w-10 bg-[#F36F21]"
-                        : "w-10 bg-slate-200",
+                        : "w-10 bg-slate-200 dark:bg-slate-700",
                     )}
                   />
                 );
@@ -116,7 +118,7 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
 
           {/* Footer */}
           {footerActionText && (
-            <div className="mt-5 text-center text-xs text-text-secondary pt-2">
+            <div className="mt-5 text-center text-xs text-text-secondary dark:text-slate-300 pt-2">
               {footerText && <span>{footerText} </span>}
               <button
                 type="button"
@@ -129,6 +131,6 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
           )}
         </div>
       </div>
-    </MobileContainer>
+    </div>
   );
 };

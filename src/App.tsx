@@ -80,7 +80,7 @@ const IdentityVerificationPage = lazy(() =>
 // Clean Mobile Loading Fallback
 const PageLoadingFallback = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-background text-primary gap-3">
-    <div className="h-14 w-14 rounded-2xl bg-white border border-border shadow-xs flex items-center justify-center">
+    <div className="h-14 w-14 rounded-2xl bg-white dark:bg-[#102A4C] border border-border dark:border-white/10 shadow-xs flex items-center justify-center">
       <Loader2 className="h-7 w-7 animate-spin text-accent" />
     </div>
     <span className="text-xs font-bold text-text-secondary">
