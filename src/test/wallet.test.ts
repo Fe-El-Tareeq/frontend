@@ -1,0 +1,40 @@
+import { describe, it, expect } from "vitest";
+import { TOKEN_PACKAGES } from "../pages/wallet/BuyTokensPackages";
+import { ENDPOINTS } from "../api/endpoints";
+
+describe("Wallet Domain & Multi-Step Purchase Flow", () => {
+  it("should have 4 predefined token packages with positive prices", () => {
+    expect(TOKEN_PACKAGES.length).toBe(4);
+
+    TOKEN_PACKAGES.forEach((pkg) => {
+      expect(pkg.tokens).toBeGreaterThan(0);
+      expect(pkg.priceNis).toBeGreaterThan(0);
+      expect(pkg.name).toBeTruthy();
+      expect(pkg.ratePerToken).toBeTruthy();
+    });
+  });
+
+  it("should mark the 25-token package as popular", () => {
+    const popularPkg = TOKEN_PACKAGES.find((p) => p.isPopular);
+    expect(popularPkg).toBeDefined();
+    expect(popularPkg?.tokens).toBe(25);
+    expect(popularPkg?.priceNis).toBe(10);
+  });
+
+  it("should verify wallet and payment endpoints", () => {
+    const invoiceId = "inv-999";
+    expect(ENDPOINTS.WALLET.ME).toBe("/api/v1/wallet");
+    expect(ENDPOINTS.WALLET.TRANSACTIONS).toBe("/api/v1/wallet/transactions");
+    expect(ENDPOINTS.PAYMENTS.PACKAGES).toBe("/api/v1/payments/packages");
+    expect(ENDPOINTS.PAYMENTS.INVOICES).toBe("/api/v1/payments/invoices");
+    expect(ENDPOINTS.PAYMENTS.OTP_VERIFY(invoiceId)).toBe(
+      `/api/v1/payments/invoices/${invoiceId}/otp/verify`,
+    );
+    expect(ENDPOINTS.PAYMENTS.OTP_RESEND(invoiceId)).toBe(
+      `/api/v1/payments/invoices/${invoiceId}/otp/resend`,
+    );
+    expect(ENDPOINTS.PAYMENTS.RECEIPT(invoiceId)).toBe(
+      `/api/v1/payments/invoices/${invoiceId}/receipt`,
+    );
+  });
+});

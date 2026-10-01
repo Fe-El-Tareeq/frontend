@@ -1,115 +1,145 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { AuthLayout } from "../../components/layout/AuthLayout";
+import { Form } from "../../components/ui/form/Form";
 
-function RegisterStep1() {
+const step1Schema = z.object({
+  fullName: z
+    .string()
+    .min(2, "الاسم الكامل يجب ألا يقل عن حرفين")
+    .max(100, "الاسم طويل جداً"),
+  phone: z
+    .string()
+    .min(8, "رقم الهاتف يجب أن يتكون من 8 أرقام على الأقل")
+    .max(20, "رقم الهاتف طويل جداً"),
+  email: z
+    .string()
+    .min(1, "البريد الإلكتروني مطلوب")
+    .email("يجب إدخال بريد إلكتروني صالح")
+    .max(254, "البريد الإلكتروني طويل جداً"),
+  password: z
+    .string()
+    .min(8, "كلمة المرور يجب ألا تقل عن 8 أحرف")
+    .regex(/[A-Z]/, "يجب أن تحتوي على حرف كبير واحد على الأقل")
+    .regex(/[0-9]/, "يجب أن تحتوي على رقم واحد على الأقل")
+    .regex(/[^A-Za-z0-9]/, "يجب أن تحتوي على رمز خاص واحد على الأقل"),
+});
+
+type Step1FormData = z.infer<typeof step1Schema>;
+
+export default function RegisterStep1() {
+  const location = useLocation();
   const navigate = useNavigate();
 
+  // Restore existing input if user navigated back from Step 2
+  const existingData = location.state as {
+    fullName?: string;
+    phone?: string;
+    email?: string;
+    password?: string;
+  } | null;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Step1FormData>({
+    resolver: zodResolver(step1Schema),
+    defaultValues: {
+      fullName: existingData?.fullName || "",
+      phone: existingData?.phone || "",
+      email: existingData?.email || "",
+      password: existingData?.password || "",
+    },
+  });
+
+  const onSubmit = (data: Step1FormData) => {
+    navigate("/register-step2", {
+      state: {
+        fullName: data.fullName,
+        phone: data.phone,
+        email: data.email,
+        password: data.password,
+      },
+    });
+  };
+
   return (
-    <main
-      dir="rtl"
-      className="min-h-screen bg-[#F5F7FA] flex items-center justify-center px-5 py-8"
+    <AuthLayout
+      title="إنشاء حساب جديد"
+      subtitle="انضم إلى مجتمع بطريقك"
+      currentStep={1}
+      totalSteps={2}
+      showBack={true}
+      onBack={() => navigate("/")}
+      footerText="لديك حساب بالفعل؟"
+      footerActionText="تسجيل الدخول"
+      onFooterAction={() => navigate("/login")}
     >
-      <div className="w-full max-w-[353px] min-h-[654px] rounded-[18px] border border-[#E1E4E8] bg-white px-[33px] pt-[38px] pb-[25px] shadow-sm">
-
-        {/* Logo */}
-        <div className="flex justify-center">
-          <img
-            src="/logo.png"
-            alt="بطريقك"
-            className="h-[65px] w-[68px] object-contain"
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        {/* Full Name */}
+        <Form.Field name="fullName" error={errors.fullName?.message} required>
+          <Form.Label>الاسم الكامل</Form.Label>
+          <Form.Input
+            placeholder="هديل محمد"
+            className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            {...register("fullName")}
           />
-        </div>
+          <Form.ErrorMessage />
+        </Form.Field>
 
-        {/* Title */}
-        <div className="mt-[20px] text-center">
-          <h1 className="text-[24px] font-bold leading-[1.4] text-primary">
-            إنشاء حساب جديد
-          </h1>
+        {/* Phone */}
+        <Form.Field name="phone" error={errors.phone?.message} required>
+          <Form.Label>رقم الهاتف</Form.Label>
+          <Form.Input
+            type="tel"
+            placeholder="05XX-XXX-XXX"
+            dir="ltr"
+            className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            {...register("phone")}
+          />
+          <Form.ErrorMessage />
+        </Form.Field>
 
-          <p className="mt-[3px] text-[16px] text-text-secondary">
-            انضم إلى مجتمع بطريقك
-          </p>
-        </div>
+        {/* Email */}
+        <Form.Field name="email" error={errors.email?.message} required>
+          <Form.Label>البريد الإلكتروني</Form.Label>
+          <Form.Input
+            type="email"
+            placeholder="user@example.com"
+            dir="ltr"
+            className="text-right h-12 rounded-2xl bg-[#F8FAFC] border-slate-200"
+            {...register("email")}
+          />
+          <Form.ErrorMessage />
+        </Form.Field>
 
-        {/* Steps */}
-        <div className="mt-[16px] flex items-center justify-center gap-[8px]">
-          <span className="h-[6px] w-[48px] rounded-pill bg-accent" />
-          <span className="h-[6px] w-[32px] rounded-pill bg-[#E4E7EB]" />
-        </div>
+        {/* Password */}
+        <Form.Field name="password" error={errors.password?.message} required>
+          <Form.Label>كلمة المرور</Form.Label>
+          <Form.PasswordInput
+            placeholder="يجب أن تتكون من 8 خانات وتحتوي على حرف كبير ورقم ورمز خاص"
+            className="h-12 rounded-2xl bg-[#F8FAFC] border-slate-200 text-xs"
+            {...register("password")}
+          />
+          <Form.ErrorMessage />
+        </Form.Field>
 
-        {/* Form */}
-        <form
-          className="mt-[27px]"
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate("/register-step2");
-          }}
+        {/* Password Helper Hint */}
+        <p className="text-[11px] text-text-secondary text-right -mt-2 mb-1 leading-relaxed">
+          يجب أن تتكون من 8 خانات، وتحتوي على حرف كبير ورقم ورمز خاص.
+        </p>
+
+        {/* Next Button (Orange matching Figma) */}
+        <button
+          type="submit"
+          className="mt-3 flex h-12 w-full items-center justify-center rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all cursor-pointer shadow-md"
         >
-          {/* Full Name */}
-          <div className="mb-[14px]">
-            <label className="mb-[6px] block text-[14px] font-medium text-primary">
-              الاسم الكامل
-              <span className="mr-[3px] text-error">*</span>
-            </label>
-
-            <input
-              type="text"
-              placeholder="هديل محمد"
-              className="h-[50px] w-full rounded-[16px] border-2 border-[#E3E7EC] bg-[#FAFBFC] px-[16px] text-right text-[15px] text-primary outline-none placeholder:text-[#A7B0BE] focus:border-accent"
-            />
-          </div>
-
-          {/* Phone */}
-          <div className="mb-[14px]">
-            <label className="mb-[6px] block text-[14px] font-medium text-primary">
-              رقم الهاتف
-              <span className="mr-[3px] text-error">*</span>
-            </label>
-
-            <input
-              type="tel"
-              placeholder="05XX-XXX-XXX"
-              className="h-[50px] w-full rounded-[16px] border-2 border-[#E3E7EC] bg-[#FAFBFC] px-[16px] text-right text-[15px] text-primary outline-none placeholder:text-[#A7B0BE] focus:border-accent"
-            />
-          </div>
-
-          {/* Password */}
-          <div className="mb-[17px]">
-            <label className="mb-[6px] block text-[14px] font-medium text-primary">
-              كلمة المرور
-              <span className="mr-[3px] text-error">*</span>
-            </label>
-
-            <input
-              type="password"
-              placeholder="يجب أن تكون من 8 أرقام وحروف كبيرة على الأقل ورمز مميز"
-              className="h-[50px] w-full rounded-[16px] border-2 border-[#E3E7EC] bg-[#FAFBFC] px-[16px] text-right text-[11px] text-primary outline-none placeholder:text-[#A7B0BE] focus:border-accent"
-            />
-          </div>
-
-          {/* Next */}
-          <button
-            type="submit"
-            className="h-[51px] w-full rounded-[16px] bg-accent text-[16px] font-bold text-white shadow-sm"
-          >
-            التالي
-          </button>
-        </form>
-
-        {/* Login */}
-        <div className="mt-[25px] text-center text-[14px] text-text-secondary">
-          <span>لديك حساب بالفعل؟ </span>
-
-          <button
-            type="button"
-            onClick={() => navigate("/welcome")}
-            className="font-bold text-accent hover:text-accent-hover"
-          >
-            تسجيل الدخول
-          </button>
-        </div>
-      </div>
-    </main>
+          التالي
+        </button>
+      </Form>
+    </AuthLayout>
   );
 }
-
-export default RegisterStep1;

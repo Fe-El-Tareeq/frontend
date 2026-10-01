@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /wallet/
+Disallow: /profile/
+Disallow: /settings/
+Disallow: /messages/
+Disallow: /chat/
+
+Sitemap: https://fe-el-tareeq.vercel.app/sitemap.xml

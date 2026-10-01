@@ -1,0 +1,231 @@
+import { apiClient } from "./client";
+import { ENDPOINTS } from "./endpoints";
+import type {
+  ApiSuccessResponse,
+  RegisterRequest,
+  RegisterResponseData,
+  LoginRequest,
+  LoginResponseData,
+  OtpRequest,
+  OtpRequestResponseData,
+  OtpVerifyRequest,
+  VerifyOtpData,
+  RefreshTokenRequest,
+  ForgotPasswordRequest,
+  ForgotPasswordResponseData,
+  ResetPasswordRequest,
+  UserProfile,
+  UserProfileUpdateRequest,
+  AuthTokens,
+  CancelDeletionRequestOtpRequest,
+  CancelDeletionConfirmRequest,
+  UserSettingsResponseData,
+  UpdateNotificationSettingsRequest,
+  ChangePasswordRequest,
+  DeactivateAccountRequest,
+  AdminLoginRequest,
+  AdminLoginResponseData,
+  AdminUserSummary,
+} from "../types";
+
+export const authApi = {
+  register: async (payload: RegisterRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<RegisterResponseData>>(
+      ENDPOINTS.AUTH.REGISTER,
+      payload,
+    );
+    return res.data;
+  },
+
+  login: async (payload: LoginRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<LoginResponseData>>(
+      ENDPOINTS.AUTH.LOGIN,
+      payload,
+    );
+    return res.data;
+  },
+
+  requestOtp: async (payload: OtpRequest) => {
+    const res = await apiClient.post<
+      ApiSuccessResponse<OtpRequestResponseData>
+    >(ENDPOINTS.AUTH.REQUEST_OTP, payload);
+    return res.data;
+  },
+
+  verifyOtp: async (payload: OtpVerifyRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<VerifyOtpData>>(
+      ENDPOINTS.AUTH.VERIFY_OTP,
+      payload,
+    );
+    return res.data;
+  },
+
+  refreshToken: async (payload: RefreshTokenRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<AuthTokens>>(
+      ENDPOINTS.AUTH.REFRESH,
+      payload,
+    );
+    return res.data;
+  },
+
+  logout: async (payload: RefreshTokenRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<null>>(
+      ENDPOINTS.AUTH.LOGOUT,
+      payload,
+    );
+    return res.data;
+  },
+
+  forgotPassword: async (payload: ForgotPasswordRequest) => {
+    const res = await apiClient.post<
+      ApiSuccessResponse<ForgotPasswordResponseData>
+    >(ENDPOINTS.AUTH.FORGOT_PASSWORD, payload);
+    return res.data;
+  },
+
+  changePassword: async (payload: ChangePasswordRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<null>>(
+      ENDPOINTS.AUTH.CHANGE_PASSWORD,
+      payload,
+    );
+    return res.data;
+  },
+
+  resetPassword: async (payload: ResetPasswordRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<null>>(
+      ENDPOINTS.AUTH.RESET_PASSWORD,
+      payload,
+    );
+    return res.data;
+  },
+
+  requestCancelDeletionOtp: async (payload: CancelDeletionRequestOtpRequest) => {
+    const res = await apiClient.post<
+      ApiSuccessResponse<{ expiresInMinutes: number }>
+    >(ENDPOINTS.AUTH.CANCEL_DELETION_REQUEST_OTP, payload);
+    return res.data;
+  },
+
+  confirmCancelDeletion: async (payload: CancelDeletionConfirmRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<VerifyOtpData>>(
+      ENDPOINTS.AUTH.CANCEL_DELETION_CONFIRM,
+      payload,
+    );
+    return res.data;
+  },
+
+  getMe: async () => {
+    const res = await apiClient.get<ApiSuccessResponse<UserProfile>>(
+      ENDPOINTS.USERS.ME,
+    );
+    return res.data;
+  },
+
+  updateMe: async (payload: UserProfileUpdateRequest) => {
+    const res = await apiClient.patch<ApiSuccessResponse<UserProfile>>(
+      ENDPOINTS.USERS.ME,
+      payload,
+    );
+    return res.data;
+  },
+
+  getSettings: async () => {
+    const res = await apiClient.get<ApiSuccessResponse<UserSettingsResponseData>>(
+      ENDPOINTS.USERS.SETTINGS,
+    );
+    return res.data;
+  },
+
+  updateNotificationSettings: async (payload: UpdateNotificationSettingsRequest) => {
+    const res = await apiClient.patch<ApiSuccessResponse<UserSettingsResponseData>>(
+      ENDPOINTS.USERS.NOTIFICATIONS,
+      payload,
+    );
+    return res.data;
+  },
+
+  uploadProfileImage: async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    const res = await apiClient.put<ApiSuccessResponse<UserProfile>>(
+      ENDPOINTS.USERS.PROFILE_IMAGE,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return res.data;
+  },
+
+  deleteProfileImage: async () => {
+    const res = await apiClient.delete<ApiSuccessResponse<UserProfile>>(
+      ENDPOINTS.USERS.PROFILE_IMAGE,
+    );
+    return res.data;
+  },
+
+  submitIdentityVerification: async (payload: {
+    idFrontImage: File;
+    idBackImage: File;
+    selfieImage: File;
+  }) => {
+    const formData = new FormData();
+    formData.append("idFrontImage", payload.idFrontImage);
+    formData.append("idBackImage", payload.idBackImage);
+    formData.append("selfieImage", payload.selfieImage);
+
+    const res = await apiClient.post<
+      ApiSuccessResponse<{ message: string; status: string }>
+    >(ENDPOINTS.USERS.IDENTITY_VERIFICATION, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  },
+
+  deactivateAccount: async (payload?: DeactivateAccountRequest) => {
+    const res = await apiClient.delete<ApiSuccessResponse<null>>(
+      ENDPOINTS.USERS.DEACTIVATE,
+      {
+        data: payload || { password: "", confirmation: "DELETE" },
+      },
+    );
+    return res.data;
+  },
+
+  adminLogin: async (payload: AdminLoginRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<AdminLoginResponseData>>(
+      ENDPOINTS.ADMIN_AUTH.LOGIN,
+      payload,
+    );
+    return res.data;
+  },
+
+  adminRefresh: async (payload: RefreshTokenRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<AuthTokens>>(
+      ENDPOINTS.ADMIN_AUTH.REFRESH,
+      payload,
+    );
+    return res.data;
+  },
+
+  adminLogout: async (payload: RefreshTokenRequest) => {
+    const res = await apiClient.post<ApiSuccessResponse<null>>(
+      ENDPOINTS.ADMIN_AUTH.LOGOUT,
+      payload,
+    );
+    return res.data;
+  },
+
+  getAdminMe: async () => {
+    const res = await apiClient.get<ApiSuccessResponse<{ user: AdminUserSummary }>>(
+      ENDPOINTS.ADMIN_AUTH.ME,
+    );
+    return res.data;
+  },
+};
+
+
