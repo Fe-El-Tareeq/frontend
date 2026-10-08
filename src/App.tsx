@@ -5,6 +5,7 @@ import { useAuthStore } from "./store/useAuthStore";
 import {
   ProtectedRoute,
   PublicOnlyRoute,
+  AdminRoute,
 } from "./components/auth/ProtectedRoute";
 import { PwaInstallBanner } from "./components/pwa/PwaInstallBanner";
 import { OfflineStatusBar } from "./components/offline/OfflineStatusBar";
@@ -77,6 +78,18 @@ const IdentityVerificationPage = lazy(() =>
     default: m.IdentityVerificationPage,
   })),
 );
+
+// Admin Dashboard Pages
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminOverviewPage = lazy(() => import("./pages/admin/AdminOverviewPage"));
+const AdminUsersPage = lazy(() => import("./pages/admin/AdminUsersPage"));
+const AdminLiveOrdersPage = lazy(() => import("./pages/admin/AdminLiveOrdersPage"));
+const AdminDisputesPage = lazy(() => import("./pages/admin/AdminDisputesPage"));
+const AdminWalletPage = lazy(() => import("./pages/admin/AdminWalletPage"));
+const AdminBroadcastsPage = lazy(() => import("./pages/admin/AdminBroadcastsPage"));
+const AdminReportsPage = lazy(() => import("./pages/admin/AdminReportsPage"));
+const AdminFaqsPage = lazy(() => import("./pages/admin/AdminFaqsPage"));
+const AdminVerificationsPage = lazy(() => import("./pages/admin/AdminVerificationsPage"));
 
 // Clean Mobile Loading Fallback
 const PageLoadingFallback = () => (
@@ -511,6 +524,26 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* Admin Dashboard Routes (Restricted to bitareqk@gmail.com) */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            <Route index element={<AdminOverviewPage />} />
+            <Route path="users" element={<AdminUsersPage />} />
+            <Route path="live-orders" element={<AdminLiveOrdersPage />} />
+            <Route path="disputes" element={<AdminDisputesPage />} />
+            <Route path="wallet" element={<AdminWalletPage />} />
+            <Route path="notifications" element={<AdminBroadcastsPage />} />
+            <Route path="reports" element={<AdminReportsPage />} />
+            <Route path="faqs" element={<AdminFaqsPage />} />
+            <Route path="verifications" element={<AdminVerificationsPage />} />
+          </Route>
 
           {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
