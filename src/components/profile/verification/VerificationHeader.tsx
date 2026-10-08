@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Shield, FileText, Camera, CheckCircle2, Home } from "lucide-react";
+import { ChevronRight, Shield, FileText, Camera, CheckCircle2 } from "lucide-react";
 
 interface VerificationHeaderProps {
   step: 1 | 2 | 3;
@@ -53,16 +53,6 @@ export const VerificationHeader: FC<VerificationHeaderProps> = ({
               className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-50 dark:bg-[#0B1E36] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 transition-colors cursor-pointer"
             >
               <ChevronRight className="h-5 w-5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate("/home")}
-              aria-label="الصفحة الرئيسية"
-              title="الصفحة الرئيسية"
-              className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-50 dark:bg-[#0B1E36] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 hover:text-accent dark:hover:text-accent transition-colors cursor-pointer"
-            >
-              <Home className="h-4.5 w-4.5" />
             </button>
           </div>
 

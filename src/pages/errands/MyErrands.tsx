@@ -150,8 +150,8 @@ export default function MyErrands() {
       <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Top Header: Title on Right & "+ طلب جديد" on Left */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 cursor-pointer">
-            <div className="text-right">
+          <div className="flex items-centerjustify-start gap-1.5 cursor-pointer">
+            <div className="text-right gap-2">
               <div className="flex items-center gap-1">
                 <ChevronRight className="h-5 w-5 text-[#123A68] dark:text-white" />
                 <h1 className="text-xl font-black text-[#123A68] dark:text-white">طلباتي</h1>
@@ -162,7 +162,7 @@ export default function MyErrands() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-start">
             <button
               type="button"
               onClick={() => setShowSearch(!showSearch)}

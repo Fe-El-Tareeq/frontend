@@ -35,16 +35,16 @@ export default function TripsPage() {
 
     const dateStr = t.departureTime
       ? new Date(t.departureTime).toLocaleDateString("ar-EG", {
-          day: "numeric",
-          month: "long",
-        })
+        day: "numeric",
+        month: "long",
+      })
       : "اليوم";
 
     const timeStr = t.departureTime
       ? new Date(t.departureTime).toLocaleTimeString("ar-EG", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
+        hour: "2-digit",
+        minute: "2-digit",
+      })
       : "10:00 ص";
 
     return {
@@ -113,7 +113,7 @@ export default function TripsPage() {
 
       <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title Header with "+ إضافة رحلة" */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-start">
           <div className="text-right">
             <h1 className="text-xl font-black text-[#123A68] dark:text-white">الرحلات</h1>
             <span className="text-xs text-text-muted dark:text-slate-400">
@@ -136,22 +136,20 @@ export default function TripsPage() {
           <button
             type="button"
             onClick={() => setActiveTab("all")}
-            className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${
-              activeTab === "all"
+            className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${activeTab === "all"
                 ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white shadow-2xs font-black"
                 : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
-            }`}
+              }`}
           >
             كل الرحلات
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("mine")}
-            className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${
-              activeTab === "mine"
+            className={`flex-1 rounded-xl py-2 transition-all cursor-pointer text-center ${activeTab === "mine"
                 ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white shadow-2xs font-black"
                 : "text-text-muted dark:text-slate-400 hover:text-text-primary dark:hover:text-white"
-            }`}
+              }`}
           >
             رحلاتي
           </button>
@@ -183,11 +181,10 @@ export default function TripsPage() {
               key={c.key}
               type="button"
               onClick={() => setCityFilter(c.key)}
-              className={`shrink-0 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${
-                cityFilter === c.key
+              className={`shrink-0 rounded-xl px-3.5 py-2 transition-all cursor-pointer ${cityFilter === c.key
                   ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white shadow-xs"
                   : "bg-white dark:bg-[#102A4C] border border-slate-200 dark:border-white/10 text-text-secondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5"
-              }`}
+                }`}
             >
               {c.label}
             </button>

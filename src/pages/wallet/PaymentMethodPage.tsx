@@ -47,13 +47,7 @@ export default function PaymentMethodPage() {
 
       <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
-        <div className="flex items-center justify-between">
-          <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68] dark:text-white">طريقة الدفع</h1>
-            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
-              اختر الطريقة الأنسب لك
-            </p>
-          </div>
+        <div className="flex items-center justify-start">
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -62,6 +56,12 @@ export default function PaymentMethodPage() {
           >
             <ChevronRight className="h-6 w-6" />
           </button>
+          <div className="text-right">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">طريقة الدفع</h1>
+            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
+              اختر الطريقة الأنسب لك
+            </p>
+          </div>
         </div>
 
         {/* 4-Step Progress Bar (Step 2 Active) */}
@@ -132,15 +132,15 @@ export default function PaymentMethodPage() {
             type="button"
             onClick={() => setSelectedMethod("JAWWAL_PAY")}
             className={`w-full flex items-center justify-between rounded-3xl p-4.5 border transition-all cursor-pointer text-right ${selectedMethod === "JAWWAL_PAY"
-                ? "border-[#123A68] dark:border-accent bg-white dark:bg-[#102A4C] ring-2 ring-[#123A68]/15 dark:ring-accent/20 shadow-sm"
-                : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#102A4C] hover:border-slate-300 dark:hover:border-white/20"
+              ? "border-[#123A68] dark:border-accent bg-white dark:bg-[#102A4C] ring-2 ring-[#123A68]/15 dark:ring-accent/20 shadow-sm"
+              : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#102A4C] hover:border-slate-300 dark:hover:border-white/20"
               }`}
           >
             <div className="flex items-center gap-3.5">
               <div
                 className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-xs font-black text-xs ${selectedMethod === "JAWWAL_PAY"
-                    ? "bg-[#059669] text-white"
-                    : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
+                  ? "bg-[#059669] text-white"
+                  : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
                   }`}
               >
                 <div className="flex flex-col items-center leading-none">
@@ -158,8 +158,8 @@ export default function PaymentMethodPage() {
 
             <div
               className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${selectedMethod === "JAWWAL_PAY"
-                  ? "border-[#123A68] dark:border-accent bg-[#123A68] dark:bg-accent text-white"
-                  : "border-slate-300 dark:border-white/20 bg-white dark:bg-[#0B1E36]"
+                ? "border-[#123A68] dark:border-accent bg-[#123A68] dark:bg-accent text-white"
+                : "border-slate-300 dark:border-white/20 bg-white dark:bg-[#0B1E36]"
                 }`}
             >
               {selectedMethod === "JAWWAL_PAY" && (
@@ -173,15 +173,15 @@ export default function PaymentMethodPage() {
             type="button"
             onClick={() => setSelectedMethod("BANK")}
             className={`w-full flex items-center justify-between rounded-3xl p-4.5 border transition-all cursor-pointer text-right ${selectedMethod === "BANK"
-                ? "border-[#123A68] dark:border-accent bg-white dark:bg-[#102A4C] ring-2 ring-[#123A68]/15 dark:ring-accent/20 shadow-sm"
-                : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#102A4C] hover:border-slate-300 dark:hover:border-white/20"
+              ? "border-[#123A68] dark:border-accent bg-white dark:bg-[#102A4C] ring-2 ring-[#123A68]/15 dark:ring-accent/20 shadow-sm"
+              : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#102A4C] hover:border-slate-300 dark:hover:border-white/20"
               }`}
           >
             <div className="flex items-center gap-3.5">
               <div
                 className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-xs ${selectedMethod === "BANK"
-                    ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white"
-                    : "bg-slate-100 dark:bg-[#132F54] text-slate-600 dark:text-slate-300"
+                  ? "bg-[#123A68] dark:bg-[#1E4E8C] text-white"
+                  : "bg-slate-100 dark:bg-[#132F54] text-slate-600 dark:text-slate-300"
                   }`}
               >
                 <Building2 className="h-6 w-6" />
@@ -196,8 +196,8 @@ export default function PaymentMethodPage() {
 
             <div
               className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${selectedMethod === "BANK"
-                  ? "border-[#123A68] dark:border-accent bg-[#123A68] dark:bg-accent text-white"
-                  : "border-slate-300 dark:border-white/20 bg-white dark:bg-[#0B1E36]"
+                ? "border-[#123A68] dark:border-accent bg-[#123A68] dark:bg-accent text-white"
+                : "border-slate-300 dark:border-white/20 bg-white dark:bg-[#0B1E36]"
                 }`}
             >
               {selectedMethod === "BANK" && (

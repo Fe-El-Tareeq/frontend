@@ -84,15 +84,7 @@ export default function EditProfile() {
 
       <div className="w-full max-w-3xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
-        <div className="flex items-center justify-between">
-          <div className="text-right">
-            <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">
-              تعديل الملف الشخصي
-            </h1>
-            <p className="text-xs md:text-sm text-text-secondary dark:text-slate-400 mt-0.5">
-              تحديث الاسم والحي السكني النشط
-            </p>
-          </div>
+        <div className="flex items-center justify-start">
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -101,6 +93,14 @@ export default function EditProfile() {
           >
             <ChevronRight className="h-6 w-6" />
           </button>
+          <div className="text-right">
+            <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">
+              تعديل الملف الشخصي
+            </h1>
+            <p className="text-xs md:text-sm text-text-secondary dark:text-slate-400 mt-0.5">
+              تحديث الاسم والحي السكني النشط
+            </p>
+          </div>
         </div>
 
         {/* Feedback alerts */}

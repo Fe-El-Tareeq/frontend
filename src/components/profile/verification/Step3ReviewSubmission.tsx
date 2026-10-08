@@ -153,7 +153,7 @@ export const Step3ReviewSubmission: FC<Step3ReviewSubmissionProps> = ({
           ) : (
             <>
               <ShieldCheck className="h-4.5 w-4.5" />
-              <span>تأكيد وإرسال طلب التحقق</span>
+              <span>ارسال طلب التحقق</span>
             </>
           )}
         </button>

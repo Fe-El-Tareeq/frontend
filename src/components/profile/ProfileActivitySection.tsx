@@ -30,40 +30,38 @@ export const ProfileActivitySection: FC<ProfileActivitySectionProps> = ({
   return (
     <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-slate-200/90 dark:border-white/10 shadow-2xs space-y-3.5 text-right">
       <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={onViewAll}
-          className="flex items-center gap-1 text-xs font-bold text-[#123A68] dark:text-slate-300 hover:text-[#F36F21] dark:hover:text-[#F36F21] transition-colors cursor-pointer"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          <span>عرض الكل</span>
-        </button>
-
         {/* Segmented Tab Pill */}
         <div className="flex rounded-2xl bg-[#F1F5F9] dark:bg-[#0B1E36] p-1 border border-slate-200/60 dark:border-white/10">
           <button
             type="button"
             onClick={() => onTabChange("errands")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              activeTab === "errands"
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${activeTab === "errands"
                 ? "bg-white dark:bg-[#102A4C] text-[#123A68] dark:text-white shadow-xs"
                 : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
-            }`}
+              }`}
           >
             طلباتي
           </button>
           <button
             type="button"
             onClick={() => onTabChange("trips")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              activeTab === "trips"
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${activeTab === "trips"
                 ? "bg-white dark:bg-[#102A4C] text-[#123A68] dark:text-white shadow-xs"
                 : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
-            }`}
+              }`}
           >
             رحلاتي
           </button>
         </div>
+
+        <button
+          type="button"
+          onClick={onViewAll}
+          className="flex items-center gap-1 text-xs font-bold text-[#123A68] dark:text-slate-300 hover:text-[#F36F21] dark:hover:text-[#F36F21] transition-colors cursor-pointer"
+        >
+          <span>عرض الكل</span>
+          <ChevronLeft className="h-4 w-4" />
+        </button>
       </div>
 
       {/* Tab 1: Trips List */}
@@ -93,9 +91,8 @@ export const ProfileActivitySection: FC<ProfileActivitySectionProps> = ({
                         4 طلب
                       </span>
                       <span
-                        className={`text-[10.5px] font-bold ${
-                          isFirst ? "text-blue-600 dark:text-blue-400" : "text-emerald-600 dark:text-emerald-400"
-                        }`}
+                        className={`text-[10.5px] font-bold ${isFirst ? "text-blue-600 dark:text-blue-400" : "text-emerald-600 dark:text-emerald-400"
+                          }`}
                       >
                         {isFirst ? "نشطة" : "مكتملة"}
                       </span>
@@ -112,9 +109,8 @@ export const ProfileActivitySection: FC<ProfileActivitySectionProps> = ({
                       </span>
                     </div>
                     <div
-                      className={`flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-2xs shrink-0 ${
-                        isFirst ? "bg-[#123A68]" : "bg-[#059669]"
-                      }`}
+                      className={`flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-2xs shrink-0 ${isFirst ? "bg-[#123A68]" : "bg-[#059669]"
+                        }`}
                     >
                       <Car className="h-4.5 w-4.5" />
                     </div>

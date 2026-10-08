@@ -54,7 +54,7 @@ export default function MatchFeed() {
     >
       <div className="space-y-4 pb-8">
         {/* Match Algorithm Banner */}
-        <div className="rounded-2xl bg-gradient-to-l from-[#123A68] to-[#1D4A7F] p-4 text-white shadow-md">
+        <div className="rounded-2xl bg-linear-to-l from-[#123A68] to-[#1D4A7F] p-4 text-white shadow-md">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-amber-300 animate-pulse" />
             <span className="text-xs font-bold text-amber-300">

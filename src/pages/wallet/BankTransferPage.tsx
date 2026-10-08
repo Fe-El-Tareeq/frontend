@@ -122,13 +122,7 @@ export default function BankTransferPage() {
 
       <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
-        <div className="flex items-center justify-between">
-          <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68] dark:text-white">إتمام الدفع</h1>
-            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
-              بيانات التحويل البنكي المباشر
-            </p>
-          </div>
+        <div className="flex items-center justify-start">
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -137,6 +131,12 @@ export default function BankTransferPage() {
           >
             <ChevronRight className="h-6 w-6" />
           </button>
+          <div className="text-right">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">إتمام الدفع</h1>
+            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
+              بيانات التحويل البنكي المباشر
+            </p>
+          </div>
         </div>
 
         {/* 4-Step Stepper */}

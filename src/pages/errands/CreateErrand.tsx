@@ -8,7 +8,6 @@ import {
   Zap,
   Trash2,
   Image as ImageIcon,
-  Home,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -178,7 +177,7 @@ export default function CreateErrand() {
       <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Top Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-start">
             <button
               type="button"
               onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
@@ -196,16 +195,6 @@ export default function CreateErrand() {
               </p>
             </div>
           </div>
-
-          <button
-            type="button"
-            onClick={() => navigate("/home")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors cursor-pointer"
-            title="الصفحة الرئيسية"
-          >
-            <Home className="h-4 w-4" />
-            <span>الرئيسية</span>
-          </button>
         </div>
 
         {/* Error Alert */}

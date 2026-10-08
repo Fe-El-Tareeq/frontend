@@ -9,6 +9,7 @@ import {
   Sun,
   Moon,
   Laptop,
+  ChevronRight,
 } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
@@ -108,8 +109,18 @@ export default function SettingsPage() {
 
       <div className="w-full max-w-3xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
-        <div className="text-right">
-          <h1 className="text-2xl font-black text-[#123A68] dark:text-white">الإعدادات</h1>
+        <div className="flex items-center justify-start">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            aria-label="الرجوع للخلف"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+          <div className="text-right">
+            <h1 className="text-2xl font-black text-[#123A68] dark:text-white">الإعدادات</h1>
+          </div>
         </div>
 
         {/* Section 1: المظهر */}
@@ -123,11 +134,10 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setTheme("light")}
-              className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all cursor-pointer ${
-                theme === "light"
+              className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all cursor-pointer ${theme === "light"
                   ? "bg-orange-50/50 dark:bg-orange-950/20 border-accent text-accent shadow-xs"
                   : "bg-slate-50/70 dark:bg-[#0B1E36]/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/20"
-              }`}
+                }`}
             >
               <Sun className={`h-5 w-5 mb-1.5 ${theme === "light" ? "text-accent" : "text-slate-500 dark:text-slate-400"}`} />
               <span className="text-xs font-bold">فاتح</span>
@@ -137,11 +147,10 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setTheme("dark")}
-              className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all cursor-pointer ${
-                theme === "dark"
+              className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all cursor-pointer ${theme === "dark"
                   ? "bg-orange-50/50 dark:bg-orange-950/20 border-accent text-accent shadow-xs"
                   : "bg-slate-50/70 dark:bg-[#0B1E36]/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/20"
-              }`}
+                }`}
             >
               <Moon className={`h-5 w-5 mb-1.5 ${theme === "dark" ? "text-accent" : "text-slate-500 dark:text-slate-400"}`} />
               <span className="text-xs font-bold">داكن</span>
@@ -151,11 +160,10 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setTheme("system")}
-              className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all cursor-pointer ${
-                theme === "system"
+              className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all cursor-pointer ${theme === "system"
                   ? "bg-orange-50/50 dark:bg-orange-950/20 border-accent text-accent shadow-xs"
                   : "bg-slate-50/70 dark:bg-[#0B1E36]/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/20"
-              }`}
+                }`}
             >
               <Laptop className={`h-5 w-5 mb-1.5 ${theme === "system" ? "text-accent" : "text-slate-500 dark:text-slate-400"}`} />
               <span className="text-xs font-bold">تلقائي</span>

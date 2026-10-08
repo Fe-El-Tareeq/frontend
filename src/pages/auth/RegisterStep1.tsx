@@ -120,7 +120,7 @@ export default function RegisterStep1() {
         <Form.Field name="password" error={errors.password?.message} required>
           <Form.Label>كلمة المرور</Form.Label>
           <Form.PasswordInput
-            placeholder="يجب أن تتكون من 8 خانات وتحتوي على حرف كبير ورقم ورمز خاص"
+            placeholder="مثال: Test!1234"
             className="h-12 rounded-2xl bg-[#F8FAFC] dark:bg-[#0B1E36] border-slate-200 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500 text-xs"
             {...register("password")}
           />
