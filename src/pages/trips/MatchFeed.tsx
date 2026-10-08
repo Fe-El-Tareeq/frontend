@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, MapPin, CheckCircle, XCircle, Zap } from "lucide-react";
-import { AppLayout } from "../../components/layout/AppLayout";
+import { Sparkles, MapPin, CheckCircle, XCircle, Zap, ChevronRight } from "lucide-react";
+import { Header } from "../../components/layout/Header";
+import { MobileContainer } from "../../components/layout/MobileContainer";
 import { Card } from "../../components/ui/card/Card";
 import { Button } from "../../components/ui/button/Button";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
@@ -44,17 +45,32 @@ export default function MatchFeed() {
   };
 
   return (
-    <AppLayout
-      headerProps={{
-        title: "الطلبات المطابقة لرحلتك",
-        subtitle: `تم العثور على ${matches.length} طلبات على نفس خط سيرك`,
-        showBack: true,
-      }}
-      showBottomNav={false}
-    >
-      <div className="space-y-4 pb-8">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
+      <Header />
+
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+        {/* Title */}
+        <div className="flex items-center gap-2 justify-start">
+          <button
+            type="button"
+            onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/trips")}
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+            aria-label="رجوع"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+          <div>
+            <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">
+              الطلبات المطابقة لرحلتك
+            </h1>
+            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
+              تم العثور على {matches.length} طلبات على نفس خط سيرك
+            </p>
+          </div>
+        </div>
+
         {/* Match Algorithm Banner */}
-        <div className="rounded-2xl bg-linear-to-l from-[#123A68] to-[#1D4A7F] p-4 text-white shadow-md">
+        <div className="rounded-3xl bg-linear-to-l from-[#123A68] to-[#1D4A7F] p-4.5 text-white shadow-md">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-amber-300 animate-pulse" />
             <span className="text-xs font-bold text-amber-300">
@@ -76,7 +92,7 @@ export default function MatchFeed() {
             onAction={() => navigate("/trips")}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {matches.map((item) => (
               <Card key={item.id} className="p-4 space-y-3">
                 <div className="flex items-start justify-between">
@@ -127,6 +143,6 @@ export default function MatchFeed() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </MobileContainer>
   );
 }

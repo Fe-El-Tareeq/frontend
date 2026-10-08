@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { Header } from "../../components/layout/Header";
+import { MobileContainer } from "../../components/layout/MobileContainer";
 import { ChangePasswordSuccessModal } from "../../components/modals/ChangePasswordSuccessModal";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthStore } from "../../store/useAuthStore";
 import { translateApiError } from "../../i18n";
 
 export default function ChangePasswordPage() {
-  const navigate = useNavigate();
   const { changePassword, isChangingPassword } = useAuth();
   const refreshToken = useAuthStore((state) => state.refreshToken);
 
@@ -50,35 +50,11 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div
-      dir="rtl"
-      className="min-h-screen w-full bg-[#F8FAFC] dark:bg-[#0B1E36] flex flex-col justify-between antialiased text-right"
-    >
-      {/* Top Header */}
-      <header className="flex h-16 items-center justify-between px-6 md:px-12 bg-white dark:bg-[#102A4C] border-b border-border/40 dark:border-white/10 shadow-2xs w-full">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="text-xs md:text-sm font-bold text-text-secondary dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors cursor-pointer"
-        >
-          رجوع
-        </button>
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
+      <Header title="تغيير كلمة المرور" showBack={true} />
 
-        <div
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          <span className="text-base font-black text-primary dark:text-white">بطريقك</span>
-          <img
-            src="/logo.png"
-            alt="بطريقك"
-            className="h-8 w-8 object-contain"
-          />
-        </div>
-      </header>
-
-      <div className="flex flex-1 items-center justify-center px-4 py-8 md:py-16">
-        <div className="w-full max-w-105 space-y-4">
+      <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6 flex-1">
+        <div className="w-full max-w-md mx-auto space-y-4 pt-4">
           {/* Error Alert if any */}
           {error && (
             <div className="rounded-2xl bg-red-50 dark:bg-red-950/40 p-3.5 border border-red-200 dark:border-red-900/40 text-xs font-bold text-red-600 dark:text-red-300 text-right">
@@ -181,6 +157,6 @@ export default function ChangePasswordPage() {
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
       />
-    </div>
+    </MobileContainer>
   );
 }

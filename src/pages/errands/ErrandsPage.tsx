@@ -234,7 +234,7 @@ export default function ErrandsPage() {
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] min-h-screen pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="w-full max-w-4xl mx-auto px-4 md:px-6 pt-4 space-y-5">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Page Title & Count Row */}
         <div className="flex items-center justify-between">
           <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">
@@ -338,62 +338,64 @@ export default function ErrandsPage() {
             }}
           />
         ) : (
-          <div className="space-y-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredErrands.map((errand) => (
               <div
                 key={errand.id}
-                className="rounded-2xl bg-white dark:bg-[#102A4C] border border-slate-100 dark:border-white/10 p-4 shadow-2xs space-y-3 transition-all hover:border-slate-200 dark:hover:border-white/20"
+                className="rounded-3xl bg-white dark:bg-[#102A4C] border border-slate-100 dark:border-white/10 p-4.5 shadow-xs flex flex-col justify-between space-y-3 transition-all hover:border-slate-200 dark:hover:border-white/20 hover:shadow-md"
               >
-                {/* Top Card Header */}
-                <div className="flex items-start justify-between">
-                  {/* Status Badge (Left in RTL) */}
-                  <span
-                    className={cn(
-                      "text-[11px] font-bold px-2.5 py-1 rounded-full",
-                      errand.statusBadgeClass,
-                    )}
-                  >
-                    {errand.statusText}
-                  </span>
-
-                  {/* User Info (Right in RTL) */}
-                  <div className="flex items-center gap-2.5">
-                    <div className="text-right">
-                      <h3 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
-                        {errand.requesterName}
-                      </h3>
-                      <p className="text-[11px] text-slate-400 dark:text-slate-400 mt-0.5">
-                        {errand.dateStr}
-                      </p>
-                    </div>
-
-                    <div
+                <div className="space-y-3">
+                  {/* Top Card Header */}
+                  <div className="flex items-start justify-between">
+                    {/* Status Badge (Left in RTL) */}
+                    <span
                       className={cn(
-                        "h-10 w-10 rounded-full flex items-center justify-center font-black text-xs shrink-0 shadow-2xs",
-                        errand.avatarBg,
+                        "text-[11px] font-bold px-2.5 py-1 rounded-full",
+                        errand.statusBadgeClass,
                       )}
                     >
-                      {errand.initials}
+                      {errand.statusText}
+                    </span>
+
+                    {/* User Info (Right in RTL) */}
+                    <div className="flex items-center gap-2.5">
+                      <div className="text-right">
+                        <h3 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
+                          {errand.requesterName}
+                        </h3>
+                        <p className="text-[11px] text-slate-400 dark:text-slate-400 mt-0.5">
+                          {errand.dateStr}
+                        </p>
+                      </div>
+
+                      <div
+                        className={cn(
+                          "h-10 w-10 rounded-full flex items-center justify-center font-black text-xs shrink-0 shadow-2xs",
+                          errand.avatarBg,
+                        )}
+                      >
+                        {errand.initials}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Description */}
-                <p className="text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed text-right">
-                  {errand.title}
-                </p>
+                  {/* Description */}
+                  <p className="text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed text-right line-clamp-3">
+                    {errand.title}
+                  </p>
 
-                {/* Location Pin */}
-                <div className="flex items-center justify-end gap-1 text-slate-500 dark:text-slate-400">
-                  <span className="text-[11px] font-semibold">{errand.location}</span>
-                  <MapPin className="h-3.5 w-3.5 text-[#F36F21]" />
+                  {/* Location Pin */}
+                  <div className="flex items-center justify-end gap-1 text-slate-500 dark:text-slate-400">
+                    <span className="text-[11px] font-semibold">{errand.location}</span>
+                    <MapPin className="h-3.5 w-3.5 text-[#F36F21]" />
+                  </div>
                 </div>
 
                 {/* Full Width Details Button */}
                 <button
                   type="button"
                   onClick={() => navigate(`/errands/${errand.id}`)}
-                  className="w-full py-2.5 rounded-xl bg-[#F0F4F8] hover:bg-[#E2E8F0] dark:bg-white/5 dark:hover:bg-white/10 text-[#123A68] dark:text-blue-300 font-bold text-xs md:text-sm transition-colors text-center cursor-pointer active:scale-99"
+                  className="w-full py-2.5 rounded-2xl bg-[#F0F4F8] hover:bg-[#E2E8F0] dark:bg-white/5 dark:hover:bg-white/10 text-[#123A68] dark:text-blue-300 font-bold text-xs md:text-sm transition-colors text-center cursor-pointer active:scale-99 mt-2"
                 >
                   عرض التفاصيل
                 </button>

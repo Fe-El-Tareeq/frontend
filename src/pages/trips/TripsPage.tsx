@@ -113,7 +113,7 @@ export default function TripsPage() {
 
       <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title Header with "+ إضافة رحلة" */}
-        <div className="flex items-center justify-start">
+        <div className="flex items-center justify-between">
           <div className="text-right">
             <h1 className="text-xl font-black text-[#123A68] dark:text-white">الرحلات</h1>
             <span className="text-xs text-text-muted dark:text-slate-400">

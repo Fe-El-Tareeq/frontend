@@ -65,17 +65,18 @@ export default function SubmitOfferPage() {
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+      <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
         <div className="flex items-center gap-2 justify-start">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/errands")}
             className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+            aria-label="رجوع"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#123A68] dark:text-white">
+            <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">
               تقديم عرض للطلب
             </h1>
             <p className="text-xs text-text-secondary dark:text-slate-400">
@@ -92,7 +93,7 @@ export default function SubmitOfferPage() {
         )}
 
         {/* Form Card */}
-        <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-border dark:border-white/10 shadow-xs text-right">
+        <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 md:p-8 border border-border dark:border-white/10 shadow-xs text-right">
           <form onSubmit={handleSubmit} className="space-y-3.5">
             {/* Trip Date & Time */}
             <div className="grid grid-cols-2 gap-3">

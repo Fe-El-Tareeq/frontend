@@ -129,12 +129,12 @@ export default function RequestSpacePage() {
     <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
       <Header />
 
-      <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Top Header */}
         <div className="flex items-center gap-2 justify-start">
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/trips")}
             className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
           >
             <ChevronRight className="h-6 w-6" />
@@ -156,11 +156,31 @@ export default function RequestSpacePage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* 1. Multi-Item Category Builder */}
-          <MultiItemBuilder items={items} onChange={setItems} />
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Primary Column: Items Builder & General Note */}
+            <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+              {/* 1. Multi-Item Category Builder */}
+              <MultiItemBuilder items={items} onChange={setItems} />
 
-          {/* 2. Location Section matching Figma */}
+              {/* 2. General Note */}
+              <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-border dark:border-white/10 shadow-xs space-y-2 text-right">
+                <h3 className="text-xs font-bold text-primary dark:text-slate-200">
+                  ملاحظة عامة للمسافر (اختياري)
+                </h3>
+                <textarea
+                  rows={4}
+                  value={generalNote}
+                  onChange={(e) => setGeneralNote(e.target.value)}
+                  placeholder="وقت التسليم المفضّل، طريقة التواصل، أي تعليمات عامة..."
+                  className="w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 text-xs text-primary dark:text-white placeholder:text-text-muted dark:placeholder:text-slate-400 focus:border-[#123A68] dark:focus:border-accent focus:outline-hidden text-right shadow-2xs resize-none"
+                />
+              </div>
+            </div>
+
+            {/* Sidebar Column: Location, Media, Cost & Submit */}
+            <div className="lg:col-span-5 xl:col-span-4 space-y-6">
+              {/* Location Section matching Figma */}
           <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-border dark:border-white/10 shadow-xs space-y-3.5 text-right">
             <h3 className="text-sm font-black text-[#123A68] dark:text-white">الموقع</h3>
 
@@ -314,53 +334,41 @@ export default function RequestSpacePage() {
             </div>
           </div>
 
-          {/* 4. General Note */}
-          <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-5 border border-border dark:border-white/10 shadow-xs space-y-2 text-right">
-            <h3 className="text-xs font-bold text-primary dark:text-slate-200">
-              ملاحظة عامة للمسافر (اختياري)
-            </h3>
-            <textarea
-              rows={3}
-              value={generalNote}
-              onChange={(e) => setGeneralNote(e.target.value)}
-              placeholder="وقت التسليم المفضّل، طريقة التواصل، أي تعليمات عامة..."
-              className="w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-[#F8FAFC] dark:bg-[#0B1E36] p-3.5 text-xs text-primary dark:text-white placeholder:text-text-muted dark:placeholder:text-slate-400 focus:border-[#123A68] dark:focus:border-accent focus:outline-hidden text-right shadow-2xs resize-none"
-            />
-          </div>
+              {/* Token Cost Card */}
+              <div className="flex items-center justify-between rounded-3xl bg-[#FFF5EE] dark:bg-orange-950/25 p-4.5 border border-[#FDE0CE] dark:border-orange-900/30 text-right">
+                <div className="text-left space-y-0.5">
+                  <div className="flex items-center gap-1 text-sm font-black text-accent">
+                    <span>1 توكن</span>
+                    <span className="h-3.5 w-1 rounded-full bg-accent inline-block" />
+                  </div>
+                  <span className="text-[10.5px] text-text-muted dark:text-slate-400 block">
+                    رصيدك: {tokenBalance ?? 0} توكن
+                  </span>
+                </div>
 
-          {/* 5. Token Cost Card */}
-          <div className="flex items-center justify-between rounded-3xl bg-[#FFF5EE] dark:bg-orange-950/25 p-4.5 border border-[#FDE0CE] dark:border-orange-900/30 text-right">
-            <div className="text-left space-y-0.5">
-              <div className="flex items-center gap-1 text-sm font-black text-accent">
-                <span>1 توكن</span>
-                <span className="h-3.5 w-1 rounded-full bg-accent inline-block" />
+                <div className="text-right">
+                  <div className="flex items-center gap-1.5 text-xs font-black text-[#123A68] dark:text-white">
+                    <Zap className="h-4 w-4 fill-accent text-accent" />
+                    <span>تكلفة نشر الطلب</span>
+                  </div>
+                  <p className="text-[10.5px] text-text-muted dark:text-slate-400 mt-0.5">
+                    سيُخصم توكن واحد من رصيدك
+                  </p>
+                </div>
               </div>
-              <span className="text-[10.5px] text-text-muted dark:text-slate-400 block">
-                رصيدك: {tokenBalance ?? 0} توكن
-              </span>
-            </div>
 
-            <div className="text-right">
-              <div className="flex items-center gap-1.5 text-xs font-black text-[#123A68] dark:text-white">
-                <Zap className="h-4 w-4 fill-accent text-accent" />
-                <span>تكلفة نشر الطلب</span>
+              {/* Submit Button matching Figma */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white shadow-md hover:bg-[#E05E12] active:scale-98 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  <Send className="h-4 w-4 -rotate-45" />
+                  <span>{isSubmitting ? "جاري إرسال الطلب..." : "إرسال الطلب"}</span>
+                </button>
               </div>
-              <p className="text-[10.5px] text-text-muted dark:text-slate-400 mt-0.5">
-                سيُخصم توكن واحد من رصيدك
-              </p>
             </div>
-          </div>
-
-          {/* 6. Submit Button matching Figma */}
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white shadow-md hover:bg-[#E05E12] active:scale-98 transition-all cursor-pointer disabled:opacity-50"
-            >
-              <Send className="h-4 w-4 -rotate-45" />
-              <span>{isSubmitting ? "جاري إرسال الطلب..." : "إرسال الطلب"}</span>
-            </button>
           </div>
         </form>
       </div>
