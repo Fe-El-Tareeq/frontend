@@ -150,7 +150,7 @@ export default function MyTripsPage() {
           />
         ) : (
           /* Trips List */
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredTrips.map((trip) => {
               const originText = trip.neighborhood?.name
                 ? `${trip.neighborhood.governorate || "غزة"} - ${trip.neighborhood.name}`

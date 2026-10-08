@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Star, CheckCircle, ShieldCheck, Heart, Package } from "lucide-react";
-import { AppLayout } from "../../components/layout/AppLayout";
+import { Header } from "../../components/layout/Header";
+import { MobileContainer } from "../../components/layout/MobileContainer";
 import { Card } from "../../components/ui/card/Card";
 import { Button } from "../../components/ui/button/Button";
 import { EmptyState } from "../../components/ui/feedback/EmptyState";
@@ -70,74 +71,61 @@ export default function RatingPage() {
 
   if (isLoading) {
     return (
-      <AppLayout
-        headerProps={{
-          title: "تقييم تجربة التوصيل",
-          showBack: true,
-        }}
-        showBottomNav={false}
-      >
-        <div className="space-y-4 pb-8">
-          <div className="h-48 w-full animate-pulse rounded-xl bg-white dark:bg-[#102A4C] border border-border dark:border-white/10" />
+      <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
+        <Header title="تقييم تجربة التوصيل" showBack={true} />
+        <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-4 pb-8">
+          <div className="h-48 w-full animate-pulse rounded-3xl bg-white dark:bg-[#102A4C] border border-border dark:border-white/10" />
         </div>
-      </AppLayout>
+      </MobileContainer>
     );
   }
 
   if (!errand && id) {
     return (
-      <AppLayout
-        headerProps={{
-          title: "تقييم تجربة التوصيل",
-          showBack: true,
-        }}
-        showBottomNav={false}
-      >
-        <EmptyState
-          icon={<Package className="h-7 w-7 text-[#123A68]" />}
-          title="الطلب غير موجود"
-          description="لم نتمكن من العثور على هذا الطلب لتقييمه."
-          actionText="العودة للرئيسية"
-          onAction={() => navigate("/home")}
-        />
-      </AppLayout>
+      <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
+        <Header title="تقييم تجربة التوصيل" showBack={true} />
+        <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6">
+          <EmptyState
+            icon={<Package className="h-7 w-7 text-[#123A68]" />}
+            title="الطلب غير موجود"
+            description="لم نتمكن من العثور على هذا الطلب لتقييمه."
+            actionText="العودة للرئيسية"
+            onAction={() => navigate("/home")}
+          />
+        </div>
+      </MobileContainer>
     );
   }
 
   if (isDone) {
     return (
-      <AppLayout
-        headerProps={{
-          title: "شكراً لتقييمك!",
-          showBack: false,
-        }}
-        showBottomNav={false}
-      >
-        <div className="w-full max-w-xl mx-auto rounded-3xl bg-white dark:bg-[#102A4C] p-8 text-center border border-border dark:border-white/10 shadow-md mt-8">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 mb-4 animate-bounce border border-emerald-200 dark:border-emerald-900/40">
-            <CheckCircle className="h-8 w-8" />
+      <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
+        <Header title="شكراً لتقييمك!" showBack={false} />
+        <div className="w-full max-w-xl mx-auto px-4 pt-8">
+          <div className="rounded-3xl bg-white dark:bg-[#102A4C] p-8 text-center border border-border dark:border-white/10 shadow-md">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 mb-4 animate-bounce border border-emerald-200 dark:border-emerald-900/40">
+              <CheckCircle className="h-8 w-8" />
+            </div>
+            <h2 className="text-[20px] font-extrabold text-primary dark:text-white">
+              تم تسجيل تقييمك بنجاح!
+            </h2>
+            <p className="text-[13px] text-text-secondary dark:text-slate-400 mt-2 leading-relaxed">
+              مساهمتك في التقييم تعزز من موثوقية وأمان مجتمع "بطريقك".
+            </p>
           </div>
-          <h2 className="text-[20px] font-extrabold text-primary dark:text-white">
-            تم تسجيل تقييمك بنجاح!
-          </h2>
-          <p className="text-[13px] text-text-secondary dark:text-slate-400 mt-2 leading-relaxed">
-            مساهمتك في التقييم تعزز من موثوقية وأمان مجتمع "بطريقك".
-          </p>
         </div>
-      </AppLayout>
+      </MobileContainer>
     );
   }
 
   return (
-    <AppLayout
-      headerProps={{
-        title: "تقييم تجربة التوصيل",
-        subtitle: `طلب رقم #${id.substring(0, 8)}`,
-        showBack: true,
-      }}
-      showBottomNav={false}
-    >
-      <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto space-y-5 pb-12 text-right">
+    <MobileContainer className="bg-[#F8FAFC] dark:bg-[#0B1E36] pb-24 lg:pb-12 text-right">
+      <Header
+        title="تقييم تجربة التوصيل"
+        showBack={true}
+      />
+      <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5 pb-12 text-right">
         {/* Traveler Profile Header */}
         <Card variant="elevated">
           <div className="text-center">
@@ -283,7 +271,8 @@ export default function RatingPage() {
         >
           إرسال التقييم
         </Button>
-      </form>
-    </AppLayout>
+        </form>
+      </div>
+    </MobileContainer>
   );
 }

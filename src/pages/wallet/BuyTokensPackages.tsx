@@ -153,7 +153,7 @@ export default function BuyTokensPackages() {
         <PaymentStepper currentStep={1} />
 
         {/* Packages Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
           {isLoading && (
             <div className="flex justify-center py-6 col-span-full">
               <Loader2 className="h-7 w-7 animate-spin text-[#123A68] dark:text-accent" />
