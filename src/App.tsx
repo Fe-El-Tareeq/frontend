@@ -28,6 +28,7 @@ const IncomingOffersPage = lazy(
 );
 const OrderTracking = lazy(() => import("./pages/errands/OrderTracking"));
 const RatingPage = lazy(() => import("./pages/errands/RatingPage"));
+const ErrandsPage = lazy(() => import("./pages/errands/ErrandsPage"));
 const MyErrands = lazy(() => import("./pages/errands/MyErrands"));
 
 const TripsPage = lazy(() => import("./pages/trips/TripsPage"));
@@ -186,7 +187,15 @@ function App() {
             path="/errands"
             element={
               <ProtectedRoute>
-                <MyErrands />
+                <ErrandsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/errand"
+            element={
+              <ProtectedRoute>
+                <ErrandsPage />
               </ProtectedRoute>
             }
           />

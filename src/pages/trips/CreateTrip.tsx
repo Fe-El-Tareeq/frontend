@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, ShieldCheck, Lock, Car, Info, Home } from "lucide-react";
+import { ChevronRight, ShieldCheck, Lock, Car, Info } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { useTrips } from "../../hooks/useTrips";
@@ -151,7 +151,7 @@ export default function CreateTrip() {
       <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-start">
             <button
               onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
               className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
@@ -168,16 +168,6 @@ export default function CreateTrip() {
               </p>
             </div>
           </div>
-
-          <button
-            type="button"
-            onClick={() => navigate("/home")}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors cursor-pointer"
-            title="الصفحة الرئيسية"
-          >
-            <Home className="h-4 w-4" />
-            <span>الرئيسية</span>
-          </button>
         </div>
 
         {/* Error Alert */}

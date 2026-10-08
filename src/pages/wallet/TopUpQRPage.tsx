@@ -150,13 +150,7 @@ export default function TopUpQRPage() {
 
       <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
-        <div className="flex items-center justify-between">
-          <div className="text-right">
-            <h1 className="text-xl font-black text-[#123A68] dark:text-white">إتمام الدفع</h1>
-            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
-              مسح باركود الـ QR أو الخصم المباشر
-            </p>
-          </div>
+        <div className="flex items-center justify-start">
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -165,6 +159,12 @@ export default function TopUpQRPage() {
           >
             <ChevronRight className="h-6 w-6" />
           </button>
+          <div className="text-right">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">إتمام الدفع</h1>
+            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
+              مسح باركود الـ QR أو الخصم المباشر
+            </p>
+          </div>
         </div>
 
         {/* 4-Step Stepper */}
@@ -194,11 +194,10 @@ export default function TopUpQRPage() {
             <button
               type="button"
               onClick={() => setActiveTab("QR")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl transition-all cursor-pointer ${
-                activeTab === "QR"
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl transition-all cursor-pointer ${activeTab === "QR"
                   ? "bg-[#123A68] dark:bg-accent text-white shadow-xs"
                   : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-              }`}
+                }`}
             >
               <QrCode className="h-4 w-4" />
               <span>باركود QR</span>
@@ -207,11 +206,10 @@ export default function TopUpQRPage() {
             <button
               type="button"
               onClick={() => setActiveTab("JAWWAL")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl transition-all cursor-pointer ${
-                activeTab === "JAWWAL"
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl transition-all cursor-pointer ${activeTab === "JAWWAL"
                   ? "bg-[#123A68] dark:bg-accent text-white shadow-xs"
                   : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-              }`}
+                }`}
             >
               <Smartphone className="h-4 w-4" />
               <span>جوال باي 📱</span>

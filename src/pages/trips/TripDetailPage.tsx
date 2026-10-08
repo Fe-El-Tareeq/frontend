@@ -115,17 +115,17 @@ export default function TripDetailPage() {
 
   const dateStr = trip.departureTime
     ? new Date(trip.departureTime).toLocaleDateString("ar-EG", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })
     : "23 يوليو 2026";
 
   const timeStr = trip.departureTime
     ? new Date(trip.departureTime).toLocaleTimeString("ar-EG", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+      hour: "2-digit",
+      minute: "2-digit",
+    })
     : "1:00 ص";
 
   // Filter requests
@@ -185,17 +185,15 @@ export default function TripDetailPage() {
           <>
             {/* Top Header */}
             <div className="flex items-center justify-between">
-              <span
-                className={`rounded-xl px-3 py-1 text-xs font-black ${
-                  isCompleted
-                    ? "bg-emerald-600 text-white"
-                    : "bg-[#123A68] text-white"
-                }`}
-              >
-                {isCompleted ? "مكتملة ✓" : "نشطة"}
-              </span>
-
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-start gap-2">
+                <button
+                  type="button"
+                  onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
+                  className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+                  aria-label="رجوع"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
                 <div className="text-right">
                   <h1 className="text-xl font-black text-[#123A68] dark:text-white">
                     تفاصيل الرحلة
@@ -204,26 +202,16 @@ export default function TripDetailPage() {
                     {originText} ➔ {destText}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => navigate("/home")}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors cursor-pointer"
-                    title="الصفحة الرئيسية"
-                  >
-                    <Home className="h-4 w-4" />
-                    <span>الرئيسية</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
-                    className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
-                    aria-label="رجوع"
-                  >
-                    <ChevronRight className="h-6 w-6" />
-                  </button>
-                </div>
               </div>
+
+              <span
+                className={`rounded-xl px-3 py-1 text-xs font-black ${isCompleted
+                  ? "bg-emerald-600 text-white"
+                  : "bg-[#123A68] text-white"
+                  }`}
+              >
+                {isCompleted ? "مكتملة ✓" : "نشطة"}
+              </span>
             </div>
 
             <TripOwnerSummaryCard
@@ -261,7 +249,7 @@ export default function TripDetailPage() {
           <>
             {/* Top Header */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 justify-start">
                 <button
                   type="button"
                   onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}

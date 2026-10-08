@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronRight, Check, Package, Home } from "lucide-react";
+import { ChevronRight, Check, Package } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { useTripDetail, useTripChecklist } from "../../hooks/useTrips";
@@ -168,31 +168,7 @@ export default function TripChecklistPage() {
       <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Header with Title & Progress */}
         <div className="flex items-center justify-between">
-          <div className="text-left space-y-0.5">
-            <span className="text-[11px] font-bold text-text-muted dark:text-slate-400 block">
-              الإنجاز
-            </span>
-            <span className="text-base font-black text-[#123A68] dark:text-white">
-              {doneCount}/{totalCount}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div>
-              <h1 className="text-xl font-black text-[#123A68] dark:text-white">ملخص الرحلة</h1>
-              <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
-                {originText} ➔ {destText} • {dateText}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => navigate("/home")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors cursor-pointer"
-              title="الصفحة الرئيسية"
-            >
-              <Home className="h-4 w-4" />
-              <span>الرئيسية</span>
-            </button>
+          <div className="flex items-center justify-start gap-2">
             <button
               type="button"
               onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
@@ -201,6 +177,20 @@ export default function TripChecklistPage() {
             >
               <ChevronRight className="h-6 w-6" />
             </button>
+            <div className="text-left space-y-0.5">
+              <span className="text-[11px] font-bold text-text-muted dark:text-slate-400 block">
+                الإنجاز
+              </span>
+              <span className="text-base font-black text-[#123A68] dark:text-white">
+                {doneCount}/{totalCount}
+              </span>
+            </div>
+          </div>
+          <div>
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">ملخص الرحلة</h1>
+            <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
+              {originText} ➔ {destText} • {dateText}
+            </p>
           </div>
         </div>
 
@@ -234,16 +224,16 @@ export default function TripChecklistPage() {
                     key={item.id}
                     onClick={() => toggleItem(item.id)}
                     className={`flex items-center justify-between rounded-2xl p-4 border transition-all cursor-pointer text-right ${item.isCompleted
-                        ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/50 shadow-2xs"
-                        : "bg-white dark:bg-[#102A4C] border-slate-200 dark:border-white/10 shadow-2xs hover:border-slate-300 dark:hover:border-white/20"
+                      ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/50 shadow-2xs"
+                      : "bg-white dark:bg-[#102A4C] border-slate-200 dark:border-white/10 shadow-2xs hover:border-slate-300 dark:hover:border-white/20"
                       }`}
                   >
                     {/* Item Info on RIGHT */}
                     <div className="flex items-center gap-3 flex-1">
                       <div
                         className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all ${item.isCompleted
-                            ? "bg-emerald-500 border-emerald-500 text-white"
-                            : "border-slate-300 dark:border-slate-600 bg-white dark:bg-[#0B1E36]"
+                          ? "bg-emerald-500 border-emerald-500 text-white"
+                          : "border-slate-300 dark:border-slate-600 bg-white dark:bg-[#0B1E36]"
                           }`}
                       >
                         {item.isCompleted && <Check className="h-3.5 w-3.5 stroke-3" />}
@@ -253,8 +243,8 @@ export default function TripChecklistPage() {
                         <div className="flex items-center gap-2">
                           <h4
                             className={`text-xs font-black transition-all ${item.isCompleted
-                                ? "text-slate-400 dark:text-slate-500 line-through"
-                                : "text-primary dark:text-white"
+                              ? "text-slate-400 dark:text-slate-500 line-through"
+                              : "text-primary dark:text-white"
                               }`}
                           >
                             {item.requesterName}
@@ -273,8 +263,8 @@ export default function TripChecklistPage() {
 
                         <p
                           className={`text-xs transition-all ${item.isCompleted
-                              ? "text-slate-400 dark:text-slate-500 line-through"
-                              : "text-text-secondary dark:text-slate-300"
+                            ? "text-slate-400 dark:text-slate-500 line-through"
+                            : "text-text-secondary dark:text-slate-300"
                             }`}
                         >
                           {item.title}

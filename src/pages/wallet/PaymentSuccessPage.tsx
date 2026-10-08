@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Check, Package, Wallet, Home } from "lucide-react";
+import { Check, Wallet, Home, ChevronRight } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { useWallet } from "../../hooks/useWallet";
@@ -33,7 +33,19 @@ export default function PaymentSuccessPage() {
       <div className="w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
         <div className="text-center">
-          <h1 className="text-xl font-black text-[#123A68] dark:text-white">إتمام الدفع</h1>
+        </div>
+        <div className="flex items-center justify-start">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            aria-label="الرجوع للخلف"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+          <div className="text-right">
+            <h1 className="text-xl font-black text-[#123A68] dark:text-white">إتمام الدفع</h1>
+          </div>
         </div>
 
         {/* 4-Step Progress Bar (Step 4 Active, 1-3 Checked Green) */}
@@ -144,15 +156,6 @@ export default function PaymentSuccessPage() {
 
         {/* Action Buttons */}
         <div className="pt-2 space-y-2.5">
-          <button
-            type="button"
-            onClick={() => navigate("/errands/new")}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#F36F21] text-xs font-black text-white hover:bg-[#E05E12] active:scale-98 transition-all cursor-pointer shadow-md"
-          >
-            <Package className="h-4 w-4" />
-            <span>ابدأ بنشر طلب الآن</span>
-          </button>
-
           <button
             type="button"
             onClick={() => navigate("/wallet")}

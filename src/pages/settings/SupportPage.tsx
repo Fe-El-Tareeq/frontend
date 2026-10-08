@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { supportApi } from "../../api/support";
@@ -162,7 +162,15 @@ export default function SupportPage() {
 
       <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-start">
+          <button
+            type="button"
+            onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
+            aria-label="الرجوع للخلف"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
           <div className="text-right">
             <h1 className="text-xl font-black text-[#123A68] dark:text-white">
               مركز المساعدة والدعم
@@ -170,25 +178,6 @@ export default function SupportPage() {
             <p className="text-xs text-text-secondary dark:text-slate-400 mt-0.5">
               فريقنا متواجد دائماً لمساعدتك والإجابة عن استفساراتك
             </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => navigate("/home")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors cursor-pointer"
-              title="الصفحة الرئيسية"
-            >
-              <Home className="h-4 w-4" />
-              <span>الرئيسية</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => typeof window !== "undefined" && window.history.length > 1 ? navigate(-1) : navigate("/home")}
-              aria-label="الرجوع للخلف"
-              className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
           </div>
         </div>
 

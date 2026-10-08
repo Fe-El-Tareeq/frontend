@@ -185,7 +185,7 @@ export default function Home() {
           newMessagesCount={0}
           onNavigateWallet={() => navigate("/wallet")}
           onNavigateTrips={() => navigate("/trips")}
-          onNavigateErrands={() => navigate("/errands")}
+          onNavigateErrands={() => navigate("/my-errands")}
           onNavigateMessages={() => navigate("/messages")}
         />
 

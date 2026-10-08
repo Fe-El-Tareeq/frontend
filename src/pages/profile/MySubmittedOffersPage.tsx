@@ -93,7 +93,7 @@ export default function MySubmittedOffersPage() {
       <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Top Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-start">
             <button
               type="button"
               onClick={() => navigate(-1)}
@@ -161,19 +161,19 @@ export default function MySubmittedOffersPage() {
           </div>
 
           <div className="flex-1 pr-3 space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-[11px] text-text-muted dark:text-slate-400">
-                {acceptedCount} من {totalCount} عرض تم قبوله
-              </span>
-              <span className="font-black text-[#123A68] dark:text-white">
-                معدل القبول {acceptanceRate}%
-              </span>
-            </div>
             <div className="h-2 w-full bg-slate-100 dark:bg-[#0B1E36] rounded-full overflow-hidden">
               <div
                 className="h-full bg-linear-to-r from-amber-400 to-[#F36F21] rounded-full transition-all duration-500"
                 style={{ width: `${acceptanceRate}%` }}
               />
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-black text-[#123A68] dark:text-white">
+                معدل القبول {acceptanceRate}%
+              </span>
+              <span className="text-[11px] text-text-muted dark:text-slate-400">
+                {acceptedCount} من {totalCount} عرض تم قبوله
+              </span>
             </div>
           </div>
         </div>
@@ -191,8 +191,8 @@ export default function MySubmittedOffersPage() {
               type="button"
               onClick={() => setActiveTab(tab.key as typeof activeTab)}
               className={`rounded-2xl px-3.5 py-1.5 transition-all cursor-pointer ${activeTab === tab.key
-                  ? "bg-[#123A68] dark:bg-accent text-white shadow-xs font-black"
-                  : "bg-white dark:bg-[#102A4C] border border-slate-200 dark:border-white/10 text-text-secondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#132F54]"
+                ? "bg-[#123A68] dark:bg-accent text-white shadow-xs font-black"
+                : "bg-white dark:bg-[#102A4C] border border-slate-200 dark:border-white/10 text-text-secondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#132F54]"
                 }`}
             >
               {tab.label}
@@ -241,10 +241,10 @@ export default function MySubmittedOffersPage() {
                 <div
                   key={offer.id}
                   className={`rounded-3xl border shadow-xs space-y-3 p-4.5 text-right transition-all ${isAccepted
-                      ? "bg-white dark:bg-[#102A4C] border-emerald-300 dark:border-emerald-500/30 ring-2 ring-emerald-100 dark:ring-emerald-500/10"
-                      : isRejected
-                        ? "bg-white dark:bg-[#102A4C] border-red-200 dark:border-red-500/30"
-                        : "bg-white dark:bg-[#102A4C] border-amber-200 dark:border-amber-500/30"
+                    ? "bg-white dark:bg-[#102A4C] border-emerald-300 dark:border-emerald-500/30 ring-2 ring-emerald-100 dark:ring-emerald-500/10"
+                    : isRejected
+                      ? "bg-white dark:bg-[#102A4C] border-red-200 dark:border-red-500/30"
+                      : "bg-white dark:bg-[#102A4C] border-amber-200 dark:border-amber-500/30"
                     }`}
                 >
                   {/* Status Banner Top */}
@@ -303,10 +303,10 @@ export default function MySubmittedOffersPage() {
                     {/* Status Badge on LEFT */}
                     <span
                       className={`rounded-xl px-2.5 py-0.5 text-[10.5px] font-black shrink-0 ${isAccepted
-                          ? "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300"
-                          : isRejected
-                            ? "bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300"
-                            : "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300"
+                        ? "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300"
+                        : isRejected
+                          ? "bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300"
+                          : "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300"
                         }`}
                     >
                       {isAccepted

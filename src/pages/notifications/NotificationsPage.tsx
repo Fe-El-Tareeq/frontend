@@ -123,7 +123,7 @@ export default function NotificationsPage() {
       <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Page Header (Title + Mark All As Read) */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-start">
             <button
               onClick={() => navigate(-1)}
               className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, MessageSquare } from "lucide-react";
+import { Search, MessageSquare, ChevronRight } from "lucide-react";
 import { Header } from "../../components/layout/Header";
 import { MobileContainer } from "../../components/layout/MobileContainer";
 import { ConversationCard } from "../../components/chat/ConversationCard";
@@ -86,8 +86,19 @@ export default function MessagesPage() {
 
       <div className="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-6">
         {/* Title */}
-        <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">الرسائل والمحادثات</h1>
-
+        <div className="flex items-center justify-start">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            aria-label="الرجوع للخلف"
+            className="p-1 text-primary dark:text-white hover:text-accent transition-colors cursor-pointer"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+          <div className="text-right">
+            <h1 className="text-xl md:text-2xl font-black text-[#123A68] dark:text-white">الرسائل والمحادثات</h1>
+          </div>
+        </div>
         {/* Search Bar */}
         <div className="relative">
           <input
